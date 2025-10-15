@@ -21,15 +21,24 @@ class FetcherSettings(BaseSettings):
     """Fetcher configuration."""
 
     timeout: int = Field(default=30, description="HTTP request timeout in seconds")
+    playwright_timeout: int = Field(
+        default=60, description="Playwright browser timeout in seconds (longer than httpx)"
+    )
     max_concurrent: int = Field(default=5, description="Max concurrent fetch operations")
-    use_playwright_fallback: bool = Field(
+    enable_fallback: bool = Field(
         default=True, description="Enable Playwright fallback for JS-heavy sites"
+    )
+    use_playwright_fallback: bool = Field(
+        default=True, description="Enable Playwright fallback (deprecated, use enable_fallback)"
     )
     user_agent: str = Field(
         default="mcp-web/0.1.0 (compatible; AI assistant)",
         description="User-Agent header",
     )
     respect_robots_txt: bool = Field(default=True, description="Honor robots.txt rules")
+    crawl_delay_override: Optional[float] = Field(
+        default=None, description="Override crawl-delay from robots.txt (seconds)"
+    )
     max_retries: int = Field(default=3, description="Max retry attempts")
     retry_delay: float = Field(default=1.0, description="Delay between retries (seconds)")
 

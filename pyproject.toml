@@ -48,6 +48,7 @@ dependencies = [
     "pydantic-settings>=2.4.0",
     "python-dateutil>=2.9.0",
     "aiofiles>=24.1.0",
+    "click>=8.1.0",
     
     # Logging & Monitoring
     "structlog>=24.4.0",
@@ -185,5 +186,7 @@ module = [
     "diskcache.*",
     "playwright.*",
     "mcp.*",
+    "click.*",
+    "deepeval.*",
 ]
 ignore_missing_imports = true

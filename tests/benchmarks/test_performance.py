@@ -24,14 +24,15 @@ class TestTokenCountingPerformance:
         long_text = "Lorem ipsum dolor sit amet. " * 1000
         
         def count_tokens():
-            counter.count_tokens(short_text)
-            counter.count_tokens(medium_text)
-            counter.count_tokens(long_text)
+            c1 = counter.count_tokens(short_text)
+            c2 = counter.count_tokens(medium_text)
+            c3 = counter.count_tokens(long_text)
+            return c1 + c2 + c3
         
         result = benchmark(count_tokens)
         
-        # Should be very fast (< 10ms for all three)
-        assert result is not None
+        # Should be very fast (< 10ms for all three) and return token counts
+        assert result > 0
 
     def test_token_truncation_speed(self, benchmark):
         """Benchmark token truncation performance."""
