@@ -1,17 +1,27 @@
 # Initiative: Fix Security Unit Tests
 
-**Status:** Active  
-**Created:** October 15, 2025  
-**Priority:** Medium  
-**Owner:** To be assigned
+**Status:** Active
+**Created:** 2025-10-15
+**Owner:** TBD
+**Priority:** Medium
+**Estimated Duration:** 2-3 hours
 
 ---
 
-## Overview
+## Objective
 
-Multiple unit tests in `tests/unit/test_security.py` are failing. These need to be fixed to ensure robust security validation.
+Fix all 10 failing unit tests in `tests/unit/test_security.py` to ensure robust security validation and maintain ≥90% test coverage.
 
-## Problem Statement
+## Success Criteria
+
+- [ ] All tests in `tests/unit/test_security.py` pass
+- [ ] No security regressions introduced
+- [ ] Test coverage remains ≥90%
+- [ ] Documentation updated if behavior changes
+
+## Motivation
+
+### Problem
 
 During the comprehensive overhaul, we discovered that 10 tests in `tests/unit/test_security.py` have implementation mismatches with production code:
 
@@ -47,20 +57,15 @@ During the comprehensive overhaul, we discovered that 10 tests in `tests/unit/te
 9-10. **`TestRateLimiter` (2 tests)**
    - Issue: (Async-related)
 
-## Goals
+### Impact
 
-1. Fix all 10 failing unit tests in `tests/unit/test_security.py`
-2. Ensure no regressions in existing passing tests
-3. Document any intentional behavior changes
+Failing tests undermine confidence in security features and block CI/CD quality gates.
 
-## Acceptance Criteria
+### Value
 
-- [ ] All tests in `tests/unit/test_security.py` pass
-- [ ] No security regressions introduced
-- [ ] Test coverage remains ≥90%
-- [ ] Documentation updated if behavior changes
+Robust security test suite ensures production security features work correctly
 
-## Implementation Notes
+## Tasks
 
 ### Quick Wins
 
@@ -85,11 +90,10 @@ After fixes, verify no regressions:
 task test:fast
 ```
 
-## Related Files
+## Related Documentation
 
-- `tests/unit/test_security.py` - Test file
-- `src/mcp_web/security.py` - Production code
-- `.windsurf/rules/04_security.md` - Security guidelines
+- [Security Rules](../../.windsurf/rules/04_security.md)
+- [Testing Standards](../../.windsurf/rules/01_testing_and_tooling.md)
 
 ## Timeline
 
@@ -101,22 +105,23 @@ task test:fast
   - Fix pattern issues (60 min)
   - Documentation (30 min)
 
-## Next Steps
+## Updates
 
-1. Review each failing test individually
-2. Determine if test or production code needs fixing
-3. Apply fixes with regression testing
-4. Update security documentation if needed
-5. Commit with message: `test(security): fix 10 failing unit tests`
+### 2025-10-15 (Initial Creation)
 
-## Notes
-
+**Notes:**
 - All integration and golden tests are passing
 - Security features are working in practice
 - Tests are overly strict or have implementation mismatches
 - No production security bugs identified
 
+**Next Steps:**
+1. Review each failing test individually
+2. Determine if test or production code needs fixing
+3. Apply fixes with regression testing
+4. Update security documentation if needed
+
 ---
 
-**Created by:** Agent (Cascade)  
-**Last updated:** October 15, 2025, 10:40 UTC+07
+**Last Updated:** 2025-10-15
+**Status:** Active - Not started

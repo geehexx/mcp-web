@@ -1,10 +1,11 @@
 # Initiative: Quality Foundation & Testing Excellence
 
-**Status:** Active  
-**Start Date:** 2025-10-15  
-**Target Completion:** 2025-11-15  
-**Owner:** Core Team  
+**Status:** Active
+**Created:** 2025-10-15
+**Owner:** Core Team
 **Priority:** High
+**Estimated Duration:** 4 weeks
+**Target Completion:** 2025-11-15
 
 ---
 
@@ -152,7 +153,7 @@ The project has grown rapidly but needs stronger quality foundations:
 
 ---
 
-## Implementation Plan
+## Timeline
 
 ### Week 1 (2025-10-15 to 2025-10-22)
 - ✓ Document structure and constitution
