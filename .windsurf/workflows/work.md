@@ -13,6 +13,10 @@ auto_execution_mode: 3
 
 ---
 
+## Stage 0: Read Project Summary and Changelog
+
+Read `docs/PROJECT_SUMMARY.md` and `docs/CHANGELOG.md` to understand project context. The summary provides a high-level overview, while the changelog shows recent changes and releases. This helps set the stage for intelligent context detection.
+
 ## Stage 1: Context Detection (Automatic)
 
 Intelligently analyze project state using **efficient batch operations**.
