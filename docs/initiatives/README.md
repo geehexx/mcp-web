@@ -195,14 +195,13 @@ Add to the "Updates" section at the bottom:
 
 ### Medium Priority
 
-| Initiative | Owner | Started | Target | Progress |
-|------------|-------|---------|--------|----------|
-| [Fix Security Unit Tests](active/fix-security-unit-tests.md) | TBD | 2025-10-15 | TBD | Not started |
+_No medium priority initiatives at this time._
 
 ## Recently Completed
 
 | Initiative | Owner | Completed | Duration |
 |------------|-------|-----------|----------|
+| [Fix Security Unit Tests](completed/fix-security-unit-tests.md) | AI Agent | 2025-10-15 | ~1.5 hours |
 | [Convert Decisions to ADRs](completed/convert-decisions-to-adrs.md) | AI Agent | 2025-10-15 | 1.5 hours |
 
 ## Archived Initiatives
