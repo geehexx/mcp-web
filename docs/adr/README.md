@@ -64,16 +64,20 @@ If a decision changes, create a new ADR that supersedes the old one.
 
 ### Active ADRs
 
-| Number | Title | Status | Date |
-|--------|-------|--------|------|
-| [0001](0001-use-httpx-playwright-fallback.md) | Use httpx with Playwright fallback | Implemented | 2025-10-15 |
-| [0002](0002-use-trafilatura-extraction.md) | Use trafilatura for content extraction | Implemented | 2025-10-15 |
-| [0003](0003-use-hierarchical-chunking.md) | Use hierarchical + semantic chunking | Implemented | 2025-10-15 |
-| [0004](0004-set-chunk-size-512-tokens.md) | Set default chunk size to 512 tokens | Implemented | 2025-10-15 |
-| [0005](0005-use-tiktoken-counting.md) | Use tiktoken for token counting | Implemented | 2025-10-15 |
-| [0006](0006-implement-map-reduce-summarization.md) | Implement map-reduce summarization | Implemented | 2025-10-15 |
-| [0007](0007-use-disk-cache-7day-ttl.md) | Use disk cache with 7-day TTL | Implemented | 2025-10-15 |
-| [0008](0008-default-to-gpt4-openai.md) | Default to GPT-4 as LLM | Implemented | 2025-10-15 |
+- [ADR-0001: Use httpx with Playwright Fallback](0001-use-httpx-playwright-fallback.md) (2025-10-15)
+  - **Status:** Implemented
+  - **Summary:** httpx for primary fetching, Playwright for JS-rendered content
+  - **Impact:** Fetcher module
+
+- [ADR-0002: Adopt Windsurf Workflow System](0002-adopt-windsurf-workflow-system.md) (2025-10-15)
+  - **Status:** Implemented
+  - **Summary:** Hierarchical workflow system with central orchestration for AI agents
+  - **Impact:** AI agent operational processes, `.windsurf/workflows/`
+
+- [ADR-0003: Documentation Standards and Structure](0003-documentation-standards-and-structure.md) (2025-10-15)
+  - **Status:** Implemented
+  - **Summary:** Hierarchical docs structure with lifecycle management and quality automation
+  - **Impact:** All documentation, `docs/` structure
 | [0009](0009-enable-streaming-output.md) | Enable streaming output | Implemented | 2025-10-15 |
 | [0010](0010-use-monolithic-tool-design.md) | Use monolithic tool design | Implemented | 2025-10-15 |
 
