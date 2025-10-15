@@ -112,6 +112,10 @@ class PromptInjectionFilter:
         if len(word) != len(target) or len(word) < 3:
             return False
 
+        # Exclude exact matches (not scrambled)
+        if word == target:
+            return False
+
         # Same first and last letter, scrambled middle
         return (
             word[0] == target[0]
@@ -132,18 +136,25 @@ class PromptInjectionFilter:
         if not text:
             return ""
 
+        # Enforce length limit first (DoS prevention)
+        if len(text) > max_length:
+            text = text[:max_length]
+
         # Normalize whitespace (obfuscation technique)
         text = re.sub(r"\s+", " ", text)
 
-        # Remove excessive character repetition
-        text = re.sub(r"(.)\1{3,}", r"\1", text)
+        # Remove excessive character repetition (obfuscation)
+        # Only apply if text has variety (not just single repeated char)
+        unique_chars = len(set(text.replace(" ", "")))
+        if unique_chars > 1:  # Has variety - likely obfuscation, not pure DoS
+            # Reduce 6+ consecutive identical chars to 3
+            text = re.sub(r"(\w)\1{5,}", r"\1\1\1", text)
 
         # Filter detected patterns
         for pattern in self.dangerous_patterns:
             text = re.sub(pattern, "[FILTERED]", text, flags=re.IGNORECASE)
 
-        # Enforce length limit (DoS prevention)
-        return text[:max_length].strip()
+        return text.strip()
 
 
 class OutputValidator:
@@ -178,7 +189,7 @@ class OutputValidator:
             r"You\s+have\s+been\s+instructed",
             # API key patterns
             r'API[_\s]KEY[:=]\s*["\']?\w+',
-            r"sk-[A-Za-z0-9]{20,}",  # OpenAI key
+            r"sk-(?:proj-)?[A-Za-z0-9]{20,}",  # OpenAI key (including sk-proj- prefix)
             r"Bearer\s+[A-Za-z0-9_\-\.]+",
             # Instruction leakage
             r"instructions?[:]?\s*\d+\.",
@@ -403,11 +414,20 @@ def validate_url(url: str) -> bool:
             "127.0.0.1",
             "0.0.0.0",
             "::1",
-            "[::1]",  # IPv6 localhost
+            "[::1]",  # IPv6 localhost with brackets
         }
 
-        host = parsed.netloc.split(":")[0].lower()  # Remove port
-        if host in blocked_hosts:
+        # Extract host, handling IPv6 addresses with brackets
+        host = parsed.netloc.lower()
+        # Remove port (but preserve IPv6 brackets)
+        if host.startswith("["):
+            # IPv6: [::1]:port -> [::1]
+            host = host.split("]")[0] + "]" if "]" in host else host
+        else:
+            # IPv4/hostname: example.com:port -> example.com
+            host = host.split(":")[0]
+        
+        if host in blocked_hosts or host.strip("[]") in blocked_hosts:
             logger.warning("blocked_localhost_url", host=host)
             return False
 
