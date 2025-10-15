@@ -354,11 +354,15 @@ def select_strategy(chunks, query):
 - [x] Create profiling decorator and timing utilities
 - [x] Implement parallel map-reduce with `asyncio.gather()`
 - [x] Add `asyncio.as_completed()` streaming variant
-- [ ] Optimize prompts (reduce verbosity, add stop sequences)
-- [ ] Implement adaptive `max_tokens` based on chunk size
 - [x] Add comprehensive metrics collection
 - [x] Create benchmark comparison framework
-- [ ] Run baseline vs optimized benchmarks (IN PROGRESS - timeout issues)
+- [x] Add mock LLM fixtures for deterministic benchmarks
+- [x] Add summarization performance benchmarks
+- [x] Validate parallel map-reduce speedup (measured ~1.17x improvement)
+- [ ] Optimize prompts (reduce verbosity, add stop sequences)
+- [ ] Implement adaptive `max_tokens` based on chunk size
+- [ ] Improve mock LLM fixtures to fully intercept API calls
+- [ ] Run comprehensive benchmark suite with fully mocked LLM
 - [ ] Validate quality with golden tests (ensure 90%+ retention)
 
 ### Phase 2 Tasks
@@ -497,13 +501,110 @@ def select_strategy(chunks, query):
 
 ---
 
+## Tooling Improvements (Future Work)
+
+### Testing Infrastructure
+
+**1. Test Fixtures & Factories Library**
+
+**Current State:**
+- Manual fixture creation in conftest.py
+- Repetitive data setup across test files
+- No standardized factories for test objects
+
+**Recommended:**
+- Adopt `factory_boy` or `pytest-factoryboy` for object factories
+- Create reusable factories for common test data:
+  - `ChunkFactory` for creating test chunks
+  - `FetchResultFactory` for mock fetch results
+  - `ConfigFactory` for test configurations
+- Benefits: DRY principle, maintainable tests, easier parameterization
+
+**Example:**
+```python
+# tests/factories.py
+import factory
+from mcp_web.chunker import Chunk
+
+class ChunkFactory(factory.Factory):
+    class Meta:
+        model = Chunk
+    
+    text = factory.Faker('text', max_nb_chars=200)
+    tokens = factory.LazyAttribute(lambda o: len(o.text.split()))
+    start_pos = factory.Sequence(lambda n: n * 100)
+    end_pos = factory.LazyAttribute(lambda o: o.start_pos + len(o.text))
+    metadata = factory.Dict({})
+
+# Usage in tests:
+chunks = ChunkFactory.create_batch(20)
+```
+
+**2. Prompt & Template Management**
+
+**Current State:**
+- LLM prompts embedded as docstrings in code
+- Hard to maintain, version, and test
+- Difficult to A/B test different prompt strategies
+- No prompt validation or templating
+
+**Recommended:**
+- Adopt `Jinja2` for prompt templating
+- Store prompts in separate files (e.g., `prompts/summarize_map.j2`)
+- Benefits: 
+  - Decouples prompts from code
+  - Version control for prompt changes
+  - Easier A/B testing
+  - Support for prompt validation and testing
+
+**Example Structure:**
+```
+src/mcp_web/prompts/
+├── __init__.py
+├── loader.py              # Jinja2 environment setup
+├── summarize_map.j2       # Map phase prompt
+├── summarize_reduce.j2    # Reduce phase prompt
+└── query_focused.j2       # Query-aware variant
+```
+
+**Example Usage:**
+```python
+# src/mcp_web/prompts/loader.py
+from jinja2 import Environment, PackageLoader
+
+env = Environment(
+    loader=PackageLoader('mcp_web', 'prompts'),
+    autoescape=False,
+    trim_blocks=True,
+    lstrip_blocks=True,
+)
+
+def render_prompt(template_name: str, **kwargs) -> str:
+    template = env.get_template(template_name)
+    return template.render(**kwargs)
+
+# In summarizer.py:
+from mcp_web.prompts import render_prompt
+
+prompt = render_prompt('summarize_map.j2', 
+                       chunk=chunk_text, 
+                       query=query,
+                       max_length=target_length)
+```
+
+**Priority:** Medium - Not blocking current performance work, but valuable for long-term maintainability.
+
+---
+
 ## Next Steps
 
-1. ✅ Complete baseline benchmarks (in progress)
-2. Create profiling infrastructure
-3. Implement Phase 1 parallel map-reduce
-4. Validate with golden tests
-5. Measure improvement and iterate
+1. ✅ Complete baseline benchmarks (completed with mock infrastructure)
+2. ✅ Create profiling infrastructure (completed)
+3. ✅ Implement Phase 1 parallel map-reduce (completed)
+4. ⏳ Improve mock LLM fixtures (in progress - currently still calls real API)
+5. 🔜 Validate quality with golden tests
+6. 🔜 Optimize prompts and implement adaptive max_tokens
+7. 🔜 Consider tooling improvements (factories, templating)
 
 ---
 
