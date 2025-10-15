@@ -1,7 +1,5 @@
 """Unit tests for config module."""
 
-import pytest
-
 from mcp_web.config import (
     CacheSettings,
     ChunkerSettings,
@@ -20,7 +18,7 @@ class TestFetcherSettings:
     def test_default_values(self):
         """Test default configuration values."""
         settings = FetcherSettings()
-        
+
         assert settings.timeout == 30
         assert settings.max_concurrent == 5
         assert settings.use_playwright_fallback is True
@@ -33,7 +31,7 @@ class TestExtractorSettings:
     def test_default_values(self):
         """Test default configuration values."""
         settings = ExtractorSettings()
-        
+
         assert settings.favor_recall is True
         assert settings.include_comments is True
         assert settings.include_tables is True
@@ -46,7 +44,7 @@ class TestChunkerSettings:
     def test_default_values(self):
         """Test default configuration values."""
         settings = ChunkerSettings()
-        
+
         assert settings.strategy == "hierarchical"
         assert settings.chunk_size == 512
         assert settings.chunk_overlap == 50
@@ -59,7 +57,7 @@ class TestSummarizerSettings:
     def test_default_values(self):
         """Test default configuration values."""
         settings = SummarizerSettings()
-        
+
         assert settings.model == "gpt-4o-mini"
         assert settings.temperature == 0.3
         assert settings.max_tokens == 2048
@@ -73,7 +71,7 @@ class TestCacheSettings:
     def test_default_values(self):
         """Test default configuration values."""
         settings = CacheSettings()
-        
+
         assert settings.enabled is True
         assert settings.ttl == 7 * 24 * 3600  # 7 days
         assert settings.max_size == 1024 * 1024 * 1024  # 1GB
@@ -86,7 +84,7 @@ class TestConfig:
     def test_default_config(self):
         """Test default configuration."""
         config = Config()
-        
+
         assert isinstance(config.fetcher, FetcherSettings)
         assert isinstance(config.extractor, ExtractorSettings)
         assert isinstance(config.chunker, ChunkerSettings)
@@ -96,7 +94,7 @@ class TestConfig:
     def test_load_config(self):
         """Test loading configuration."""
         config = load_config()
-        
+
         assert config is not None
         assert config.fetcher.timeout > 0
         assert config.chunker.chunk_size > 0
@@ -104,6 +102,6 @@ class TestConfig:
     def test_get_default_config(self):
         """Test getting default configuration."""
         config = get_default_config()
-        
+
         assert config is not None
         assert config.cache.enabled is True

@@ -2,7 +2,6 @@
 
 import os
 import tempfile
-from pathlib import Path
 
 import pytest
 
@@ -148,13 +147,13 @@ def reset_environment():
         "MCP_WEB_CACHE_DIR",
         "MCP_WEB_LOG_LEVEL",
     ]
-    
+
     for key in test_env_keys:
         if key in os.environ:
             original_env[key] = os.environ[key]
-    
+
     yield
-    
+
     # Restore original values
     for key in test_env_keys:
         if key in original_env:
@@ -166,15 +165,7 @@ def reset_environment():
 # Markers for test categorization
 def pytest_configure(config):
     """Configure pytest markers."""
-    config.addinivalue_line(
-        "markers", "unit: mark test as a unit test"
-    )
-    config.addinivalue_line(
-        "markers", "integration: mark test as an integration test"
-    )
-    config.addinivalue_line(
-        "markers", "slow: mark test as slow running"
-    )
-    config.addinivalue_line(
-        "markers", "requires_api: mark test as requiring external API"
-    )
+    config.addinivalue_line("markers", "unit: mark test as a unit test")
+    config.addinivalue_line("markers", "integration: mark test as an integration test")
+    config.addinivalue_line("markers", "slow: mark test as slow running")
+    config.addinivalue_line("markers", "requires_api: mark test as requiring external API")

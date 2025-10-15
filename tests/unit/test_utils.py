@@ -1,7 +1,5 @@
 """Unit tests for utils module."""
 
-import pytest
-
 from mcp_web.utils import (
     TokenCounter,
     extract_code_blocks,
@@ -18,26 +16,26 @@ class TestTokenCounter:
     def test_count_tokens(self):
         """Test token counting."""
         counter = TokenCounter()
-        
+
         # Simple text
         assert counter.count_tokens("Hello") > 0
         assert counter.count_tokens("Hello world") > counter.count_tokens("Hello")
-        
+
         # Empty string
         assert counter.count_tokens("") == 0
 
     def test_truncate_to_tokens(self):
         """Test token truncation."""
         counter = TokenCounter()
-        
+
         text = "Hello world, this is a test."
         tokens = counter.count_tokens(text)
-        
+
         # Truncate to half
         truncated = counter.truncate_to_tokens(text, tokens // 2)
         assert counter.count_tokens(truncated) <= tokens // 2
         assert len(truncated) < len(text)
-        
+
         # Truncate to more than available
         not_truncated = counter.truncate_to_tokens(text, tokens + 100)
         assert not_truncated == text
@@ -64,7 +62,7 @@ class TestURLValidation:
         """Test URL normalization."""
         # Remove fragment
         assert normalize_url("https://example.com#section") == "https://example.com"
-        
+
         # Sort query params
         normalized = normalize_url("https://example.com?b=2&a=1")
         assert "a=1" in normalized
@@ -81,7 +79,7 @@ class TestMarkdownFormatting:
             sources=["https://example.com"],
             metadata={"date": "2025-10-15"},
         )
-        
+
         assert "# Summary" in summary
         assert "This is a summary." in summary
         assert "## Sources" in summary
@@ -114,7 +112,7 @@ More text
 console.log('world');
 ```
 """
-        
+
         blocks = extract_code_blocks(markdown)
         assert len(blocks) == 2
         assert blocks[0][0] == "python"
@@ -138,7 +136,7 @@ class TestFilenameUtils:
         assert sanitize_filename("hello.txt") == "hello.txt"
         assert sanitize_filename("hello/world.txt") == "hello_world.txt"
         assert sanitize_filename("hello:world?.txt") == "hello_world_.txt"
-        
+
         # Test length limit
         long_name = "a" * 300
         sanitized = sanitize_filename(long_name)

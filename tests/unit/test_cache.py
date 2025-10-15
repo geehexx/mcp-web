@@ -1,7 +1,6 @@
 """Unit tests for cache module."""
 
 import tempfile
-from pathlib import Path
 
 import pytest
 
@@ -16,7 +15,7 @@ class TestCacheKeyBuilder:
         key1 = CacheKeyBuilder.fetch_key("https://example.com")
         key2 = CacheKeyBuilder.fetch_key("https://example.com")
         key3 = CacheKeyBuilder.fetch_key("https://other.com")
-        
+
         assert key1 == key2  # Same URL = same key
         assert key1 != key3  # Different URL = different key
         assert "fetch" in key1
@@ -25,7 +24,7 @@ class TestCacheKeyBuilder:
         """Test fetch key with parameters."""
         key1 = CacheKeyBuilder.fetch_key("https://example.com", {"timeout": 30})
         key2 = CacheKeyBuilder.fetch_key("https://example.com", {"timeout": 60})
-        
+
         assert key1 != key2  # Different params = different key
 
     def test_extract_key(self):
@@ -37,7 +36,7 @@ class TestCacheKeyBuilder:
         """Test summary key generation."""
         key1 = CacheKeyBuilder.summary_key("https://example.com", query="test")
         key2 = CacheKeyBuilder.summary_key("https://example.com", query="other")
-        
+
         assert key1 != key2  # Different query = different key
         assert "summary" in key1
 
@@ -65,11 +64,11 @@ class TestCacheManager:
         """Test setting and getting cache values."""
         key = "test_key"
         value = {"data": "test value"}
-        
+
         # Set value
         success = await cache.set(key, value)
         assert success is True
-        
+
         # Get value
         retrieved = await cache.get(key)
         assert retrieved == value
@@ -85,10 +84,10 @@ class TestCacheManager:
         """Test deleting cache entries."""
         key = "test_key"
         value = "test value"
-        
+
         await cache.set(key, value)
         assert await cache.get(key) == value
-        
+
         deleted = await cache.delete(key)
         assert deleted is True
         assert await cache.get(key) is None
@@ -98,15 +97,16 @@ class TestCacheManager:
         """Test TTL expiration."""
         key = "test_key"
         value = "test value"
-        
+
         # Set with very short TTL
         await cache.set(key, value, ttl=1)
         assert await cache.get(key) == value
-        
+
         # Wait for expiration
         import asyncio
+
         await asyncio.sleep(2)
-        
+
         # Should be expired
         assert await cache.get(key) is None
 
@@ -115,9 +115,9 @@ class TestCacheManager:
         """Test clearing entire cache."""
         await cache.set("key1", "value1")
         await cache.set("key2", "value2")
-        
+
         await cache.clear()
-        
+
         assert await cache.get("key1") is None
         assert await cache.get("key2") is None
 
@@ -127,22 +127,23 @@ class TestCacheManager:
         # Add entries with different TTLs
         await cache.set("short", "value", ttl=1)
         await cache.set("long", "value", ttl=3600)
-        
+
         # Wait for short TTL to expire
         import asyncio
+
         await asyncio.sleep(2)
-        
+
         # Prune should remove expired entry
         pruned = await cache.prune()
         assert pruned >= 1
-        
+
         assert await cache.get("short") is None
         assert await cache.get("long") is not None
 
     def test_get_stats(self, cache):
         """Test getting cache statistics."""
         stats = cache.get_stats()
-        
+
         assert "size_bytes" in stats
         assert "size_mb" in stats
         assert "usage_percent" in stats

@@ -27,9 +27,9 @@ class TestGoldenExtraction:
         """Test extraction of simple article matches expectations."""
         from mcp_web.extractor import ContentExtractor
         from mcp_web.fetcher import FetchResult
-        
+
         extractor = ContentExtractor(test_config.extractor, cache=None)
-        
+
         fetch_result = FetchResult(
             url="https://test.com/simple-article",
             content=SIMPLE_ARTICLE_HTML.encode("utf-8"),
@@ -38,30 +38,30 @@ class TestGoldenExtraction:
             status_code=200,
             fetch_method="test",
         )
-        
+
         extracted = await extractor.extract(fetch_result, use_cache=False)
-        
+
         # Verify title
         assert SIMPLE_ARTICLE_EXPECTED["title"] in extracted.title
-        
+
         # Verify content contains expected keywords
         content_lower = extracted.content.lower()
         for keyword in SIMPLE_ARTICLE_EXPECTED["content_keywords"]:
             assert keyword.lower() in content_lower, f"Missing keyword: {keyword}"
-        
+
         # Verify sections are present
         for section in SIMPLE_ARTICLE_EXPECTED["sections"]:
             assert section in extracted.content, f"Missing section: {section}"
-        
+
         # Verify code blocks
         code_block_count = extracted.content.count("```")
         assert code_block_count >= SIMPLE_ARTICLE_EXPECTED["code_blocks"] * 2  # Opening and closing
-        
+
         # Verify links
         assert len(extracted.links) >= len(SIMPLE_ARTICLE_EXPECTED["links"])
         for expected_link in SIMPLE_ARTICLE_EXPECTED["links"]:
             assert expected_link in extracted.links
-        
+
         # Verify content length
         assert len(extracted.content) >= SIMPLE_ARTICLE_EXPECTED["min_content_length"]
 
@@ -71,9 +71,9 @@ class TestGoldenExtraction:
         """Test extraction of technical documentation."""
         from mcp_web.extractor import ContentExtractor
         from mcp_web.fetcher import FetchResult
-        
+
         extractor = ContentExtractor(test_config.extractor, cache=None)
-        
+
         fetch_result = FetchResult(
             url="https://test.com/api-docs",
             content=TECHNICAL_DOC_HTML.encode("utf-8"),
@@ -82,30 +82,30 @@ class TestGoldenExtraction:
             status_code=200,
             fetch_method="test",
         )
-        
+
         extracted = await extractor.extract(fetch_result, use_cache=False)
-        
+
         # Verify title
         assert TECHNICAL_DOC_EXPECTED["title"] in extracted.title
-        
+
         # Verify keywords
         content_lower = extracted.content.lower()
         for keyword in TECHNICAL_DOC_EXPECTED["content_keywords"]:
             assert keyword.lower() in content_lower, f"Missing keyword: {keyword}"
-        
+
         # Verify sections
         for section in TECHNICAL_DOC_EXPECTED["sections"]:
             assert section in extracted.content, f"Missing section: {section}"
-        
+
         # Verify code blocks (technical docs have many)
         code_block_count = extracted.content.count("```")
         assert code_block_count >= TECHNICAL_DOC_EXPECTED["code_blocks_min"] * 2
-        
+
         # Verify JSON examples if expected
         if TECHNICAL_DOC_EXPECTED["has_json_examples"]:
             assert "json" in extracted.content.lower()
             assert "{" in extracted.content
-        
+
         # Verify content length
         assert len(extracted.content) >= TECHNICAL_DOC_EXPECTED["min_content_length"]
 
@@ -115,9 +115,9 @@ class TestGoldenExtraction:
         """Test extraction of news article with quotes."""
         from mcp_web.extractor import ContentExtractor
         from mcp_web.fetcher import FetchResult
-        
+
         extractor = ContentExtractor(test_config.extractor, cache=None)
-        
+
         fetch_result = FetchResult(
             url="https://test.com/news",
             content=NEWS_ARTICLE_HTML.encode("utf-8"),
@@ -126,34 +126,34 @@ class TestGoldenExtraction:
             status_code=200,
             fetch_method="test",
         )
-        
+
         extracted = await extractor.extract(fetch_result, use_cache=False)
-        
+
         # Verify title
         assert NEWS_ARTICLE_EXPECTED["title"] in extracted.title
-        
+
         # Verify metadata
         if extracted.metadata.get("author"):
             assert NEWS_ARTICLE_EXPECTED["author"] in extracted.metadata.get("author", "")
-        
+
         # Verify keywords
         content_lower = extracted.content.lower()
         for keyword in NEWS_ARTICLE_EXPECTED["content_keywords"]:
             assert keyword.lower() in content_lower, f"Missing keyword: {keyword}"
-        
+
         # Verify quotes are preserved
         if NEWS_ARTICLE_EXPECTED["has_quotes"]:
             # Should contain quote markers or blockquote content
-            assert '"' in extracted.content or '>' in extracted.content
-        
+            assert '"' in extracted.content or ">" in extracted.content
+
         # Verify sections
         for section in NEWS_ARTICLE_EXPECTED["sections"]:
             assert section in extracted.content, f"Missing section: {section}"
-        
+
         # Verify links
         for expected_link in NEWS_ARTICLE_EXPECTED["links"]:
             assert expected_link in extracted.links
-        
+
         # Verify content length
         assert len(extracted.content) >= NEWS_ARTICLE_EXPECTED["min_content_length"]
 
@@ -163,9 +163,9 @@ class TestGoldenExtraction:
         """Test extraction of blog post with multiple links."""
         from mcp_web.extractor import ContentExtractor
         from mcp_web.fetcher import FetchResult
-        
+
         extractor = ContentExtractor(test_config.extractor, cache=None)
-        
+
         fetch_result = FetchResult(
             url="https://test.com/blog",
             content=BLOG_POST_HTML.encode("utf-8"),
@@ -174,24 +174,24 @@ class TestGoldenExtraction:
             status_code=200,
             fetch_method="test",
         )
-        
+
         extracted = await extractor.extract(fetch_result, use_cache=False)
-        
+
         # Verify title
         assert BLOG_POST_EXPECTED["title"] in extracted.title
-        
+
         # Verify keywords
         content_lower = extracted.content.lower()
         for keyword in BLOG_POST_EXPECTED["content_keywords"]:
             assert keyword.lower() in content_lower, f"Missing keyword: {keyword}"
-        
+
         # Verify all numbered sections
         section_count = sum(1 for i in range(1, 11) if f"{i}." in extracted.content)
         assert section_count >= BLOG_POST_EXPECTED["sections"]
-        
+
         # Verify links
         assert len(extracted.links) >= BLOG_POST_EXPECTED["links_min"]
-        
+
         # Verify content length
         assert len(extracted.content) >= BLOG_POST_EXPECTED["min_content_length"]
 
@@ -201,9 +201,9 @@ class TestGoldenExtraction:
         """Test that extraction is consistent across multiple runs."""
         from mcp_web.extractor import ContentExtractor
         from mcp_web.fetcher import FetchResult
-        
+
         extractor = ContentExtractor(test_config.extractor, cache=None)
-        
+
         fetch_result = FetchResult(
             url="https://test.com/consistent",
             content=SIMPLE_ARTICLE_HTML.encode("utf-8"),
@@ -212,17 +212,19 @@ class TestGoldenExtraction:
             status_code=200,
             fetch_method="test",
         )
-        
+
         # Extract multiple times
         results = []
         for _ in range(3):
             extracted = await extractor.extract(fetch_result, use_cache=False)
-            results.append({
-                "title": extracted.title,
-                "content": extracted.content,
-                "links": sorted(extracted.links),
-            })
-        
+            results.append(
+                {
+                    "title": extracted.title,
+                    "content": extracted.content,
+                    "links": sorted(extracted.links),
+                }
+            )
+
         # All results should be identical
         for i in range(1, len(results)):
             assert results[i]["title"] == results[0]["title"]
@@ -235,7 +237,7 @@ class TestGoldenExtraction:
         """Test that code blocks are preserved correctly."""
         from mcp_web.extractor import ContentExtractor
         from mcp_web.fetcher import FetchResult
-        
+
         html_with_code = """
         <html>
         <body>
@@ -250,9 +252,9 @@ def hello_world():
         </body>
         </html>
         """
-        
+
         extractor = ContentExtractor(test_config.extractor, cache=None)
-        
+
         fetch_result = FetchResult(
             url="https://test.com/code",
             content=html_with_code.encode("utf-8"),
@@ -261,13 +263,13 @@ def hello_world():
             status_code=200,
             fetch_method="test",
         )
-        
+
         extracted = await extractor.extract(fetch_result, use_cache=False)
-        
+
         # Code should be in extracted content
         assert "def hello_world" in extracted.content
         assert "print" in extracted.content
-        
+
         # Code blocks should be marked
         assert "```" in extracted.content or "def hello_world" in extracted.content
 
@@ -277,7 +279,7 @@ def hello_world():
         """Test metadata extraction from HTML."""
         from mcp_web.extractor import ContentExtractor
         from mcp_web.fetcher import FetchResult
-        
+
         html_with_metadata = """
         <html>
         <head>
@@ -295,9 +297,9 @@ def hello_world():
         </body>
         </html>
         """
-        
+
         extractor = ContentExtractor(test_config.extractor, cache=None)
-        
+
         fetch_result = FetchResult(
             url="https://test.com/metadata",
             content=html_with_metadata.encode("utf-8"),
@@ -306,13 +308,13 @@ def hello_world():
             status_code=200,
             fetch_method="test",
         )
-        
+
         extracted = await extractor.extract(fetch_result, use_cache=False)
-        
+
         # Should extract title
         assert extracted.title
         assert "Test Article" in extracted.title or "Article Title" in extracted.title
-        
+
         # Should extract metadata if configured
         if test_config.extractor.extract_metadata:
             assert extracted.metadata is not None
@@ -323,7 +325,7 @@ def hello_world():
         """Test handling of pages with no meaningful content."""
         from mcp_web.extractor import ContentExtractor
         from mcp_web.fetcher import FetchResult
-        
+
         empty_html = """
         <html>
         <head><title>Empty Page</title></head>
@@ -333,9 +335,9 @@ def hello_world():
         </body>
         </html>
         """
-        
+
         extractor = ContentExtractor(test_config.extractor, cache=None)
-        
+
         fetch_result = FetchResult(
             url="https://test.com/empty",
             content=empty_html.encode("utf-8"),
@@ -344,10 +346,10 @@ def hello_world():
             status_code=200,
             fetch_method="test",
         )
-        
+
         # Should not crash on empty content
         extracted = await extractor.extract(fetch_result, use_cache=False)
-        
+
         # Should return something, even if minimal
         assert extracted is not None
         assert extracted.url == "https://test.com/empty"
@@ -358,7 +360,7 @@ def hello_world():
         """Test handling of malformed HTML."""
         from mcp_web.extractor import ContentExtractor
         from mcp_web.fetcher import FetchResult
-        
+
         malformed_html = """
         <html>
         <body>
@@ -370,9 +372,9 @@ def hello_world():
             </article>
         </body>
         """
-        
+
         extractor = ContentExtractor(test_config.extractor, cache=None)
-        
+
         fetch_result = FetchResult(
             url="https://test.com/malformed",
             content=malformed_html.encode("utf-8"),
@@ -381,10 +383,10 @@ def hello_world():
             status_code=200,
             fetch_method="test",
         )
-        
+
         # Should handle malformed HTML gracefully
         extracted = await extractor.extract(fetch_result, use_cache=False)
-        
+
         assert extracted is not None
         # Should still extract some content
         assert "content" in extracted.content.lower()

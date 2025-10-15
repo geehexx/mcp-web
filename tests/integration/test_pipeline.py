@@ -2,7 +2,6 @@
 
 import pytest
 
-from mcp_web.config import Config
 from mcp_web.mcp_server import WebSummarizationPipeline
 
 
@@ -30,17 +29,17 @@ class TestWebSummarizationPipeline:
         """Test fetching a simple URL."""
         # Use example.com which is designed for testing
         urls = ["https://example.com"]
-        
+
         try:
             fetch_results = await pipeline.fetcher.fetch_multiple(urls)
-            
+
             assert len(fetch_results) > 0
             assert "https://example.com" in fetch_results
-            
+
             result = fetch_results["https://example.com"]
             assert result.status_code == 200
             assert len(result.content) > 0
-            
+
         except Exception as e:
             pytest.skip(f"Network request failed: {str(e)}")
 
@@ -49,7 +48,7 @@ class TestWebSummarizationPipeline:
     async def test_extract_from_html(self, pipeline, sample_html):
         """Test extraction from HTML content."""
         from mcp_web.fetcher import FetchResult
-        
+
         # Create fake fetch result
         fetch_result = FetchResult(
             url="https://test.com",
@@ -59,9 +58,9 @@ class TestWebSummarizationPipeline:
             status_code=200,
             fetch_method="test",
         )
-        
+
         extracted = await pipeline.extractor.extract(fetch_result, use_cache=False)
-        
+
         assert extracted is not None
         assert extracted.title != ""
         assert len(extracted.content) > 0
@@ -71,7 +70,7 @@ class TestWebSummarizationPipeline:
     async def test_chunk_extracted_content(self, pipeline, sample_markdown):
         """Test chunking of extracted content."""
         chunks = pipeline.chunker.chunk_text(sample_markdown)
-        
+
         assert len(chunks) > 0
         assert all(chunk.tokens > 0 for chunk in chunks)
         assert all(len(chunk.text) > 0 for chunk in chunks)
@@ -83,20 +82,20 @@ class TestWebSummarizationPipeline:
     async def test_full_pipeline_with_example_com(self, pipeline):
         """Test full pipeline with example.com (requires network)."""
         urls = ["https://example.com"]
-        
+
         try:
             output_parts = []
             async for chunk in pipeline.summarize_urls(urls):
                 output_parts.append(chunk)
-            
+
             output = "".join(output_parts)
-            
+
             # Verify we got some output
             assert len(output) > 0
-            
+
             # Check for expected sections
             assert "Fetching" in output or "Summary" in output
-            
+
         except Exception as e:
             if "OPENAI_API_KEY" in str(e) or "API" in str(e):
                 pytest.skip(f"API key not configured: {str(e)}")
@@ -109,16 +108,16 @@ class TestWebSummarizationPipeline:
         """Test cache integration across pipeline."""
         if not pipeline.cache:
             pytest.skip("Cache not enabled")
-        
+
         # Set a test value
         key = "test:integration:key"
         value = {"test": "data"}
-        
+
         await pipeline.cache.set(key, value)
         retrieved = await pipeline.cache.get(key)
-        
+
         assert retrieved == value
-        
+
         # Cleanup
         await pipeline.cache.delete(key)
 
@@ -128,10 +127,10 @@ class TestWebSummarizationPipeline:
         """Test metrics are collected during pipeline operations."""
         if not pipeline.metrics:
             pytest.skip("Metrics not enabled")
-        
+
         # Perform some operation
         from mcp_web.fetcher import FetchResult
-        
+
         fetch_result = FetchResult(
             url="https://test.com",
             content=b"test content",
@@ -140,7 +139,7 @@ class TestWebSummarizationPipeline:
             status_code=200,
             fetch_method="test",
         )
-        
+
         # This should record metrics
         pipeline.metrics.record_fetch(
             url="https://test.com",
@@ -150,10 +149,10 @@ class TestWebSummarizationPipeline:
             content_size=12,
             success=True,
         )
-        
+
         # Export metrics
         metrics = pipeline.metrics.export_metrics()
-        
+
         assert "summary" in metrics
         assert "counters" in metrics
 
@@ -162,7 +161,7 @@ class TestWebSummarizationPipeline:
     async def test_pipeline_cleanup(self, pipeline):
         """Test pipeline cleanup."""
         await pipeline.close()
-        
+
         # Verify resources are closed
         # Note: In a real test, we'd verify HTTP client is closed, etc.
         assert True
@@ -172,13 +171,13 @@ class TestWebSummarizationPipeline:
     async def test_error_handling_invalid_url(self, pipeline):
         """Test error handling with invalid URL."""
         urls = ["not-a-valid-url"]
-        
+
         output_parts = []
         async for chunk in pipeline.summarize_urls(urls):
             output_parts.append(chunk)
-        
+
         output = "".join(output_parts)
-        
+
         # Should contain error or warning message
         assert "Error" in output or "Warning" in output or "invalid" in output.lower()
 
@@ -190,12 +189,12 @@ class TestWebSummarizationPipeline:
             "https://example.com",
             "https://example.org",
         ]
-        
+
         try:
             fetch_results = await pipeline.fetcher.fetch_multiple(urls)
-            
+
             # Should successfully fetch at least one URL
             assert len(fetch_results) > 0
-            
+
         except Exception as e:
             pytest.skip(f"Network request failed: {str(e)}")

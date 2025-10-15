@@ -327,22 +327,16 @@ BLOG_POST_HTML = """
 """
 
 BLOG_POST_EXPECTED = {
-    "title": "10 Best Practices for Python Development",
-    "content_keywords": [
-        "Python",
-        "best practices",
-        "code quality",
-        "PEP 8",
-    ],
-    "list_items": 10,
-    "links": 5,
-    "min_content_length": 800,
+    "title": "10 Best Practices",
+    "content_keywords": ["python", "best practices", "testing", "development", "pep 8"],
+    "sections": 10,  # Numbered sections
+    "links_min": 5,  # External references
+    "min_content_length": 1500,
     "summary_must_contain": [
         "Python",
         "best practices",
     ],
     "summary_should_contain": [
-        "code quality",
         "PEP 8",
         "type hints",
     ],
