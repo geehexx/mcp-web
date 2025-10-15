@@ -67,23 +67,32 @@ When making any implementation decision, prioritize the following principles in 
 
 ## 1.8 Session End Protocol
 
-**MANDATORY:** Before ending any work session:
+**MANDATORY:** Before ending any work session or presenting final summary:
 
-1. **Archive completed initiatives:** Check `docs/initiatives/active/` for status "Completed" or "✅"
+1. **Check for auto-fix changes:**
+   - Run `git status` to check for unstaged changes
+   - If auto-fixes present (from lint/format commands), commit them separately
+   - Use: `style(scope): apply [tool] auto-fixes`
+
+2. **Archive completed initiatives:** Check `docs/initiatives/active/` for status "Completed" or "✅"
    - If found, MUST call `/archive-initiative` workflow for each
    - Do NOT skip - this is a quality gate
 
-2. **Run meta-analysis:** MUST call `/meta-analysis` workflow
+3. **Run meta-analysis:** MUST call `/meta-analysis` workflow
    - Creates session summary for cross-session continuity
    - Identifies workflow/rule improvements
    - This is NOT optional
 
-3. **Verify exit criteria:**
-   - All changes committed (or only timestamp file unstaged)
+4. **Verify exit criteria:**
+   - All changes committed (including auto-fixes)
    - Tests passing (if code changes made)
    - Session summary created in `docs/archive/session-summaries/`
 
-**CRITICAL:** Never present final summary to user without completing steps 1-3.
+**CRITICAL VIOLATIONS:**
+- ❌ Never present final summary without running meta-analysis first
+- ❌ Never commit work and skip meta-analysis
+- ❌ Never leave unstaged auto-fix changes uncommitted
+- ❌ The session end protocol is NOT optional, even at logical checkpoints
 
 ## 1.9 Checkpoint Strategy
 
