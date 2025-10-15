@@ -147,11 +147,25 @@ Total commits: X
 
 ## Next Steps
 
+**CRITICAL:** This section enables cross-session context detection.
+
 For the next agent or session:
 
-1. [Specific actionable item 1]
-2. [Specific actionable item 2]
-3. [Specific actionable item 3]
+1. [Specific actionable item 1] - **Include file paths and test names**
+2. [Specific actionable item 2] - **Include specific commands to run**
+3. [Specific actionable item 3] - **Link to related initiatives/ADRs**
+
+**Format requirements for AI agent context detection:**
+- ✅ **Be explicit:** "Fix 4 failing tests in tests/unit/test_security.py"
+- ✅ **Include paths:** "Continue ADR conversion in docs/adr/"
+- ✅ **Reference initiatives:** "Resume docs/initiatives/active/quality-foundation.md Phase 2"
+- ❌ **Avoid vague:** "Continue the work" or "Fix remaining issues"
+
+**Priority indicators:**
+- 🔴 **Critical:** Blocks all other work
+- 🟡 **High:** Should do next session
+- 🟢 **Medium:** Do when convenient
+- ⚪ **Low:** Nice to have
 
 ---
 
@@ -264,14 +278,24 @@ and resolved all auto-fixable code quality issues.
 
 ### Next Steps
 
-**Be actionable:**
+**Be actionable and AI-parseable:**
 - ✅ "Fix 4 remaining async test timeouts in `tests/unit/test_security.py`"
-- ❌ "Fix tests"
+- ✅ "Continue initiative: docs/initiatives/active/quality-foundation.md Phase 2"
+- ✅ "Create ADR-0007 through ADR-0012 per docs/initiatives/active/convert-decisions-to-adrs.md"
+- ❌ "Fix tests" (which tests? where?)
+- ❌ "Continue work" (what work? what context?)
 
-**Prioritize:**
-1. Critical (blocks progress)
-2. Important (should do soon)
-3. Nice-to-have (when time permits)
+**Prioritize with clear indicators:**
+1. 🔴 **Critical** (blocks progress) - "MUST fix before any other work"
+2. 🟡 **High** (should do soon) - "Next session priority"
+3. 🟢 **Medium** (do when convenient) - "When time permits"
+4. ⚪ **Low** (nice-to-have) - "Future enhancement"
+
+**Cross-session context requirements:**
+- Include enough context that a new AI agent can pick up work
+- No assumptions about prior conversation history
+- File paths, test names, command examples
+- Links to related documentation
 
 ---
 

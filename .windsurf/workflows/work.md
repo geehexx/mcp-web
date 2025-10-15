@@ -31,15 +31,32 @@ mcp0_read_multiple_files([
 ```
 
 **Scan for:**
+- **Session summaries** (`docs/archive/session-summaries/` - most recent 2-3)
 - Active initiatives (`docs/initiatives/active/`)
 - Recent git activity (last 5 commits)
 - Unfinished work markers (`TODO`, `FIXME`, `XXX`, incomplete checklist items)
 - Test failures (check CI status if available)
 - Open issues mentioned in docs
 
+**Why session summaries matter:**
+- Provide cross-session continuity when conversation context lost
+- Show recent work patterns and decisions
+- Identify deferred work and next steps
+- Reveal recurring issues or blockers
+
 ### 1.2 Intelligent File System Search
 
 **Prioritized search pattern:**
+
+0. **Recent Session Summaries** (cross-session context)
+   ```bash
+   # Get 2-3 most recent summaries
+   ls -t docs/archive/session-summaries/*.md | head -3
+   ```
+   - Read "Next Steps" sections
+   - Check "Unresolved" issues
+   - Review "Key Learnings"
+   - Identify continuation points
 
 1. **Initiatives** (highest context value)
    ```
@@ -77,6 +94,7 @@ Based on detected signals, classify intent:
 
 | Detection Pattern | Interpretation | Route To |
 |-------------------|----------------|----------|
+| Session summary "Next Steps" | Continue from last session | Implementation workflow |
 | Unchecked initiative tasks | Continue initiative | Implementation workflow |
 | Test failures mentioned | Bug fixing needed | `/implement` + tests first |
 | "Plan" or "Design" in recent docs | Planning needed | `/plan` workflow |
@@ -203,12 +221,27 @@ Workflows can call each other:
 **When invoked in new session:**
 
 1. **Cannot access prior conversation** (new session)
-2. Rely entirely on file system state
-3. Look for session artifacts:
+2. Rely on file system state and session summaries
+3. **Primary context source: Session summaries**
+   ```bash
+   # Read 2-3 most recent summaries
+   ls -t docs/archive/session-summaries/*.md | head -3 | xargs cat
+   ```
+   - Extract "Next Steps" section
+   - Note "Unresolved" issues
+   - Review recent decisions
+   - Identify work patterns
+
+4. Look for session artifacts:
    - Uncommitted changes
    - In-progress markers in initiatives
-   - Recent git activity
+   - Recent git activity (correlate with summary dates)
    - Open test failures
+
+**Context compaction strategy** (per Anthropic research):
+- Session summaries = compressed context from previous sessions
+- Preserve critical decisions, unresolved issues, next steps
+- Discard verbose details (available in git history if needed)
 
 ---
 

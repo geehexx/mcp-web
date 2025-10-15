@@ -110,14 +110,30 @@ Do NOT plan for:
 
 ### 2.2 External Research
 
-**Web search for best practices:**
+**ALWAYS use web search for best practices:**
 
-```markdown
-Search queries:
-1. "Python API key authentication best practices 2025"
-2. "FastAPI JWT authentication security 2025"
-3. "OWASP API security authentication 2025"
+**Critical:** Use the `search_web` tool to find current best practices, not just examples.
+
+```python
+# Example web searches
+search_web("Python API key authentication best practices 2025")
+search_web("FastAPI JWT authentication security OWASP 2025")
+search_web("API security patterns microservices 2025")
 ```
+
+**Why web search is essential:**
+- Technology evolves rapidly (2025 best practices differ from 2023)
+- Security vulnerabilities discovered regularly
+- New libraries and patterns emerge
+- Official documentation updates
+- Community consensus shifts
+
+**Search strategy:**
+1. **Broad context** - General best practices for the domain
+2. **Specific technology** - Framework/library-specific patterns
+3. **Security focus** - OWASP, CVE, security advisories
+4. **Recent updates** - Include year (2025) in queries
+5. **Production examples** - Real-world implementations
 
 **Document findings:**
 ```markdown
@@ -138,7 +154,9 @@ Search queries:
 **References:**
 - [OWASP API Security Top 10 (2023)](https://owasp.org/API-Security/)
 - [FastAPI Security Documentation](https://fastapi.tiangolo.com/tutorial/security/)
-- [Python API Security Best Practices](https://example.com/...)
+- [Additional sources from web search]
+
+**Note:** Always cite actual URLs from search results, not placeholder examples
 ```
 
 ### 2.3 Architecture Assessment

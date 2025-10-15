@@ -50,13 +50,50 @@ auto_execution_mode: 3
 - Avoid repeating what's in commits
 - No verbose explanations
 
-### 1.3 Identify Critical Improvements
+### 1.3 Validate Context-Friendly Format
+
+**CRITICAL:** Session summaries must enable cross-session context detection.
+
+**Validation checklist for "Next Steps" section:**
+- [ ] **Specific file paths** - Not "fix the tests" but "Fix tests in tests/unit/test_security.py"
+- [ ] **Initiative links** - Reference active initiatives by full path
+- [ ] **Commands included** - Exact commands to run (e.g., `task test:security`)
+- [ ] **Priority indicators** - Use 🔴🟡🟢⚪ emojis for clarity
+- [ ] **No assumptions** - Readable without prior conversation context
+- [ ] **Continuation points** - Clear what phase/step to resume
+
+**Test:** Could a new AI agent pick up work from this summary alone?
+
+**Good example:**
+```markdown
+## Next Steps
+
+1. 🔴 **Critical:** Fix 4 async test timeouts in `tests/unit/test_security.py`
+   - Tests: `test_rate_limit_concurrent`, `test_consumption_limits_async`
+   - Command: `task test:security`
+
+2. 🟡 **High:** Continue docs/initiatives/active/quality-foundation.md Phase 2
+   - Tasks: Install markdownlint-cli2, configure Vale
+   - Estimated: 1-2 hours
+```
+
+**Bad example:**
+```markdown
+## Next Steps
+
+1. Continue the work from earlier
+2. Fix remaining issues
+3. Complete the feature
+```
+
+### 1.4 Identify Critical Improvements
 
 **Focus only on:**
 - **Documentation pollution** - Summary docs created outside proper location
 - **Workflow gaps** - Missing automation that caused friction
 - **Rule violations** - Agent didn't follow established rules
 - **Commit patterns** - Not committing frequently enough
+- **Context detection failures** - Summary lacked cross-session continuity info
 
 **Ignore:**
 - Minor inefficiencies
