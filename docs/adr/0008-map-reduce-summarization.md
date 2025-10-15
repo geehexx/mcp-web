@@ -44,13 +44,15 @@ We will use a **map-reduce pattern** for document summarization:
 ### Strategy
 
 1. **Short documents (<= 8k tokens):** Direct summarization in single call
- - Fastest path, best quality
- - No overhead from chunking/combining
+
+- Fastest path, best quality
+- No overhead from chunking/combining
 
 2. **Long documents (> 8k tokens):** Map-reduce approach
- - **Map phase:** Summarize each chunk independently (parallel)
- - **Reduce phase:** Combine chunk summaries into final summary
- - Recursive reduce if intermediate summaries still too long
+
+- **Map phase:** Summarize each chunk independently (parallel)
+- **Reduce phase:** Combine chunk summaries into final summary
+- Recursive reduce if intermediate summaries still too long
 
 ### Implementation Details
 

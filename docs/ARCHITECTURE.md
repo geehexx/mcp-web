@@ -1,7 +1,7 @@
 # MCP Web Summarization Tool - Architecture & Design
 
-**Project:** `mcp-web` - MCP Server for Web Summarization 
-**Created:** 2025-10-15 
+**Project:** `mcp-web` - MCP Server for Web Summarization
+**Created:** 2025-10-15
 **Status:** Initial Design & Planning
 
 ---
@@ -552,28 +552,28 @@ cache:
 - **Coverage Target:** 90%+
 - **Mocking:** Mock httpx, Playwright, LLM API calls
 - **Focus Areas:**
- - Edge cases (malformed HTML, empty content, network errors)
- - Cache hit/miss logic
- - Chunking boundary conditions
- - Token counting accuracy
+- Edge cases (malformed HTML, empty content, network errors)
+- Cache hit/miss logic
+- Chunking boundary conditions
+- Token counting accuracy
 
 ### Integration Tests
 
 - **Fixtures:** Sample HTML files, mock APIs
 - **Scenarios:**
- - Single URL summary
- - Multi-URL aggregation
- - Recursive link following (max depth)
- - Cache persistence across runs
- - Error recovery (retry logic)
+- Single URL summary
+- Multi-URL aggregation
+- Recursive link following (max depth)
+- Cache persistence across runs
+- Error recovery (retry logic)
 
 ### Manual Testing
 
 - **Real-world URLs:**
- - Documentation sites (Python docs, MDN)
- - Blog posts (Medium, dev.to)
- - Academic papers (arXiv)
- - GitHub README files
+- Documentation sites (Python docs, MDN)
+- Blog posts (Medium, dev.to)
+- Academic papers (arXiv)
+- GitHub README files
 
 ---
 
@@ -610,28 +610,32 @@ cache:
 ### External Resources Consulted
 
 1. **Trafilatura Documentation**
- - URL: https://trafilatura.readthedocs.io/en/latest/usage-python.html
- - Validated: `favor_recall` parameter, `include_*` options
- - Key Finding: `favor_recall=True` maximizes content extraction at minor precision cost
- - Applied: DD-002 decision
+
+- URL: https://trafilatura.readthedocs.io/en/latest/usage-python.html
+- Validated: `favor_recall` parameter, `include_*` options
+- Key Finding: `favor_recall=True` maximizes content extraction at minor precision cost
+- Applied: DD-002 decision
 
 2. **Pinecone Chunking Strategies**
- - URL: https://www.pinecone.io/learn/chunking-strategies/
- - Validated: Hierarchical and semantic chunking approaches
- - Key Finding: 512-token chunks are optimal for most use cases
- - Applied: DD-003, DD-004 decisions
+
+- URL: https://www.pinecone.io/learn/chunking-strategies/
+- Validated: Hierarchical and semantic chunking approaches
+- Key Finding: 512-token chunks are optimal for most use cases
+- Applied: DD-003, DD-004 decisions
 
 3. **MCP Python SDK**
- - URL: https://github.com/modelcontextprotocol/python-sdk
- - Validated: Tool registration with `@mcp.tool()` decorator
- - Key Finding: Streaming support via async iterators
- - Applied: mcp_server.py implementation
+
+- URL: https://github.com/modelcontextprotocol/python-sdk
+- Validated: Tool registration with `@mcp.tool()` decorator
+- Key Finding: Streaming support via async iterators
+- Applied: mcp_server.py implementation
 
 4. **LangChain Map-Reduce Summarization**
- - URL: https://python.langchain.com/docs/how_to/summarize_map_reduce/
- - Validated: Map-reduce pattern for long documents
- - Key Finding: Parallel chunk summarization → sequential reduction
- - Applied: DD-006 decision, summarizer.py implementation
+
+- URL: https://python.langchain.com/docs/how_to/summarize_map_reduce/
+- Validated: Map-reduce pattern for long documents
+- Key Finding: Parallel chunk summarization → sequential reduction
+- Applied: DD-006 decision, summarizer.py implementation
 
 ### Key Insights
 
@@ -666,5 +670,5 @@ cache:
 
 ---
 
-**Last Updated:** 2025-10-15 
+**Last Updated:** 2025-10-15
 **Next Review:** After Phase 2 completion

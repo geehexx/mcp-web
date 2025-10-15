@@ -50,9 +50,10 @@ We will use **disk-based caching** with **7-day TTL** using the `diskcache` libr
 3. **Eviction policy:** LRU (Least Recently Used) when size limit reached
 4. **Size limit:** 1GB maximum cache size
 5. **Cache levels:**
- - **L1:** Fetched HTML (raw, before extraction)
- - **L2:** Extracted content (after trafilatura)
- - **L3:** Summaries (final output)
+
+- **L1:** Fetched HTML (raw, before extraction)
+- **L2:** Extracted content (after trafilatura)
+- **L3:** Summaries (final output)
 
 ### HTTP Cache Validation
 

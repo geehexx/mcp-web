@@ -212,34 +212,39 @@
 ### Immediate (This Session)
 
 1. 🔴 **Critical:** Improve meta-analysis workflow to detect protocol violations
- - Add self-monitoring capability
- - Create validation checks
- - Implement timestamp tracking
- - File: `.windsurf/workflows/meta-analysis.md`
+
+- Add self-monitoring capability
+- Create validation checks
+- Implement timestamp tracking
+- File: `.windsurf/workflows/meta-analysis.md`
 
 2. 🔴 **Critical:** Update `/work` workflow with protocol enforcement
- - Add meta-analysis validation
- - Check for stale session summaries
- - Warn if Session End Protocol not followed
- - File: `.windsurf/workflows/work.md`
+
+- Add meta-analysis validation
+- Check for stale session summaries
+- Warn if Session End Protocol not followed
+- File: `.windsurf/workflows/work.md`
 
 3. 🟡 **High:** Commit meta-analysis improvements
- - Commit this session summary
- - Commit workflow improvements
- - Update rule violations detected
+
+- Commit this session summary
+- Commit workflow improvements
+- Update rule violations detected
 
 ### Next Session
 
 4. 🟡 **High:** Continue Quality Foundation Phase 2
- - Install markdownlint-cli2 and Vale
- - Configure linting rules
- - Set up pre-commit hooks
- - Initiative: `docs/initiatives/active/2024-q4-quality-foundation.md`
+
+- Install markdownlint-cli2 and Vale
+- Configure linting rules
+- Set up pre-commit hooks
+- Initiative: `docs/initiatives/active/2024-q4-quality-foundation.md`
 
 5. 🟢 **Medium:** Fix security unit tests
- - 10 failing tests in `tests/unit/test_security.py`
- - Quick wins available (API key patterns, IPv6 localhost)
- - Initiative: `docs/initiatives/active/fix-security-unit-tests.md`
+
+- 10 failing tests in `tests/unit/test_security.py`
+- Quick wins available (API key patterns, IPv6 localhost)
+- Initiative: `docs/initiatives/active/fix-security-unit-tests.md`
 
 ---
 

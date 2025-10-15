@@ -1,6 +1,6 @@
 # Documentation Structure
 
-**Version:** 1.0.0 
+**Version:** 1.0.0
 **Last Updated:** 2025-10-15
 
 This document defines the organization and lifecycle of all documentation in the mcp-web project.
@@ -444,5 +444,5 @@ A: Generate from docstrings + manual curation in `docs/api/`.
 
 ---
 
-**Maintained by:** mcp-web core team 
+**Maintained by:** mcp-web core team
 **Questions:** Open GitHub issue with "docs:" prefix

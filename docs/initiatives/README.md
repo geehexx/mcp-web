@@ -182,10 +182,12 @@ Add to the "Updates" section at the bottom:
 2. Update status: `**Status:** Complete` or `**Status:** ✅ Completed`
 3. Add completion date: `**Completed:** YYYY-MM-DD`
 4. **Archive via workflow:** The `/archive-initiative` workflow will automatically:
- - Move file to `completed/` directory
- - Update this README index
- - Create proper git commit
- - This runs automatically during session end protocol
+
+- Move file to `completed/` directory
+- Update this README index
+- Create proper git commit
+- This runs automatically during session end protocol
+
 5. Manual archival (if needed):
 
  ```bash

@@ -223,9 +223,10 @@ When this initiative is complete:
 2. Update **Status:** to "Complete" or "✅ Completed"
 3. Add **Completed:** date in metadata
 4. **IMPORTANT:** The `/archive-initiative` workflow will automatically move this to `completed/` directory
- - This happens automatically as part of session end protocol
- - Do NOT manually move the file
- - Ensures proper tracking and historical record
+
+- This happens automatically as part of session end protocol
+- Do NOT manually move the file
+- Ensures proper tracking and historical record
 
 ---
 

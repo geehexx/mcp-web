@@ -97,42 +97,42 @@ The project has grown rapidly but needs stronger quality foundations:
 ### Phase 3: Missing Tests
 
 - [ ] **Query-Aware Tests** (10+ scenarios)
- - [ ] Simple query matching
- - [ ] Complex multi-term queries
- - [ ] Query with no matches
- - [ ] Query-focused chunk selection
- - [ ] Query in map-reduce context
+- [ ] Simple query matching
+- [ ] Complex multi-term queries
+- [ ] Query with no matches
+- [ ] Query-focused chunk selection
+- [ ] Query in map-reduce context
 
 - [ ] **Playwright Fallback Tests** (5+ scenarios)
- - [ ] Detect JS-rendered content
- - [ ] Fallback on httpx failure
- - [ ] Wait for network idle
- - [ ] Extract from SPA
- - [ ] Handle Playwright errors gracefully
+- [ ] Detect JS-rendered content
+- [ ] Fallback on httpx failure
+- [ ] Wait for network idle
+- [ ] Extract from SPA
+- [ ] Handle Playwright errors gracefully
 
 - [ ] **robots.txt Tests** (5+ scenarios)
- - [ ] Respect robots.txt by default
- - [ ] Parse and check disallow rules
- - [ ] Handle crawl-delay
- - [ ] Ignore robots.txt when configured
- - [ ] Handle missing robots.txt
+- [ ] Respect robots.txt by default
+- [ ] Parse and check disallow rules
+- [ ] Handle crawl-delay
+- [ ] Ignore robots.txt when configured
+- [ ] Handle missing robots.txt
 
 - [ ] **Edge Case Tests**
- - [ ] Very long documents (>100k tokens)
- - [ ] Binary content (images, PDFs)
- - [ ] Malformed HTML
- - [ ] Timeout handling
- - [ ] Network errors
+- [ ] Very long documents (>100k tokens)
+- [ ] Binary content (images, PDFs)
+- [ ] Malformed HTML
+- [ ] Timeout handling
+- [ ] Network errors
 
 ### Phase 4: CLI Testing Endpoint
 
 - [ ] Create `mcp_web.cli` module
 - [ ] Add `test-summarize` command
- - [ ] Accept URL or multiple URLs
- - [ ] Accept query parameter
- - [ ] Show streaming output
- - [ ] Display metrics (tokens, time, method used)
- - [ ] Save output to file (optional)
+- [ ] Accept URL or multiple URLs
+- [ ] Accept query parameter
+- [ ] Show streaming output
+- [ ] Display metrics (tokens, time, method used)
+- [ ] Save output to file (optional)
 - [ ] Add to Taskfile: `task test:manual URL=...`
 - [ ] Add examples to TESTING_GUIDE.md
 
@@ -294,6 +294,7 @@ The project has grown rapidly but needs stronger quality foundations:
 ### 2025-10-15 (Update 3) - Phase 2 Complete
 
 **Completed:**
+
 - ✓ Installed markdownlint-cli2 globally
 - ✓ Fixed .vale.ini configuration (moved MinAlertLevel to top)
 - ✓ Created custom Vale styles (mcpweb/LLMArtifacts.yml, mcpweb/TechnicalTerms.yml)
@@ -306,6 +307,7 @@ The project has grown rapidly but needs stronger quality foundations:
 - ✓ Phase 2 100% complete
 
 **Documentation Quality Metrics:**
+
 - Markdown linting: Active (1107 style violations identified, infrastructure working)
 - Prose linting: Active (Vale catching terminology issues)
 - Pre-commit: Enabled for markdown quality
@@ -314,6 +316,7 @@ The project has grown rapidly but needs stronger quality foundations:
 - Auto-fix: Working via task docs:fix
 
 **Next steps:**
+
 - Begin Phase 3: Missing Tests
 - Continue Phase 1 completion (convert remaining ADRs)
 

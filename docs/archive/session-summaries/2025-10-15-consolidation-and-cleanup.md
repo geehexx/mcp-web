@@ -61,8 +61,8 @@ Systematically consolidated Windsurf workflows, created missing ADRs for archite
 **Removed workflows:**
 
 - ❌ `/test-before-commit` - Content integrated into `/implement` workflow
- - Rationale: Testing guidance duplicated in `/implement` which already enforces TDD
- - `/implement` includes: Red-Green-Refactor, 15-minute rule, 3-file rule, quality gates
+- Rationale: Testing guidance duplicated in `/implement` which already enforces TDD
+- `/implement` includes: Red-Green-Refactor, 15-minute rule, 3-file rule, quality gates
 
 **Updated workflows:**
 

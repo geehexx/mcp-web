@@ -152,30 +152,34 @@ task llm:ollama:pull # Pull local LLM models
 ### New Documentation
 
 1. **LOCAL_LLM_GUIDE.md** (400+ lines)
- - Complete local LLM setup
- - Provider comparison
- - Model recommendations
- - Performance optimization
- - Troubleshooting
+
+- Complete local LLM setup
+- Provider comparison
+- Model recommendations
+- Performance optimization
+- Troubleshooting
 
 2. **TASKFILE_GUIDE.md** (500+ lines)
- - Complete task reference
- - Common workflows
- - Migration from bash
- - IDE integration
- - Tips & tricks
+
+- Complete task reference
+- Common workflows
+- Migration from bash
+- IDE integration
+- Tips & tricks
 
 3. **IMPROVEMENTS_V2.md** (700+ lines)
- - Security implementation details
- - Code quality improvements
- - Testing improvements
- - Best practices applied
- - Future enhancements
+
+- Security implementation details
+- Code quality improvements
+- Testing improvements
+- Best practices applied
+- Future enhancements
 
 4. **COMPREHENSIVE_IMPROVEMENTS_SUMMARY.md** (this file)
- - High-level overview
- - Statistics and metrics
- - Quick reference
+
+- High-level overview
+- Statistics and metrics
+- Quick reference
 
 ### Enhanced Documentation
 

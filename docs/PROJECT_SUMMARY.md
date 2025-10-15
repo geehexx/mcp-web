@@ -67,101 +67,103 @@ mcp-web/
 - **Purpose:** Orchestrates the complete summarization pipeline
 - **Key Class:** `WebSummarizationPipeline`
 - **Tools Provided:**
- - `summarize_urls` - Main summarization tool
- - `get_cache_stats` - Cache metrics
- - `clear_cache` - Cache management
- - `prune_cache` - Cache maintenance
+- `summarize_urls` - Main summarization tool
+- `get_cache_stats` - Cache metrics
+- `clear_cache` - Cache management
+- `prune_cache` - Cache maintenance
 - **Features:**
- - Multi-URL support with concurrent fetching
- - Streaming output for responsiveness
- - Link following with relevance scoring
- - Metadata footer with sources and stats
+- Multi-URL support with concurrent fetching
+- Streaming output for responsiveness
+- Link following with relevance scoring
+- Metadata footer with sources and stats
 
 #### `fetcher.py` - URL Fetching (310 lines)
 
 - **Strategy:** httpx primary → Playwright fallback
 - **Features:**
- - Async concurrent fetching (configurable limit)
- - Automatic retry with exponential backoff
- - Cache integration (ETag support)
- - Comprehensive metrics collection
+- Async concurrent fetching (configurable limit)
+- Automatic retry with exponential backoff
+- Cache integration (ETag support)
+- Comprehensive metrics collection
 - **Design Decision:** DD-001 (httpx/Playwright fallback)
 
 #### `extractor.py` - Content Extraction (290 lines)
 
 - **Technology:** trafilatura (HTML), pypdf (PDF)
 - **Features:**
- - Main content extraction with `favor_recall=True`
- - Metadata extraction (title, author, date)
- - Link extraction for recursive following
- - Code snippet preservation
+- Main content extraction with `favor_recall=True`
+- Metadata extraction (title, author, date)
+- Link extraction for recursive following
+- Code snippet preservation
 - **Design Decision:** DD-002 (trafilatura with favor_recall)
 
 #### `chunker.py` - Text Chunking (430 lines)
 
 - **Strategies:**
- - **Hierarchical:** Respects headings and sections
- - **Semantic:** Paragraph and sentence boundaries
- - **Fixed:** Fixed-size with overlap
+- **Hierarchical:** Respects headings and sections
+- **Semantic:** Paragraph and sentence boundaries
+- **Fixed:** Fixed-size with overlap
 - **Features:**
- - Configurable chunk size (default: 512 tokens)
- - Configurable overlap (default: 50 tokens)
- - Code block preservation
- - Token-accurate sizing with tiktoken
+- Configurable chunk size (default: 512 tokens)
+- Configurable overlap (default: 50 tokens)
+- Code block preservation
+- Token-accurate sizing with tiktoken
 - **Design Decisions:** DD-003, DD-004 (chunking strategy & size)
 
 #### `summarizer.py` - LLM Summarization (340 lines)
 
 - **Strategy:** Direct or Map-Reduce based on size
 - **Features:**
- - Streaming output with async generators
- - Query-aware prompts for focused summaries
- - Map phase: Parallel chunk summarization
- - Reduce phase: Combine into final summary
- - Cost tracking (input/output tokens)
+- Streaming output with async generators
+- Query-aware prompts for focused summaries
+- Map phase: Parallel chunk summarization
+- Reduce phase: Combine into final summary
+- Cost tracking (input/output tokens)
 - **Design Decisions:** DD-006, DD-008, DD-009 (map-reduce, GPT-4, streaming)
 
 #### `cache.py` - Disk Cache (270 lines)
 
 - **Technology:** diskcache library
 - **Features:**
- - Persistent disk storage (~/.cache/mcp-web)
- - TTL expiration (default: 7 days)
- - LRU/LFU eviction policies
- - Size limits (default: 1GB)
- - Cache key builders for consistency
- - ETag/Last-Modified support
+- Persistent disk storage (~/.cache/mcp-web)
+- TTL expiration (default: 7 days)
+- LRU/LFU eviction policies
+- Size limits (default: 1GB)
+- Cache key builders for consistency
+- ETag/Last-Modified support
 - **Design Decision:** DD-007 (7-day TTL disk cache)
 
 #### `metrics.py` - Metrics & Logging (330 lines)
 
 - **Features:**
- - Structured JSON logging (structlog)
- - Metrics collection for all operations
- - Context manager for timing (`with metrics.timer()`)
- - Export to JSON for analysis
- - Error tracking with context
+- Structured JSON logging (structlog)
+- Metrics collection for all operations
+- Context manager for timing (`with metrics.timer()`)
+- Export to JSON for analysis
+- Error tracking with context
 - **Metrics Tracked:**
- - Fetch times by method (httpx vs Playwright)
- - Extraction success rates
- - Token usage and costs
- - Cache hit/miss ratios
- - Error frequencies by module
+- Fetch times by method (httpx vs Playwright)
+- Extraction success rates
+- Token usage and costs
+- Cache hit/miss ratios
+- Error frequencies by module
 
 #### `config.py` - Configuration (190 lines)
 
 - **Architecture:** Nested settings with Pydantic
 - **Configuration Layers:**
+
  1. Environment variables (`MCP_WEB_*`)
  2. Config file (planned for v0.2)
  3. Runtime overrides (highest priority)
+
 - **Settings Groups:**
- - FetcherSettings (timeout, concurrency, etc.)
- - ExtractorSettings (favor_recall, includes, etc.)
- - ChunkerSettings (strategy, size, overlap, etc.)
- - SummarizerSettings (model, temperature, etc.)
- - CacheSettings (dir, TTL, size, policy, etc.)
- - MetricsSettings (log level, export, etc.)
+- FetcherSettings (timeout, concurrency, etc.)
+- ExtractorSettings (favor_recall, includes, etc.)
+- ChunkerSettings (strategy, size, overlap, etc.)
+- SummarizerSettings (model, temperature, etc.)
+- CacheSettings (dir, TTL, size, policy, etc.)
+- MetricsSettings (log level, export, etc.)
 
 #### `utils.py` - Utilities (190 lines)
 
@@ -202,51 +204,51 @@ mcp-web/
 #### Architecture Documentation (600+ lines)
 
 - **ARCHITECTURE.md:** Complete system design
- - Module breakdown with responsibilities
- - Data flow diagrams
- - Technology stack justification
- - Configuration strategy
- - Testing strategy
- - Future enhancements roadmap
+- Module breakdown with responsibilities
+- Data flow diagrams
+- Technology stack justification
+- Configuration strategy
+- Testing strategy
+- Future enhancements roadmap
 
 #### Design Decisions (300+ lines)
 
 - **DECISIONS.md:** ADR-style decision log
- - 10 documented design decisions (DD-001 to DD-010)
- - Rationale, alternatives, consequences
- - Pending decisions for future features
- - Change log
+- 10 documented design decisions (DD-001 to DD-010)
+- Rationale, alternatives, consequences
+- Pending decisions for future features
+- Change log
 
 #### API Documentation (700+ lines)
 
 - **API.md:** Complete API reference
- - All modules documented
- - Function signatures with types
- - Parameter descriptions
- - Return values and exceptions
- - Usage examples
- - Best practices
+- All modules documented
+- Function signatures with types
+- Parameter descriptions
+- Return values and exceptions
+- Usage examples
+- Best practices
 
 #### User Documentation
 
 - **README.md:** User-facing guide (300+ lines)
- - Quick start instructions
- - Feature highlights
- - Configuration reference
- - Tool documentation
- - Troubleshooting guide
- - Performance benchmarks
- - Roadmap
+- Quick start instructions
+- Feature highlights
+- Configuration reference
+- Tool documentation
+- Troubleshooting guide
+- Performance benchmarks
+- Roadmap
 
 #### Contributor Guide
 
 - **CONTRIBUTING.md:** Development guidelines (270+ lines)
- - Setup instructions
- - Development workflow
- - Coding standards
- - Testing guidelines
- - Documentation requirements
- - PR process
+- Setup instructions
+- Development workflow
+- Coding standards
+- Testing guidelines
+- Documentation requirements
+- PR process
 
 ---
 
@@ -462,20 +464,24 @@ Each example is runnable and demonstrates real-world usage patterns.
 ### External Resources Consulted
 
 1. **Trafilatura Documentation:** https://trafilatura.readthedocs.io/
- - Used to validate extraction configuration
- - Confirmed `favor_recall` parameter usage
+
+- Used to validate extraction configuration
+- Confirmed `favor_recall` parameter usage
 
 2. **Pinecone Chunking Strategies:** https://www.pinecone.io/learn/chunking-strategies/
- - Validated hierarchical and semantic chunking approach
- - Confirmed 512-token chunk size as reasonable default
+
+- Validated hierarchical and semantic chunking approach
+- Confirmed 512-token chunk size as reasonable default
 
 3. **MCP Python SDK:** https://github.com/modelcontextprotocol/python-sdk
- - Used to understand tool registration
- - Confirmed streaming capabilities
+
+- Used to understand tool registration
+- Confirmed streaming capabilities
 
 4. **LangChain Map-Reduce:** https://python.langchain.com/docs/how_to/summarize_map_reduce/
- - Validated map-reduce summarization pattern
- - Informed prompt design
+
+- Validated map-reduce summarization pattern
+- Informed prompt design
 
 ### Academic Context
 

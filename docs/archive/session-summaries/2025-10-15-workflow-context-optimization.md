@@ -184,28 +184,32 @@ Refs: https://www.anthropic.com/engineering/effective-context-engineering-for-ai
 ### Immediate (This Session)
 
 1. 🔴 **Critical:** Commit workflow and standards improvements
- - Files: `.windsurf/workflows/{work,plan,meta-analysis}.md`, `docs/standards/SUMMARY_STANDARDS.md`
- - Command: `git add -A && git commit`
- - Message: Use conventional commit format with research references
+
+- Files: `.windsurf/workflows/{work,plan,meta-analysis}.md`, `docs/standards/SUMMARY_STANDARDS.md`
+- Command: `git add -A && git commit`
+- Message: Use conventional commit format with research references
 
 ### Next Session
 
 2. 🟡 **High:** Test improved `/work` workflow with actual continuation
- - Scenario: Start new session, run `/work`, verify it uses session summaries
- - Expected: Agent reads 2-3 most recent summaries automatically
- - Validation: Picks up from "Next Steps" without user prompting
+
+- Scenario: Start new session, run `/work`, verify it uses session summaries
+- Expected: Agent reads 2-3 most recent summaries automatically
+- Validation: Picks up from "Next Steps" without user prompting
 
 3. 🟢 **Medium:** Continue docs/initiatives/active/quality-foundation.md Phase 2
- - Tasks: Install markdownlint-cli2, configure Vale
- - Estimated: 1-2 hours
- - Context: See initiative file for full checklist
+
+- Tasks: Install markdownlint-cli2, configure Vale
+- Estimated: 1-2 hours
+- Context: See initiative file for full checklist
 
 ### Future
 
 4. ⚪ **Low:** Create ADR documenting session summary strategy
- - Decision: Session summaries as cross-session context mechanism
- - Alternatives: Persistent database, conversation export, external memory
- - Rationale: File-based, git-tracked, human-readable, AI-parseable
+
+- Decision: Session summaries as cross-session context mechanism
+- Alternatives: Persistent database, conversation export, external memory
+- Rationale: File-based, git-tracked, human-readable, AI-parseable
 
 ---
 

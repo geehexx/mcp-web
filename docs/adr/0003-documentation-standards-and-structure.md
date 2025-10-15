@@ -76,26 +76,30 @@ docs/
 ### Document Types and Standards
 
 1. **Architecture Decision Records (ADRs)**
- - Template-based (Status, Context, Decision, Alternatives, Consequences)
- - Numbered sequentially (0001, 0002, ...)
- - Immutable once accepted
- - Clear lifecycle: Proposed → Accepted → Implemented
+
+- Template-based (Status, Context, Decision, Alternatives, Consequences)
+- Numbered sequentially (0001, 0002, ...)
+- Immutable once accepted
+- Clear lifecycle: Proposed → Accepted → Implemented
 
 2. **Initiatives**
- - Track multi-session projects
- - Clear success criteria
- - Active vs completed separation
- - Regular updates with timestamps
+
+- Track multi-session projects
+- Clear success criteria
+- Active vs completed separation
+- Regular updates with timestamps
 
 3. **Session Summaries**
- - Location: `docs/archive/session-summaries/`
- - Naming: `YYYY-MM-DD-descriptive-name.md`
- - Standard structure (objectives, accomplishments, commits, next steps)
+
+- Location: `docs/archive/session-summaries/`
+- Naming: `YYYY-MM-DD-descriptive-name.md`
+- Standard structure (objectives, accomplishments, commits, next steps)
 
 4. **Standards/Guides**
- - Location: `docs/standards/` or `docs/guides/`
- - SCREAMING_SNAKE_CASE naming
- - Comprehensive, actionable content
+
+- Location: `docs/standards/` or `docs/guides/`
+- SCREAMING_SNAKE_CASE naming
+- Comprehensive, actionable content
 
 ### Quality Standards
 

@@ -117,6 +117,7 @@ docs/
   ```markdown
   We use [uv](https://docs.astral.sh/uv/) as our package manager.
   ```
+
 - **Prefer official documentation:**
   - Python: https://docs.python.org/3/
   - pytest: https://docs.pytest.org/
@@ -198,6 +199,7 @@ task test:parallel
   globs: ["**/*.py"]  # Optional, for glob trigger
   ---
   ```
+
 - **Content:** Clear, actionable instructions
 - **Validation:** After changes, verify Windsurf IDE loads artifact correctly
 
@@ -213,6 +215,7 @@ task test:parallel
   auto_execution_mode: 3  # Checkpoints at key steps
   ---
   ```
+
 - **Content:** Numbered steps with clear instructions
 - **Invocation:** `/workflow-name` in Cascade
 

@@ -19,16 +19,19 @@ This document tracks comprehensive improvements based on:
 ## Research Sources
 
 1. **OWASP LLM Security**
- - https://genai.owasp.org/llmrisk/llm01-prompt-injection/
- - https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html
+
+- https://genai.owasp.org/llmrisk/llm01-prompt-injection/
+- https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html
 
 2. **Python Async Patterns**
- - https://realpython.com/async-io-python/
- - Real Python async best practices guide
+
+- https://realpython.com/async-io-python/
+- Real Python async best practices guide
 
 3. **Testing Best Practices**
- - https://www.nerdwallet.com/blog/engineering/5-pytest-best-practices/
- - pytest patterns and AAA pattern
+
+- https://www.nerdwallet.com/blog/engineering/5-pytest-best-practices/
+- pytest patterns and AAA pattern
 
 ---
 

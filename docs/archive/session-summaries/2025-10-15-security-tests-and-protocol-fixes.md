@@ -163,25 +163,29 @@ bfa251e feat(workflows): add mandatory session end protocol enforcement
 ### Immediate (Current Session - COMPLETING NOW)
 
 1. 🔴 **Critical:** Update `.windsurf/.last-meta-analysis` timestamp
- - Command: `date -u +"%Y-%m-%dT%H:%M:%SZ" > .windsurf/.last-meta-analysis`
- - Tracks meta-analysis execution
+
+- Command: `date -u +"%Y-%m-%dT%H:%M:%SZ" > .windsurf/.last-meta-analysis`
+- Tracks meta-analysis execution
 
 2. 🔴 **Critical:** Commit session summary and timestamp
- - This summary file
- - Timestamp file
- - Completes session end protocol
+
+- This summary file
+- Timestamp file
+- Completes session end protocol
 
 ### Next Session
 
 3. 🟡 **High:** Continue `docs/initiatives/active/2024-q4-quality-foundation.md` Phase 2
- - Tasks: Install markdownlint-cli2, configure Vale
- - Files: `.markdownlint.json`, `.vale.ini`
- - Estimated: 1-2 hours
+
+- Tasks: Install markdownlint-cli2, configure Vale
+- Files: `.markdownlint.json`, `.vale.ini`
+- Estimated: 1-2 hours
 
 4. 🟢 **Medium:** Test improved session end protocol
- - Scenario: Complete another piece of work, verify protocol runs automatically
- - Expected: Agent detects completed initiatives, runs meta-analysis without prompting
- - Validation: No manual intervention needed for session end
+
+- Scenario: Complete another piece of work, verify protocol runs automatically
+- Expected: Agent detects completed initiatives, runs meta-analysis without prompting
+- Validation: No manual intervention needed for session end
 
 ---
 
@@ -215,19 +219,22 @@ bfa251e feat(workflows): add mandatory session end protocol enforcement
 ### Critical Improvements (Implemented)
 
 1. ✅ **Session End Protocol Enforcement**
- - Added to `/work` workflow Stage 5
- - Added to agent directives Section 1.8
- - Prevents completion without meta-analysis and archival
+
+- Added to `/work` workflow Stage 5
+- Added to agent directives Section 1.8
+- Prevents completion without meta-analysis and archival
 
 2. ✅ **MCP Tool Usage Guidance**
- - Added to agent directives Section 1.6
- - Explicit tool selection for `.windsurf/` directory
- - Fallback strategy documented
+
+- Added to agent directives Section 1.6
+- Explicit tool selection for `.windsurf/` directory
+- Fallback strategy documented
 
 3. ✅ **Initiative Archival Visibility**
- - Added to template
- - Added to README
- - Added to active initiatives
+
+- Added to template
+- Added to README
+- Added to active initiatives
 
 ### Future Improvements (Deferred)
 

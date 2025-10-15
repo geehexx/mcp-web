@@ -56,7 +56,7 @@ async def summarize_urls(
 ) -> str
 ```
 
-**Description:** 
+**Description:**
 Summarize content from one or more URLs with optional query focus and link following.
 
 **Parameters:**
@@ -110,7 +110,7 @@ async def summarize_urls(
 ) -> AsyncIterator[str]
 ```
 
-**Description:** 
+**Description:**
 Summarize content from URLs with streaming output.
 
 **Yields:**
@@ -155,7 +155,7 @@ async def fetch(
 ) -> FetchResult
 ```
 
-**Description:** 
+**Description:**
 Fetch URL with automatic fallback strategy.
 
 **Parameters:**
@@ -183,7 +183,7 @@ async def fetch_multiple(
 ) -> Dict[str, FetchResult]
 ```
 
-**Description:** 
+**Description:**
 Fetch multiple URLs concurrently with rate limiting.
 
 **Parameters:**
@@ -239,7 +239,7 @@ async def extract(
 ) -> ExtractedContent
 ```
 
-**Description:** 
+**Description:**
 Extract content from fetch result.
 
 **Parameters:**
@@ -301,7 +301,7 @@ def chunk_text(
 ) -> List[Chunk]
 ```
 
-**Description:** 
+**Description:**
 Chunk text using configured strategy.
 
 **Parameters:**
@@ -363,7 +363,7 @@ async def summarize_chunks(
 ) -> AsyncIterator[str]
 ```
 
-**Description:** 
+**Description:**
 Summarize chunks with streaming output.
 
 **Parameters:**
@@ -733,5 +733,5 @@ See [examples/](../examples/) directory for complete usage examples.
 
 ---
 
-**Last Updated:** 2025-10-15 
+**Last Updated:** 2025-10-15
 **Version:** 0.1.0

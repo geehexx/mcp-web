@@ -88,12 +88,14 @@ When making any implementation decision, prioritize the following principles in 
 ## 1.9 Checkpoint Strategy
 
 Present work for review at logical milestones:
+
 - After completing a major feature
 - Before architectural changes
 - After fixing critical bugs
 - When tests pass and documentation is updated
 
 Do not request approval for:
+
 - Formatting changes
 - Adding type hints
 - Routine test additions

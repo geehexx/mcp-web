@@ -49,12 +49,12 @@ Successfully implemented a comprehensive, production-grade testing and security 
 **Files:**
 
 - `test_prompt_injection.py` (400+ lines) - 9 test classes covering:
- - Prompt injection detection (direct and indirect)
- - False positive prevention
- - Output sanitization
- - Input validation
- - Rate limiting
- - Cache security
+- Prompt injection detection (direct and indirect)
+- False positive prevention
+- Output sanitization
+- Input validation
+- Rate limiting
+- Cache security
 
 **Test Coverage:**
 
@@ -416,24 +416,28 @@ Total: 100+ tests across 6 categories
 ### Research Sources
 
 1. **OWASP GenAI Security Project**
- - URL: https://genai.owasp.org/llmrisk/llm01-prompt-injection/
- - Used for: LLM security vulnerability patterns
- - Applied: Prompt injection test cases
+
+- URL: https://genai.owasp.org/llmrisk/llm01-prompt-injection/
+- Used for: LLM security vulnerability patterns
+- Applied: Prompt injection test cases
 
 2. **HackerOne LLM Vulnerability Blog**
- - URL: https://www.hackerone.com/blog/how-prompt-injection-vulnerability-led-data-exfiltration
- - Used for: Real-world attack patterns
- - Applied: Data exfiltration test cases
+
+- URL: https://www.hackerone.com/blog/how-prompt-injection-vulnerability-led-data-exfiltration
+- Used for: Real-world attack patterns
+- Applied: Data exfiltration test cases
 
 3. **Confident AI LLM Testing**
- - URL: https://www.confident-ai.com/blog/llm-testing-in-2024-top-methods-and-strategies
- - Used for: LLM testing best practices
- - Applied: Test structure and metrics approach
+
+- URL: https://www.confident-ai.com/blog/llm-testing-in-2024-top-methods-and-strategies
+- Used for: LLM testing best practices
+- Applied: Test structure and metrics approach
 
 4. **Semgrep vs Bandit Comparison**
- - URL: https://semgrep.dev/blog/2021/python-static-analysis-comparison-bandit-semgrep/
- - Used for: Tool selection and configuration
- - Applied: Combined Bandit + Semgrep strategy
+
+- URL: https://semgrep.dev/blog/2021/python-static-analysis-comparison-bandit-semgrep/
+- Used for: Tool selection and configuration
+- Applied: Combined Bandit + Semgrep strategy
 
 ### Standards Followed
 

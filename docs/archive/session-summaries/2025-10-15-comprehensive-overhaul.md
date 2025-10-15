@@ -136,68 +136,80 @@ When a test requires complex logic to validate behavior:
 ### High-Priority Gaps (ADDRESSED)
 
 1. **✅ Missing Meta-Analysis Process**
- - **Impact:** No systematic improvement mechanism
- - **Solution:** Created comprehensive meta-analysis workflow
- - **Location:** `.windsurf/workflows/meta-analysis.md`
+
+- **Impact:** No systematic improvement mechanism
+- **Solution:** Created comprehensive meta-analysis workflow
+- **Location:** `.windsurf/workflows/meta-analysis.md`
 
 2. **✅ No Testing Workflow for AI Agents**
- - **Impact:** Agent didn't know when/how to test
- - **Solution:** Created test-before-commit workflow with decision trees
- - **Location:** `.windsurf/workflows/test-before-commit.md`
+
+- **Impact:** Agent didn't know when/how to test
+- **Solution:** Created test-before-commit workflow with decision trees
+- **Location:** `.windsurf/workflows/test-before-commit.md`
 
 3. **✅ Inconsistent Documentation**
- - **Impact:** No standard for where/how to document
- - **Solution:** Created comprehensive documentation standards
- - **Location:** `docs/standards/DOCUMENTATION_STANDARDS.md`
+
+- **Impact:** No standard for where/how to document
+- **Solution:** Created comprehensive documentation standards
+- **Location:** `docs/standards/DOCUMENTATION_STANDARDS.md`
 
 4. **✅ No Pre-commit Hooks**
- - **Impact:** Manual quality checks, inconsistent enforcement
- - **Solution:** Created `.pre-commit-config.yaml` with industry best practices
- - **Location:** `.pre-commit-config.yaml`
+
+- **Impact:** Manual quality checks, inconsistent enforcement
+- **Solution:** Created `.pre-commit-config.yaml` with industry best practices
+- **Location:** `.pre-commit-config.yaml`
 
 5. **✅ No Commit Message Standard**
- - **Impact:** Inconsistent git history
- - **Solution:** Created comprehensive commit style guide + pre-commit enforcement
- - **Location:** `docs/standards/COMMIT_STYLE_GUIDE.md`
+
+- **Impact:** Inconsistent git history
+- **Solution:** Created comprehensive commit style guide + pre-commit enforcement
+- **Location:** `docs/standards/COMMIT_STYLE_GUIDE.md`
 
 6. **✅ No Summary Standards**
- - **Impact:** Inconsistent session documentation
- - **Solution:** Created detailed summary standards
- - **Location:** `docs/standards/SUMMARY_STANDARDS.md`
+
+- **Impact:** Inconsistent session documentation
+- **Solution:** Created detailed summary standards
+- **Location:** `docs/standards/SUMMARY_STANDARDS.md`
 
 ### Medium-Priority Gaps (DEFERRED)
 
 1. **Python Style Guide**
- - **Current:** Follow PEP 8, enforced by ruff
- - **Missing:** Project-specific conventions
- - **Recommendation:** Create when patterns emerge (not premature)
+
+- **Current:** Follow PEP 8, enforced by ruff
+- **Missing:** Project-specific conventions
+- **Recommendation:** Create when patterns emerge (not premature)
 
 2. **Dependency Management Guide**
- - **Current:** Using `uv` but no formal guide
- - **Missing:** How to add/update/remove deps, virtual env management
- - **Recommendation:** Document after more experience with uv
+
+- **Current:** Using `uv` but no formal guide
+- **Missing:** How to add/update/remove deps, virtual env management
+- **Recommendation:** Document after more experience with uv
 
 3. **Mypy Type Errors**
- - **Current:** 95 type errors (mostly in mcp_server.py)
- - **Impact:** Low (doesn't block functionality)
- - **Recommendation:** Fix incrementally, not all at once
+
+- **Current:** 95 type errors (mostly in mcp_server.py)
+- **Impact:** Low (doesn't block functionality)
+- **Recommendation:** Fix incrementally, not all at once
 
 4. **Async Test Failures**
- - **Current:** 4 tests timeout in ConsumptionLimits/RateLimiter
- - **Impact:** Medium (test infrastructure issue, not production bug)
- - **Recommendation:** Separate initiative to fix async testing
+
+- **Current:** 4 tests timeout in ConsumptionLimits/RateLimiter
+- **Impact:** Medium (test infrastructure issue, not production bug)
+- **Recommendation:** Separate initiative to fix async testing
 
 ### Low-Priority Items (NOT WORTH FIXING NOW)
 
 1. **Some dependency updates available**
- - deepeval 2.5.5 → 3.6.6
- - llama-index packages have updates
- - **Rationale:** No breaking issues, updates can wait for batch update cycle
+
+- deepeval 2.5.5 → 3.6.6
+- llama-index packages have updates
+- **Rationale:** No breaking issues, updates can wait for batch update cycle
 
 2. **Additional pre-commit hooks**
- - Could add coverage checking
- - Could add test running (currently commented out)
- - **Rationale:** Start with basics, add more as needed
+
+- Could add coverage checking
+- Could add test running (currently commented out)
+- **Rationale:** Start with basics, add more as needed
 
 ---
 
@@ -354,10 +366,11 @@ task lint:markdown
 ### Immediate (Next 1-2 Hours)
 
 1. **Fix Async Test Failures**
- - File: `tests/unit/test_security.py`
- - Tests: ConsumptionLimits and RateLimiter (4 tests)
- - Issue: Timeout/async context manager problems
- - Initiative exists: `docs/initiatives/active/fix-security-unit-tests.md`
+
+- File: `tests/unit/test_security.py`
+- Tests: ConsumptionLimits and RateLimiter (4 tests)
+- Issue: Timeout/async context manager problems
+- Initiative exists: `docs/initiatives/active/fix-security-unit-tests.md`
 
 2. **Install Pre-Commit Hooks**
 
@@ -365,51 +378,58 @@ task lint:markdown
  task install:pre-commit
  ```
 
- - Test with a dummy commit
- - Verify all hooks work
- - Update documentation if issues found
+- Test with a dummy commit
+- Verify all hooks work
+- Update documentation if issues found
 
 3. **Create Python Style Guide**
- - Use established patterns from codebase
- - Document project-specific conventions
- - Link to PEP 8 as foundation
+
+- Use established patterns from codebase
+- Document project-specific conventions
+- Link to PEP 8 as foundation
 
 ### Short-Term (Next Week)
 
 1. **Mypy Type Error Cleanup**
- - Focus on `src/mcp_web/mcp_server.py` first
- - Add type stubs or `# type: ignore` comments strategically
- - Goal: <50 errors, then can enable mypy pre-commit hook
+
+- Focus on `src/mcp_web/mcp_server.py` first
+- Add type stubs or `# type: ignore` comments strategically
+- Goal: <50 errors, then can enable mypy pre-commit hook
 
 2. **Dependency Update Cycle**
- - Review outdated packages
- - Test updates in isolation
- - Update in batch with testing
- - Document any breaking changes
+
+- Review outdated packages
+- Test updates in isolation
+- Update in batch with testing
+- Document any breaking changes
 
 3. **Create Missing ADRs**
- - ADR-0002: Trafilatura for extraction
- - ADR-0003: Hierarchical chunking strategy
- - ADR-0004: Structured logging approach
- - ADR-0005: Security filters design
+
+- ADR-0002: Trafilatura for extraction
+- ADR-0003: Hierarchical chunking strategy
+- ADR-0004: Structured logging approach
+- ADR-0005: Security filters design
 
 ### Medium-Term (Next Month)
 
 1. **Coverage-Based Pre-commit**
- - Research: How to run only tests for changed files
- - Implement: Intelligent test selection
- - Enable: Fast tests in pre-commit when feasible
+
+- Research: How to run only tests for changed files
+- Implement: Intelligent test selection
+- Enable: Fast tests in pre-commit when feasible
 
 2. **CI/CD Pipeline Optimization**
- - Current: 10+ minutes
- - Goal: <5 minutes with caching
- - Parallel job execution
- - Smarter test selection
+
+- Current: 10+ minutes
+- Goal: <5 minutes with caching
+- Parallel job execution
+- Smarter test selection
 
 3. **Documentation Site**
- - Consider: MkDocs or Sphinx
- - Generate: API documentation automatically
- - Deploy: GitHub Pages or similar
+
+- Consider: MkDocs or Sphinx
+- Generate: API documentation automatically
+- Deploy: GitHub Pages or similar
 
 ---
 
@@ -497,41 +517,48 @@ task lint:markdown
 ### For AI Agents
 
 1. **Test More Frequently**
- - Don't let test fixes compound
- - Run tests after EVERY code change
- - Use test-before-commit workflow
+
+- Don't let test fixes compound
+- Run tests after EVERY code change
+- Use test-before-commit workflow
 
 2. **Research Upfront**
- - Web search for best practices before implementing
- - Document findings for future reference
- - Cite sources in documentation
+
+- Web search for best practices before implementing
+- Document findings for future reference
+- Cite sources in documentation
 
 3. **Document Decisions**
- - When making architectural choices, create ADR
- - When establishing patterns, create standards
- - When solving problems, document solution
+
+- When making architectural choices, create ADR
+- When establishing patterns, create standards
+- When solving problems, document solution
 
 4. **Use Workflows**
- - Don't reinvent processes each session
- - Follow established workflows
- - Update workflows when gaps found
+
+- Don't reinvent processes each session
+- Follow established workflows
+- Update workflows when gaps found
 
 ### For Users
 
 1. **Session Length**
- - 3+ hours is too long without breaks
- - Consider checkpoints every 90 minutes
- - Agent performance may degrade over long sessions
+
+- 3+ hours is too long without breaks
+- Consider checkpoints every 90 minutes
+- Agent performance may degrade over long sessions
 
 2. **Clear Requirements**
- - Comprehensive task lists work well
- - "Be comprehensive" encourages thorough work
- - Prioritization helps with scope management
+
+- Comprehensive task lists work well
+- "Be comprehensive" encourages thorough work
+- Prioritization helps with scope management
 
 3. **Tool Access**
- - Web search is invaluable for research
- - Agent makes good use of external references
- - Consider providing more tool access (not less)
+
+- Web search is invaluable for research
+- Agent makes good use of external references
+- Consider providing more tool access (not less)
 
 ---
 

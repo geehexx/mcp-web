@@ -1,7 +1,7 @@
 # Local LLM Support Guide
 
-**Project:** mcp-web 
-**Version:** 0.2.0 
+**Project:** mcp-web
+**Version:** 0.2.0
 **Last Updated:** 2025-10-15
 
 ---
@@ -724,6 +724,6 @@ config = Config(summarizer=configs[provider])
 
 ---
 
-**Author:** mcp-web team 
-**Version:** 0.2.0 
+**Author:** mcp-web team
+**Version:** 0.2.0
 **Status:** ✅ Local LLM support fully implemented
