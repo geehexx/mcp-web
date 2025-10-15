@@ -11,8 +11,7 @@ Design Decision DD-008: OpenAI GPT-4 default.
 Design Decision DD-009: Streaming output.
 """
 
-import os
-from typing import AsyncIterator, List, Optional
+from collections.abc import AsyncIterator
 
 from openai import AsyncOpenAI
 
@@ -20,8 +19,8 @@ from mcp_web.chunker import Chunk
 from mcp_web.config import SummarizerSettings
 from mcp_web.metrics import get_metrics_collector
 from mcp_web.security import (
-    PromptInjectionFilter,
     OutputValidator,
+    PromptInjectionFilter,
     create_structured_prompt,
 )
 from mcp_web.utils import TokenCounter
@@ -34,6 +33,7 @@ def _get_logger():
     global logger
     if logger is None:
         import structlog
+
         logger = structlog.get_logger()
     return logger
 
@@ -56,23 +56,20 @@ class Summarizer:
         self.config = config
         self.token_counter = TokenCounter()
         self.metrics = get_metrics_collector()
-        
+
         # Security components (OWASP LLM Top 10)
         self.injection_filter = PromptInjectionFilter()
-        self.output_validator = OutputValidator(
-            max_output_length=config.max_summary_length
-        )
+        self.output_validator = OutputValidator(max_output_length=config.max_summary_length)
 
         # Initialize OpenAI-compatible client
         api_key = config.get_api_key()
         api_base = config.get_api_base()
-        
+
         if config.provider == "openai" and not api_key:
             _get_logger().warning(
-                "no_openai_api_key",
-                msg="OPENAI_API_KEY not set for OpenAI provider"
+                "no_openai_api_key", msg="OPENAI_API_KEY not set for OpenAI provider"
             )
-        
+
         _get_logger().info(
             "summarizer_init",
             provider=config.provider,
@@ -88,9 +85,9 @@ class Summarizer:
 
     async def summarize_chunks(
         self,
-        chunks: List[Chunk],
-        query: Optional[str] = None,
-        sources: Optional[List[str]] = None,
+        chunks: list[Chunk],
+        query: str | None = None,
+        sources: list[str] | None = None,
     ) -> AsyncIterator[str]:
         """Summarize chunks with streaming output.
 
@@ -140,9 +137,9 @@ class Summarizer:
 
     async def _summarize_direct(
         self,
-        chunks: List[Chunk],
-        query: Optional[str] = None,
-        sources: Optional[List[str]] = None,
+        chunks: list[Chunk],
+        query: str | None = None,
+        sources: list[str] | None = None,
     ) -> AsyncIterator[str]:
         """Direct summarization (single LLM call).
 
@@ -166,9 +163,9 @@ class Summarizer:
 
     async def _summarize_map_reduce(
         self,
-        chunks: List[Chunk],
-        query: Optional[str] = None,
-        sources: Optional[List[str]] = None,
+        chunks: list[Chunk],
+        query: str | None = None,
+        sources: list[str] | None = None,
     ) -> AsyncIterator[str]:
         """Map-reduce summarization for large documents.
 
@@ -212,7 +209,7 @@ class Summarizer:
 
         Yields:
             Validated response chunks
-            
+
         Note:
             Implements output validation (OWASP LLM05:2025) to detect
             system prompt leakage and sensitive data exposure.
@@ -238,26 +235,24 @@ class Summarizer:
                     content = chunk.choices[0].delta.content
                     output_tokens += self.token_counter.count_tokens(content)
                     accumulated_output.append(content)
-                    
+
                     # Validate accumulated output periodically (every 10 chunks)
                     if len(accumulated_output) % 10 == 0:
                         full_output = "".join(accumulated_output)
                         if not self.output_validator.validate(full_output):
                             _get_logger().error(
-                                "output_validation_failed_streaming",
-                                output_length=len(full_output)
+                                "output_validation_failed_streaming", output_length=len(full_output)
                             )
                             # Stop streaming if validation fails
                             break
-                    
+
                     yield content
-            
+
             # Final validation
             full_output = "".join(accumulated_output)
             if not self.output_validator.validate(full_output):
                 _get_logger().error(
-                    "output_validation_failed_final",
-                    output_length=len(full_output)
+                    "output_validation_failed_final", output_length=len(full_output)
                 )
                 raise ValueError("Output validation failed: potentially unsafe content detected")
 
@@ -336,11 +331,11 @@ class Summarizer:
     def _build_summary_prompt(
         self,
         content: str,
-        query: Optional[str] = None,
-        sources: Optional[List[str]] = None,
+        query: str | None = None,
+        sources: list[str] | None = None,
     ) -> str:
         """Build secure prompt for direct summarization.
-        
+
         Uses structured prompt pattern (OWASP LLM01:2025) to prevent
         prompt injection attacks.
 
@@ -354,56 +349,59 @@ class Summarizer:
         """
         # Check for prompt injection in query
         if query and self.injection_filter.detect_injection(query):
-            _get_logger().warning(
-                "prompt_injection_in_query",
-                query_preview=query[:100]
-            )
+            _get_logger().warning("prompt_injection_in_query", query_preview=query[:100])
             # Sanitize the query
             query = self.injection_filter.sanitize(query)
-        
+
         # Build system instructions
         system_instructions = [
             "You are an expert at analyzing and summarizing web content.",
             "Your task is to create a comprehensive, well-structured summary.",
         ]
-        
+
         if query:
             system_instructions.append(
                 f"Focus your summary on this specific question or topic: {query}"
             )
-        
-        system_instructions.extend([
-            "",
-            "Instructions:",
-            "1. Create a clear, coherent summary in Markdown format",
-            "2. Highlight key points, insights, and important details",
-            "3. Preserve any code examples, technical details, or data",
-            "4. Use proper Markdown formatting (headings, lists, code blocks)",
-            "5. If the content is technical, maintain technical accuracy",
-        ])
-        
+
+        system_instructions.extend(
+            [
+                "",
+                "Instructions:",
+                "1. Create a clear, coherent summary in Markdown format",
+                "2. Highlight key points, insights, and important details",
+                "3. Preserve any code examples, technical details, or data",
+                "4. Use proper Markdown formatting (headings, lists, code blocks)",
+                "5. If the content is technical, maintain technical accuracy",
+            ]
+        )
+
         # Build user data section
         user_data_parts = []
-        
+
         if sources:
-            user_data_parts.extend([
-                "Source URLs:",
-                *[f"- {url}" for url in sources],
-                "",
-            ])
-        
-        user_data_parts.extend([
-            "Content to summarize:",
-            content,
-        ])
-        
+            user_data_parts.extend(
+                [
+                    "Source URLs:",
+                    *[f"- {url}" for url in sources],
+                    "",
+                ]
+            )
+
+        user_data_parts.extend(
+            [
+                "Content to summarize:",
+                content,
+            ]
+        )
+
         # Use structured prompt pattern for security
         return create_structured_prompt(
             system_instructions="\n".join(system_instructions),
             user_data="\n".join(user_data_parts),
         )
 
-    def _build_map_prompt(self, chunk: str, query: Optional[str] = None) -> str:
+    def _build_map_prompt(self, chunk: str, query: str | None = None) -> str:
         """Build prompt for map phase.
 
         Args:
@@ -420,23 +418,25 @@ class Summarizer:
         if query:
             parts.append(f"Pay special attention to content related to: {query}")
 
-        parts.extend([
-            "",
-            "Section:",
-            "---",
-            chunk,
-            "---",
-            "",
-            "Concise summary:",
-        ])
+        parts.extend(
+            [
+                "",
+                "Section:",
+                "---",
+                chunk,
+                "---",
+                "",
+                "Concise summary:",
+            ]
+        )
 
         return "\n".join(parts)
 
     def _build_reduce_prompt(
         self,
         summaries: str,
-        query: Optional[str] = None,
-        sources: Optional[List[str]] = None,
+        query: str | None = None,
+        sources: list[str] | None = None,
     ) -> str:
         """Build prompt for reduce phase.
 
@@ -454,36 +454,44 @@ class Summarizer:
         ]
 
         if query:
-            parts.extend([
-                f"Focus on this question/topic: {query}",
-                "",
-            ])
+            parts.extend(
+                [
+                    f"Focus on this question/topic: {query}",
+                    "",
+                ]
+            )
 
-        parts.extend([
-            "Instructions:",
-            "1. Combine the section summaries into a unified, well-structured summary",
-            "2. Eliminate redundancy while preserving all important information",
-            "3. Organize the content logically with clear headings",
-            "4. Use Markdown formatting",
-            "5. Maintain technical accuracy and detail",
-            "",
-        ])
+        parts.extend(
+            [
+                "Instructions:",
+                "1. Combine the section summaries into a unified, well-structured summary",
+                "2. Eliminate redundancy while preserving all important information",
+                "3. Organize the content logically with clear headings",
+                "4. Use Markdown formatting",
+                "5. Maintain technical accuracy and detail",
+                "",
+            ]
+        )
 
         if sources:
-            parts.extend([
-                "Sources:",
-                *[f"- {url}" for url in sources],
-                "",
-            ])
+            parts.extend(
+                [
+                    "Sources:",
+                    *[f"- {url}" for url in sources],
+                    "",
+                ]
+            )
 
-        parts.extend([
-            "Section summaries:",
-            "---",
-            summaries,
-            "---",
-            "",
-            "Final synthesized summary:",
-        ])
+        parts.extend(
+            [
+                "Section summaries:",
+                "---",
+                summaries,
+                "---",
+                "",
+                "Final synthesized summary:",
+            ]
+        )
 
         return "\n".join(parts)
 

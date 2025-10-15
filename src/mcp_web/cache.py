@@ -14,9 +14,8 @@ import hashlib
 import json
 import time
 from dataclasses import asdict, dataclass
-from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 import diskcache
 
@@ -42,8 +41,8 @@ class CacheEntry:
     value: Any
     created_at: float
     ttl: int
-    etag: Optional[str] = None
-    last_modified: Optional[str] = None
+    etag: str | None = None
+    last_modified: str | None = None
 
 
 class CacheManager:
@@ -92,7 +91,7 @@ class CacheManager:
             max_size_mb=max_size / (1024 * 1024),
         )
 
-    async def get(self, key: str) -> Optional[Any]:
+    async def get(self, key: str) -> Any | None:
         """Retrieve cached value if valid.
 
         Args:
@@ -129,9 +128,9 @@ class CacheManager:
         self,
         key: str,
         value: Any,
-        ttl: Optional[int] = None,
-        etag: Optional[str] = None,
-        last_modified: Optional[str] = None,
+        ttl: int | None = None,
+        etag: str | None = None,
+        last_modified: str | None = None,
     ) -> bool:
         """Store value in cache.
 
@@ -224,7 +223,7 @@ class CacheManager:
         except Exception as e:
             _get_logger().error("cache_clear_error", error=str(e))
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get cache statistics.
 
         Returns:
@@ -299,7 +298,7 @@ class CacheKeyBuilder:
     """
 
     @staticmethod
-    def fetch_key(url: str, params: Optional[Dict[str, Any]] = None) -> str:
+    def fetch_key(url: str, params: dict[str, Any] | None = None) -> str:
         """Build cache key for fetch operation.
 
         Args:
@@ -316,7 +315,7 @@ class CacheKeyBuilder:
         return ":".join(parts)
 
     @staticmethod
-    def extract_key(url: str, config: Optional[Dict[str, Any]] = None) -> str:
+    def extract_key(url: str, config: dict[str, Any] | None = None) -> str:
         """Build cache key for extraction.
 
         Args:
@@ -335,8 +334,8 @@ class CacheKeyBuilder:
     @staticmethod
     def summary_key(
         url: str,
-        query: Optional[str] = None,
-        config: Optional[Dict[str, Any]] = None,
+        query: str | None = None,
+        config: dict[str, Any] | None = None,
     ) -> str:
         """Build cache key for summary.
 

@@ -11,7 +11,8 @@ Design Decision DD-010: Monolithic tool design.
 """
 
 import asyncio
-from typing import Any, AsyncIterator, Dict, List, Optional
+from collections.abc import AsyncIterator
+from typing import Any
 
 from mcp.server.fastmcp import FastMCP
 
@@ -22,7 +23,7 @@ from mcp_web.extractor import ContentExtractor
 from mcp_web.fetcher import URLFetcher
 from mcp_web.metrics import configure_logging, get_metrics_collector
 from mcp_web.summarizer import Summarizer
-from mcp_web.utils import format_markdown_summary, validate_url
+from mcp_web.utils import validate_url
 
 logger = None
 
@@ -32,6 +33,7 @@ def _get_logger():
     global logger
     if logger is None:
         import structlog
+
         logger = structlog.get_logger()
     return logger
 
@@ -54,12 +56,16 @@ class WebSummarizationPipeline:
         self.config = config
 
         # Initialize cache
-        self.cache = CacheManager(
-            cache_dir=config.cache.cache_dir,
-            ttl=config.cache.ttl,
-            max_size=config.cache.max_size,
-            eviction_policy=config.cache.eviction_policy,
-        ) if config.cache.enabled else None
+        self.cache = (
+            CacheManager(
+                cache_dir=config.cache.cache_dir,
+                ttl=config.cache.ttl,
+                max_size=config.cache.max_size,
+                eviction_policy=config.cache.eviction_policy,
+            )
+            if config.cache.enabled
+            else None
+        )
 
         # Initialize components
         self.fetcher = URLFetcher(config.fetcher, cache=self.cache)
@@ -71,8 +77,8 @@ class WebSummarizationPipeline:
 
     async def summarize_urls(
         self,
-        urls: List[str],
-        query: Optional[str] = None,
+        urls: list[str],
+        query: str | None = None,
         follow_links: bool = False,
         max_depth: int = 1,
     ) -> AsyncIterator[str]:
@@ -172,10 +178,10 @@ class WebSummarizationPipeline:
 
     async def _follow_links(
         self,
-        contents: List[Any],
+        contents: list[Any],
         max_depth: int,
-        query: Optional[str] = None,
-    ) -> List[Any]:
+        query: str | None = None,
+    ) -> list[Any]:
         """Recursively follow relevant links.
 
         Args:
@@ -215,9 +221,9 @@ class WebSummarizationPipeline:
 
     def _score_links(
         self,
-        contents: List[Any],
-        query: Optional[str] = None,
-    ) -> List[str]:
+        contents: list[Any],
+        query: str | None = None,
+    ) -> list[str]:
         """Score and rank links by relevance.
 
         Args:
@@ -227,7 +233,7 @@ class WebSummarizationPipeline:
         Returns:
             Sorted list of URLs
         """
-        link_scores: Dict[str, float] = {}
+        link_scores: dict[str, float] = {}
 
         for content in contents:
             for link in content.links:
@@ -267,7 +273,7 @@ class WebSummarizationPipeline:
         sorted_links = sorted(link_scores.items(), key=lambda x: x[1], reverse=True)
         return [link for link, score in sorted_links if score > 0]
 
-    def _combine_contents(self, contents: List[Any]) -> str:
+    def _combine_contents(self, contents: list[Any]) -> str:
         """Combine multiple extracted contents.
 
         Args:
@@ -286,7 +292,7 @@ class WebSummarizationPipeline:
 
         return "".join(parts)
 
-    def _format_metadata(self, contents: List[Any]) -> str:
+    def _format_metadata(self, contents: list[Any]) -> str:
         """Format metadata footer.
 
         Args:
@@ -325,7 +331,7 @@ class WebSummarizationPipeline:
         _get_logger().info("pipeline_closed")
 
 
-def create_server(config: Optional[Config] = None) -> FastMCP:
+def create_server(config: Config | None = None) -> FastMCP:
     """Create MCP server with summarize_urls tool.
 
     Args:
@@ -354,8 +360,8 @@ def create_server(config: Optional[Config] = None) -> FastMCP:
 
     @mcp.tool()
     async def summarize_urls(
-        urls: List[str],
-        query: Optional[str] = None,
+        urls: list[str],
+        query: str | None = None,
         follow_links: bool = False,
         max_depth: int = 1,
     ) -> str:
@@ -446,7 +452,6 @@ def main() -> None:
     mcp = create_server(config)
 
     # Run the server
-    import asyncio
 
     asyncio.run(mcp.run())
 

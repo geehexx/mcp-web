@@ -11,7 +11,6 @@ Design Decision DD-005: Preserve code blocks and tables in Markdown.
 import re
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import List, Optional
 
 import trafilatura
 from pypdf import PdfReader
@@ -29,6 +28,7 @@ def _get_logger():
     global logger
     if logger is None:
         import structlog
+
         logger = structlog.get_logger()
     return logger
 
@@ -39,7 +39,7 @@ class CodeSnippet:
 
     language: str
     code: str
-    line_number: Optional[int] = None
+    line_number: int | None = None
 
 
 @dataclass
@@ -50,8 +50,8 @@ class ExtractedContent:
     title: str
     content: str  # Markdown formatted
     metadata: dict = field(default_factory=dict)
-    links: List[str] = field(default_factory=list)
-    code_snippets: List[CodeSnippet] = field(default_factory=list)
+    links: list[str] = field(default_factory=list)
+    code_snippets: list[CodeSnippet] = field(default_factory=list)
     timestamp: datetime = field(default_factory=datetime.now)
 
     def to_dict(self) -> dict:
@@ -72,9 +72,7 @@ class ExtractedContent:
     @classmethod
     def from_dict(cls, data: dict) -> "ExtractedContent":
         """Create from dictionary."""
-        code_snippets = [
-            CodeSnippet(**cs) for cs in data.get("code_snippets", [])
-        ]
+        code_snippets = [CodeSnippet(**cs) for cs in data.get("code_snippets", [])]
         return cls(
             url=data["url"],
             title=data["title"],
@@ -99,7 +97,7 @@ class ContentExtractor:
     def __init__(
         self,
         config: ExtractorSettings,
-        cache: Optional[CacheManager] = None,
+        cache: CacheManager | None = None,
     ):
         """Initialize content extractor.
 
@@ -270,7 +268,7 @@ class ContentExtractor:
 
         try:
             reader = PdfReader(pdf_bytes)
-            
+
             # Extract text from all pages
             text_parts = []
             for page in reader.pages:
@@ -311,7 +309,7 @@ class ContentExtractor:
                 metadata={"error": str(e)},
             )
 
-    def _extract_title(self, html: str, fallback: Optional[str] = None) -> str:
+    def _extract_title(self, html: str, fallback: str | None = None) -> str:
         """Extract page title from HTML.
 
         Args:
@@ -346,7 +344,7 @@ class ContentExtractor:
 
         parsed = urlparse(url)
         path = parsed.path.rstrip("/")
-        
+
         if path:
             # Get last path segment
             title = path.split("/")[-1]
@@ -355,10 +353,10 @@ class ContentExtractor:
             # Replace separators with spaces
             title = re.sub(r"[-_]", " ", title)
             return title.title()
-        
+
         return parsed.netloc or "Untitled"
 
-    def _extract_links(self, html: str, base_url: str) -> List[str]:
+    def _extract_links(self, html: str, base_url: str) -> list[str]:
         """Extract links from HTML.
 
         Args:
@@ -381,7 +379,7 @@ class ContentExtractor:
 
             # Resolve to absolute URL
             absolute_url = urljoin(base_url, link)
-            
+
             # Validate
             parsed = urlparse(absolute_url)
             if parsed.scheme in ("http", "https"):
@@ -391,7 +389,7 @@ class ContentExtractor:
         seen = set()
         return [url for url in links if not (url in seen or seen.add(url))]
 
-    def _extract_code_snippets(self, markdown: str) -> List[CodeSnippet]:
+    def _extract_code_snippets(self, markdown: str) -> list[CodeSnippet]:
         """Extract code blocks from Markdown.
 
         Args:

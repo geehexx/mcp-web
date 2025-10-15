@@ -11,16 +11,15 @@ Usage:
 import asyncio
 import sys
 import time
-from typing import List, Optional
 
 import click
 import structlog
 
-from mcp_web.config import MCPWebConfig
-from mcp_web.summarizer import Summarizer
-from mcp_web.fetcher import URLFetcher
-from mcp_web.extractor import ContentExtractor
 from mcp_web.chunker import Chunker
+from mcp_web.config import MCPWebConfig
+from mcp_web.extractor import ContentExtractor
+from mcp_web.fetcher import URLFetcher
+from mcp_web.summarizer import Summarizer
 
 logger = structlog.get_logger()
 
@@ -70,10 +69,10 @@ def cli() -> None:
 )
 def test_summarize(
     urls: tuple[str, ...],
-    query: Optional[str],
+    query: str | None,
     provider: str,
-    model: Optional[str],
-    output: Optional[str],
+    model: str | None,
+    output: str | None,
     show_metrics: bool,
     verbose: bool,
 ) -> None:
@@ -95,17 +94,17 @@ def test_summarize(
         # Save output
         mcp-web test-summarize https://example.com -o summary.md
     """
-    asyncio.run(_test_summarize_async(
-        list(urls), query, provider, model, output, show_metrics, verbose
-    ))
+    asyncio.run(
+        _test_summarize_async(list(urls), query, provider, model, output, show_metrics, verbose)
+    )
 
 
 async def _test_summarize_async(
-    urls: List[str],
-    query: Optional[str],
+    urls: list[str],
+    query: str | None,
     provider: str,
-    model: Optional[str],
-    output: Optional[str],
+    model: str | None,
+    output: str | None,
     show_metrics: bool,
     verbose: bool,
 ) -> None:
@@ -185,9 +184,9 @@ async def _test_summarize_async(
             if verbose:
                 click.echo(f"  Chunk: {len(chunks)} chunks ({chunk_time:.2f}s)")
                 for i, chunk in enumerate(chunks[:3]):  # Show first 3
-                    click.echo(f"    Chunk {i+1}: {chunk.token_count} tokens")
+                    click.echo(f"    Chunk {i + 1}: {chunk.token_count} tokens")
                 if len(chunks) > 3:
-                    click.echo(f"    ... and {len(chunks)-3} more")
+                    click.echo(f"    ... and {len(chunks) - 3} more")
 
             # Summarize
             click.echo(click.style("  Summarizing...", fg="cyan"))
@@ -211,14 +210,16 @@ async def _test_summarize_async(
             if verbose:
                 click.echo(f"\n  Summarize: {summarize_time:.2f}s")
                 click.echo(f"  Summary length: {len(summary):,} chars")
-                click.echo("\n" + "="*80)
+                click.echo("\n" + "=" * 80)
                 click.echo(summary)
-                click.echo("="*80 + "\n")
+                click.echo("=" * 80 + "\n")
 
-            all_summaries.append({
-                "url": url,
-                "summary": summary,
-            })
+            all_summaries.append(
+                {
+                    "url": url,
+                    "summary": summary,
+                }
+            )
 
         overall_time = time.perf_counter() - overall_start
 
@@ -239,7 +240,7 @@ async def _test_summarize_async(
             with open(output, "w") as f:
                 for item in all_summaries:
                     f.write(f"# {item['url']}\n\n")
-                    f.write(item['summary'])
+                    f.write(item["summary"])
                     f.write("\n\n---\n\n")
             click.echo(click.style(f"\n✓ Output saved to {output}", fg="green"))
 
@@ -250,6 +251,7 @@ async def _test_summarize_async(
         click.echo(click.style(f"\n✗ Error: {e}", fg="red", bold=True))
         if verbose:
             import traceback
+
             traceback.print_exc()
         sys.exit(1)
     finally:
@@ -323,7 +325,12 @@ async def _test_robots_async(url: str, ignore: bool) -> None:
 
         # Attempt fetch if ignoring or allowed
         if ignore or can_fetch:
-            click.echo(click.style(f"\n{'Ignoring robots.txt and fetching...' if not can_fetch else 'Fetching URL...'}", fg="cyan"))
+            click.echo(
+                click.style(
+                    f"\n{'Ignoring robots.txt and fetching...' if not can_fetch else 'Fetching URL...'}",
+                    fg="cyan",
+                )
+            )
             result = await fetcher.fetch(url)
             click.echo(click.style(f"✓ Fetched successfully ({result.fetch_method})", fg="green"))
             click.echo(f"  Status: {result.status_code}")

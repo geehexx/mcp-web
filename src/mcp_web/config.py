@@ -9,9 +9,8 @@ Design Decision DD-XXX: Configuration layering allows flexible deployment.
 """
 
 import os
-from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, Literal, Optional
+from typing import Any, Literal
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -36,7 +35,7 @@ class FetcherSettings(BaseSettings):
         description="User-Agent header",
     )
     respect_robots_txt: bool = Field(default=True, description="Honor robots.txt rules")
-    crawl_delay_override: Optional[float] = Field(
+    crawl_delay_override: float | None = Field(
         default=None, description="Override crawl-delay from robots.txt (seconds)"
     )
     max_retries: int = Field(default=3, description="Max retry attempts")
@@ -79,7 +78,7 @@ class ChunkerSettings(BaseSettings):
 
 class SummarizerSettings(BaseSettings):
     """Summarizer configuration.
-    
+
     Supports multiple LLM providers:
     - OpenAI (default): api.openai.com
     - Ollama: localhost:11434
@@ -93,7 +92,7 @@ class SummarizerSettings(BaseSettings):
         default="openai", description="LLM provider type"
     )
     model: str = Field(default="gpt-4o-mini", description="LLM model to use")
-    
+
     # Generation parameters
     temperature: float = Field(
         default=0.3,
@@ -103,60 +102,58 @@ class SummarizerSettings(BaseSettings):
     )
     max_tokens: int = Field(default=2048, description="Max tokens in summary")
     streaming: bool = Field(default=True, description="Enable streaming output")
-    
+
     # Map-reduce configuration
     map_reduce_threshold: int = Field(
         default=8000, description="Token threshold for map-reduce strategy"
     )
-    
+
     # API configuration
-    api_key: Optional[str] = Field(default=None, description="API key (if required)")
-    api_base: Optional[str] = Field(
+    api_key: str | None = Field(default=None, description="API key (if required)")
+    api_base: str | None = Field(
         default=None, description="API base URL (auto-detected by provider)"
     )
     timeout: int = Field(default=120, description="API request timeout in seconds")
-    
+
     # Security settings
     max_summary_length: int = Field(
         default=10000, description="Maximum summary length (safety limit)"
     )
-    content_filtering: bool = Field(
-        default=True, description="Enable content filtering for safety"
-    )
-    
+    content_filtering: bool = Field(default=True, description="Enable content filtering for safety")
+
     def get_api_base(self) -> str:
         """Get API base URL based on provider.
-        
+
         Returns:
             API base URL for the configured provider
         """
         if self.api_base:
             return self.api_base
-            
+
         provider_urls = {
             "openai": "https://api.openai.com/v1",
             "ollama": "http://localhost:11434/v1",
             "lmstudio": "http://localhost:1234/v1",
             "localai": "http://localhost:8080/v1",
         }
-        
+
         return provider_urls.get(self.provider, "https://api.openai.com/v1")
-    
-    def get_api_key(self) -> Optional[str]:
+
+    def get_api_key(self) -> str | None:
         """Get API key based on provider.
-        
+
         Local providers don't require API keys.
-        
+
         Returns:
             API key or None for local providers
         """
         if self.api_key:
             return self.api_key
-            
+
         # Local providers don't need API keys
         if self.provider in ["ollama", "lmstudio", "localai"]:
             return "not-needed"
-            
+
         # OpenAI requires key
         return os.getenv("OPENAI_API_KEY")
 
@@ -167,13 +164,9 @@ class CacheSettings(BaseSettings):
     """Caching configuration."""
 
     enabled: bool = Field(default=True, description="Enable caching")
-    cache_dir: str = Field(
-        default="~/.cache/mcp-web", description="Cache directory path"
-    )
+    cache_dir: str = Field(default="~/.cache/mcp-web", description="Cache directory path")
     ttl: int = Field(default=7 * 24 * 3600, description="Cache TTL (seconds)")
-    max_size: int = Field(
-        default=1024 * 1024 * 1024, description="Max cache size (bytes)"
-    )
+    max_size: int = Field(default=1024 * 1024 * 1024, description="Max cache size (bytes)")
     eviction_policy: Literal["lru", "lfu"] = Field(
         default="lru", description="Cache eviction policy"
     )
@@ -189,9 +182,7 @@ class MetricsSettings(BaseSettings):
         default="INFO", description="Logging level"
     )
     structured_logging: bool = Field(default=True, description="Use structured JSON logs")
-    metrics_export_path: Optional[str] = Field(
-        default=None, description="Export metrics to file"
-    )
+    metrics_export_path: str | None = Field(default=None, description="Export metrics to file")
 
     model_config = SettingsConfigDict(env_prefix="MCP_WEB_METRICS_")
 
@@ -221,8 +212,8 @@ class Config(BaseSettings):
 
 
 def load_config(
-    config_file: Optional[Path] = None,
-    overrides: Optional[Dict[str, Any]] = None,
+    _config_file: Path | None = None,
+    overrides: dict[str, Any] | None = None,
 ) -> Config:
     """Load configuration from file and environment.
 

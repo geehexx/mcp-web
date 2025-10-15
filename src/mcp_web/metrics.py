@@ -13,11 +13,12 @@ Design Decision DD-018: Structured logging for observability.
 import json
 import time
 from collections import defaultdict
+from collections.abc import Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, Iterator, Optional
+from typing import Any
 
 import structlog
 
@@ -34,7 +35,7 @@ class FetchMetrics:
     status_code: int
     content_size: int
     success: bool
-    error: Optional[str] = None
+    error: str | None = None
     timestamp: datetime = field(default_factory=datetime.now)
 
 
@@ -48,7 +49,7 @@ class ExtractionMetrics:
     extraction_ratio: float
     duration_ms: float
     success: bool
-    error: Optional[str] = None
+    error: str | None = None
     timestamp: datetime = field(default_factory=datetime.now)
 
 
@@ -73,7 +74,7 @@ class SummarizationMetrics:
     duration_ms: float
     cost_estimate: float  # USD
     success: bool
-    error: Optional[str] = None
+    error: str | None = None
     timestamp: datetime = field(default_factory=datetime.now)
 
 
@@ -83,7 +84,7 @@ class CacheMetrics:
 
     operation: str  # 'hit', 'miss', 'set', 'evict'
     key: str
-    size_bytes: Optional[int] = None
+    size_bytes: int | None = None
     timestamp: datetime = field(default_factory=datetime.now)
 
 
@@ -96,7 +97,7 @@ class MetricsCollector:
         >>> metrics = collector.export_metrics()
     """
 
-    def __init__(self, enabled: bool = True, export_path: Optional[Path] = None):
+    def __init__(self, enabled: bool = True, export_path: Path | None = None):
         """Initialize metrics collector.
 
         Args:
@@ -114,9 +115,9 @@ class MetricsCollector:
         self.cache_metrics: list[CacheMetrics] = []
 
         # Aggregated counters
-        self.counters: Dict[str, int] = defaultdict(int)
-        self.timers: Dict[str, list[float]] = defaultdict(list)
-        self.errors: list[Dict[str, Any]] = []
+        self.counters: dict[str, int] = defaultdict(int)
+        self.timers: dict[str, list[float]] = defaultdict(list)
+        self.errors: list[dict[str, Any]] = []
 
     def record_fetch(
         self,
@@ -126,7 +127,7 @@ class MetricsCollector:
         status_code: int,
         content_size: int,
         success: bool,
-        error: Optional[str] = None,
+        error: str | None = None,
     ) -> None:
         """Record fetch metrics."""
         if not self.enabled:
@@ -163,7 +164,7 @@ class MetricsCollector:
         extracted_length: int,
         duration_ms: float,
         success: bool,
-        error: Optional[str] = None,
+        error: str | None = None,
     ) -> None:
         """Record extraction metrics."""
         if not self.enabled:
@@ -229,7 +230,7 @@ class MetricsCollector:
         model: str,
         duration_ms: float,
         success: bool,
-        error: Optional[str] = None,
+        error: str | None = None,
     ) -> None:
         """Record summarization metrics."""
         if not self.enabled:
@@ -269,7 +270,7 @@ class MetricsCollector:
         self,
         operation: str,
         key: str,
-        size_bytes: Optional[int] = None,
+        size_bytes: int | None = None,
     ) -> None:
         """Record cache operation."""
         if not self.enabled:
@@ -285,7 +286,7 @@ class MetricsCollector:
 
         logger.debug("cache_operation", operation=operation, key=key[:50])
 
-    def record_error(self, module: str, error: Exception, context: Optional[Dict] = None) -> None:
+    def record_error(self, module: str, error: Exception, context: dict | None = None) -> None:
         """Record error for diagnostics."""
         if not self.enabled:
             return
@@ -323,7 +324,7 @@ class MetricsCollector:
             duration_ms = (time.perf_counter() - start) * 1000
             self.timers[operation].append(duration_ms)
 
-    def export_metrics(self) -> Dict[str, Any]:
+    def export_metrics(self) -> dict[str, Any]:
         """Export all metrics as dict.
 
         Returns:
@@ -356,7 +357,7 @@ class MetricsCollector:
             "errors": self.errors,
         }
 
-    def save_metrics(self, path: Optional[Path] = None) -> None:
+    def save_metrics(self, path: Path | None = None) -> None:
         """Save metrics to JSON file.
 
         Args:
@@ -388,7 +389,7 @@ class MetricsCollector:
 
 
 # Global metrics collector instance
-_global_collector: Optional[MetricsCollector] = None
+_global_collector: MetricsCollector | None = None
 
 
 def get_metrics_collector() -> MetricsCollector:

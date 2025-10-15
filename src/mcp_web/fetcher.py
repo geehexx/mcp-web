@@ -10,7 +10,6 @@ Design Decision DD-001: httpx primary, Playwright fallback.
 
 import asyncio
 from dataclasses import dataclass
-from typing import Any, Dict, Optional
 
 import httpx
 from playwright.async_api import async_playwright
@@ -27,6 +26,7 @@ def _get_logger():
     global logger
     if logger is None:
         import structlog
+
         logger = structlog.get_logger()
     return logger
 
@@ -38,7 +38,7 @@ class FetchResult:
     url: str
     content: bytes
     content_type: str
-    headers: Dict[str, str]
+    headers: dict[str, str]
     status_code: int
     fetch_method: str  # 'httpx', 'playwright', or 'cache'
     from_cache: bool = False
@@ -57,7 +57,7 @@ class URLFetcher:
     def __init__(
         self,
         config: FetcherSettings,
-        cache: Optional[CacheManager] = None,
+        cache: CacheManager | None = None,
     ):
         """Initialize URL fetcher.
 
@@ -117,11 +117,11 @@ class URLFetcher:
         if not force_playwright:
             try:
                 result = await self._fetch_httpx(url)
-                
+
                 # Cache successful fetch
                 if use_cache and self.cache and result.status_code == 200:
                     await self._cache_result(url, result)
-                
+
                 return result
 
             except Exception as e:
@@ -139,17 +139,17 @@ class URLFetcher:
         # Fallback to Playwright
         try:
             result = await self._fetch_playwright(url)
-            
+
             # Cache successful fetch
             if use_cache and self.cache and result.status_code == 200:
                 await self._cache_result(url, result)
-            
+
             return result
 
         except Exception as e:
             _get_logger().error("fetch_failed", url=url, error=str(e))
             self.metrics.record_error("fetcher", e, {"url": url})
-            raise Exception(f"Failed to fetch {url}: {str(e)}")
+            raise Exception(f"Failed to fetch {url}: {str(e)}") from e
 
     async def _fetch_httpx(self, url: str) -> FetchResult:
         """Fetch using httpx.
@@ -331,8 +331,8 @@ class URLFetcher:
     async def fetch_multiple(
         self,
         urls: list[str],
-        max_concurrent: Optional[int] = None,
-    ) -> Dict[str, FetchResult]:
+        max_concurrent: int | None = None,
+    ) -> dict[str, FetchResult]:
         """Fetch multiple URLs concurrently.
 
         Args:
@@ -345,7 +345,7 @@ class URLFetcher:
         max_concurrent = max_concurrent or self.config.max_concurrent
         semaphore = asyncio.Semaphore(max_concurrent)
 
-        async def fetch_with_semaphore(url: str) -> tuple[str, Optional[FetchResult]]:
+        async def fetch_with_semaphore(url: str) -> tuple[str, FetchResult | None]:
             async with semaphore:
                 try:
                     result = await self.fetch(url)

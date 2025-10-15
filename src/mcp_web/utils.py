@@ -8,7 +8,6 @@ Provides shared helpers for:
 """
 
 import re
-from typing import List, Optional
 from urllib.parse import urlparse
 
 import tiktoken
@@ -119,8 +118,8 @@ def normalize_url(url: str) -> str:
 
 def format_markdown_summary(
     summary: str,
-    sources: List[str],
-    metadata: Optional[dict] = None,
+    sources: list[str],
+    metadata: dict | None = None,
 ) -> str:
     """Format summary with citations and metadata.
 
@@ -155,7 +154,7 @@ def format_markdown_summary(
     return "".join(output)
 
 
-def extract_code_blocks(text: str) -> List[tuple[str, str]]:
+def extract_code_blocks(text: str) -> list[tuple[str, str]]:
     """Extract code blocks from Markdown text.
 
     Args:

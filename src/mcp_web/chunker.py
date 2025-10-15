@@ -12,7 +12,6 @@ Design Decision DD-009: Keep code blocks intact.
 
 import re
 from dataclasses import dataclass, field
-from typing import List, Optional
 
 from mcp_web.config import ChunkerSettings
 from mcp_web.metrics import get_metrics_collector
@@ -26,6 +25,7 @@ def _get_logger():
     global logger
     if logger is None:
         import structlog
+
         logger = structlog.get_logger()
     return logger
 
@@ -71,7 +71,7 @@ class TextChunker:
         self.token_counter = TokenCounter()
         self.metrics = get_metrics_collector()
 
-    def chunk_text(self, text: str, metadata: Optional[dict] = None) -> List[Chunk]:
+    def chunk_text(self, text: str, metadata: dict | None = None) -> list[Chunk]:
         """Chunk text using configured strategy.
 
         Args:
@@ -118,7 +118,7 @@ class TextChunker:
 
         return chunks
 
-    def _chunk_hierarchical(self, text: str, metadata: Optional[dict] = None) -> List[Chunk]:
+    def _chunk_hierarchical(self, text: str, metadata: dict | None = None) -> list[Chunk]:
         """Chunk text hierarchically (headings → paragraphs → sentences).
 
         Args:
@@ -153,9 +153,7 @@ class TextChunker:
                 )
             else:
                 # Section needs splitting
-                section_chunks = self._split_large_section(
-                    section_text, section_metadata
-                )
+                section_chunks = self._split_large_section(section_text, section_metadata)
                 chunks.extend(section_chunks)
 
         # Handle overlap between chunks
@@ -163,7 +161,7 @@ class TextChunker:
 
         return chunks
 
-    def _chunk_semantic(self, text: str, metadata: Optional[dict] = None) -> List[Chunk]:
+    def _chunk_semantic(self, text: str, metadata: dict | None = None) -> list[Chunk]:
         """Chunk text at semantic boundaries (paragraphs, sentences).
 
         Args:
@@ -234,7 +232,7 @@ class TextChunker:
 
         return chunks
 
-    def _chunk_fixed(self, text: str, metadata: Optional[dict] = None) -> List[Chunk]:
+    def _chunk_fixed(self, text: str, metadata: dict | None = None) -> list[Chunk]:
         """Chunk text into fixed-size chunks with overlap.
 
         Args:
@@ -285,7 +283,7 @@ class TextChunker:
 
         return chunks
 
-    def _split_by_headings(self, text: str) -> List[tuple[str, str]]:
+    def _split_by_headings(self, text: str) -> list[tuple[str, str]]:
         """Split text by Markdown headings.
 
         Args:
@@ -321,9 +319,7 @@ class TextChunker:
 
         return sections if sections else [("Main Content", text)]
 
-    def _split_large_section(
-        self, text: str, metadata: dict
-    ) -> List[Chunk]:
+    def _split_large_section(self, text: str, metadata: dict) -> list[Chunk]:
         """Split large section into multiple chunks.
 
         Args:
@@ -342,7 +338,7 @@ class TextChunker:
         # Fall back to paragraph splitting
         return self._chunk_semantic(text, metadata)
 
-    def _split_paragraphs(self, text: str) -> List[str]:
+    def _split_paragraphs(self, text: str) -> list[str]:
         """Split text into paragraphs.
 
         Args:
@@ -355,7 +351,7 @@ class TextChunker:
         paragraphs = re.split(r"\n\s*\n", text)
         return [p.strip() for p in paragraphs if p.strip()]
 
-    def _split_by_sentences(self, text: str, metadata: dict) -> List[Chunk]:
+    def _split_by_sentences(self, text: str, metadata: dict) -> list[Chunk]:
         """Split text by sentences.
 
         Args:
@@ -412,7 +408,7 @@ class TextChunker:
 
         return chunks
 
-    def _extract_code_blocks(self, text: str) -> List[tuple[int, int, str]]:
+    def _extract_code_blocks(self, text: str) -> list[tuple[int, int, str]]:
         """Extract code block positions.
 
         Args:
@@ -430,8 +426,8 @@ class TextChunker:
         return blocks
 
     def _chunk_with_code_blocks(
-        self, text: str, code_blocks: List[tuple[int, int, str]], metadata: dict
-    ) -> List[Chunk]:
+        self, text: str, code_blocks: list[tuple[int, int, str]], metadata: dict
+    ) -> list[Chunk]:
         """Chunk text while preserving code blocks.
 
         Args:
@@ -492,7 +488,7 @@ class TextChunker:
 
         return chunks
 
-    def _add_overlap(self, chunks: List[Chunk], original_text: str) -> List[Chunk]:
+    def _add_overlap(self, chunks: list[Chunk], _original_text: str) -> list[Chunk]:
         """Add overlap between chunks.
 
         Args:
