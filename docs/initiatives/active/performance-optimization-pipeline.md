@@ -50,6 +50,7 @@ Comprehensive performance optimization initiative to profile, benchmark, and opt
 **Source**: [Mastering Python asyncio.gather and asyncio.as_completed](https://python.useinstructor.com/blog/2023/11/13/learn-async/)
 
 **Key Patterns**:
+
 - `asyncio.gather()`: Concurrent execution with ordered results
 - `asyncio.as_completed()`: Stream results as they complete (better perceived latency)
 - `Semaphore`: Rate limiting to respect API limits
@@ -62,6 +63,7 @@ Comprehensive performance optimization initiative to profile, benchmark, and opt
 **Source**: [LangChain Map-Reduce Summarization](https://python.langchain.com/docs/how_to/summarize_map_reduce/)
 
 **Architecture**:
+
 ```python
 # Map phase: Parallel chunk summarization
 tasks = [summarize_chunk(chunk) for chunk in chunks]
@@ -81,6 +83,7 @@ else:
 **Source**: [Optimizing OpenAI API Performance - SigNoz](https://signoz.io/guides/open-ai-api-latency/)
 
 **Techniques**:
+
 - **Lower `max_tokens`**: Reduces generation time proportionally
 - **Stop sequences**: Prevent unnecessary token generation
 - **Streaming responses**: Improve perceived latency (TTFT vs total time)
@@ -93,6 +96,7 @@ else:
 **Source**: [Scaling LLM Calls Efficiently with asyncio](https://medium.com/@kannappansuresh99/scaling-llm-calls-efficiently-in-python-the-power-of-asyncio-bfa969eed718)
 
 **Pattern**:
+
 ```python
 # Instead of sequential
 for item in items:
@@ -125,11 +129,13 @@ results = await asyncio.gather(*tasks)  # Fast!
 ### Performance Bottleneck Hypothesis
 
 **Primary Bottleneck**: Summarization (LLM API calls)
+
 - **Map phase**: Sequential chunk summarization
 - **Reduce phase**: Single LLM call (fast)
 - **Opportunity**: Parallelize map phase for N chunks
 
 **Secondary Bottlenecks**:
+
 - Fetcher: Already concurrent (configurable limit)
 - Extractor: Mostly CPU-bound (trafilatura)
 - Chunker: Pure CPU (can optimize token counting)
@@ -145,6 +151,7 @@ results = await asyncio.gather(*tasks)  # Fast!
 #### 1.1 Parallel Map-Reduce
 
 **Current**:
+
 ```python
 # Sequential - SLOW
 for i, chunk in enumerate(chunks):
@@ -153,6 +160,7 @@ for i, chunk in enumerate(chunks):
 ```
 
 **Optimized**:
+
 ```python
 # Parallel - FAST
 async def summarize_chunk(chunk, query):
@@ -163,13 +171,15 @@ tasks = [summarize_chunk(chunk, query) for chunk in chunks]
 chunk_summaries = await asyncio.gather(*tasks)
 ```
 
-**Expected Impact**: 
+**Expected Impact**:
+
 - For 10 chunks: ~10x faster map phase
 - Overall: 30-50% total time reduction
 
 #### 1.2 Optimize Prompts
 
 **Actions**:
+
 - Reduce verbose system instructions
 - Use concise, directive prompts
 - Add stop sequences for controlled output length
@@ -186,12 +196,14 @@ chunk_summaries = await asyncio.gather(*tasks)
 #### 1.4 Add Profiling Instrumentation
 
 **Create**:
+
 - Per-component timing metrics
 - LLM call duration tracking
 - Token usage monitoring
 - Cache hit/miss ratios
 
 **Tools**:
+
 - Python `cProfile` integration
 - Custom `@profile` decorator
 - Comprehensive metrics export
@@ -205,11 +217,13 @@ chunk_summaries = await asyncio.gather(*tasks)
 #### 2.1 Batch API Integration (Optional, for non-real-time)
 
 **OpenAI Batch API**:
+
 - 50% cost savings
 - 24-hour processing window
 - Best for: Evaluation, testing, background jobs
 
 **Implementation**:
+
 ```python
 # For map phase with many chunks
 batch_requests = [
@@ -252,6 +266,7 @@ def adaptive_chunk_size(document):
 
 **Current**: URL-level cache
 **Add**:
+
 - **Chunk-level cache**: Cache summaries of common chunks
 - **Semantic deduplication**: Skip summarizing identical/similar chunks
 - **TTL optimization**: Extend TTL for stable content
@@ -261,6 +276,7 @@ def adaptive_chunk_size(document):
 #### 2.4 Concurrency Tuning
 
 **Research optimal concurrency limits**:
+
 ```python
 # Experiment with different limits
 CONCURRENCY_LIMITS = [5, 10, 20, 30, 50]
@@ -283,11 +299,13 @@ for limit in CONCURRENCY_LIMITS:
 #### 3.1 Model Optimization
 
 **Techniques**:
+
 - **Use faster models for map phase**: GPT-4o-mini vs GPT-4 (faster, cheaper)
 - **Use larger context for reduce phase**: Minimize reduce calls
 - **Fine-tuning** (future): Custom summarization model
 
 **Implementation**:
+
 ```python
 class SummarizerConfig:
     map_model: str = "gpt-4o-mini"  # Fast for map
@@ -304,14 +322,14 @@ class SummarizerConfig:
 # Pipeline parallelism
 async def pipeline_parallel():
     extractor_task = asyncio.create_task(extract())
-    
+
     # Start chunking as soon as extraction starts
     chunks = []
     async for chunk in streaming_chunker(await extractor_task):
         # Start summarizing immediately
         task = asyncio.create_task(summarize_chunk(chunk))
         chunks.append(task)
-    
+
     summaries = await asyncio.gather(*chunks)
 ```
 
@@ -325,7 +343,7 @@ async def pipeline_parallel():
 ```python
 def select_strategy(chunks, query):
     total_tokens = sum(c.tokens for c in chunks)
-    
+
     if total_tokens < 8000:
         return "direct"  # Single LLM call
     elif total_tokens < 32000:
@@ -339,6 +357,7 @@ def select_strategy(chunks, query):
 #### 3.4 GPU-Accelerated Chunking (Future)
 
 **For very large documents**:
+
 - Use local sentence transformers for semantic chunking
 - GPU acceleration for embedding generation
 - Cluster similar sentences into chunks
@@ -359,10 +378,11 @@ def select_strategy(chunks, query):
 - [x] Add mock LLM fixtures for deterministic benchmarks
 - [x] Add summarization performance benchmarks
 - [x] Validate parallel map-reduce speedup (measured ~1.17x improvement)
+- [x] Fix mock LLM fixtures to fully intercept API calls (patched mcp_web.summarizer.AsyncOpenAI)
+- [x] Run summarization benchmark suite with working mocks (all pass in ~150ms)
 - [ ] Optimize prompts (reduce verbosity, add stop sequences)
 - [ ] Implement adaptive `max_tokens` based on chunk size
-- [ ] Improve mock LLM fixtures to fully intercept API calls
-- [ ] Run comprehensive benchmark suite with fully mocked LLM
+- [ ] Run comprehensive benchmark suite across all components
 - [ ] Validate quality with golden tests (ensure 90%+ retention)
 
 ### Phase 2 Tasks
@@ -394,7 +414,7 @@ def select_strategy(chunks, query):
 
 1. **Total Latency**: End-to-end time from URL to summary
 2. **Component Latency**: Per-stage timing (fetch, extract, chunk, summarize)
-3. **LLM Metrics**: 
+3. **LLM Metrics**:
    - Time to first token (TTFT)
    - Total tokens per second
    - Cost per summary
@@ -436,7 +456,7 @@ def select_strategy(chunks, query):
 
 1. **API Rate Limits**: Parallel requests may hit limits
    - **Mitigation**: Implement semaphore-based rate limiting
-   
+
 2. **Quality Degradation**: Faster models may reduce quality
    - **Mitigation**: Golden tests, A/B comparison, configurable models
 
@@ -508,11 +528,13 @@ def select_strategy(chunks, query):
 **1. Test Fixtures & Factories Library**
 
 **Current State:**
+
 - Manual fixture creation in conftest.py
 - Repetitive data setup across test files
 - No standardized factories for test objects
 
 **Recommended:**
+
 - Adopt `factory_boy` or `pytest-factoryboy` for object factories
 - Create reusable factories for common test data:
   - `ChunkFactory` for creating test chunks
@@ -521,6 +543,7 @@ def select_strategy(chunks, query):
 - Benefits: DRY principle, maintainable tests, easier parameterization
 
 **Example:**
+
 ```python
 # tests/factories.py
 import factory
@@ -529,7 +552,7 @@ from mcp_web.chunker import Chunk
 class ChunkFactory(factory.Factory):
     class Meta:
         model = Chunk
-    
+
     text = factory.Faker('text', max_nb_chars=200)
     tokens = factory.LazyAttribute(lambda o: len(o.text.split()))
     start_pos = factory.Sequence(lambda n: n * 100)
@@ -543,21 +566,24 @@ chunks = ChunkFactory.create_batch(20)
 **2. Prompt & Template Management**
 
 **Current State:**
+
 - LLM prompts embedded as docstrings in code
 - Hard to maintain, version, and test
 - Difficult to A/B test different prompt strategies
 - No prompt validation or templating
 
 **Recommended:**
+
 - Adopt `Jinja2` for prompt templating
 - Store prompts in separate files (e.g., `prompts/summarize_map.j2`)
-- Benefits: 
+- Benefits:
   - Decouples prompts from code
   - Version control for prompt changes
   - Easier A/B testing
   - Support for prompt validation and testing
 
 **Example Structure:**
+
 ```
 src/mcp_web/prompts/
 ├── __init__.py
@@ -568,6 +594,7 @@ src/mcp_web/prompts/
 ```
 
 **Example Usage:**
+
 ```python
 # src/mcp_web/prompts/loader.py
 from jinja2 import Environment, PackageLoader
@@ -586,8 +613,8 @@ def render_prompt(template_name: str, **kwargs) -> str:
 # In summarizer.py:
 from mcp_web.prompts import render_prompt
 
-prompt = render_prompt('summarize_map.j2', 
-                       chunk=chunk_text, 
+prompt = render_prompt('summarize_map.j2',
+                       chunk=chunk_text,
                        query=query,
                        max_length=target_length)
 ```
