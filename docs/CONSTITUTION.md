@@ -1,7 +1,7 @@
 # MCP-Web Project Constitution
 
-**Version:** 1.0.0  
-**Effective Date:** 2025-10-15  
+**Version:** 1.0.0
+**Effective Date:** 2025-10-15
 **Status:** Active
 
 This document establishes the principles, standards, and processes that govern the mcp-web project. It serves as the foundational reference for all contributors, especially AI agents working on the codebase.
@@ -276,7 +276,7 @@ tests/
 ### 4. External Research
 
 **When making decisions:**
-- Search for best practices (use web search)
+- Search for best practices (use @web search)
 - Reference authoritative sources
 - Include URLs in documentation
 - Document alternatives considered
@@ -497,7 +497,7 @@ References: #123, ADR-0005
 
 ---
 
-**Maintained by:** mcp-web core team  
-**Review frequency:** Quarterly  
-**Last reviewed:** 2025-10-15  
+**Maintained by:** mcp-web core team
+**Review frequency:** Quarterly
+**Last reviewed:** 2025-10-15
 **Next review:** 2026-01-15

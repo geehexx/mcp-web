@@ -134,7 +134,7 @@ Session summaries = Compacted context from previous sessions
 [Pending] docs(workflows): optimize context detection with session summaries
 
 - Enhanced /work workflow to prioritize session summaries (step 0)
-- Added web search integration to /plan workflow (required)
+- Added @web search integration to /plan workflow (required)
 - Updated session summary standards for AI-parseable format
 - Added context-friendly validation to /meta-analysis workflow
 - Based on Anthropic research on context compaction and engineering

@@ -28,7 +28,7 @@ Create an ADR for:
    - Scalability needs
    - Integration points
 
-3. **Research alternatives:** Agent researches options using web search for authoritative sources:
+3. **Research alternatives:** Agent researches options using @web search for authoritative sources:
    - Official documentation
    - RFCs and standards
    - OWASP guidelines

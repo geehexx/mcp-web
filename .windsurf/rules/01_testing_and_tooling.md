@@ -141,7 +141,7 @@ Before delivering checkpoints:
 
 ## 1.12 Network Intelligence
 
-* **Authoritative sources:** Use web search when official documentation needed
+* **Authoritative sources:** Use @web search when official documentation needed
 * **Validation:** Cross-reference non-authoritative sources
 * **Traceability:** Document fetch rationale in checkpoints
 * **Current date awareness:** October 15, 2025 - ensure references are current

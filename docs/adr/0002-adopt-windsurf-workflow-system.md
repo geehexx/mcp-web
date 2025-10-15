@@ -155,7 +155,7 @@ We will adopt a hierarchical Windsurf workflow system with a central orchestrati
 
 ✅ **Created workflows:**
 - `/work` (9.6 KB) - Central orchestration with context detection
-- `/plan` (12.2 KB) - Research-driven planning with web search
+- `/plan` (12.2 KB) - Research-driven planning with @web search
 - `/implement` (9.3 KB) - Test-first implementation with quality gates
 - `/commit` (1.8 KB) - Git operations with validation
 - `/new-adr` (2.9 KB) - ADR creation workflow
