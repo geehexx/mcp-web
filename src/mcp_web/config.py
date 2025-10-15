@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Any, Literal
 
 from dotenv import load_dotenv
-from pydantic import Field, field_validator
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # Load .env file at module import (before any config instantiation)
@@ -104,6 +104,23 @@ class SummarizerSettings(BaseSettings):
     )
     max_tokens: int = Field(default=2048, description="Max tokens in summary")
     streaming: bool = Field(default=True, description="Enable streaming output")
+    stop_sequences: list[str] = Field(
+        default_factory=list,
+        description="Stop sequences to prevent over-generation (e.g., ['\n\n\n', '---'])",
+    )
+    adaptive_max_tokens: bool = Field(
+        default=False,
+        description="Automatically adjust max_tokens based on input size for better performance",
+    )
+    max_tokens_ratio: float = Field(
+        default=0.5,
+        ge=0.1,
+        le=1.0,
+        description=(
+            "Ratio of input tokens to max output tokens "
+            "when adaptive_max_tokens is enabled"
+        ),
+    )
 
     # Map-reduce configuration
     map_reduce_threshold: int = Field(
@@ -115,7 +132,10 @@ class SummarizerSettings(BaseSettings):
     )
     streaming_map: bool = Field(
         default=False,
-        description="Stream map progress updates (asyncio.as_completed) - better UX but slightly slower",
+        description=(
+            "Stream map progress updates (asyncio.as_completed) - "
+            "better UX but slightly slower"
+        ),
     )
 
     # API configuration

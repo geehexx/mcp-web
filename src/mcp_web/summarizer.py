@@ -11,8 +11,10 @@ Design Decision DD-008: OpenAI GPT-4 default.
 Design Decision DD-009: Streaming output.
 """
 
+import asyncio
 from collections.abc import AsyncIterator
 
+import structlog
 from openai import AsyncOpenAI
 
 from mcp_web.chunker import Chunk
@@ -24,8 +26,6 @@ from mcp_web.security import (
     create_structured_prompt,
 )
 from mcp_web.utils import TokenCounter
-
-import structlog
 
 logger: structlog.stdlib.BoundLogger | None = None
 
@@ -64,7 +64,7 @@ class Summarizer:
         # Initialize OpenAI-compatible client
         api_key = config.get_api_key()
         api_base = config.get_api_base()
-        
+
         # For local providers without API keys, use placeholder
         if not api_key:
             if config.provider == "openai":
@@ -133,7 +133,9 @@ class Summarizer:
                         yield chunk
                 else:
                     # Sequential fallback (original implementation)
-                    async for chunk in self._summarize_map_reduce_sequential(chunks, query, sources):
+                    async for chunk in self._summarize_map_reduce_sequential(
+                        chunks, query, sources
+                    ):
                         yield chunk
 
             duration_ms = (time.perf_counter() - start_time) * 1000
@@ -299,8 +301,7 @@ class Summarizer:
 
         # Create tasks
         tasks = [
-            asyncio.create_task(summarize_single_chunk(i, chunk))
-            for i, chunk in enumerate(chunks)
+            asyncio.create_task(summarize_single_chunk(i, chunk)) for i, chunk in enumerate(chunks)
         ]
 
         # Collect summaries as they complete
@@ -330,7 +331,34 @@ class Summarizer:
         async for chunk in self._call_llm(reduce_prompt):
             yield chunk
 
-    async def _call_llm(self, prompt: str) -> AsyncIterator[str]:
+    def _calculate_max_tokens(self, input_tokens: int) -> int:
+        """Calculate adaptive max_tokens based on input size.
+
+        Args:
+            input_tokens: Number of input tokens
+
+        Returns:
+            Optimized max_tokens value
+
+        Note:
+            Adaptive max_tokens reduces latency by preventing over-generation.
+            Based on research: smaller max_tokens = faster response.
+            Reference: https://signoz.io/guides/open-ai-api-latency/
+        """
+        if not self.config.adaptive_max_tokens:
+            return self.config.max_tokens
+
+        # Calculate adaptive max_tokens based on input size
+        # Ratio: smaller inputs need proportionally smaller outputs
+        adaptive_tokens = int(input_tokens * self.config.max_tokens_ratio)
+
+        # Clamp to reasonable bounds
+        min_tokens = 200  # Minimum useful summary
+        max_tokens = self.config.max_tokens  # Never exceed configured max
+
+        return max(min_tokens, min(adaptive_tokens, max_tokens))
+
+    async def _call_llm(self, prompt: str, adaptive_max_tokens: bool = True) -> AsyncIterator[str]:
         """Call LLM with streaming and output validation.
 
         Args:
@@ -350,12 +378,23 @@ class Summarizer:
         output_tokens = 0
         accumulated_output = []
 
+        # Calculate adaptive max_tokens if enabled
+        max_tokens = (
+            self._calculate_max_tokens(input_tokens)
+            if adaptive_max_tokens
+            else self.config.max_tokens
+        )
+
+        # Prepare stop sequences if configured
+        stop = self.config.stop_sequences if self.config.stop_sequences else None
+
         try:
             stream = await self.client.chat.completions.create(
                 model=self.config.model,
                 messages=[{"role": "user", "content": prompt}],
                 temperature=self.config.temperature,
-                max_tokens=self.config.max_tokens,
+                max_tokens=max_tokens,
+                stop=stop,
                 stream=True,
             )
 
@@ -408,7 +447,7 @@ class Summarizer:
             )
             raise
 
-    async def _call_llm_non_streaming(self, prompt: str) -> str:
+    async def _call_llm_non_streaming(self, prompt: str, adaptive_max_tokens: bool = True) -> str:
         """Call LLM without streaming (for map phase).
 
         Args:
@@ -422,12 +461,23 @@ class Summarizer:
         start_time = time.perf_counter()
         input_tokens = self.token_counter.count_tokens(prompt)
 
+        # Calculate adaptive max_tokens if enabled
+        max_tokens = (
+            self._calculate_max_tokens(input_tokens)
+            if adaptive_max_tokens
+            else self.config.max_tokens
+        )
+
+        # Prepare stop sequences if configured
+        stop = self.config.stop_sequences if self.config.stop_sequences else None
+
         try:
             response = await self.client.chat.completions.create(
                 model=self.config.model,
                 messages=[{"role": "user", "content": prompt}],
                 temperature=self.config.temperature,
-                max_tokens=self.config.max_tokens,
+                max_tokens=max_tokens,
+                stop=stop,
                 stream=False,
             )
 
@@ -482,26 +532,23 @@ class Summarizer:
             # Sanitize the query
             query = self.injection_filter.sanitize(query)
 
-        # Build system instructions
+        # Build optimized system instructions (balanced for performance and quality)
+        # Research: Concise prompts reduce latency without sacrificing quality
+        # Reference: https://signoz.io/guides/open-ai-api-latency/
         system_instructions = [
-            "You are an expert at analyzing and summarizing web content.",
-            "Your task is to create a comprehensive, well-structured summary.",
+            "Create a comprehensive summary of this web content in Markdown format.",
         ]
 
         if query:
-            system_instructions.append(
-                f"Focus your summary on this specific question or topic: {query}"
-            )
+            system_instructions.append(f"Focus on: {query}")
 
         system_instructions.extend(
             [
                 "",
-                "Instructions:",
-                "1. Create a clear, coherent summary in Markdown format",
-                "2. Highlight key points, insights, and important details",
-                "3. Preserve any code examples, technical details, or data",
-                "4. Use proper Markdown formatting (headings, lists, code blocks)",
-                "5. If the content is technical, maintain technical accuracy",
+                "Requirements:",
+                "- Highlight key points and important details",
+                "- Preserve technical accuracy, code examples, and data",
+                "- Use proper Markdown formatting (headings, lists, code blocks)",
             ]
         )
 
@@ -531,33 +578,24 @@ class Summarizer:
         )
 
     def _build_map_prompt(self, chunk: str, query: str | None = None) -> str:
-        """Build prompt for map phase.
+        """Build optimized prompt for map phase.
 
         Args:
             chunk: Text chunk to summarize
             query: Optional query
 
         Returns:
-            Prompt string
+            Concise prompt string
+
+        Note:
+            Optimized for performance - clear directives reduce latency.
         """
-        parts = [
-            "Summarize the following section concisely, focusing on key information.",
-        ]
+        parts = ["Summarize the key information from this section:"]
 
         if query:
-            parts.append(f"Pay special attention to content related to: {query}")
+            parts.append(f"Focus on: {query}")
 
-        parts.extend(
-            [
-                "",
-                "Section:",
-                "---",
-                chunk,
-                "---",
-                "",
-                "Concise summary:",
-            ]
-        )
+        parts.extend(["", chunk, "", "Summary:"])
 
         return "\n".join(parts)
 
@@ -567,7 +605,7 @@ class Summarizer:
         query: str | None = None,
         sources: list[str] | None = None,
     ) -> str:
-        """Build prompt for reduce phase.
+        """Build optimized prompt for reduce phase.
 
         Args:
             summaries: Combined chunk summaries
@@ -575,50 +613,30 @@ class Summarizer:
             sources: Optional sources
 
         Returns:
-            Prompt string
+            Concise prompt string
+
+        Note:
+            Optimized for performance - clear directives reduce latency.
         """
         parts = [
-            "You are synthesizing multiple section summaries into a final, cohesive summary.",
-            "",
+            "Combine these section summaries into a cohesive final summary.",
+            "Use Markdown formatting with clear structure.",
         ]
 
         if query:
-            parts.extend(
-                [
-                    f"Focus on this question/topic: {query}",
-                    "",
-                ]
-            )
+            parts.append(f"Focus on: {query}")
 
-        parts.extend(
-            [
-                "Instructions:",
-                "1. Combine the section summaries into a unified, well-structured summary",
-                "2. Eliminate redundancy while preserving all important information",
-                "3. Organize the content logically with clear headings",
-                "4. Use Markdown formatting",
-                "5. Maintain technical accuracy and detail",
-                "",
-            ]
-        )
+        parts.append("")
 
         if sources:
-            parts.extend(
-                [
-                    "Sources:",
-                    *[f"- {url}" for url in sources],
-                    "",
-                ]
-            )
+            parts.extend(["Sources:", *[f"- {url}" for url in sources], ""])
 
         parts.extend(
             [
                 "Section summaries:",
-                "---",
                 summaries,
-                "---",
                 "",
-                "Final synthesized summary:",
+                "Final summary:",
             ]
         )
 
