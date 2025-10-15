@@ -189,9 +189,10 @@ class CacheManager:
 
         try:
             deleted = self.cache.delete(cache_key)
-            if deleted:
+            deleted_bool = bool(deleted)
+            if deleted_bool:
                 self.metrics.record_cache_operation("delete", key)
-            return deleted
+            return deleted_bool
         except Exception as e:
             _get_logger().error("cache_delete_error", key=key[:50], error=str(e))
             return False

@@ -74,6 +74,29 @@ class ChunkerSettings(BaseSettings):
     preserve_code_blocks: bool = Field(
         default=True, description="Keep code blocks intact when possible"
     )
+    adaptive_chunking: bool = Field(
+        default=True,
+        description="Dynamically adjust chunk size based on document characteristics",
+    )
+    code_chunk_size: int = Field(
+        default=1024,
+        description="Chunk size to target when document contains significant code",
+    )
+    dense_chunk_size: int = Field(
+        default=768,
+        description="Chunk size to target when prose sentences are dense",
+    )
+    code_block_threshold: float = Field(
+        default=0.1,
+        ge=0.0,
+        le=1.0,
+        description="Minimum proportion of code blocks to trigger code chunk sizing",
+    )
+    dense_sentence_threshold: int = Field(
+        default=24,
+        ge=1,
+        description="Average words per sentence to treat prose as dense",
+    )
 
     model_config = SettingsConfigDict(env_prefix="MCP_WEB_CHUNKER_")
 
@@ -117,8 +140,7 @@ class SummarizerSettings(BaseSettings):
         ge=0.1,
         le=1.0,
         description=(
-            "Ratio of input tokens to max output tokens "
-            "when adaptive_max_tokens is enabled"
+            "Ratio of input tokens to max output tokens when adaptive_max_tokens is enabled"
         ),
     )
 
@@ -133,8 +155,7 @@ class SummarizerSettings(BaseSettings):
     streaming_map: bool = Field(
         default=False,
         description=(
-            "Stream map progress updates (asyncio.as_completed) - "
-            "better UX but slightly slower"
+            "Stream map progress updates (asyncio.as_completed) - better UX but slightly slower"
         ),
     )
 

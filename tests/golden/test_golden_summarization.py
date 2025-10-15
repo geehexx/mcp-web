@@ -16,6 +16,11 @@ import os
 
 import pytest
 
+try:
+    import httpx
+except ImportError:  # pragma: no cover - optional dependency for tests only
+    httpx = None  # type: ignore[assignment]
+
 from mcp_web.chunker import TextChunker
 from mcp_web.config import ChunkerSettings, SummarizerSettings
 from mcp_web.extractor import ContentExtractor, FetchResult
@@ -39,28 +44,26 @@ def check_llm_available() -> tuple[bool, str]:
         (available, provider_name)
     """
     # Check Ollama
-    try:
-        import httpx
-
-        response = httpx.get("http://localhost:11434/api/tags", timeout=2)
-        if response.status_code == 200:
-            return True, "ollama"
-    except:
-        pass
+    if httpx is not None:
+        try:
+            response = httpx.get("http://localhost:11434/api/tags", timeout=2)
+            if response.status_code == 200:
+                return True, "ollama"
+        except (httpx.HTTPError, httpx.TimeoutException, OSError):
+            pass
 
     # Check OpenAI
     if os.getenv("OPENAI_API_KEY"):
         return True, "openai"
 
     # Check LM Studio
-    try:
-        import httpx
-
-        response = httpx.get("http://localhost:1234/v1/models", timeout=2)
-        if response.status_code == 200:
-            return True, "lmstudio"
-    except:
-        pass
+    if httpx is not None:
+        try:
+            response = httpx.get("http://localhost:1234/v1/models", timeout=2)
+            if response.status_code == 200:
+                return True, "lmstudio"
+        except (httpx.HTTPError, httpx.TimeoutException, OSError):
+            pass
 
     return False, "none"
 

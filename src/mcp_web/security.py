@@ -11,15 +11,18 @@ References:
 - https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html
 """
 
+from __future__ import annotations
+
 import asyncio
 import re
 import time
 from collections import deque
+from types import TracebackType
 from urllib.parse import urlparse
 
 import structlog
 
-logger = structlog.get_logger()
+logger: structlog.stdlib.BoundLogger = structlog.get_logger()
 
 
 class PromptInjectionFilter:
@@ -39,9 +42,9 @@ class PromptInjectionFilter:
         'Hello world'
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize with dangerous patterns."""
-        self.dangerous_patterns = [
+        self.dangerous_patterns: list[str] = [
             r"ignore\s+(all\s+)?(previous\s+)?instructions?",
             r"you\s+are\s+now\s+(in\s+)?developer\s+mode",
             r"system\s+override",
@@ -55,7 +58,7 @@ class PromptInjectionFilter:
         ]
 
         # Keywords for fuzzy/typoglycemia matching
-        self.fuzzy_keywords = [
+        self.fuzzy_keywords: list[str] = [
             "ignore",
             "bypass",
             "override",
@@ -266,13 +269,13 @@ class RateLimiter:
         """
         self.max_requests = max_requests
         self.time_window = time_window
-        self.requests: deque = deque()
-        self._lock = asyncio.Lock()
+        self.requests: deque[float] = deque()
+        self._lock: asyncio.Lock = asyncio.Lock()
 
     async def wait(self) -> None:
         """Wait if rate limit exceeded (blocking)."""
         while True:
-            sleep_time = None
+            sleep_time: float | None = None
 
             async with self._lock:
                 now = time.time()
@@ -297,11 +300,11 @@ class RateLimiter:
                     break
 
             # Sleep outside the lock if needed
-            if sleep_time and sleep_time > 0:
+            if sleep_time is not None and sleep_time > 0:
                 await asyncio.sleep(sleep_time)
                 # Loop again to reacquire lock and check
 
-    def get_stats(self) -> dict:
+    def get_stats(self) -> dict[str, int | float]:
         """Get current rate limiter statistics.
 
         Returns:
@@ -313,14 +316,14 @@ class RateLimiter:
         while self.requests and self.requests[0] < now - self.time_window:
             self.requests.popleft()
 
-        time_until_reset = 0
+        time_until_reset: float = 0.0
         if self.requests:
             time_until_reset = max(0, self.time_window - (now - self.requests[0]))
 
         return {
             "current_requests": len(self.requests),
             "max_requests": self.max_requests,
-            "time_window": self.time_window,
+            "time_window": float(self.time_window),
             "time_until_reset": time_until_reset,
             "requests_available": max(0, self.max_requests - len(self.requests)),
         }
@@ -364,7 +367,7 @@ class ConsumptionLimits:
         self.semaphore = asyncio.Semaphore(max_concurrent)
         self.rate_limiter = RateLimiter(max_requests_per_minute, time_window=60)
 
-    async def __aenter__(self):
+    async def __aenter__(self) -> ConsumptionLimits:
         """Enter async context manager - enforce limits.
 
         Returns:
@@ -377,10 +380,15 @@ class ConsumptionLimits:
         await self.rate_limiter.wait()
 
         # Acquire concurrent slot
-        await self.semaphore.__aenter__()
+        await self.semaphore.acquire()
         return self
 
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
+    async def __aexit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> bool:
         """Exit async context manager - release resources.
 
         Args:
@@ -392,7 +400,8 @@ class ConsumptionLimits:
             False to propagate exceptions
         """
         # Release concurrent slot
-        return await self.semaphore.__aexit__(exc_type, exc_val, exc_tb)
+        self.semaphore.release()
+        return False
 
 
 def validate_url(url: str) -> bool:

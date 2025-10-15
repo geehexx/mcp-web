@@ -10,7 +10,9 @@
 
 ## Executive Summary
 
-Comprehensive performance optimization initiative to profile, benchmark, and optimize the entire mcp-web pipeline with focus on reducing summarization latency from current baseline to well under 5 seconds while maintaining or improving quality.
+Comprehensive performance optimization initiative to profile, benchmark, and optimize the
+entire mcp-web pipeline with focus on reducing summarization latency from current baseline to
+well under 5 seconds while maintaining or improving quality.
 
 ### Key Goals
 
@@ -115,7 +117,7 @@ results = await asyncio.gather(*tasks)  # Fast!
 
 ### Pipeline Flow
 
-```
+```text
 ┌─────────────┐    ┌──────────────┐    ┌──────────┐    ┌──────────────┐
 │   Fetcher   │ -> │  Extractor   │ -> │ Chunker  │ -> │ Summarizer   │
 │  (httpx/    │    │ (trafilatura)│    │ (smart   │    │ (map-reduce) │
@@ -389,7 +391,7 @@ def select_strategy(chunks, query):
 
 - [ ] Research and implement OpenAI Batch API integration
 - [ ] Create batch mode for non-real-time summarization
-- [ ] Implement adaptive chunking strategy
+- [x] Implement adaptive chunking strategy (enabled by default 2025-10-16 with strategy/adaptive metrics)
 - [ ] Add chunk-level caching
 - [ ] Implement semantic deduplication for chunks
 - [ ] Benchmark optimal concurrency limits
@@ -525,7 +527,7 @@ def select_strategy(chunks, query):
 
 ### Testing Infrastructure
 
-**1. Test Fixtures & Factories Library**
+#### Test Fixtures & Factories Library
 
 **Current State:**
 
@@ -563,7 +565,7 @@ class ChunkFactory(factory.Factory):
 chunks = ChunkFactory.create_batch(20)
 ```
 
-**2. Prompt & Template Management**
+#### Prompt & Template Management
 
 **Current State:**
 
@@ -584,7 +586,7 @@ chunks = ChunkFactory.create_batch(20)
 
 **Example Structure:**
 
-```
+```text
 src/mcp_web/prompts/
 ├── __init__.py
 ├── loader.py              # Jinja2 environment setup

@@ -22,7 +22,7 @@ import json
 import pstats
 import time
 from collections import defaultdict
-from collections.abc import Callable
+from collections.abc import AsyncIterator, Callable, Iterator
 from contextlib import asynccontextmanager, contextmanager
 from dataclasses import asdict, dataclass, field
 from io import StringIO
@@ -146,7 +146,7 @@ class ProfilerContext:
 @asynccontextmanager
 async def async_profile_context(
     name: str, metadata: dict[str, Any] | None = None
-) -> ProfilerContext:
+) -> AsyncIterator[ProfilerContext]:
     """Async context manager for profiling.
 
     Example:
@@ -323,7 +323,9 @@ class PerformanceCollector:
 
 
 @contextmanager
-def cprofile_context(output_path: str | Path | None = None, top_n: int = 30):
+def cprofile_context(
+    output_path: str | Path | None = None, top_n: int = 30
+) -> Iterator[cProfile.Profile]:
     """Context manager for cProfile profiling.
 
     Example:
@@ -396,7 +398,7 @@ class ComponentTimer:
         return duration_ms
 
     @contextmanager
-    def time(self, component: str):
+    def time(self, component: str) -> Iterator[None]:
         """Context manager for timing.
 
         Example:

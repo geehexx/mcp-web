@@ -49,6 +49,11 @@ class TestChunkerSettings:
         assert settings.chunk_size == 512
         assert settings.chunk_overlap == 50
         assert settings.preserve_code_blocks is True
+        assert settings.adaptive_chunking is True
+        assert settings.code_chunk_size == 1024
+        assert settings.dense_chunk_size == 768
+        assert settings.code_block_threshold == 0.1
+        assert settings.dense_sentence_threshold == 24
 
 
 class TestSummarizerSettings:

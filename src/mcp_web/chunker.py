@@ -18,7 +18,11 @@ import structlog
 
 from mcp_web.config import ChunkerSettings
 from mcp_web.metrics import get_metrics_collector
-from mcp_web.utils import TokenCounter
+from mcp_web.utils import (
+    TokenCounter,
+    average_sentence_word_count,
+    calculate_code_block_ratio,
+)
 
 logger: structlog.stdlib.BoundLogger | None = None
 
@@ -92,12 +96,21 @@ class TextChunker:
             text_length=len(text),
         )
 
+        effective_chunk_size = self._select_chunk_size(text)
+
+        _get_logger().debug(
+            "chunking_strategy_selected",
+            requested_strategy=self.config.strategy,
+            adaptive_enabled=self.config.adaptive_chunking,
+            effective_chunk_size=effective_chunk_size,
+        )
+
         if self.config.strategy == "hierarchical":
-            chunks = self._chunk_hierarchical(text, metadata)
+            chunks = self._chunk_hierarchical(text, metadata, effective_chunk_size)
         elif self.config.strategy == "semantic":
-            chunks = self._chunk_semantic(text, metadata)
+            chunks = self._chunk_semantic(text, metadata, effective_chunk_size)
         else:  # fixed
-            chunks = self._chunk_fixed(text, metadata)
+            chunks = self._chunk_fixed(text, metadata, effective_chunk_size)
 
         duration_ms = (time.perf_counter() - start_time) * 1000
 
@@ -108,6 +121,9 @@ class TextChunker:
             num_chunks=len(chunks),
             avg_chunk_size=avg_chunk_size,
             duration_ms=duration_ms,
+            strategy=self.config.strategy,
+            adaptive_enabled=self.config.adaptive_chunking,
+            target_chunk_size=effective_chunk_size,
         )
 
         _get_logger().info(
@@ -119,7 +135,9 @@ class TextChunker:
 
         return chunks
 
-    def _chunk_hierarchical(self, text: str, metadata: dict[str, Any] | None = None) -> list[Chunk]:
+    def _chunk_hierarchical(
+        self, text: str, metadata: dict[str, Any] | None = None, chunk_size: int | None = None
+    ) -> list[Chunk]:
         """Chunk text hierarchically (headings → paragraphs → sentences).
 
         Args:
@@ -141,7 +159,9 @@ class TextChunker:
             # Check if section fits in one chunk
             section_tokens = self.token_counter.count_tokens(section_text)
 
-            if section_tokens <= self.config.chunk_size:
+            target_size = chunk_size or self.config.chunk_size
+
+            if section_tokens <= target_size:
                 # Section fits in one chunk
                 chunks.append(
                     Chunk(
@@ -154,7 +174,9 @@ class TextChunker:
                 )
             else:
                 # Section needs splitting
-                section_chunks = self._split_large_section(section_text, section_metadata)
+                section_chunks = self._split_large_section(
+                    section_text, section_metadata, target_size
+                )
                 chunks.extend(section_chunks)
 
         # Handle overlap between chunks
@@ -162,7 +184,9 @@ class TextChunker:
 
         return chunks
 
-    def _chunk_semantic(self, text: str, metadata: dict[str, Any] | None = None) -> list[Chunk]:
+    def _chunk_semantic(
+        self, text: str, metadata: dict[str, Any] | None = None, chunk_size: int | None = None
+    ) -> list[Chunk]:
         """Chunk text by semantic boundaries using recursive splitting.
 
         Based on research from Pinecone and Databricks (2024):
@@ -191,11 +215,13 @@ class TextChunker:
         # Split text recursively
         current_chunks = [text]
 
+        target_size = chunk_size or self.config.chunk_size
+
         for separator in separators:
             new_chunks = []
             for chunk_text in current_chunks:
                 # If chunk is small enough, keep it
-                if self.token_counter.count_tokens(chunk_text) <= self.config.chunk_size:
+                if self.token_counter.count_tokens(chunk_text) <= target_size:
                     new_chunks.append(chunk_text)
                 else:
                     # Split by current separator
@@ -208,7 +234,7 @@ class TextChunker:
 
                         test_combined = combined + separator + part if combined else part
 
-                        if self.token_counter.count_tokens(test_combined) <= self.config.chunk_size:
+                        if self.token_counter.count_tokens(test_combined) <= target_size:
                             combined = test_combined
                         else:
                             if combined:
@@ -221,9 +247,7 @@ class TextChunker:
             current_chunks = new_chunks
 
             # If all chunks are within size, we're done
-            if all(
-                self.token_counter.count_tokens(c) <= self.config.chunk_size for c in current_chunks
-            ):
+            if all(self.token_counter.count_tokens(c) <= target_size for c in current_chunks):
                 break
 
         # Convert to Chunk objects with metadata
@@ -254,7 +278,9 @@ class TextChunker:
 
         return chunks
 
-    def _chunk_fixed(self, text: str, metadata: dict[str, Any] | None = None) -> list[Chunk]:
+    def _chunk_fixed(
+        self, text: str, metadata: dict[str, Any] | None = None, chunk_size: int | None = None
+    ) -> list[Chunk]:
         """Chunk text into fixed-size chunks with overlap.
 
         Note: This strategy has performance issues with tiktoken encoding on
@@ -282,7 +308,8 @@ class TextChunker:
 
         # Calculate chunk size in characters (approximate)
         # Rough estimate: 1 token ≈ 4 characters
-        chunk_size_chars = self.config.chunk_size * 4
+        target_size = chunk_size or self.config.chunk_size
+        chunk_size_chars = target_size * 4
         overlap_chars = self.config.chunk_overlap * 4
 
         start = 0
@@ -299,6 +326,9 @@ class TextChunker:
 
             tokens = self.token_counter.count_tokens(chunk_text)
 
+            if not chunk_text:
+                break
+
             chunks.append(
                 Chunk(
                     text=chunk_text,
@@ -310,7 +340,10 @@ class TextChunker:
             )
 
             # Move start with overlap
-            start += len(chunk_text) - overlap_chars
+            advance = len(chunk_text) - overlap_chars
+            if advance <= 0:
+                advance = len(chunk_text) or chunk_size_chars or 1
+            start += advance
 
             # Prevent infinite loop
             if start + chunk_size_chars <= start:
@@ -331,9 +364,9 @@ class TextChunker:
         heading_pattern = r"^(#{1,6})\s+(.+)$"
         lines = text.split("\n")
 
-        sections = []
+        sections: list[tuple[str, str]] = []
         current_heading = "Introduction"
-        current_content = []
+        current_content: list[str] = []
 
         for line in lines:
             match = re.match(heading_pattern, line)
@@ -354,7 +387,9 @@ class TextChunker:
 
         return sections if sections else [("Main Content", text)]
 
-    def _split_large_section(self, text: str, metadata: dict) -> list[Chunk]:
+    def _split_large_section(
+        self, text: str, metadata: dict[str, Any], chunk_size: int
+    ) -> list[Chunk]:
         """Split large section into multiple chunks.
 
         Args:
@@ -368,10 +403,10 @@ class TextChunker:
         if self.config.preserve_code_blocks:
             code_blocks = self._extract_code_blocks(text)
             if code_blocks:
-                return self._chunk_with_code_blocks(text, code_blocks, metadata)
+                return self._chunk_with_code_blocks(text, code_blocks, metadata, chunk_size)
 
         # Fall back to paragraph splitting
-        return self._chunk_semantic(text, metadata)
+        return self._chunk_semantic(text, metadata, chunk_size)
 
     def _split_paragraphs(self, text: str) -> list[str]:
         """Split text into paragraphs.
@@ -386,7 +421,9 @@ class TextChunker:
         paragraphs = re.split(r"\n\s*\n", text)
         return [p.strip() for p in paragraphs if p.strip()]
 
-    def _split_by_sentences(self, text: str, metadata: dict) -> list[Chunk]:
+    def _split_by_sentences(
+        self, text: str, metadata: dict[str, Any], chunk_size: int
+    ) -> list[Chunk]:
         """Split text by sentences.
 
         Args:
@@ -406,10 +443,12 @@ class TextChunker:
         current_tokens = 0
         start_pos = 0
 
+        target_size = chunk_size
+
         for sentence in sentences:
             sentence_tokens = self.token_counter.count_tokens(sentence)
 
-            if current_tokens + sentence_tokens <= self.config.chunk_size:
+            if current_tokens + sentence_tokens <= target_size:
                 current_text.append(sentence)
                 current_tokens += sentence_tokens
             else:
@@ -461,7 +500,11 @@ class TextChunker:
         return blocks
 
     def _chunk_with_code_blocks(
-        self, text: str, code_blocks: list[tuple[int, int, str]], metadata: dict[str, Any]
+        self,
+        text: str,
+        code_blocks: list[tuple[int, int, str]],
+        metadata: dict[str, Any],
+        chunk_size: int,
     ) -> list[Chunk]:
         """Chunk text while preserving code blocks.
 
@@ -480,7 +523,7 @@ class TextChunker:
             # Chunk text before code block
             before_text = text[last_end:start].strip()
             if before_text:
-                before_chunks = self._chunk_semantic(before_text, metadata)
+                before_chunks = self._chunk_semantic(before_text, metadata, chunk_size)
                 chunks.extend(before_chunks)
 
             # Add code block as separate chunk (if not too large)
@@ -518,7 +561,7 @@ class TextChunker:
         # Chunk remaining text
         remaining_text = text[last_end:].strip()
         if remaining_text:
-            remaining_chunks = self._chunk_semantic(remaining_text, metadata)
+            remaining_chunks = self._chunk_semantic(remaining_text, metadata, chunk_size)
             chunks.extend(remaining_chunks)
 
         return chunks
@@ -567,6 +610,32 @@ class TextChunker:
                     overlapped_chunks.append(chunk)
 
         return overlapped_chunks
+
+    def _select_chunk_size(self, text: str) -> int:
+        """Determine effective chunk size based on content characteristics.
+
+        Args:
+            text: Source content to analyse.
+
+        Returns:
+            Chunk size in tokens respecting configured minimum and maximum bounds.
+        """
+
+        if not self.config.adaptive_chunking or not text.strip():
+            return self.config.chunk_size
+
+        base_min = self.config.min_chunk_size
+        base_max = self.config.max_chunk_size
+
+        code_ratio = calculate_code_block_ratio(text)
+        if code_ratio >= self.config.code_block_threshold:
+            return max(base_min, min(self.config.code_chunk_size, base_max))
+
+        avg_words = average_sentence_word_count(text)
+        if avg_words >= self.config.dense_sentence_threshold:
+            return max(base_min, min(self.config.dense_chunk_size, base_max))
+
+        return max(base_min, min(self.config.chunk_size, base_max))
 
     def _find_sentence_boundary(self, text: str) -> int:
         """Find the last sentence boundary in text.

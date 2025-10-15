@@ -9,6 +9,10 @@ Comprehensive testing workflow with various options for different scenarios.
 
 ## Quick Commands
 
+> **Note:** When invoking pytest directly, always run it through `uv run`.
+> Example:
+> `uv run pytest -q tests/unit`
+
 ```bash
 # Fast tests (unit + security + golden) in parallel
 task test:fast:parallel

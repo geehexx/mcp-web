@@ -220,10 +220,17 @@ class ContentExtractor:
             _get_logger().warning("trafilatura_fallback", url=url)
 
         # Extract metadata
-        metadata = {}
+        metadata: dict[str, Any] = {}
         if self.config.extract_metadata:
             metadata_obj = trafilatura.extract_metadata(html, default_url=url)
             if metadata_obj:
+                fallback_title: str | None = None
+                if metadata_obj.title:
+                    if isinstance(metadata_obj.title, list):
+                        fallback_title = " ".join(str(item) for item in metadata_obj.title if item)
+                    else:
+                        fallback_title = str(metadata_obj.title)
+
                 metadata = {
                     "author": metadata_obj.author,
                     "date": metadata_obj.date,
@@ -231,9 +238,15 @@ class ContentExtractor:
                     "sitename": metadata_obj.sitename,
                     "tags": metadata_obj.tags,
                 }
+                if fallback_title:
+                    metadata["title"] = fallback_title
 
         # Extract title
-        title = self._extract_title(html, metadata.get("title"))
+        fallback_title = metadata.get("title")
+        title = self._extract_title(
+            html,
+            fallback_title if isinstance(fallback_title, str) else None,
+        )
 
         # Extract links
         links = []
@@ -371,7 +384,7 @@ class ContentExtractor:
         link_pattern = r'<a[^>]+href=["\'](.*?)["\']'
         matches = re.findall(link_pattern, html, re.IGNORECASE)
 
-        links = []
+        links: list[str] = []
         for link in matches:
             # Skip anchors and javascript
             if link.startswith("#") or link.startswith("javascript:"):
@@ -386,8 +399,14 @@ class ContentExtractor:
                 links.append(absolute_url)
 
         # Deduplicate while preserving order
-        seen = set()
-        return [url for url in links if not (url in seen or seen.add(url))]
+        seen: set[str] = set()
+        deduped_links: list[str] = []
+        for absolute in links:
+            if absolute not in seen:
+                seen.add(absolute)
+                deduped_links.append(absolute)
+
+        return deduped_links
 
     def _extract_code_snippets(self, markdown: str) -> list[CodeSnippet]:
         """Extract code blocks from Markdown.

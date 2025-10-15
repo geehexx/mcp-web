@@ -11,6 +11,7 @@ Usage:
 import asyncio
 import sys
 import time
+from typing import Literal, cast
 
 import click
 import structlog
@@ -95,15 +96,21 @@ def test_summarize(
         # Save output
         mcp-web test-summarize https://example.com -o summary.md
     """
+    provider_literal = cast(ProviderLiteral, provider)
     asyncio.run(
-        _test_summarize_async(list(urls), query, provider, model, output, show_metrics, verbose)
+        _test_summarize_async(
+            list(urls), query, provider_literal, model, output, show_metrics, verbose
+        )
     )
+
+
+ProviderLiteral = Literal["openai", "ollama", "lmstudio", "localai", "custom"]
 
 
 async def _test_summarize_async(
     urls: list[str],
     query: str | None,
-    provider: str,
+    provider: ProviderLiteral,
     model: str | None,
     output: str | None,
     show_metrics: bool,
@@ -144,19 +151,16 @@ async def _test_summarize_async(
     summarizer = Summarizer(config.summarizer)
 
     overall_start = time.perf_counter()
-    metrics = {
-        "fetch_time": 0.0,
-        "extract_time": 0.0,
-        "chunk_time": 0.0,
-        "summarize_time": 0.0,
-        "total_tokens": 0,
-        "fetch_method": [],
-        "chunk_count": 0,
-    }
+    fetch_time_total = 0.0
+    extract_time_total = 0.0
+    chunk_time_total = 0.0
+    summarize_time_total = 0.0
+    fetch_methods: list[str] = []
+    chunk_count = 0
 
     try:
         # Process each URL
-        all_summaries = []
+        all_summaries: list[dict[str, str]] = []
 
         for url in urls:
             click.echo(click.style(f"Processing: {url}", fg="yellow"))
@@ -165,8 +169,8 @@ async def _test_summarize_async(
             fetch_start = time.perf_counter()
             fetch_result = await fetcher.fetch(url)
             fetch_time = time.perf_counter() - fetch_start
-            metrics["fetch_time"] += fetch_time
-            metrics["fetch_method"].append(fetch_result.fetch_method)
+            fetch_time_total += fetch_time
+            fetch_methods.append(fetch_result.fetch_method)
 
             if verbose:
                 click.echo(f"  Fetch: {fetch_result.fetch_method} ({fetch_time:.2f}s)")
@@ -178,7 +182,7 @@ async def _test_summarize_async(
             extract_start = time.perf_counter()
             extraction = await extractor.extract(fetch_result)
             extract_time = time.perf_counter() - extract_start
-            metrics["extract_time"] += extract_time
+            extract_time_total += extract_time
 
             if verbose:
                 click.echo(f"  Extract: {len(extraction.content):,} chars ({extract_time:.2f}s)")
@@ -190,8 +194,8 @@ async def _test_summarize_async(
             chunk_start = time.perf_counter()
             chunks = chunker.chunk_text(extraction.content)
             chunk_time = time.perf_counter() - chunk_start
-            metrics["chunk_time"] += chunk_time
-            metrics["chunk_count"] += len(chunks)
+            chunk_time_total += chunk_time
+            chunk_count += len(chunks)
 
             if verbose:
                 click.echo(f"  Chunk: {len(chunks)} chunks ({chunk_time:.2f}s)")
@@ -204,20 +208,20 @@ async def _test_summarize_async(
             click.echo(click.style("  Summarizing...", fg="cyan"))
             summarize_start = time.perf_counter()
 
-            summary_parts = []
-            async for chunk in summarizer.summarize_chunks(
+            summary_parts: list[str] = []
+            async for summary_chunk in summarizer.summarize_chunks(
                 chunks=chunks,
                 query=query,
                 sources=[url],
             ):
                 if not verbose:
                     # Show streaming progress
-                    click.echo(chunk, nl=False)
-                summary_parts.append(chunk)
+                    click.echo(summary_chunk, nl=False)
+                summary_parts.append(summary_chunk)
 
             summary = "".join(summary_parts)
             summarize_time = time.perf_counter() - summarize_start
-            metrics["summarize_time"] += summarize_time
+            summarize_time_total += summarize_time
 
             if verbose:
                 click.echo(f"\n  Summarize: {summarize_time:.2f}s")
@@ -240,12 +244,12 @@ async def _test_summarize_async(
             click.echo("\n" + click.style("=== Metrics ===", fg="green", bold=True))
             click.echo(f"URLs processed: {len(urls)}")
             click.echo(f"Total time: {overall_time:.2f}s")
-            click.echo(f"  Fetch: {metrics['fetch_time']:.2f}s")
-            click.echo(f"  Extract: {metrics['extract_time']:.2f}s")
-            click.echo(f"  Chunk: {metrics['chunk_time']:.2f}s")
-            click.echo(f"  Summarize: {metrics['summarize_time']:.2f}s")
-            click.echo(f"Chunks created: {metrics['chunk_count']}")
-            click.echo(f"Fetch methods: {', '.join(set(metrics['fetch_method']))}")
+            click.echo(f"  Fetch: {fetch_time_total:.2f}s")
+            click.echo(f"  Extract: {extract_time_total:.2f}s")
+            click.echo(f"  Chunk: {chunk_time_total:.2f}s")
+            click.echo(f"  Summarize: {summarize_time_total:.2f}s")
+            click.echo(f"Chunks created: {chunk_count}")
+            click.echo(f"Fetch methods: {', '.join(sorted(set(fetch_methods)))}")
 
         # Save output
         if output:

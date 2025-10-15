@@ -61,6 +61,9 @@ class ChunkingMetrics:
     num_chunks: int
     avg_chunk_size: float
     duration_ms: float
+    strategy: str
+    adaptive_enabled: bool
+    target_chunk_size: int
     timestamp: datetime = field(default_factory=datetime.now)
 
 
@@ -201,6 +204,10 @@ class MetricsCollector:
         num_chunks: int,
         avg_chunk_size: float,
         duration_ms: float,
+        *,
+        strategy: str,
+        adaptive_enabled: bool,
+        target_chunk_size: int,
     ) -> None:
         """Record chunking metrics."""
         if not self.enabled:
@@ -211,16 +218,25 @@ class MetricsCollector:
             num_chunks=num_chunks,
             avg_chunk_size=avg_chunk_size,
             duration_ms=duration_ms,
+            strategy=strategy,
+            adaptive_enabled=adaptive_enabled,
+            target_chunk_size=target_chunk_size,
         )
         self.chunking_metrics.append(metric)
         self.counters["chunking_operations"] += 1
         self.timers["chunking_duration"].append(duration_ms)
+        self.counters[f"chunking_strategy_{strategy}"] += 1
+        if adaptive_enabled:
+            self.counters["chunking_adaptive_enabled"] += 1
 
         logger.info(
             "chunking_completed",
             content_length=content_length,
             num_chunks=num_chunks,
             avg_chunk_size=avg_chunk_size,
+            strategy=strategy,
+            adaptive_enabled=adaptive_enabled,
+            target_chunk_size=target_chunk_size,
         )
 
     def record_summarization(
@@ -413,7 +429,7 @@ def configure_logging(level: str = "INFO", structured: bool = True) -> None:
         level: Log level (DEBUG, INFO, WARNING, ERROR)
         structured: Use structured JSON output
     """
-    processors = [
+    processors: list[structlog.types.Processor] = [
         structlog.contextvars.merge_contextvars,
         structlog.processors.add_log_level,
         structlog.processors.TimeStamper(fmt="iso"),

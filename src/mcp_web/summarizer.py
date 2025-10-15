@@ -120,23 +120,25 @@ class Summarizer:
             # Decide strategy: direct or map-reduce
             if total_tokens <= self.config.map_reduce_threshold:
                 # Direct summarization
-                async for chunk in self._summarize_direct(chunks, query, sources):
-                    yield chunk
+                async for response_chunk in self._summarize_direct(chunks, query, sources):
+                    yield response_chunk
             else:
                 # Map-reduce for large documents
                 # Choose between parallel gather or streaming as_completed
                 if self.config.streaming_map:
-                    async for chunk in self._summarize_map_reduce_streaming(chunks, query, sources):
-                        yield chunk
-                elif self.config.parallel_map:
-                    async for chunk in self._summarize_map_reduce(chunks, query, sources):
-                        yield chunk
-                else:
-                    # Sequential fallback (original implementation)
-                    async for chunk in self._summarize_map_reduce_sequential(
+                    async for response_chunk in self._summarize_map_reduce_streaming(
                         chunks, query, sources
                     ):
-                        yield chunk
+                        yield response_chunk
+                elif self.config.parallel_map:
+                    async for response_chunk in self._summarize_map_reduce(chunks, query, sources):
+                        yield response_chunk
+                else:
+                    # Sequential fallback (original implementation)
+                    async for response_chunk in self._summarize_map_reduce_sequential(
+                        chunks, query, sources
+                    ):
+                        yield response_chunk
 
             duration_ms = (time.perf_counter() - start_time) * 1000
 
@@ -173,8 +175,8 @@ class Summarizer:
         prompt = self._build_summary_prompt(combined_text, query, sources)
 
         # Call LLM
-        async for chunk in self._call_llm(prompt):
-            yield chunk
+        async for llm_response_chunk in self._call_llm(prompt):
+            yield llm_response_chunk
 
     async def _summarize_map_reduce(
         self,
@@ -221,8 +223,8 @@ class Summarizer:
         reduce_prompt = self._build_reduce_prompt(combined_summaries, query, sources)
 
         # Stream final summary
-        async for chunk in self._call_llm(reduce_prompt):
-            yield chunk
+        async for response_chunk in self._call_llm(reduce_prompt):
+            yield response_chunk
 
     async def _summarize_map_reduce_sequential(
         self,
@@ -264,8 +266,8 @@ class Summarizer:
         reduce_prompt = self._build_reduce_prompt(combined_summaries, query, sources)
 
         # Stream final summary
-        async for chunk in self._call_llm(reduce_prompt):
-            yield chunk
+        async for response_chunk in self._call_llm(reduce_prompt):
+            yield response_chunk
 
     async def _summarize_map_reduce_streaming(
         self,
@@ -306,12 +308,10 @@ class Summarizer:
 
         # Collect summaries as they complete
         chunk_summaries: list[str | None] = [None] * len(chunks)
-        completed = 0
 
         for task in asyncio.as_completed(tasks):
             idx, summary = await task
             chunk_summaries[idx] = summary
-            completed += 1
 
             # Stream progress
             yield f"✓ Section {idx + 1}/{len(chunks)} complete\n"
@@ -328,8 +328,8 @@ class Summarizer:
         reduce_prompt = self._build_reduce_prompt(combined_summaries, query, sources)
 
         # Stream final summary
-        async for chunk in self._call_llm(reduce_prompt):
-            yield chunk
+        async for response_chunk in self._call_llm(reduce_prompt):
+            yield response_chunk
 
     def _calculate_max_tokens(self, input_tokens: int) -> int:
         """Calculate adaptive max_tokens based on input size.

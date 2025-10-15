@@ -208,3 +208,43 @@ def estimate_reading_time(text: str, wpm: int = 200) -> int:
     """
     word_count = len(text.split())
     return max(1, round(word_count / wpm))
+
+
+def calculate_code_block_ratio(text: str) -> float:
+    """Calculate the proportion of content wrapped in fenced code blocks.
+
+    Args:
+        text: Markdown text to analyse.
+
+    Returns:
+        Ratio between 0 and 1 describing how much of the text is inside code blocks.
+    """
+
+    if not text:
+        return 0.0
+
+    pattern = r"```.*?```"
+    code_chars = sum(len(match.group(0)) for match in re.finditer(pattern, text, re.DOTALL))
+    return min(1.0, code_chars / len(text)) if text else 0.0
+
+
+def average_sentence_word_count(text: str) -> float:
+    """Calculate average words per sentence to estimate prose density.
+
+    Args:
+        text: Input text.
+
+    Returns:
+        Average number of words per sentence. Returns 0.0 when no sentences detected.
+    """
+
+    if not text:
+        return 0.0
+
+    sentences = re.split(r"[.!?]+\s+", text.strip())
+    cleaned = [s.strip() for s in sentences if s.strip()]
+    if not cleaned:
+        return 0.0
+
+    total_words = sum(len(sentence.split()) for sentence in cleaned)
+    return total_words / len(cleaned)

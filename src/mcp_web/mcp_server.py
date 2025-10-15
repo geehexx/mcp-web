@@ -10,7 +10,6 @@ Implements the monolithic 'summarize_urls' tool that:
 Design Decision DD-010: Monolithic tool design.
 """
 
-import asyncio
 from collections.abc import AsyncIterator
 from typing import Any
 
@@ -348,11 +347,7 @@ def create_server(config: Config | None = None) -> FastMCP:
     )
 
     # Create MCP server
-    mcp = FastMCP(
-        name="mcp-web",
-        version="0.1.0",
-        description="MCP server for web operations including intelligent URL summarization",
-    )
+    mcp = FastMCP(name="mcp-web", instructions="Intelligent web summarization server")
 
     # Initialize pipeline
     pipeline = WebSummarizationPipeline(config)
@@ -397,7 +392,7 @@ def create_server(config: Config | None = None) -> FastMCP:
         return "".join(output_parts)
 
     @mcp.tool()
-    async def get_cache_stats() -> dict:
+    async def get_cache_stats() -> dict[str, Any]:
         """Get cache statistics.
 
         Returns:
@@ -451,8 +446,7 @@ def main() -> None:
     mcp = create_server(config)
 
     # Run the server
-
-    asyncio.run(mcp.run())
+    mcp.run()
 
 
 if __name__ == "__main__":
