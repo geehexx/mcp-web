@@ -1,14 +1,16 @@
 version: '3'
 
-# Taskfile for mcp-web project
-# Install: https://taskfile.dev/installation/
+# Taskfile for mcp-web project (uv-based workflow)
+# Install task: https://taskfile.dev/installation/
+# Install uv: https://docs.astral.sh/uv/
 # Usage: task <command>
 
 vars:
-  PYTHON: python3
+  UV: uv
   SRC_DIR: src
   TEST_DIR: tests
   COVERAGE_MIN: 90
+  PARALLEL_WORKERS: auto
 
 env:
   PYTHONPATH: "{{.ROOT_DIR}}/{{.SRC_DIR}}"
@@ -21,97 +23,122 @@ tasks:
 
   # Installation tasks
   install:
-    desc: Install package in editable mode with all dependencies
+    desc: Install package and all dependencies using uv
     cmds:
-      - "{{.PYTHON}} -m pip install -e .[dev]"
+      - "{{.UV}} sync --all-extras"
       - task: install:playwright
 
   install:playwright:
     desc: Install Playwright browsers
     cmds:
-      - playwright install chromium
+      - "{{.UV}} run playwright install chromium"
 
   install:pre-commit:
     desc: Install pre-commit hooks
     cmds:
-      - pre-commit install
+      - "{{.UV}} run pre-commit install"
 
   # Testing tasks
   test:
-    desc: Run all tests (except live tests)
+    desc: Run all tests (except live tests) - parallel by default
     cmds:
-      - pytest -m "not live" -v
+      - "{{.UV}} run pytest -n {{.PARALLEL_WORKERS}} -m 'not live and not benchmark' -v"
 
   test:unit:
     desc: Run unit tests only
     cmds:
-      - pytest -m unit -v
+      - "{{.UV}} run pytest -m unit -v"
+
+  test:unit:parallel:
+    desc: Run unit tests in parallel using pytest-xdist
+    cmds:
+      - "{{.UV}} run pytest -n {{.PARALLEL_WORKERS}} -m unit -v"
 
   test:security:
     desc: Run security tests
     cmds:
-      - pytest -m security -v
+      - "{{.UV}} run pytest -m security -v"
 
   test:golden:
     desc: Run golden/regression tests
     cmds:
-      - pytest -m golden -v
+      - "{{.UV}} run pytest -m golden -v"
 
   test:integration:
     desc: Run integration tests
     cmds:
-      - pytest -m integration -v
+      - "{{.UV}} run pytest -m integration -v"
+
+  test:integration:parallel:
+    desc: Run integration tests in parallel
+    cmds:
+      - "{{.UV}} run pytest -n {{.PARALLEL_WORKERS}} -m integration -v"
 
   test:live:
     desc: Run live tests (requires network and API key)
     cmds:
-      - pytest -m live -v
+      - "{{.UV}} run pytest -m live -v"
 
   test:bench:
     desc: Run performance benchmarks
     cmds:
-      - pytest -m benchmark --benchmark-only -v
+      - "{{.UV}} run pytest -m benchmark --benchmark-only -v"
 
   test:all:
     desc: Run all tests including live tests (requires API keys)
     cmds:
-      - pytest -v
+      - "{{.UV}} run pytest -v"
+
+  test:all:parallel:
+    desc: Run all tests in parallel
+    cmds:
+      - "{{.UV}} run pytest -n {{.PARALLEL_WORKERS}} -v"
 
   test:manual:
     desc: Manual URL summarization test (URL=url QUERY=query)
     cmds:
-      - "{{.PYTHON}} -m mcp_web.cli test-summarize {{.URL}} {{if .QUERY}}--query \"{{.QUERY}}\"{{end}} {{if .OUTPUT}}-o {{.OUTPUT}}{{end}} --verbose"
+      - "{{.UV}} run python -m mcp_web.cli test-summarize {{.URL}} {{if .QUERY}}--query \"{{.QUERY}}\"{{end}} {{if .OUTPUT}}-o {{.OUTPUT}}{{end}} --verbose"
 
   test:robots:
     desc: Test robots.txt handling (URL=url)
     cmds:
-      - "{{.PYTHON}} -m mcp_web.cli test-robots {{.URL}} {{if .IGNORE}}--ignore{{end}}"
+      - "{{.UV}} run python -m mcp_web.cli test-robots {{.URL}} {{if .IGNORE}}--ignore{{end}}"
 
   test:fast:
-    desc: Run fast tests only (unit + security + golden)
+    desc: Run fast tests only (unit + security) - parallel by default, no LLM required
     cmds:
-      - pytest -m "unit or security or golden" -v
+      - "{{.UV}} run pytest -n {{.PARALLEL_WORKERS}} -m '(unit or security) and not benchmark' -v"
+
+  test:fast:parallel:
+    desc: Run fast tests in parallel
+    cmds:
+      - "{{.UV}} run pytest -n {{.PARALLEL_WORKERS}} -m 'unit or security or golden' -v"
 
   test:parallel:
-    desc: Run tests in parallel
+    desc: Run tests in parallel (default all except live)
     cmds:
-      - pytest -n auto -m "not live"
+      - "{{.UV}} run pytest -n {{.PARALLEL_WORKERS}} -m 'not live' -v"
 
   test:coverage:
     desc: Run tests with coverage report
     cmds:
-      - pytest --cov={{.SRC_DIR}}/mcp_web --cov-report=term-missing --cov-report=html
+      - "{{.UV}} run pytest --cov={{.SRC_DIR}}/mcp_web --cov-report=term-missing --cov-report=html"
       - echo "Coverage report generated in htmlcov/index.html"
+
+  test:coverage:parallel:
+    desc: Run tests with coverage in parallel
+    cmds:
+      - "{{.UV}} run pytest -n {{.PARALLEL_WORKERS}} --cov={{.SRC_DIR}}/mcp_web --cov-report=term-missing --cov-report=html"
 
   test:coverage:min:
     desc: Run tests with minimum coverage enforcement
     cmds:
-      - pytest --cov={{.SRC_DIR}}/mcp_web --cov-report=term-missing --cov-fail-under={{.COVERAGE_MIN}}
+      - "{{.UV}} run pytest --cov={{.SRC_DIR}}/mcp_web --cov-report=term-missing --cov-fail-under={{.COVERAGE_MIN}}"
 
   test:watch:
     desc: Run tests in watch mode (requires pytest-watch)
     cmds:
-      - ptw -- -m "not live" -v
+      - "{{.UV}} run ptw -- -m 'not live' -v"
 
   # Code quality tasks
   lint:
@@ -121,24 +148,28 @@ tasks:
   lint:ruff:
     desc: Run ruff linter
     cmds:
-      - ruff check {{.SRC_DIR}} {{.TEST_DIR}}
+      - "{{.UV}} run ruff check {{.SRC_DIR}} {{.TEST_DIR}}"
 
   lint:format:
     desc: Check code formatting
     cmds:
-      - ruff format --check {{.SRC_DIR}} {{.TEST_DIR}}
+      - '{{.UV}} run ruff format --check {{.SRC_DIR}} {{.TEST_DIR}}'
 
   lint:mypy:
     desc: Run type checking
     cmds:
-      - mypy {{.SRC_DIR}} --ignore-missing-imports
+      - "{{.UV}} run mypy {{.SRC_DIR}} --ignore-missing-imports"
+
+  lint:all:
+    desc: Run all linting and quality checks
+    deps: [lint, docs:lint]
 
   # Code formatting tasks
   format:
     desc: Auto-format code with ruff
     cmds:
-      - ruff format {{.SRC_DIR}} {{.TEST_DIR}}
-      - ruff check --fix {{.SRC_DIR}} {{.TEST_DIR}}
+      - "{{.UV}} run ruff format {{.SRC_DIR}} {{.TEST_DIR}}"
+      - "{{.UV}} run ruff check --fix {{.SRC_DIR}} {{.TEST_DIR}}"
 
   # Security tasks
   security:
@@ -148,17 +179,17 @@ tasks:
   security:bandit:
     desc: Run Bandit security scanner
     cmds:
-      - bandit -r {{.SRC_DIR}} -c .bandit -f screen
+      - "{{.UV}} run bandit -r {{.SRC_DIR}} -c .bandit -f screen"
 
   security:semgrep:
     desc: Run Semgrep pattern scanner
     cmds:
-      - semgrep --config=.semgrep.yml {{.SRC_DIR}} --error
+      - "{{.UV}} run semgrep --config=.semgrep.yml {{.SRC_DIR}} --error"
 
   security:safety:
     desc: Check for known vulnerabilities in dependencies
     cmds:
-      - safety check --json
+      - "{{.UV}} run safety check --json"
 
   # Quality analysis
   analyze:
@@ -168,12 +199,12 @@ tasks:
   analyze:complexity:
     desc: Analyze code complexity (requires radon)
     cmds:
-      - radon cc {{.SRC_DIR}} -a -nb
+      - "{{.UV}} run radon cc {{.SRC_DIR}} -a -nb"
 
   analyze:maintainability:
     desc: Analyze maintainability index (requires radon)
     cmds:
-      - radon mi {{.SRC_DIR}} -nb
+      - "{{.UV}} run radon mi {{.SRC_DIR}} -nb"
 
   # Documentation tasks
   docs:build:
@@ -227,7 +258,7 @@ tasks:
     cmds:
       - rm -rf build/ dist/ *.egg-info
       - rm -rf .pytest_cache/ .mypy_cache/ .ruff_cache/
-      - rm -rf htmlcov/ .coverage
+      - rm -rf htmlcov/ .coverage .hypothesis/
       - find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
       - echo "Cleaned build artifacts and caches"
 
@@ -245,7 +276,7 @@ tasks:
   pre-commit:all:
     desc: Run pre-commit on all files
     cmds:
-      - pre-commit run --all-files
+      - "{{.UV}} run pre-commit run --all-files"
 
   # CI/CD simulation
   ci:
@@ -258,30 +289,39 @@ tasks:
       - echo "=== CI Pipeline Complete ==="
 
   ci:fast:
-    desc: Fast CI check (no coverage)
+    desc: Fast CI check (no coverage, parallel tests)
     cmds:
       - echo "=== Running Fast CI ==="
       - task: lint
-      - task: test:fast
+      - task: test:fast:parallel
       - task: security:bandit
       - echo "=== Fast CI Complete ==="
+
+  ci:parallel:
+    desc: Full CI with parallel testing
+    cmds:
+      - echo "=== Running Parallel CI ==="
+      - task: lint
+      - task: test:coverage:parallel
+      - task: security
+      - echo "=== Parallel CI Complete ==="
 
   # Benchmarking tasks
   bench:
     desc: Run all benchmarks
     cmds:
-      - pytest -m benchmark --benchmark-only --benchmark-autosave
+      - "{{.UV}} run pytest -m benchmark --benchmark-only --benchmark-autosave"
 
   bench:compare:
     desc: Compare with previous benchmark
     cmds:
-      - pytest -m benchmark --benchmark-only --benchmark-compare
+      - "{{.UV}} run pytest -m benchmark --benchmark-only --benchmark-compare"
 
   bench:profile:
     desc: Profile performance with cProfile
     cmds:
-      - python -m cProfile -o profile.stats -m pytest -m benchmark
-      - python -c "import pstats; p = pstats.Stats('profile.stats'); p.sort_stats('cumulative'); p.print_stats(30)"
+      - "{{.UV}} run python -m cProfile -o profile.stats -m pytest -m benchmark"
+      - "{{.UV}} run python -c 'import pstats; p = pstats.Stats(\"profile.stats\"); p.sort_stats(\"cumulative\"); p.print_stats(30)'"
 
   # Docker tasks (if needed)
   docker:build:
@@ -305,40 +345,39 @@ tasks:
   release:build:
     desc: Build distribution packages
     cmds:
-      - "{{.PYTHON}} -m build"
+      - "{{.UV}} build"
       - echo "Distribution packages built in dist/"
 
   release:test-pypi:
     desc: Upload to TestPyPI
     cmds:
-      - "{{.PYTHON}} -m twine upload --repository testpypi dist/*"
+      - "{{.UV}} publish --publish-url https://test.pypi.org/legacy/"
 
   release:pypi:
     desc: Upload to PyPI
     cmds:
-      - "{{.PYTHON}} -m twine upload dist/*"
+      - "{{.UV}} publish"
 
   # Utility tasks
   shell:
     desc: Start Python shell with package imported
     cmds:
-      - "{{.PYTHON}} -i -c 'from mcp_web import *; print(\"mcp-web shell ready\")'"
+      - "{{.UV}} run python -i -c 'from mcp_web import *; print(\"mcp-web shell ready\")'"
 
   deps:update:
     desc: Update dependencies
     cmds:
-      - "{{.PYTHON}} -m pip install --upgrade pip"
-      - "{{.PYTHON}} -m pip install --upgrade -e .[dev]"
+      - "{{.UV}} lock --upgrade"
 
   deps:tree:
     desc: Show dependency tree
     cmds:
-      - pipdeptree
+      - "{{.UV}} tree"
 
   deps:outdated:
     desc: Check for outdated dependencies
     cmds:
-      - "{{.PYTHON}} -m pip list --outdated"
+      - "{{.UV}} pip list --outdated"
 
   # Local LLM tasks
   llm:ollama:start:
@@ -360,30 +399,31 @@ tasks:
       MCP_WEB_SUMMARIZER_MODEL: llama3.2:3b
       MCP_WEB_SUMMARIZER_API_KEY: ollama
     cmds:
-      - pytest -m golden -v
+      - "{{.UV}} run pytest -m golden -v"
 
   # Golden test management
   golden:update:
     desc: Update golden test expectations (use with caution)
     cmds:
-      - pytest -m golden --update-golden -v
+      - "{{.UV}} run pytest -m golden --update-golden -v"
 
   golden:verify:
     desc: Verify golden tests with detailed output
     cmds:
-      - pytest -m golden -vv --tb=long
+      - "{{.UV}} run pytest -m golden -vv --tb=long"
 
   # Information tasks
   info:
     desc: Show project information
     cmds:
       - echo "Project{{\":\"}} mcp-web"
-      - "{{.PYTHON}} --version"
-      - pytest --version
-      - ruff --version
+      - "{{.UV}} run python --version"
+      - "{{.UV}} run pytest --version"
+      - "{{.UV}} run ruff --version"
       - echo "Coverage minimum{{\":\"}} {{.COVERAGE_MIN}}%"
+      - echo "Parallel workers{{\":\"}} {{.PARALLEL_WORKERS}}"
 
   info:env:
     desc: Show environment configuration
     cmds:
-      - "{{.PYTHON}} -c 'from mcp_web.config import MCPWebConfig; import json; print(json.dumps(MCPWebConfig().model_dump(), indent=2))'"
+      - "{{.UV}} run python -c 'from mcp_web.config import MCPWebConfig; import json; print(json.dumps(MCPWebConfig().model_dump(), indent=2))'"
