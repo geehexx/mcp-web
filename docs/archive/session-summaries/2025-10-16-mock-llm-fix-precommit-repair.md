@@ -9,6 +9,7 @@
 ## Objectives
 
 Continue performance optimization work from previous session by:
+
 1. Fixing mock LLM interception to prevent real API calls in benchmarks
 2. Resolving pre-commit hook nodeenv errors
 3. Validating benchmark infrastructure works correctly
@@ -24,11 +25,13 @@ Continue performance optimization work from previous session by:
 **Root Cause:** Python mock rule - "patch where used, not where defined"
 
 **Solution:**
+
 - Changed `patch("openai.AsyncOpenAI")` to `patch("mcp_web.summarizer.AsyncOpenAI")`
 - Fixed async/sync test function declarations
 - Removed class-level `@pytest.mark.asyncio`, applied to individual async tests
 
 **Files:**
+
 - `tests/benchmarks/conftest.py` - Fixed patch target
 - `tests/benchmarks/test_performance.py` - Fixed test signatures
 
@@ -43,11 +46,13 @@ Continue performance optimization work from previous session by:
 **Root Cause:** System nodeenv unable to fetch stable node version list
 
 **Solution:**
+
 - Switched from `markdownlint-cli` to `markdownlint-cli2-docker`
 - Docker version doesn't require Node.js/nodeenv installation
 - Maintains same linting capabilities
 
 **Files:**
+
 - `.pre-commit-config.yaml` - Updated markdownlint hook to Docker variant
 - `tests/benchmarks/test_performance.py` - Fixed unused variable warnings from ruff
 
@@ -60,6 +65,7 @@ Continue performance optimization work from previous session by:
 **File:** `docs/initiatives/active/performance-optimization-pipeline.md`
 
 **Updates:**
+
 - Marked mock LLM interception fix as completed
 - Marked summarization benchmark suite as completed
 - Adjusted Phase 1 checklist to reflect current state
@@ -109,11 +115,13 @@ with patch("mcp_web.summarizer.AsyncOpenAI"):
 **Insight:** Docker-based pre-commit hooks bypass environment installation issues.
 
 **When to use:**
+
 - Tool requires runtime (Node.js, Ruby) not in environment
 - Installation process is flaky (nodeenv)
 - Consistency across different systems needed
 
 **Trade-offs:**
+
 - Slower first run (image pull)
 - Requires Docker installed
 - But more reliable and reproducible
@@ -121,6 +129,7 @@ with patch("mcp_web.summarizer.AsyncOpenAI"):
 ### 3. Async Test Markers in pytest
 
 **Pattern:**
+
 - Class-level `@pytest.mark.asyncio` applies to ALL methods
 - If mixing sync and async tests, mark individual methods
 - `asyncio.run()` inside test → function should be sync `def`
@@ -138,6 +147,7 @@ pytest tests/benchmarks/test_performance.py::TestSummarizationPerformance -v
 ```
 
 **Performance:**
+
 - Direct summarization: ~5ms (was ~100ms with real API)
 - Map-reduce summarization: ~10ms total
 - Parallel vs sequential test: Both complete in <10ms
@@ -210,6 +220,7 @@ pytest tests/unit/test_security.py -v -x
 ### 🔍 Potential Future Improvements
 
 **None identified** - Session followed protocols correctly:
+
 - ✅ Used `/work` workflow for continuation
 - ✅ Followed `/commit` workflow principles  
 - ✅ Running meta-analysis before final summary

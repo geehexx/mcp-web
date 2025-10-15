@@ -89,6 +89,39 @@ This document establishes the principles, standards, and processes that govern t
 | Config change | Update reference docs | Developer |
 | Quarterly | Review all active docs | Team |
 | Release | Update CHANGELOG | Release manager |
+| **Any change** | **Update PROJECT_SUMMARY.md** | **Developer (Continuous)** |
+
+#### 3.1 PROJECT_SUMMARY.md: Living Status Document
+
+**CRITICAL REQUIREMENT:** `PROJECT_SUMMARY.md` in the project root MUST be maintained continuously as a living snapshot of project status.
+
+**Scope:** This requirement supersedes workflow boundaries and applies to ALL work sessions.
+
+**Update Triggers:**
+
+- Major feature completion
+- Initiative status changes
+- Metrics changes (test coverage, type coverage, etc.)
+- Roadmap updates
+- Architecture decision implementations
+- Any significant project milestone
+
+**Required Sections:**
+
+- Current version and status
+- Key metrics (test coverage, quality indicators)
+- Active initiatives with progress
+- Recent accomplishments
+- Roadmap (current and planned versions)
+- Technical debt status
+- Links to key documentation
+
+**Maintenance Responsibility:**
+
+- All contributors (human and AI)
+- Reviewed in quarterly documentation reviews
+- Updated before every release
+- Serves as single source of truth for project overview
 
 ### 4. External References
 

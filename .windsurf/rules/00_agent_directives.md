@@ -89,6 +89,7 @@ When making any implementation decision, prioritize the following principles in 
    - Session summary created in `docs/archive/session-summaries/`
 
 **CRITICAL VIOLATIONS:**
+
 - ❌ Never present final summary without running meta-analysis first
 - ❌ Never commit work and skip meta-analysis
 - ❌ Never leave unstaged auto-fix changes uncommitted

@@ -163,8 +163,8 @@ Remove expired cache entries.
 ### Pipeline Flow
 
 ```
-URLs → Fetch (httpx/Playwright) → Extract (trafilatura) → 
-Chunk (hierarchical/semantic) → Summarize (LLM map-reduce) → 
+URLs → Fetch (httpx/Playwright) → Extract (trafilatura) →
+Chunk (hierarchical/semantic) → Summarize (LLM map-reduce) →
 Markdown Output (streaming)
 ```
 
@@ -179,7 +179,7 @@ Markdown Output (streaming)
 7. **DD-008**: OpenAI GPT-4o-mini default (configurable)
 8. **DD-009**: Streaming output for better UX
 
-See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for full design documentation.
+See [docs/architecture/ARCHITECTURE.md](docs/architecture/ARCHITECTURE.md) for full design documentation.
 
 ## Project Structure
 
@@ -273,7 +273,7 @@ bandit -r src/
 
 ## Configuration Reference
 
-See [docs/ARCHITECTURE.md#configuration-strategy](docs/ARCHITECTURE.md#configuration-strategy) for complete configuration options.
+See [docs/architecture/ARCHITECTURE.md#configuration-strategy](docs/architecture/ARCHITECTURE.md#configuration-strategy) for complete configuration options.
 
 ### Key Settings
 
@@ -358,7 +358,7 @@ python -m mcp_web.mcp_server
 - [ ] Incremental summarization
 - [ ] Prometheus metrics export
 
-See [docs/ARCHITECTURE.md#future-enhancements](docs/ARCHITECTURE.md#future-enhancements) for full roadmap.
+See [docs/architecture/ARCHITECTURE.md#future-enhancements](docs/architecture/ARCHITECTURE.md#future-enhancements) for full roadmap.
 
 ## License
 

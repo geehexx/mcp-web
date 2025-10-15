@@ -9,6 +9,7 @@
 ## Objectives
 
 Continue performance optimization initiative from previous session:
+
 1. Optimize prompts to reduce latency without sacrificing quality
 2. Implement adaptive `max_tokens` based on input size
 3. Add support for stop sequences
@@ -23,6 +24,7 @@ Continue performance optimization initiative from previous session:
 **Problem:** Verbose prompts increase LLM processing time and token usage.
 
 **Research:** Industry best practices from SigNoz and OpenAI documentation:
+
 - Concise, directive prompts reduce latency
 - Shorter prompts = faster response times
 - Must balance conciseness with quality guidance
@@ -30,16 +32,19 @@ Continue performance optimization initiative from previous session:
 **Solution Implemented:**
 
 **Direct Summarization Prompt:**
+
 - Before: 11 lines of verbose instructions
 - After: 6 lines of clear, concise directives
 - Reduction: ~45% shorter
 
 **Map Phase Prompt:**
+
 - Before: "Summarize the following section concisely, focusing on key information..." + structural markers
 - After: "Summarize the key information from this section: [content]"
 - Reduction: ~60% shorter
 
 **Reduce Phase Prompt:**
+
 - Before: 18 lines with numbered instructions and structural markers
 - After: 10 lines with direct, clear instructions
 - Reduction: ~45% shorter
@@ -47,6 +52,7 @@ Continue performance optimization initiative from previous session:
 **Key Insight:** Avoided over-optimization. Initial aggressive reduction caused quality issues and security validation failures. Revised to balanced approach maintaining core guidance.
 
 **Files Modified:**
+
 - `src/mcp_web/summarizer.py` - `_build_summary_prompt()`, `_build_map_prompt()`, `_build_reduce_prompt()`
 
 **Commit:** `feat(summarizer): add prompt optimization and adaptive max_tokens`
@@ -59,6 +65,7 @@ Continue performance optimization initiative from previous session:
 > "Lower max_tokens: If your requests are generating a similar number of tokens, setting a lower max_tokens parameter can help cut down on latency."
 
 **Solution:**
+
 ```python
 def _calculate_max_tokens(self, input_tokens: int) -> int:
     adaptive_tokens = int(input_tokens * self.config.max_tokens_ratio)
@@ -66,6 +73,7 @@ def _calculate_max_tokens(self, input_tokens: int) -> int:
 ```
 
 **Configuration:**
+
 - New option: `adaptive_max_tokens` (bool, default=False for backward compatibility)
 - New option: `max_tokens_ratio` (float, default=0.5)
 - Formula: `output_tokens = input_tokens × 0.5`
@@ -74,6 +82,7 @@ def _calculate_max_tokens(self, input_tokens: int) -> int:
 **Opt-in Design:** Disabled by default to maintain test determinism and backward compatibility. Users can enable for performance.
 
 **Files Modified:**
+
 - `src/mcp_web/config.py` - Added `adaptive_max_tokens`, `max_tokens_ratio`, `stop_sequences` fields
 - `src/mcp_web/summarizer.py` - Added `_calculate_max_tokens()`, integrated into `_call_llm()` and `_call_llm_non_streaming()`
 
@@ -82,11 +91,13 @@ def _calculate_max_tokens(self, input_tokens: int) -> int:
 **Problem:** No mechanism to prevent over-generation when output follows predictable patterns.
 
 **Solution:**
+
 - New config option: `stop_sequences: list[str]`
 - Passed to OpenAI API in both streaming and non-streaming calls
 - Example usage: `["\\n\\n\\n", "---"]` to stop at excessive spacing
 
 **Configuration:**
+
 ```python
 # Environment variable
 MCP_WEB_SUMMARIZER_STOP_SEQUENCES='["\\n\\n\\n"]'
@@ -96,12 +107,14 @@ config.summarizer.stop_sequences = ["\\n\\n\\n", "---"]
 ```
 
 **Files Modified:**
+
 - `src/mcp_web/config.py` - Added `stop_sequences` field
 - `src/mcp_web/summarizer.py` - Integrated into API calls
 
 ### 4. Code Quality Maintenance ✅
 
 **Linting & Formatting:**
+
 - Ran `ruff` auto-fixes (63 issues resolved)
 - Fixed import ordering (moved `asyncio`, `structlog` to top)
 - Removed unused variables from tests
@@ -110,6 +123,7 @@ config.summarizer.stop_sequences = ["\\n\\n\\n", "---"]
 **Commit:** `style(src,tests): apply ruff auto-fixes (import ordering, whitespace, unused vars)`
 
 **Type Checking:**
+
 - Validated changes with `mypy` (pre-existing issues remain, none introduced)
 - All new code properly typed
 
@@ -125,6 +139,7 @@ pytest tests/benchmarks/test_performance.py::TestSummarizationPerformance -v
 ```
 
 **Performance:**
+
 - Direct summarization: <10ms
 - Map-reduce summarization: <10ms  
 - Parallel speedup test: <10ms
@@ -139,6 +154,7 @@ task test:golden
 ```
 
 **Analysis:**
+
 - Pass rate: 63% (12/19 tests)
 - **Context:** Tests use local LLM (`llama3.2:3b`) which has inherent variability
 - Failures are consistent with baseline behavior (not introduced by changes)
@@ -158,17 +174,20 @@ task test:golden
 **Finding:** Aggressive optimization can hurt quality.
 
 **Initial Approach (Too Aggressive):**
+
 ```python
 # Map prompt
 parts = ["Summarize key information:", chunk, "\\nSummary:"]
 ```
 
 **Issues:**
+
 - Security validation failures (unpredictable output)
 - Missing expected content keywords
 - Lower determinism
 
 **Final Approach (Balanced):**
+
 ```python
 # Map prompt
 parts = ["Summarize the key information from this section:", 
@@ -185,6 +204,7 @@ parts = ["Summarize the key information from this section:",
 **Decision:** Default `adaptive_max_tokens=False`
 
 **Rationale:**
+
 - Maintains backward compatibility
 - Preserves test determinism
 - Users can opt-in for performance gains
@@ -198,6 +218,7 @@ parts = ["Summarize the key information from this section:",
 **Approach:** Used web search to supplement implementation decisions.
 
 **Sources Consulted:**
+
 - SigNoz: OpenAI API latency optimization guide
 - OpenAI Help Center: Stop sequences, max_tokens best practices
 - OpenAI Cookbook: Prompt optimization examples
@@ -210,7 +231,7 @@ parts = ["Summarize the key information from this section:",
 
 1. `style(src,tests): apply ruff auto-fixes (import ordering, whitespace, unused vars)`
    - 21 files changed: Import ordering, unused variable removal
-   
+
 2. `feat(summarizer): add prompt optimization and adaptive max_tokens`
    - 2 files changed: Core functionality implementation
    - Prompt optimization (~45-60% reduction)
@@ -312,11 +333,13 @@ parts = ["Summarize the key information from this section:",
 ## References
 
 **Research:**
+
 - [SigNoz - Optimizing OpenAI API Performance](https://signoz.io/guides/open-ai-api-latency/)
 - [OpenAI - Controlling Model Response Length](https://help.openai.com/en/articles/5072518-controlling-the-length-of-completions)
 - [OpenAI - Stop Sequences](https://help.openai.com/en/articles/5072263-how-do-i-use-stop-sequences-in-the-openai-api)
 
 **Previous Sessions:**
+
 - `2025-10-16-mock-llm-fix-precommit-repair.md` - Mock LLM fixes
 - Initiative: `docs/initiatives/active/performance-optimization-pipeline.md`
 

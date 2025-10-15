@@ -55,6 +55,7 @@
 **Root Cause:** No workflow guidance to check git diff after auto-fix commands.
 
 **Fix:**
+
 - Updated `.windsurf/workflows/commit.md`: Added Step 2 to check for auto-fix changes
 - Auto-fixes must now be committed separately with `style:` prefix before main work
 
@@ -65,6 +66,7 @@
 **Root Cause:** Protocol treated as optional at "logical checkpoints" rather than mandatory.
 
 **Fix:**
+
 - Updated `.windsurf/rules/00_agent_directives.md` Section 1.8:
   - Changed "Before ending any work session" → "Before ending any work session or presenting final summary"
   - Added explicit CRITICAL VIOLATIONS section
@@ -90,6 +92,7 @@
 ### markdownlint-cli2 vs markdownlint-cli
 
 Chose markdownlint-cli2 for:
+
 - Better performance
 - Improved CLI interface
 - Built-in --fix flag (no separate package needed)
@@ -103,6 +106,7 @@ Chose markdownlint-cli2 for:
 ### Auto-Fix Commit Strategy
 
 Best practices from research (Interrupt blog, lint-action):
+
 - **Separate commits:** Auto-fixes should be committed separately from feature work
 - **Check diffs:** Always review what auto-fix changed before committing
 - **Commit message format:** `style(scope): apply [tool] auto-fixes`

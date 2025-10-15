@@ -12,6 +12,7 @@ This guide documents the performance optimization work for mcp-web, including im
 ### Quick Summary
 
 ✅ **Phase 1 Complete**: Parallel map-reduce optimization
+
 - **Implementation**: `asyncio.gather()` for concurrent chunk summarization
 - **Expected Improvement**: 10x+ speedup for large documents (30+ chunks)
 - **Configuration**: Enabled by default via `parallel_map=True`
@@ -35,9 +36,11 @@ This guide documents the performance optimization work for mcp-web, including im
 ### Phase 1: Parallel Map-Reduce (October 2025)
 
 **Problem**: Sequential chunk summarization was the primary bottleneck
+
 - 10 chunks × 3s/chunk = 30 seconds (just for map phase)
 
 **Solution**: Parallel map phase using `asyncio.gather()`
+
 - All chunks summarized concurrently
 - Expected: 10x+ speedup for documents with many chunks
 
@@ -48,6 +51,7 @@ This guide documents the performance optimization work for mcp-web, including im
 3. **Sequential**: Original implementation - fallback
 
 **References**:
+
 - [ADR 0016: Parallel Map-Reduce](adr/0016-parallel-map-reduce-optimization.md)
 - [Performance Initiative](initiatives/active/performance-optimization-pipeline.md)
 
@@ -179,6 +183,7 @@ export MCP_WEB_SUMMARIZER_MAP_REDUCE_THRESHOLD=8000  # tokens
 - **≥ threshold**: Map-reduce (parallel chunk summarization)
 
 **Tuning**:
+
 - Lower threshold → More use of map-reduce → Better for very long docs
 - Higher threshold → More direct summarization → Better for shorter docs
 
@@ -209,11 +214,12 @@ MCP_WEB_SUMMARIZER_PARALLEL_MAP=false python scripts/benchmark_pipeline.py --url
 | 30k tokens    | 12-15  | ~45s       | ~5s      | 8-10x            |
 | 100k tokens   | 40-50  | ~2min      | ~10s     | 12x+             |
 
-*Assumptions: 3s average LLM call latency, ~1s reduce phase*
+_Assumptions: 3s average LLM call latency, ~1s reduce phase_
 
 ### Interpreting Results
 
 Look for:
+
 1. **Component breakdown**: Which stage is slowest?
 2. **Map phase time**: Should be ~3-5s regardless of chunk count (with parallel)
 3. **Reduce phase time**: Should be 1-2s
@@ -276,6 +282,7 @@ export MCP_WEB_CHUNKER_CHUNK_SIZE=768  # Default: 512
 ```
 
 **Tuning guidance**:
+
 - 512: Best quality, slower
 - 768: Good balance (recommended for performance)
 - 1024: Fastest, may reduce quality
@@ -322,7 +329,9 @@ config.chunker.chunk_size = 1024  # Larger chunks = fewer API calls
 ### Problem: Slow summarization despite parallel mode
 
 **Check**:
+
 1. Is parallel mode actually enabled?
+
    ```bash
    uv run python -c "from mcp_web.config import load_config; c=load_config(); print(f'Parallel: {c.summarizer.parallel_map}')"
    ```
@@ -332,6 +341,7 @@ config.chunker.chunk_size = 1024  # Larger chunks = fewer API calls
 
 3. Network latency?
    - Run with profiling to see actual LLM call times
+
    ```bash
    python scripts/benchmark_pipeline.py --url URL --profile
    ```
@@ -339,12 +349,15 @@ config.chunker.chunk_size = 1024  # Larger chunks = fewer API calls
 ### Problem: API rate limit errors
 
 **Solutions**:
+
 1. Reduce concurrent operations:
+
    ```bash
    export MCP_WEB_FETCHER_MAX_CONCURRENT=3
    ```
 
 2. Use larger chunks (fewer API calls):
+
    ```bash
    export MCP_WEB_CHUNKER_CHUNK_SIZE=1024
    ```
@@ -354,17 +367,21 @@ config.chunker.chunk_size = 1024  # Larger chunks = fewer API calls
 ### Problem: Quality degradation
 
 **Check**:
+
 1. Chunk size not too large:
+
    ```bash
    export MCP_WEB_CHUNKER_CHUNK_SIZE=512  # Don't exceed 1024
    ```
 
 2. Run golden tests to validate:
+
    ```bash
    task test:golden
    ```
 
 3. Compare with sequential mode:
+
    ```bash
    MCP_WEB_SUMMARIZER_PARALLEL_MAP=false task test:manual URL=your_url
    ```
@@ -372,12 +389,15 @@ config.chunker.chunk_size = 1024  # Larger chunks = fewer API calls
 ### Problem: Memory usage
 
 **Solutions**:
+
 1. Reduce max chunk size:
+
    ```bash
    export MCP_WEB_CHUNKER_MAX_CHUNK_SIZE=1024
    ```
 
 2. Clear cache periodically:
+
    ```bash
    task dev:clean:cache
    ```
@@ -419,6 +439,7 @@ config.chunker.chunk_size = 1024  # Larger chunks = fewer API calls
 ## Support
 
 For questions or issues:
+
 1. Check [Troubleshooting](#troubleshooting) section
 2. Review [Performance Initiative](initiatives/active/performance-optimization-pipeline.md)
 3. Run benchmarks to gather data

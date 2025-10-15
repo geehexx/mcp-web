@@ -10,6 +10,7 @@
 ## Context
 
 The summarization pipeline uses a map-reduce strategy for long documents:
+
 1. **Map phase**: Summarize each chunk individually
 2. **Reduce phase**: Combine chunk summaries into final summary
 
@@ -18,6 +19,7 @@ The original implementation processed chunks **sequentially**, which was a signi
 ### Performance Problem
 
 For a document split into 10 chunks:
+
 - **Sequential**: 10 LLM calls one after another ≈ 30 seconds
 - **Opportunity**: All chunks are independent → can parallelize
 
@@ -143,7 +145,7 @@ async def _summarize_map_reduce_streaming(
 | 30k tokens    | 10     | ~35s       | ~4-5s    | 7-8x    |
 | 100k tokens   | 30     | ~100s      | ~8-10s   | 10x+    |
 
-*Assumptions: 3s average per LLM call, ~1s reduce phase*
+_Assumptions: 3s average per LLM call, ~1s reduce phase_
 
 ---
 
@@ -160,13 +162,16 @@ async def _summarize_map_reduce_streaming(
 ### Negative
 
 ⚠️ **API rate limits** - May hit provider rate limits with many parallel calls
-   - **Mitigation**: Already have semaphore-based concurrency control in fetcher; can add same to summarizer if needed
+
+- **Mitigation**: Already have semaphore-based concurrency control in fetcher; can add same to summarizer if needed
 
 ⚠️ **Higher concurrent load** - More simultaneous API connections
-   - **Mitigation**: Monitor and tune concurrency limits
+
+- **Mitigation**: Monitor and tune concurrency limits
 
 ⚠️ **Cost transparency** - Parallel calls may appear to spike costs
-   - **Mitigation**: Same total cost, just faster; cost = tokens × rate (unchanged)
+
+- **Mitigation**: Same total cost, just faster; cost = tokens × rate (unchanged)
 
 ### Risks
 
@@ -208,10 +213,12 @@ async def _summarize_map_reduce_streaming(
 ### 1. Batch API (OpenAI, Anthropic, Google)
 
 **Pros:**
+
 - 50% cost savings
 - Higher throughput
 
 **Cons:**
+
 - 24-hour processing window (not acceptable for real-time)
 - Only for offline/batch processing
 
@@ -220,11 +227,13 @@ async def _summarize_map_reduce_streaming(
 ### 2. Local LLM with GPU acceleration
 
 **Pros:**
+
 - No API costs
 - Full control
 - Lower latency potential
 
 **Cons:**
+
 - Requires GPU
 - Deployment complexity
 - Model quality trade-offs
@@ -234,10 +243,12 @@ async def _summarize_map_reduce_streaming(
 ### 3. Speculative summarization (pipeline parallelism)
 
 **Pros:**
+
 - Additional 15-25% speedup
 - Start summarizing while chunking
 
 **Cons:**
+
 - Complex implementation
 - Tight coupling between components
 - Risk of wasted work if early stages fail
@@ -283,7 +294,7 @@ async def _summarize_map_reduce_streaming(
 ### Phase 3 (Future)
 
 - **Multi-model strategy** (fast model for map, quality model for reduce)
-- **Speculative/pipeline parallelism** 
+- **Speculative/pipeline parallelism**
 - **GPU-accelerated chunking** for very large documents
 
 ---
