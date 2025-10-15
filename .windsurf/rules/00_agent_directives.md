@@ -47,7 +47,17 @@ When making any implementation decision, prioritize the following principles in 
   - OWASP LLM Top 10: https://genai.owasp.org/
   - Windsurf workflows: https://docs.windsurf.com/
 
-## 1.6 Git Operations
+## 1.6 File Operations
+
+* **Protected directories (.windsurf/):** ALWAYS use MCP filesystem tools (`mcp0_*`) for files in `.windsurf/` directory
+  - `mcp0_read_text_file` for reading
+  - `mcp0_write_file` for creating/overwriting
+  - `mcp0_edit_file` for editing
+  - Deletions: Use command-line `rm` (MCP doesn't support delete)
+* **Regular files:** Standard `read_file`, `edit`, `write_to_file` tools
+* **Fallback strategy:** If standard tools fail on protected files, immediately retry with `mcp0_*` tools
+
+## 1.7 Git Operations
 
 * **All Git operations via MCP tools when available:** `mcp2_git_status`, `mcp2_git_diff_unstaged`, `mcp2_git_diff_staged`, `mcp2_git_add`, `mcp2_git_commit`
 * **Status before and after edits:** Run `mcp2_git_status` to maintain awareness of working tree
@@ -55,7 +65,27 @@ When making any implementation decision, prioritize the following principles in 
 * **Ownership verification:** Ensure every change belongs to current task before committing
 * **Conventional commits:** Use format `type(scope): description` (feat, fix, docs, test, refactor, security, chore)
 
-## 1.7 Checkpoint Strategy
+## 1.8 Session End Protocol
+
+**MANDATORY:** Before ending any work session:
+
+1. **Archive completed initiatives:** Check `docs/initiatives/active/` for status "Completed" or "✅"
+   - If found, MUST call `/archive-initiative` workflow for each
+   - Do NOT skip - this is a quality gate
+
+2. **Run meta-analysis:** MUST call `/meta-analysis` workflow
+   - Creates session summary for cross-session continuity
+   - Identifies workflow/rule improvements
+   - This is NOT optional
+
+3. **Verify exit criteria:**
+   - All changes committed (or only timestamp file unstaged)
+   - Tests passing (if code changes made)
+   - Session summary created in `docs/archive/session-summaries/`
+
+**CRITICAL:** Never present final summary to user without completing steps 1-3.
+
+## 1.9 Checkpoint Strategy
 
 Present work for review at logical milestones:
 * After completing a major feature

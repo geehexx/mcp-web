@@ -440,6 +440,91 @@ fi
 
 ---
 
+---
+
+## Stage 5: Session End Protocol (MANDATORY)
+
+**CRITICAL:** This stage MUST execute before presenting final summary to user.
+
+### 5.1 Exit Criteria Checklist
+
+Before ending any work session, verify:
+
+```markdown
+## Exit Criteria (ALL MUST BE TRUE)
+
+- [ ] All changes committed (git status clean OR only .windsurf/.last-meta-analysis unstaged)
+- [ ] All tests passing (if code changes made)
+- [ ] Completed initiatives archived (see 5.2)
+- [ ] Meta-analysis executed (see 5.3)
+- [ ] Session summary created in proper location
+```
+
+### 5.2 Archive Completed Initiatives (AUTOMATIC)
+
+**Check for initiatives marked complete:**
+
+```bash
+# Search for completed status markers in active initiatives
+grep -l "Status.*Completed\|Status.*✅" docs/initiatives/active/*.md
+```
+
+**If any found:**
+1. MUST call `/archive-initiative` workflow for each
+2. Do NOT skip this - completed initiatives pollute active directory
+3. Archiving must complete before meta-analysis
+
+**Why this matters:**
+- Active directory should only contain active work
+- Completed initiatives provide historical context when archived
+- Skipping creates clutter and confusion in next session
+
+### 5.3 Execute Meta-Analysis (MANDATORY)
+
+**MUST call `/meta-analysis` workflow:**
+
+```bash
+# This is NOT optional - it's a mandatory exit gate
+/meta-analysis
+```
+
+**Why this is mandatory:**
+- Creates session summary for cross-session continuity
+- Identifies workflow/rule improvements
+- Enables next session to pick up context
+- Documents decisions and learnings
+
+**Enforcement:**
+- Agent MUST NOT present final summary without running meta-analysis
+- User should never see work completion without session summary created
+- If skipped, this is a CRITICAL workflow violation
+
+### 5.4 Final Presentation
+
+**ONLY after all exit criteria met:**
+
+Present structured summary to user:
+```markdown
+# ✅ Session Complete
+
+## Work Completed
+[Brief bullet list from commits]
+
+## Tests Status
+[Pass/fail counts]
+
+## Session Summary
+Created: docs/archive/session-summaries/YYYY-MM-DD-description.md
+
+## Archived Initiatives
+[List any initiatives archived]
+
+## Next Session Starting Points
+[Top 3 priorities from session summary]
+```
+
+---
+
 ## Success Metrics
 
 ✅ **Good Performance:**
@@ -447,12 +532,14 @@ fi
 - <5 tool calls for context gathering
 - Correct routing 90%+ of time
 - Autonomous continuation (no user prompt) 70%+ of time
+- **Session end protocol executed 100% of time**
 
 ❌ **Needs Improvement:**
 - >1 minute for context detection
 - >10 tool calls
 - Asking user "what to work on" when context is clear
 - Requiring user direction for obvious continuations
+- **Skipping session end protocol (CRITICAL FAILURE)**
 
 ---
 

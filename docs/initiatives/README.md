@@ -170,17 +170,20 @@ Add to the "Updates" section at the bottom:
 ### Completing an Initiative
 
 1. Mark all success criteria as complete: `- [x]`
-2. Update status: `**Status:** Complete`
+2. Update status: `**Status:** Complete` or `**Status:** ✅ Completed`
 3. Add completion date: `**Completed:** YYYY-MM-DD`
-4. Move file to `completed/` directory:
+4. **Archive via workflow:** The `/archive-initiative` workflow will automatically:
+   - Move file to `completed/` directory
+   - Update this README index
+   - Create proper git commit
+   - This runs automatically during session end protocol
+5. Manual archival (if needed):
    ```bash
    git mv docs/initiatives/active/name.md docs/initiatives/completed/name.md
-   ```
-5. Update this README index
-6. Commit:
-   ```bash
    git commit -m "docs(initiative): complete [initiative name]"
    ```
+
+**Note:** Step 4 (automatic archival) is preferred and happens as part of the session end protocol.
 
 ## Active Initiatives
 

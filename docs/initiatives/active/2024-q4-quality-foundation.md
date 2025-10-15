@@ -99,14 +99,14 @@ The project has grown rapidly but needs stronger quality foundations:
   - [ ] Query with no matches
   - [ ] Query-focused chunk selection
   - [ ] Query in map-reduce context
-  
+
 - [ ] **Playwright Fallback Tests** (5+ scenarios)
   - [ ] Detect JS-rendered content
   - [ ] Fallback on httpx failure
   - [ ] Wait for network idle
   - [ ] Extract from SPA
   - [ ] Handle Playwright errors gracefully
-  
+
 - [ ] **robots.txt Tests** (5+ scenarios)
   - [ ] Respect robots.txt by default
   - [ ] Parse and check disallow rules
@@ -276,5 +276,11 @@ The project has grown rapidly but needs stronger quality foundations:
 
 ---
 
-**Last Updated:** 2025-10-15  
+**Last Updated:** 2025-10-15
 **Status:** Active - On Track
+
+---
+
+## Completion and Archival
+
+When this initiative is complete, the `/archive-initiative` workflow will automatically move it to `completed/` directory during session end protocol. Do not manually move this file.
