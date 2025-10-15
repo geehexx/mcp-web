@@ -214,7 +214,7 @@ class PipelineBenchmark:
         async def single_request(request_num: int) -> float:
             """Single request with semaphore."""
             async with semaphore:
-                start = time.perf_counter()
+                time.perf_counter()
                 try:
                     result = await self.benchmark_full_pipeline(
                         url, use_cache=False
@@ -272,7 +272,7 @@ class PipelineBenchmark:
         print(f"  Failed:         {results.get('failed', 0)}")
         if "throughput_rps" in results:
             print(f"  Throughput:     {results['throughput_rps']:.2f} req/s")
-            print(f"\nLatency:")
+            print("\nLatency:")
             print(f"  Min:    {format_duration(results['latency']['min_ms'])}")
             print(f"  Mean:   {format_duration(results['latency']['mean_ms'])}")
             print(f"  Median: {format_duration(results['latency']['median_ms'])}")

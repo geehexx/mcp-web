@@ -12,13 +12,12 @@ import asyncio
 from dataclasses import dataclass
 
 import httpx
+import structlog
 from playwright.async_api import async_playwright
 
 from mcp_web.cache import CacheKeyBuilder, CacheManager
 from mcp_web.config import FetcherSettings
 from mcp_web.metrics import get_metrics_collector
-
-import structlog
 
 logger: structlog.stdlib.BoundLogger | None = None
 

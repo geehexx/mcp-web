@@ -135,8 +135,8 @@ class TestCacheManager:
 
         # Prune should remove expired entry
         # Note: diskcache with eviction policies may not immediately report pruned count
-        pruned = await cache.prune()
-        
+        await cache.prune()
+
         # The important check: expired entry should be gone
         assert await cache.get("short") is None
         assert await cache.get("long") is not None

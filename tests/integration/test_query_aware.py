@@ -4,6 +4,7 @@ Tests the end-to-end flow of using a query to focus summaries.
 """
 
 import os
+
 import pytest
 
 from mcp_web.chunker import Chunk
@@ -13,7 +14,7 @@ from mcp_web.summarizer import Summarizer
 # Skip these tests if no OpenAI API key available
 pytestmark = pytest.mark.skipif(
     not os.getenv("OPENAI_API_KEY"),
-    reason="OpenAI API key not available - use OPENAI_API_KEY env var"
+    reason="OpenAI API key not available - use OPENAI_API_KEY env var",
 )
 
 
@@ -22,27 +23,27 @@ def sample_content():
     """Sample content covering multiple topics."""
     return """
     Python Programming Best Practices
-    
+
     Python is a versatile programming language known for its simplicity and readability.
     It supports multiple programming paradigms including procedural, object-oriented,
     and functional programming.
-    
+
     Security Considerations
-    
+
     When writing Python code, security is paramount. Always validate user input to
     prevent injection attacks. Use parameterized queries for database operations to
     avoid SQL injection. Never store passwords in plain text; use proper hashing
     algorithms like bcrypt or Argon2.
-    
+
     Performance Optimization
-    
+
     Python performance can be improved through various techniques. Use list
     comprehensions instead of loops where possible. Consider using built-in
     functions like map() and filter(). For computationally intensive tasks,
     consider using NumPy or Numba for acceleration.
-    
+
     Testing Strategies
-    
+
     Comprehensive testing is essential for maintainable code. Write unit tests for
     individual functions, integration tests for module interactions, and end-to-end
     tests for complete workflows. Aim for at least 80% code coverage.

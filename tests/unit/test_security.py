@@ -11,7 +11,6 @@ import asyncio
 import time
 
 import pytest
-from freezegun import freeze_time
 
 from mcp_web.security import (
     ConsumptionLimits,
@@ -266,7 +265,7 @@ class TestConsumptionLimits:
 
     async def test_rate_limiting_integration(self):
         """Test rate limiting within consumption limits.
-        
+
         Uses actual timing validation but with optimized parameters for speed.
         """
         # Test that rate limiting works by verifying request counting
@@ -291,26 +290,27 @@ class TestConsumptionLimits:
         await asyncio.gather(*tasks)
 
         # Verify concurrency was limited
-        assert max_concurrent <= limits.max_concurrent, \
+        assert max_concurrent <= limits.max_concurrent, (
             f"Exceeded concurrent limit: {max_concurrent} > {limits.max_concurrent}"
-    
+        )
+
     @pytest.mark.slow
     async def test_rate_limiting_realistic_timing(self):
         """Test rate limiting with realistic timing (slow test).
-        
+
         This test validates actual time-based rate limiting behavior.
         """
         limits = ConsumptionLimits(max_concurrent=2, max_requests_per_minute=10)
-        
+
         start = time.perf_counter()
-        
+
         # Make 12 requests - should trigger rate limiting
         for _ in range(12):
             async with limits:
                 await asyncio.sleep(0.01)  # Simulate tiny amount of work
-        
+
         elapsed = time.perf_counter() - start
-        
+
         # 12 requests at 10/min should take at least ~0.2 seconds
         assert elapsed >= 0.15, f"Rate limiting not working: {elapsed:.3f}s"
 

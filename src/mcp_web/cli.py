@@ -117,13 +117,17 @@ async def _test_summarize_async(
     config.summarizer.provider = provider
     if model:
         config.summarizer.model = model
-    
+
     # Initialize cache manager
-    cache_manager = CacheManager(
-        cache_dir=config.cache.cache_dir,
-        ttl=config.cache.ttl,
-        max_size=config.cache.max_size,
-    ) if config.cache.enabled else None
+    cache_manager = (
+        CacheManager(
+            cache_dir=config.cache.cache_dir,
+            ttl=config.cache.ttl,
+            max_size=config.cache.max_size,
+        )
+        if config.cache.enabled
+        else None
+    )
 
     if verbose:
         click.echo(f"Provider: {config.summarizer.provider}")
@@ -300,11 +304,15 @@ async def _test_robots_async(url: str, ignore: bool) -> None:
     click.echo(f"Fetching: {robots_url}")
 
     config = Config()
-    cache_manager = CacheManager(
-        cache_dir=config.cache.cache_dir,
-        ttl=config.cache.ttl,
-        max_size=config.cache.max_size,
-    ) if config.cache.enabled else None
+    cache_manager = (
+        CacheManager(
+            cache_dir=config.cache.cache_dir,
+            ttl=config.cache.ttl,
+            max_size=config.cache.max_size,
+        )
+        if config.cache.enabled
+        else None
+    )
     fetcher = URLFetcher(config.fetcher, cache_manager)
 
     try:

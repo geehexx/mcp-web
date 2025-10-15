@@ -286,7 +286,9 @@ class MetricsCollector:
 
         logger.debug("cache_operation", operation=operation, key=key[:50])
 
-    def record_error(self, module: str, error: Exception, context: dict[str, Any] | None = None) -> None:
+    def record_error(
+        self, module: str, error: Exception, context: dict[str, Any] | None = None
+    ) -> None:
         """Record error for diagnostics."""
         if not self.enabled:
             return

@@ -14,6 +14,7 @@ import asyncio
 from collections.abc import AsyncIterator
 from typing import Any
 
+import structlog
 from mcp.server.fastmcp import FastMCP
 
 from mcp_web.cache import CacheManager
@@ -24,8 +25,6 @@ from mcp_web.fetcher import URLFetcher
 from mcp_web.metrics import configure_logging, get_metrics_collector
 from mcp_web.summarizer import Summarizer
 from mcp_web.utils import validate_url
-
-import structlog
 
 logger: structlog.stdlib.BoundLogger | None = None
 

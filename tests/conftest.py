@@ -76,15 +76,15 @@ def sample_html():
         <h1>Main Heading</h1>
         <p>This is the main content of the test page.</p>
         <p>It has multiple paragraphs for testing extraction.</p>
-        
+
         <h2>Section 1</h2>
         <p>Content in section 1.</p>
-        
+
         <pre><code>
 def example():
     return "code example"
         </code></pre>
-        
+
         <h2>Section 2</h2>
         <p>Content in section 2.</p>
     </main>

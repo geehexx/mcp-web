@@ -13,6 +13,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any
 
+import structlog
 import trafilatura
 from pypdf import PdfReader
 
@@ -20,8 +21,6 @@ from mcp_web.cache import CacheKeyBuilder, CacheManager
 from mcp_web.config import ExtractorSettings
 from mcp_web.fetcher import FetchResult
 from mcp_web.metrics import get_metrics_collector
-
-import structlog
 
 logger: structlog.stdlib.BoundLogger | None = None
 

@@ -160,7 +160,7 @@ class TestRobotsTxtFetching:
             robots_url = "https://httpbin.org/robots.txt"
 
             try:
-                result = await fetcher.fetch(robots_url)
+                await fetcher.fetch(robots_url)
                 # If we get here, robots.txt exists - that's fine too
             except Exception:
                 # 404 or other error means no robots.txt
@@ -281,7 +281,7 @@ class TestRobotsIntegration:
     async def test_check_before_fetch(self):
         """Test checking robots.txt before fetching URL."""
         config = FetcherSettings(respect_robots_txt=True)
-        fetcher = URLFetcher(config)
+        URLFetcher(config)
 
         # Implementation would:
         # 1. Extract domain from URL
@@ -309,7 +309,7 @@ class TestRobotsIntegration:
             timeout=1,  # Short timeout
             respect_robots_txt=True,
         )
-        fetcher = URLFetcher(config)
+        URLFetcher(config)
 
         # If robots.txt fetch times out, should allow crawling
         # (fail open, not fail closed)

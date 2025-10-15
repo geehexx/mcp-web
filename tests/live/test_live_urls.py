@@ -265,7 +265,7 @@ class TestLiveSummarization:
 
         try:
             # Generate 2 summaries
-            for i in range(2):
+            for _i in range(2):
                 summary_parts = []
                 async for chunk in pipeline.summarize_urls([test_case["url"]]):
                     summary_parts.append(chunk)
@@ -367,7 +367,7 @@ class TestCachingBehavior:
         try:
             # First fetch (no cache)
             start1 = time.time()
-            result1 = await fetcher.fetch(test_case["url"], use_cache=True)
+            await fetcher.fetch(test_case["url"], use_cache=True)
             time1 = time.time() - start1
 
             # Second fetch (should hit cache)

@@ -86,12 +86,12 @@ Common patterns include divide and conquer, dynamic programming, and greedy appr
 
         # With hierarchical chunking and 100 token chunks, this should produce multiple chunks
         assert len(chunks) >= 2, f"Expected at least 2 chunks but got {len(chunks)}"
-        
+
         # Filter out empty chunks (hierarchical strategy may create section markers)
         non_empty_chunks = [c for c in chunks if c.text.strip()]
         assert len(non_empty_chunks) >= 2
         assert all(chunk.tokens > 0 for chunk in non_empty_chunks)
-        
+
         # Verify content is preserved
         combined = " ".join(c.text for c in non_empty_chunks)
         assert "Programming" in combined
@@ -118,9 +118,11 @@ This is the conclusion section.
         # Check that sections are properly identified
         # Headings may be in text or metadata depending on chunking strategy
         has_section_content = any(
-            "Introduction" in chunk.text or "Methods" in chunk.text or 
-            "introduction" in chunk.text or "methods" in chunk.text or
-            ("heading" in chunk.metadata and chunk.metadata["heading"])
+            "Introduction" in chunk.text
+            or "Methods" in chunk.text
+            or "introduction" in chunk.text
+            or "methods" in chunk.text
+            or ("heading" in chunk.metadata and chunk.metadata["heading"])
             for chunk in chunks
         )
         assert has_section_content, "Chunks should contain section content or heading metadata"
@@ -148,7 +150,7 @@ Some text after code.
     @pytest.mark.slow
     def test_fixed_chunking(self):
         """Test fixed-size chunking strategy.
-        
+
         Note: Marked as slow due to tiktoken encoding overhead in tight loops.
         """
         config = ChunkerSettings(strategy="fixed", chunk_size=30, chunk_overlap=5)
@@ -156,7 +158,7 @@ Some text after code.
 
         # Use very short text to minimize tiktoken calls
         text = "The quick brown fox."
-        
+
         chunks = chunker.chunk_text(text)
 
         assert len(chunks) >= 1

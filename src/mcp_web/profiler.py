@@ -22,11 +22,12 @@ import json
 import pstats
 import time
 from collections import defaultdict
+from collections.abc import Callable
 from contextlib import asynccontextmanager, contextmanager
 from dataclasses import asdict, dataclass, field
 from io import StringIO
 from pathlib import Path
-from typing import Any, Callable, TypeVar
+from typing import Any, TypeVar
 
 import structlog
 
@@ -193,7 +194,7 @@ def profile(func: F) -> F:
 
         @functools.wraps(func)
         async def async_wrapper(*args: Any, **kwargs: Any) -> Any:
-            async with async_profile_context(func.__name__) as ctx:
+            async with async_profile_context(func.__name__):
                 result = await func(*args, **kwargs)
                 return result
 
@@ -203,7 +204,7 @@ def profile(func: F) -> F:
 
         @functools.wraps(func)
         def sync_wrapper(*args: Any, **kwargs: Any) -> Any:
-            with ProfilerContext(func.__name__) as ctx:
+            with ProfilerContext(func.__name__):
                 result = func(*args, **kwargs)
                 return result
 

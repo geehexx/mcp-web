@@ -33,11 +33,10 @@ class TestPromptInjectionDetection:
     @pytest.mark.parametrize("sample", BENIGN_CONTENT_SAMPLES)
     def test_no_false_positives(self, sample):
         """Test that benign content is not flagged."""
-        content = sample["content"]
+        sample["content"]
         should_filter = sample["should_filter"]
 
         # Common instruction keywords that might appear in legitimate content
-        legitimate_keywords = ["ignore", "skip", "exclude", "remove"]
 
         # These should not be flagged as dangerous in legitimate contexts
         assert should_filter is False
@@ -259,7 +258,7 @@ class TestRateLimiting:
         """Test that concurrent request limits are enforced."""
         from mcp_web.fetcher import URLFetcher
 
-        fetcher = URLFetcher(test_config.fetcher)
+        URLFetcher(test_config.fetcher)
 
         # Config should have max_concurrent limit
         assert test_config.fetcher.max_concurrent > 0
@@ -332,10 +331,7 @@ class TestInputValidation:
         for filename in malicious_filenames:
             # Any of these patterns indicate a security risk
             is_malicious = (
-                ".." in filename
-                or "/" in filename
-                or "\\" in filename
-                or "\x00" in filename
+                ".." in filename or "/" in filename or "\\" in filename or "\x00" in filename
             )
             assert is_malicious, f"Should detect malicious pattern in: {filename}"
 
@@ -383,7 +379,7 @@ class TestCacheSecurity:
         if cache_dir.exists():
             # Check permissions (on Unix systems)
             if hasattr(os, "stat"):
-                stat_info = cache_dir.stat()
+                cache_dir.stat()
                 # Should not be world-writable
                 # This is a simplified check
                 assert cache_dir.is_dir()

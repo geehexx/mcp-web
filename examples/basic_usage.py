@@ -152,7 +152,7 @@ async def main():
         return
 
     # Run examples (uncomment the ones you want to run)
-    
+
     # Simple examples (fast)
     await example_1_simple_summary()
     await example_5_cache_operations()

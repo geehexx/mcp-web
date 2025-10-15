@@ -19,7 +19,7 @@ class TestPlaywrightFallback:
     async def test_detect_js_rendered_content(self):
         """Test detection of JavaScript-rendered content."""
         config = FetcherSettings()
-        fetcher = URLFetcher(config)
+        URLFetcher(config)
 
         # Example of a page that's mostly JS-rendered
         # Using httpbin's delay endpoint which returns static content
@@ -32,7 +32,7 @@ class TestPlaywrightFallback:
             timeout=1,  # Short timeout to trigger failures
             enable_fallback=True,
         )
-        fetcher = URLFetcher(config)
+        URLFetcher(config)
 
         # This would test with a URL that httpx can't handle
         # but Playwright can (e.g., heavy JS, anti-bot measures)
@@ -41,7 +41,7 @@ class TestPlaywrightFallback:
     async def test_wait_for_network_idle(self):
         """Test that Playwright waits for network idle."""
         config = FetcherSettings(enable_fallback=True)
-        fetcher = URLFetcher(config)
+        URLFetcher(config)
 
         # Test would verify that Playwright waits for all network
         # requests to complete before extracting content
@@ -65,9 +65,9 @@ class TestPlaywrightFallback:
         # Test error handling when Playwright also fails
         try:
             # Use invalid URL
-            result = await fetcher.fetch("http://invalid-domain-that-does-not-exist-12345.com")
+            await fetcher.fetch("http://invalid-domain-that-does-not-exist-12345.com")
             # Should not reach here
-            assert False, "Expected exception"
+            raise AssertionError("Expected exception")
         except Exception as e:
             # Should handle gracefully
             assert "invalid" in str(e).lower() or "not" in str(e).lower()
@@ -176,7 +176,7 @@ class TestFallbackMetrics:
     async def test_track_fetch_method_used(self):
         """Test that we track which method was used."""
         config = FetcherSettings()
-        fetcher = URLFetcher(config)
+        URLFetcher(config)
 
         # Would need to fetch a real URL and check the result
         # result.fetch_method should be either 'httpx' or 'playwright'
@@ -200,7 +200,7 @@ class TestFallbackPerformance:
         """Test that httpx is significantly faster for static content."""
 
         config = FetcherSettings()
-        fetcher = URLFetcher(config)
+        URLFetcher(config)
 
         # For static content, httpx should be 10-100x faster
         # This would be tested with a known static URL
@@ -210,7 +210,7 @@ class TestFallbackPerformance:
         """Test that httpx handles concurrent requests efficiently."""
 
         config = FetcherSettings()
-        fetcher = URLFetcher(config)
+        URLFetcher(config)
 
         # httpx should handle many concurrent requests
         # Playwright would be limited by browser instances
@@ -228,7 +228,7 @@ def mock_js_rendered_html():
     <body>
         <div id="root"></div>
         <script>
-            document.getElementById('root').innerHTML = 
+            document.getElementById('root').innerHTML =
                 '<h1>Loaded by JavaScript</h1><p>Real content here</p>';
         </script>
     </body>

@@ -14,11 +14,11 @@ import re
 from dataclasses import dataclass, field
 from typing import Any
 
+import structlog
+
 from mcp_web.config import ChunkerSettings
 from mcp_web.metrics import get_metrics_collector
 from mcp_web.utils import TokenCounter
-
-import structlog
 
 logger: structlog.stdlib.BoundLogger | None = None
 
@@ -187,10 +187,10 @@ class TextChunker:
         # Recursive splitting with semantic separators (best practice from LangChain)
         # Order matters: try larger boundaries first
         separators = ["\n\n", "\n", ". ", "! ", "? ", "; ", ": ", " ", ""]
-        
+
         # Split text recursively
         current_chunks = [text]
-        
+
         for separator in separators:
             new_chunks = []
             for chunk_text in current_chunks:
@@ -201,27 +201,29 @@ class TextChunker:
                     # Split by current separator
                     parts = chunk_text.split(separator)
                     combined = ""
-                    
+
                     for part in parts:
                         if not part.strip():
                             continue
-                            
+
                         test_combined = combined + separator + part if combined else part
-                        
+
                         if self.token_counter.count_tokens(test_combined) <= self.config.chunk_size:
                             combined = test_combined
                         else:
                             if combined:
                                 new_chunks.append(combined)
                             combined = part
-                    
+
                     if combined:
                         new_chunks.append(combined)
-            
+
             current_chunks = new_chunks
-            
+
             # If all chunks are within size, we're done
-            if all(self.token_counter.count_tokens(c) <= self.config.chunk_size for c in current_chunks):
+            if all(
+                self.token_counter.count_tokens(c) <= self.config.chunk_size for c in current_chunks
+            ):
                 break
 
         # Convert to Chunk objects with metadata
@@ -229,13 +231,13 @@ class TextChunker:
         for i, chunk_text in enumerate(current_chunks):
             if not chunk_text.strip():
                 continue
-                
+
             tokens = self.token_counter.count_tokens(chunk_text)
             chunk_metadata = metadata.copy()
             chunk_metadata["semantic_split"] = True
             chunk_metadata["chunk_index"] = i
             chunk_metadata["total_chunks"] = len(current_chunks)
-            
+
             chunks.append(
                 Chunk(
                     text=chunk_text.strip(),
@@ -254,16 +256,16 @@ class TextChunker:
 
     def _chunk_fixed(self, text: str, metadata: dict[str, Any] | None = None) -> list[Chunk]:
         """Chunk text into fixed-size chunks with overlap.
-        
+
         Note: This strategy has performance issues with tiktoken encoding on
-        repetitive text patterns. Consider using semantic or hierarchical 
+        repetitive text patterns. Consider using semantic or hierarchical
         chunking for better performance and context preservation.
-        
+
         Research (2024) recommends:
-        - General text: 200-500 tokens, 10-20% overlap  
+        - General text: 200-500 tokens, 10-20% overlap
         - Code/technical: 100-200 tokens, 15-25% overlap
         - Current default: 512 tokens, ~10% overlap ✓
-        
+
         References:
         - https://www.pinecone.io/learn/chunking-strategies/
         - MongoDB study: ~100 tokens, ~15 overlap for Python docs

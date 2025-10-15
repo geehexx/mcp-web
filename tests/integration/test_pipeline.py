@@ -1,15 +1,17 @@
 """Integration tests for the full summarization pipeline."""
 
-import pytest
 import os
+
+import pytest
 
 from mcp_web.mcp_server import WebSummarizationPipeline
 
 # Skip these tests if no OpenAI API key available
 pytestmark = pytest.mark.skipif(
     not os.getenv("OPENAI_API_KEY"),
-    reason="OpenAI API key not available - use OPENAI_API_KEY env var"
+    reason="OpenAI API key not available - use OPENAI_API_KEY env var",
 )
+
 
 class TestWebSummarizationPipeline:
     """Integration tests for the full pipeline."""
@@ -137,7 +139,7 @@ class TestWebSummarizationPipeline:
         # Perform some operation
         from mcp_web.fetcher import FetchResult
 
-        fetch_result = FetchResult(
+        FetchResult(
             url="https://test.com",
             content=b"test content",
             content_type="text/html",
