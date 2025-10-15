@@ -18,6 +18,49 @@ auto_execution_mode: 3
 
 ---
 
+## Stage 0: Self-Monitoring (AUTOMATIC)
+
+**Purpose:** Detect if meta-analysis is being run correctly and on schedule.
+
+### 0.1 Check Last Execution
+
+Read timestamp file to detect if meta-analysis is being run regularly:
+
+```bash
+# Check if .windsurf/.last-meta-analysis exists
+cat .windsurf/.last-meta-analysis 2>/dev/null || echo "NEVER"
+```
+
+**Warning triggers:**
+- File doesn't exist → Meta-analysis never run before
+- Timestamp >24 hours old → Overdue for meta-analysis
+- Multiple commits since last run → Protocol violation likely
+
+### 0.2 Create/Update Timestamp
+
+Update timestamp file when meta-analysis runs:
+
+```bash
+# Write current timestamp
+date -u +"%Y-%m-%dT%H:%M:%SZ" > .windsurf/.last-meta-analysis
+git add .windsurf/.last-meta-analysis
+# Will be committed with session summary
+```
+
+### 0.3 Protocol Violation Detection
+
+**Check for common violations:**
+- Session summary not created in proper location
+- Meta-analysis not run after work session completion
+- Timestamp file not updated
+
+**If violation detected:**
+1. Document in session summary "Critical Improvements" section
+2. Propose workflow fixes
+3. Flag for immediate attention
+
+---
+
 ## Stage 1: Create Session Summary (REQUIRED)
 
 ### 1.1 Summary Location and Naming
@@ -89,6 +132,7 @@ auto_execution_mode: 3
 ### 1.4 Identify Critical Improvements
 
 **Focus only on:**
+- **Protocol violations** - Meta-analysis not run, Session End Protocol skipped
 - **Documentation pollution** - Summary docs created outside proper location
 - **Workflow gaps** - Missing automation that caused friction
 - **Rule violations** - Agent didn't follow established rules

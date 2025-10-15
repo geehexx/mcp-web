@@ -404,9 +404,39 @@ Proceeding with implementation...
 
 **This ensures:**
 - ✅ Session summaries always created in proper location
-- ✅ Learnings captured before context loss
-- ✅ No orphaned summary documents
-- ✅ Consistent session documentation
+- ✅ Learnings captured for future sessions
+- ✅ Cross-session context preserved
+- ✅ Improvements identified and documented
+
+**Not optional:** Meta-analysis MUST run at end of every work session.
+
+### Validation Checks
+
+Before finishing `/work`, verify:
+
+- [ ] All work committed to git
+- [ ] `/meta-analysis` workflow executed
+- [ ] Session summary created in `docs/archive/session-summaries/`
+- [ ] Timestamp file `.windsurf/.last-meta-analysis` updated
+- [ ] No uncommitted changes remain
+
+**If meta-analysis not run:**
+- **STOP** - Do not proceed
+- Execute `/meta-analysis` immediately
+- Document violation in session summary
+- Propose workflow improvements
+
+**Auto-detection:**
+```bash
+# Check if meta-analysis is overdue
+if [ -f .windsurf/.last-meta-analysis ]; then
+  LAST=$(cat .windsurf/.last-meta-analysis)
+  echo "Last meta-analysis: $LAST"
+  # Agent should compare timestamp and warn if >24h old
+else
+  echo "WARNING: Meta-analysis never run before"
+fi
+```
 
 ---
 
