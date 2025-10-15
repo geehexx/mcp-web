@@ -185,7 +185,7 @@ class TestRateLimiter:
         limiter = RateLimiter(max_requests=5, time_window=1)
 
         # First 5 requests should succeed immediately
-        for i in range(5):
+        for _ in range(5):
             await limiter.wait()
 
         # 6th request should block
@@ -201,7 +201,7 @@ class TestRateLimiter:
         limiter = RateLimiter(max_requests=3, time_window=2)
 
         # Use 3 requests
-        for i in range(3):
+        for _ in range(3):
             await limiter.wait()
 
         # Wait for window to slide (1 second)
@@ -220,7 +220,7 @@ class TestRateLimiter:
         limiter = RateLimiter(max_requests=10, time_window=60)
 
         # Make some requests
-        for i in range(3):
+        for _ in range(3):
             await limiter.wait()
 
         stats = limiter.get_stats()
@@ -250,7 +250,7 @@ class TestConsumptionLimits:
                 executing.pop()
 
         async def limited_operation():
-            async with limits.enforce():
+            async with limits:
                 await slow_operation()
 
         # Start 5 operations concurrently
@@ -269,8 +269,8 @@ class TestConsumptionLimits:
         # Make requests
         start = asyncio.get_event_loop().time()
 
-        for i in range(15):
-            async with limits.enforce():
+        for _ in range(15):
+            async with limits:
                 pass  # No-op operation
 
         elapsed = asyncio.get_event_loop().time() - start

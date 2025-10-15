@@ -107,6 +107,43 @@ task test:fast
 
 ## Updates
 
+### 2025-10-15 (Completion)
+
+**Implementation Summary:**
+
+Fixed all 10 failing security unit tests by addressing two root causes:
+
+1. **Async Context Manager Protocol (6 tests)**
+   - Issue: `ConsumptionLimits.enforce()` returned coroutine instead of implementing async context manager
+   - Solution: Implemented `__aenter__` and `__aexit__` methods per Python async context manager protocol
+   - Updated tests to use `async with limits:` syntax
+   - Fixed `RateLimiter.wait()` to release lock before sleeping (avoid deadlock)
+   - Reference: [Python contextlib docs](https://docs.python.org/3/library/contextlib.html)
+
+2. **Prompt Injection Detection (4 tests)**
+   - Issue: Patterns too narrow, missing common injection variations
+   - Solution: Enhanced patterns based on OWASP LLM01:2025 guidance:
+     - Added `bypass rules` pattern
+     - Made `ignore instructions` pattern flexible (allow "previous" to be optional)
+     - Enhanced `reveal` pattern to catch "reveal your system prompt"
+     - Improved system prompt leakage detection (catch "SYSTEM: I am..." variations)
+   - Reference: [OWASP LLM Top 10 2025](https://genai.owasp.org/llmrisk/llm01-prompt-injection/)
+
+**Test Results:**
+- ✅ All 25 security unit tests passing
+- ✅ All 80 fast tests passing (unit + security + integration)
+- ✅ No regressions introduced
+
+**Files Modified:**
+- `src/mcp_web/security.py` - Fixed async context manager and enhanced patterns
+- `tests/unit/test_security.py` - Updated test syntax for async context managers
+
+**Research References:**
+- OWASP LLM01:2025 Prompt Injection guidelines
+- Python PEP 492 (Async/Await syntax)
+- Python contextlib module documentation
+- Real Python async patterns
+
 ### 2025-10-15 (Initial Creation)
 
 **Notes:**
@@ -115,13 +152,7 @@ task test:fast
 - Tests are overly strict or have implementation mismatches
 - No production security bugs identified
 
-**Next Steps:**
-1. Review each failing test individually
-2. Determine if test or production code needs fixing
-3. Apply fixes with regression testing
-4. Update security documentation if needed
-
 ---
 
 **Last Updated:** 2025-10-15
-**Status:** Active - Not started
+**Status:** ✅ Completed

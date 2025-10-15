@@ -42,12 +42,13 @@ class PromptInjectionFilter:
     def __init__(self):
         """Initialize with dangerous patterns."""
         self.dangerous_patterns = [
-            r"ignore\s+(all\s+)?previous\s+instructions?",
+            r"ignore\s+(all\s+)?(previous\s+)?instructions?",
             r"you\s+are\s+now\s+(in\s+)?developer\s+mode",
             r"system\s+override",
-            r"reveal\s+(your\s+)?(prompt|instructions)",
+            r"reveal\s+(your\s+)?(system\s+)?(prompt|instructions)",
             r"forget\s+everything",
             r"disregard\s+(all\s+)?rules",
+            r"bypass\s+(all\s+)?rules",
             r"new\s+instructions?:",
             r"end\s+of\s+prompt",
             r"---\s*new\s+system",
@@ -184,7 +185,7 @@ class OutputValidator:
 
         self.suspicious_patterns = [
             # System prompt leakage
-            r"SYSTEM\s*[:]?\s*You\s+are",
+            r"SYSTEM\s*[:]?\s*(You\s+are|I\s+am|configured|instructions)",
             r"Your\s+role\s+is\s+to",
             r"You\s+have\s+been\s+instructed",
             # API key patterns
@@ -270,29 +271,35 @@ class RateLimiter:
 
     async def wait(self) -> None:
         """Wait if rate limit exceeded (blocking)."""
-        async with self._lock:
-            now = time.time()
+        while True:
+            sleep_time = None
 
-            # Remove old requests outside window
-            while self.requests and self.requests[0] < now - self.time_window:
-                self.requests.popleft()
+            async with self._lock:
+                now = time.time()
 
-            # Check if limit exceeded
-            if len(self.requests) >= self.max_requests:
-                sleep_time = self.time_window - (now - self.requests[0])
-                if sleep_time > 0:
-                    logger.warning(
-                        "rate_limit_exceeded",
-                        requests=len(self.requests),
-                        max_requests=self.max_requests,
-                        sleep_seconds=sleep_time,
-                    )
-                    await asyncio.sleep(sleep_time)
-                    # Recurse to check again after sleep
-                    return await self.wait()
+                # Remove old requests outside window
+                while self.requests and self.requests[0] < now - self.time_window:
+                    self.requests.popleft()
 
-            # Record this request
-            self.requests.append(now)
+                # Check if limit exceeded
+                if len(self.requests) >= self.max_requests:
+                    sleep_time = self.time_window - (now - self.requests[0])
+                    if sleep_time > 0:
+                        logger.warning(
+                            "rate_limit_exceeded",
+                            requests=len(self.requests),
+                            max_requests=self.max_requests,
+                            sleep_seconds=sleep_time,
+                        )
+                else:
+                    # Record this request and exit
+                    self.requests.append(now)
+                    break
+
+            # Sleep outside the lock if needed
+            if sleep_time and sleep_time > 0:
+                await asyncio.sleep(sleep_time)
+                # Loop again to reacquire lock and check
 
     def get_stats(self) -> dict:
         """Get current rate limiter statistics.
@@ -330,7 +337,7 @@ class ConsumptionLimits:
 
     Example:
         >>> limits = ConsumptionLimits()
-        >>> async with limits.enforce():
+        >>> async with limits:
         ...     result = await expensive_operation()
     """
 
@@ -357,11 +364,11 @@ class ConsumptionLimits:
         self.semaphore = asyncio.Semaphore(max_concurrent)
         self.rate_limiter = RateLimiter(max_requests_per_minute, time_window=60)
 
-    async def enforce(self):
-        """Context manager to enforce limits.
+    async def __aenter__(self):
+        """Enter async context manager - enforce limits.
 
-        Yields:
-            Context manager that enforces all limits
+        Returns:
+            Self for context manager protocol
 
         Raises:
             asyncio.TimeoutError: If operation exceeds timeout
@@ -369,8 +376,23 @@ class ConsumptionLimits:
         # Wait for rate limit
         await self.rate_limiter.wait()
 
-        # Wait for concurrent slot
-        return self.semaphore
+        # Acquire concurrent slot
+        await self.semaphore.__aenter__()
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        """Exit async context manager - release resources.
+
+        Args:
+            exc_type: Exception type if raised
+            exc_val: Exception value if raised
+            exc_tb: Exception traceback if raised
+
+        Returns:
+            False to propagate exceptions
+        """
+        # Release concurrent slot
+        return await self.semaphore.__aexit__(exc_type, exc_val, exc_tb)
 
 
 def validate_url(url: str) -> bool:
@@ -426,7 +448,7 @@ def validate_url(url: str) -> bool:
         else:
             # IPv4/hostname: example.com:port -> example.com
             host = host.split(":")[0]
-        
+
         if host in blocked_hosts or host.strip("[]") in blocked_hosts:
             logger.warning("blocked_localhost_url", host=host)
             return False
