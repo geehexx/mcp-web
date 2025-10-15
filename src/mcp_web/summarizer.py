@@ -124,8 +124,17 @@ class Summarizer:
                     yield chunk
             else:
                 # Map-reduce for large documents
-                async for chunk in self._summarize_map_reduce(chunks, query, sources):
-                    yield chunk
+                # Choose between parallel gather or streaming as_completed
+                if self.config.streaming_map:
+                    async for chunk in self._summarize_map_reduce_streaming(chunks, query, sources):
+                        yield chunk
+                elif self.config.parallel_map:
+                    async for chunk in self._summarize_map_reduce(chunks, query, sources):
+                        yield chunk
+                else:
+                    # Sequential fallback (original implementation)
+                    async for chunk in self._summarize_map_reduce_sequential(chunks, query, sources):
+                        yield chunk
 
             duration_ms = (time.perf_counter() - start_time) * 1000
 
@@ -180,14 +189,65 @@ class Summarizer:
 
         Yields:
             Summary chunks
+
+        Note:
+            Uses parallel map phase for performance (asyncio.gather).
+            This can achieve 10x+ speedup for documents with many chunks.
         """
         _get_logger().info("map_reduce_start", num_chunks=len(chunks))
 
-        # Step 1: Map - Summarize each chunk
+        # Step 1: Map - Summarize each chunk IN PARALLEL
+        async def summarize_single_chunk(i: int, chunk: Chunk) -> str:
+            """Summarize a single chunk."""
+            _get_logger().debug("map_chunk_start", chunk_num=i + 1)
+            map_prompt = self._build_map_prompt(chunk.text, query)
+            summary = await self._call_llm_non_streaming(map_prompt)
+            _get_logger().debug("map_chunk_complete", chunk_num=i + 1)
+            return summary
+
+        # Create tasks for all chunks and execute in parallel
+        tasks = [summarize_single_chunk(i, chunk) for i, chunk in enumerate(chunks)]
+        chunk_summaries = await asyncio.gather(*tasks)
+
+        _get_logger().info("map_complete", num_summaries=len(chunk_summaries))
+
+        # Step 2: Reduce - Combine summaries
+        combined_summaries = "\n\n".join(
+            f"Section {i + 1}:\n{s}" for i, s in enumerate(chunk_summaries)
+        )
+
+        reduce_prompt = self._build_reduce_prompt(combined_summaries, query, sources)
+
+        # Stream final summary
+        async for chunk in self._call_llm(reduce_prompt):
+            yield chunk
+
+    async def _summarize_map_reduce_sequential(
+        self,
+        chunks: list[Chunk],
+        query: str | None = None,
+        sources: list[str] | None = None,
+    ) -> AsyncIterator[str]:
+        """Sequential map-reduce (original implementation).
+
+        Args:
+            chunks: Text chunks
+            query: Optional query
+            sources: Optional sources
+
+        Yields:
+            Summary chunks
+
+        Note:
+            This is the original sequential implementation.
+            Kept for compatibility and as a fallback option.
+        """
+        _get_logger().info("map_reduce_sequential_start", num_chunks=len(chunks))
+
+        # Step 1: Map - Summarize each chunk SEQUENTIALLY
         chunk_summaries = []
         for i, chunk in enumerate(chunks):
             _get_logger().debug("map_chunk", chunk_num=i + 1)
-
             map_prompt = self._build_map_prompt(chunk.text, query)
             summary = await self._call_llm_non_streaming(map_prompt)
             chunk_summaries.append(summary)
@@ -197,6 +257,71 @@ class Summarizer:
         # Step 2: Reduce - Combine summaries
         combined_summaries = "\n\n".join(
             f"Section {i + 1}:\n{s}" for i, s in enumerate(chunk_summaries)
+        )
+
+        reduce_prompt = self._build_reduce_prompt(combined_summaries, query, sources)
+
+        # Stream final summary
+        async for chunk in self._call_llm(reduce_prompt):
+            yield chunk
+
+    async def _summarize_map_reduce_streaming(
+        self,
+        chunks: list[Chunk],
+        query: str | None = None,
+        sources: list[str] | None = None,
+    ) -> AsyncIterator[str]:
+        """Map-reduce with streaming results as they complete.
+
+        Args:
+            chunks: Text chunks
+            query: Optional query
+            sources: Optional sources
+
+        Yields:
+            Progress updates and final summary
+
+        Note:
+            Uses asyncio.as_completed() to stream map results as they finish.
+            Better perceived latency but results are out of order.
+        """
+        _get_logger().info("map_reduce_streaming_start", num_chunks=len(chunks))
+
+        # Yield progress update
+        yield f"Processing {len(chunks)} sections...\n\n"
+
+        # Step 1: Map - Summarize chunks and stream progress
+        async def summarize_single_chunk(i: int, chunk: Chunk) -> tuple[int, str]:
+            """Summarize a single chunk, return index and summary."""
+            map_prompt = self._build_map_prompt(chunk.text, query)
+            summary = await self._call_llm_non_streaming(map_prompt)
+            return (i, summary)
+
+        # Create tasks
+        tasks = [
+            asyncio.create_task(summarize_single_chunk(i, chunk))
+            for i, chunk in enumerate(chunks)
+        ]
+
+        # Collect summaries as they complete
+        chunk_summaries: list[str | None] = [None] * len(chunks)
+        completed = 0
+
+        for task in asyncio.as_completed(tasks):
+            idx, summary = await task
+            chunk_summaries[idx] = summary
+            completed += 1
+
+            # Stream progress
+            yield f"✓ Section {idx + 1}/{len(chunks)} complete\n"
+
+        _get_logger().info("map_complete_streaming", num_summaries=len(chunk_summaries))
+
+        # Step 2: Reduce - Combine summaries
+        yield "\nSynthesizing final summary...\n\n"
+
+        combined_summaries = "\n\n".join(
+            f"Section {i + 1}:\n{s}" for i, s in enumerate(chunk_summaries) if s
         )
 
         reduce_prompt = self._build_reduce_prompt(combined_summaries, query, sources)

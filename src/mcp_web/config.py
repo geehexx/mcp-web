@@ -109,6 +109,14 @@ class SummarizerSettings(BaseSettings):
     map_reduce_threshold: int = Field(
         default=8000, description="Token threshold for map-reduce strategy"
     )
+    parallel_map: bool = Field(
+        default=True,
+        description="Use parallel map phase (asyncio.gather) for better performance",
+    )
+    streaming_map: bool = Field(
+        default=False,
+        description="Stream map progress updates (asyncio.as_completed) - better UX but slightly slower",
+    )
 
     # API configuration
     api_key: str | None = Field(default=None, description="API key (if required)")
@@ -122,6 +130,8 @@ class SummarizerSettings(BaseSettings):
         default=10000, description="Maximum summary length (safety limit)"
     )
     content_filtering: bool = Field(default=True, description="Enable content filtering for safety")
+
+    model_config = SettingsConfigDict(env_prefix="MCP_WEB_SUMMARIZER_")
 
     def get_api_base(self) -> str:
         """Get API base URL based on provider.
@@ -153,13 +163,11 @@ class SummarizerSettings(BaseSettings):
             return self.api_key
 
         # Local providers don't need API keys
-        if self.provider in ["ollama", "lmstudio", "localai"]:
+        if self.provider in ("ollama", "lmstudio", "localai"):
             return "not-needed"
 
-        # OpenAI requires key
+        # Try to get from environment
         return os.getenv("OPENAI_API_KEY")
-
-    model_config = SettingsConfigDict(env_prefix="MCP_WEB_SUMMARIZER_")
 
 
 class CacheSettings(BaseSettings):
