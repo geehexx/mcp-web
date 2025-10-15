@@ -18,18 +18,17 @@ from pathlib import Path
 from typing import Any
 
 import diskcache
+import structlog
 
 from mcp_web.metrics import get_metrics_collector
 
-logger = None  # Will be initialized on first use
+logger: structlog.stdlib.BoundLogger | None = None  # Will be initialized on first use
 
 
-def _get_logger():
+def _get_logger() -> structlog.stdlib.BoundLogger:
     """Lazy logger initialization to avoid circular imports."""
     global logger
     if logger is None:
-        import structlog
-
         logger = structlog.get_logger()
     return logger
 

@@ -20,15 +20,15 @@ from mcp_web.config import ExtractorSettings
 from mcp_web.fetcher import FetchResult
 from mcp_web.metrics import get_metrics_collector
 
-logger = None
+import structlog
+
+logger: structlog.stdlib.BoundLogger | None = None
 
 
-def _get_logger():
+def _get_logger() -> structlog.stdlib.BoundLogger:
     """Lazy logger initialization."""
     global logger
     if logger is None:
-        import structlog
-
         logger = structlog.get_logger()
     return logger
 

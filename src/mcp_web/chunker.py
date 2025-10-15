@@ -17,15 +17,15 @@ from mcp_web.config import ChunkerSettings
 from mcp_web.metrics import get_metrics_collector
 from mcp_web.utils import TokenCounter
 
-logger = None
+import structlog
+
+logger: structlog.stdlib.BoundLogger | None = None
 
 
-def _get_logger():
+def _get_logger() -> structlog.stdlib.BoundLogger:
     """Lazy logger initialization."""
     global logger
     if logger is None:
-        import structlog
-
         logger = structlog.get_logger()
     return logger
 
