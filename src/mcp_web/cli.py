@@ -15,8 +15,9 @@ import time
 import click
 import structlog
 
-from mcp_web.chunker import Chunker
-from mcp_web.config import MCPWebConfig
+from mcp_web.cache import CacheManager
+from mcp_web.chunker import TextChunker
+from mcp_web.config import Config
 from mcp_web.extractor import ContentExtractor
 from mcp_web.fetcher import URLFetcher
 from mcp_web.summarizer import Summarizer
@@ -112,10 +113,17 @@ async def _test_summarize_async(
     click.echo(click.style("=== MCP-Web Test Summarizer ===\n", fg="cyan", bold=True))
 
     # Configuration
-    config = MCPWebConfig()
+    config = Config()
     config.summarizer.provider = provider
     if model:
         config.summarizer.model = model
+    
+    # Initialize cache manager
+    cache_manager = CacheManager(
+        cache_dir=config.cache.cache_dir,
+        ttl=config.cache.ttl,
+        max_size=config.cache.max_size,
+    ) if config.cache.enabled else None
 
     if verbose:
         click.echo(f"Provider: {config.summarizer.provider}")
@@ -126,9 +134,9 @@ async def _test_summarize_async(
         click.echo()
 
     # Initialize components
-    fetcher = URLFetcher(config.fetcher, config.cache_manager)
+    fetcher = URLFetcher(config.fetcher, cache_manager)
     extractor = ContentExtractor(config.extractor)
-    chunker = Chunker(config.chunker)
+    chunker = TextChunker(config.chunker)
     summarizer = Summarizer(config.summarizer)
 
     overall_start = time.perf_counter()
@@ -291,8 +299,13 @@ async def _test_robots_async(url: str, ignore: bool) -> None:
 
     click.echo(f"Fetching: {robots_url}")
 
-    config = MCPWebConfig()
-    fetcher = URLFetcher(config.fetcher, config.cache_manager)
+    config = Config()
+    cache_manager = CacheManager(
+        cache_dir=config.cache.cache_dir,
+        ttl=config.cache.ttl,
+        max_size=config.cache.max_size,
+    ) if config.cache.enabled else None
+    fetcher = URLFetcher(config.fetcher, cache_manager)
 
     try:
         robots_result = await fetcher.fetch(robots_url)

@@ -94,46 +94,47 @@ The project has grown rapidly but needs stronger quality foundations:
 - [x] Add pre-commit hook for docs linting
 - [x] Add CI check for documentation quality
 
-### Phase 3: Missing Tests
+### Phase 3: Missing Tests (✓ Completed 2025-10-15)
 
-- [ ] **Query-Aware Tests** (10+ scenarios)
-- [ ] Simple query matching
-- [ ] Complex multi-term queries
-- [ ] Query with no matches
-- [ ] Query-focused chunk selection
-- [ ] Query in map-reduce context
+- [x] **Query-Aware Tests** (11 scenarios created)
+- [x] Simple query matching
+- [x] Complex multi-term queries
+- [x] Query with no matches
+- [x] Query-focused chunk selection
+- [x] Query in map-reduce context
 
-- [ ] **Playwright Fallback Tests** (5+ scenarios)
-- [ ] Detect JS-rendered content
-- [ ] Fallback on httpx failure
-- [ ] Wait for network idle
-- [ ] Extract from SPA
-- [ ] Handle Playwright errors gracefully
+- [x] **Playwright Fallback Tests** (18 test cases created)
+- [x] Detect JS-rendered content
+- [x] Fallback on httpx failure
+- [x] Wait for network idle
+- [x] Extract from SPA
+- [x] Handle Playwright errors gracefully
 
-- [ ] **robots.txt Tests** (5+ scenarios)
-- [ ] Respect robots.txt by default
-- [ ] Parse and check disallow rules
-- [ ] Handle crawl-delay
-- [ ] Ignore robots.txt when configured
-- [ ] Handle missing robots.txt
+- [x] **robots.txt Tests** (25 test cases created)
+- [x] Respect robots.txt by default
+- [x] Parse and check disallow rules
+- [x] Handle crawl-delay
+- [x] Ignore robots.txt when configured
+- [x] Handle missing robots.txt
 
-- [ ] **Edge Case Tests**
-- [ ] Very long documents (>100k tokens)
-- [ ] Binary content (images, PDFs)
-- [ ] Malformed HTML
-- [ ] Timeout handling
-- [ ] Network errors
+- [x] **Edge Case Tests**
+- [x] Very long documents (>100k tokens)
+- [x] Binary content (images, PDFs)
+- [x] Malformed HTML
+- [x] Timeout handling
+- [x] Network errors
 
-### Phase 4: CLI Testing Endpoint
+### Phase 4: CLI Testing Endpoint (✓ Completed 2025-10-15)
 
-- [ ] Create `mcp_web.cli` module
-- [ ] Add `test-summarize` command
-- [ ] Accept URL or multiple URLs
-- [ ] Accept query parameter
-- [ ] Show streaming output
-- [ ] Display metrics (tokens, time, method used)
-- [ ] Save output to file (optional)
-- [ ] Add to Taskfile: `task test:manual URL=...`
+- [x] Create `mcp_web.cli` module
+- [x] Add `test-summarize` command
+- [x] Accept URL or multiple URLs
+- [x] Accept query parameter
+- [x] Show streaming output
+- [x] Display metrics (tokens, time, method used)
+- [x] Save output to file (optional)
+- [x] Add to Taskfile: `task test:manual URL=...`
+- [x] Add `test-robots` command for robots.txt testing
 - [ ] Add examples to TESTING_GUIDE.md
 
 ### Phase 5: mypy Improvements
