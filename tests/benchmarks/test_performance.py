@@ -12,7 +12,7 @@ import pytest
 @pytest.mark.io_bound
 class TestTokenCountingPerformance:
     """Benchmark token counting operations.
-    
+
     These are CPU-bound and can run in parallel efficiently.
     """
 
@@ -54,7 +54,7 @@ class TestTokenCountingPerformance:
 @pytest.mark.io_bound
 class TestChunkingPerformance:
     """Benchmark chunking operations.
-    
+
     These are CPU-bound and can run in parallel efficiently.
     """
 
@@ -90,7 +90,7 @@ class TestChunkingPerformance:
     @pytest.mark.slow
     def test_fixed_chunking_speed(self, benchmark, test_config):
         """Benchmark fixed-size chunking.
-        
+
         Note: Marked as slow due to tiktoken performance issues with fixed strategy.
         """
         from mcp_web.chunker import TextChunker
@@ -109,7 +109,7 @@ class TestChunkingPerformance:
 @pytest.mark.xdist_group(name="cache")
 class TestCachePerformance:
     """Benchmark cache operations.
-    
+
     Grouped to avoid cache contention between parallel workers.
     """
 
@@ -130,7 +130,7 @@ class TestCachePerformance:
                 await cache.set(f"bench_key_{i}", test_data)
 
         # Benchmark async function
-        result = benchmark.pedantic(
+        benchmark.pedantic(
             lambda: asyncio.run(write_cache()),
             iterations=5,
             rounds=3,
@@ -193,7 +193,7 @@ class TestExtractionPerformance:
             await extractor.extract(fetch_result, use_cache=False)
 
         # Run benchmark
-        result = benchmark.pedantic(
+        benchmark.pedantic(
             lambda: asyncio.run(extract()),
             iterations=10,
             rounds=3,
@@ -221,7 +221,7 @@ class TestURLValidationPerformance:
             for url in test_urls:
                 validate_url(url)
 
-        result = benchmark(validate_all)
+        benchmark(validate_all)
 
     def test_url_normalization_speed(self, benchmark):
         """Benchmark URL normalization."""
@@ -237,7 +237,7 @@ class TestURLValidationPerformance:
             for url in test_urls:
                 normalize_url(url)
 
-        result = benchmark(normalize_all)
+        benchmark(normalize_all)
 
 
 @pytest.mark.benchmark
@@ -401,17 +401,14 @@ class TestScalability:
 
 
 @pytest.mark.benchmark
-@pytest.mark.asyncio
 class TestSummarizationPerformance:
     """Benchmark summarization with mocked LLM.
-    
+
     These tests measure the performance of the summarization logic
     without the variability of real API calls.
     """
 
-    async def test_direct_summarization_speed(
-        self, benchmark, mock_summarizer, sample_chunks
-    ):
+    def test_direct_summarization_speed(self, benchmark, mock_summarizer, sample_chunks):
         """Benchmark direct summarization (no map-reduce)."""
 
         async def summarize():
@@ -430,9 +427,7 @@ class TestSummarizationPerformance:
 
         assert len(result) > 0
 
-    async def test_map_reduce_summarization_speed(
-        self, benchmark, mock_summarizer, sample_chunks
-    ):
+    def test_map_reduce_summarization_speed(self, benchmark, mock_summarizer, sample_chunks):
         """Benchmark map-reduce summarization with multiple chunks."""
 
         async def summarize():
@@ -451,11 +446,10 @@ class TestSummarizationPerformance:
 
         assert len(result) > 0
 
-    async def test_parallel_map_reduce_speedup(
-        self, mock_summarizer, large_chunks
-    ):
+    @pytest.mark.asyncio
+    async def test_parallel_map_reduce_speedup(self, mock_summarizer, large_chunks):
         """Test speedup from parallel map-reduce vs sequential.
-        
+
         This validates that parallel_map provides performance benefits.
         """
         import time
@@ -485,7 +479,7 @@ class TestSummarizationPerformance:
         # Calculate speedup
         speedup = sequential_time / parallel_time if parallel_time > 0 else 1.0
 
-        print(f"\nParallel Map-Reduce Performance:")
+        print("\nParallel Map-Reduce Performance:")
         print(f"  Chunks: {len(large_chunks)}")
         print(f"  Sequential: {sequential_time:.3f}s")
         print(f"  Parallel: {parallel_time:.3f}s")
