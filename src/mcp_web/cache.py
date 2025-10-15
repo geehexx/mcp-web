@@ -75,11 +75,18 @@ class CacheManager:
         self.default_ttl = ttl
         self.max_size = max_size
 
+        # Map short policy names to diskcache full names
+        policy_map = {
+            "lru": "least-recently-used",
+            "lfu": "least-frequently-used",
+        }
+        full_policy = policy_map.get(eviction_policy, eviction_policy)
+
         # Initialize diskcache
         self.cache = diskcache.Cache(
             str(self.cache_dir),
             size_limit=max_size,
-            eviction_policy=eviction_policy,
+            eviction_policy=full_policy,
         )
 
         self.metrics = get_metrics_collector()
