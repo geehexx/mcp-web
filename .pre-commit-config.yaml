@@ -1,0 +1,108 @@
+# Pre-commit hooks for mcp-web
+# See https://pre-commit.com for more information
+# See https://gatlenculp.medium.com/effortless-code-quality-the-ultimate-pre-commit-hooks-guide-for-2025-57ca501d9835
+
+default_language_version:
+  python: python3.12
+
+repos:
+  # Security - Detect hardcoded secrets
+  # Note: Disabled due to WASM runtime error on this system
+  # Run manually: gitleaks detect --source . -v
+  # - repo: https://github.com/gitleaks/gitleaks
+  #   rev: v8.22.1
+  #   hooks:
+  #     - id: gitleaks
+  #       name: "🔒 security · Detect hardcoded secrets"
+
+  # Python - Formatting and Linting with Ruff
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.9.1
+    hooks:
+      - id: ruff-format
+        name: "🐍 python · Format with Ruff"
+      - id: ruff
+        name: "🐍 python · Lint with Ruff"
+        args: [--fix]
+
+  # Python - Type Checking with Mypy
+  # Note: Disabled by default due to current type errors
+  # Enable when ready: uncomment the block below
+  # - repo: https://github.com/pre-commit/mirrors-mypy
+  #   rev: v1.11.1
+  #   hooks:
+  #     - id: mypy
+  #       name: "🐍 python · Type check with Mypy"
+  #       additional_dependencies: [types-all]
+  #       args: [--ignore-missing-imports]
+
+  # YAML/JSON/TOML Validation
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-yaml
+        name: "✅ config · Validate YAML"
+      - id: check-json
+        name: "✅ config · Validate JSON"
+      - id: check-toml
+        name: "✅ config · Validate TOML"
+      - id: check-added-large-files
+        name: "📁 files · Prevent large files (>500KB)"
+        args: [--maxkb=500]
+      - id: trailing-whitespace
+        name: "📁 files · Remove trailing whitespace"
+      - id: end-of-file-fixer
+        name: "📁 files · Ensure newline at EOF"
+      - id: mixed-line-ending
+        name: "📁 files · Fix mixed line endings"
+        args: [--fix=lf]
+
+  # Python - Validate pyproject.toml
+  - repo: https://github.com/abravalheri/validate-pyproject
+    rev: v0.23
+    hooks:
+      - id: validate-pyproject
+        name: "🐍 python · Validate pyproject.toml"
+        additional_dependencies: ["validate-pyproject-schema-store[all]"]
+
+  # Markdown - Linting
+  # Note: Disabled due to nodeenv installation issues
+  # Run manually: markdownlint-cli2 --fix "**/*.md"
+  # - repo: https://github.com/igorshubovych/markdownlint-cli
+  #   rev: v0.43.0
+  #   hooks:
+  #     - id: markdownlint
+  #       name: "📝 markdown · Lint with markdownlint"
+  #       args: [--fix, --config, .markdownlint.json]
+
+  # Git - Commit Message Validation
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v3.6.0
+    hooks:
+      - id: conventional-pre-commit
+        name: "🗒️ git · Validate commit message (Conventional Commits)"
+        stages: [commit-msg]
+        args: [--strict]
+
+  # Local - Fast Tests (Optional, can be slow)
+  # Uncomment to run fast tests on every commit
+  # - repo: local
+  #   hooks:
+  #     - id: pytest-fast
+  #       name: "🧪 test · Run fast tests"
+  #       entry: ./.venv/bin/pytest
+  #       language: system
+  #       types: [python]
+  #       args: ["-m", "(unit or security) and not benchmark", "--tb=short", "-x"]
+  #       pass_filenames: false
+  #       always_run: true
+
+# CI Mode - Run all hooks with fail-fast disabled
+ci:
+  autofix_commit_msg: "style: auto-fix pre-commit issues"
+  autofix_prs: true
+  autoupdate_branch: main
+  autoupdate_commit_msg: "chore: pre-commit autoupdate"
+  autoupdate_schedule: monthly
+  skip: []
+  submodules: false
