@@ -1,14 +1,20 @@
 """Integration tests for query-aware summarization.
 
-Tests the query-focused summarization feature where summaries
-are tailored to answer specific questions or focus on specific topics.
+Tests the end-to-end flow of using a query to focus summaries.
 """
 
+import os
 import pytest
 
 from mcp_web.chunker import Chunk
 from mcp_web.config import SummarizerSettings
 from mcp_web.summarizer import Summarizer
+
+# Skip these tests if no OpenAI API key available
+pytestmark = pytest.mark.skipif(
+    not os.getenv("OPENAI_API_KEY"),
+    reason="OpenAI API key not available - use OPENAI_API_KEY env var"
+)
 
 
 @pytest.fixture
@@ -46,10 +52,10 @@ def sample_content():
 @pytest.fixture
 def sample_chunks(sample_content):
     """Create sample chunks from content."""
-    from mcp_web.chunker import Chunker
+    from mcp_web.chunker import TextChunker
     from mcp_web.config import ChunkerSettings
 
-    chunker = Chunker(ChunkerSettings())
+    chunker = TextChunker(ChunkerSettings())
     return chunker.chunk_text(sample_content)
 
 
@@ -67,7 +73,7 @@ class TestQueryAwareSummarization:
         query = "security best practices"
 
         summary_parts = []
-        async for chunk in summarizer.summarize(
+        async for chunk in summarizer.summarize_chunks(
             chunks=sample_chunks,
             query=query,
         ):
@@ -90,7 +96,7 @@ class TestQueryAwareSummarization:
         query = "performance optimization and testing"
 
         summary_parts = []
-        async for chunk in summarizer.summarize(
+        async for chunk in summarizer.summarize_chunks(
             chunks=sample_chunks,
             query=query,
         ):
@@ -112,7 +118,7 @@ class TestQueryAwareSummarization:
         query = "machine learning algorithms"
 
         summary_parts = []
-        async for chunk in summarizer.summarize(
+        async for chunk in summarizer.summarize_chunks(
             chunks=sample_chunks,
             query=query,
         ):
@@ -131,21 +137,21 @@ class TestQueryAwareSummarization:
         # Create chunks with distinct topics
         chunk1 = Chunk(
             text="Python security: validate input, hash passwords, prevent injection.",
-            start=0,
-            end=100,
-            token_count=15,
+            tokens=15,
+            start_pos=0,
+            end_pos=100,
         )
         chunk2 = Chunk(
             text="Python performance: use comprehensions, NumPy, and built-in functions.",
-            start=100,
-            end=200,
-            token_count=15,
+            tokens=15,
+            start_pos=100,
+            end_pos=200,
         )
         chunk3 = Chunk(
             text="Python testing: write unit tests, integration tests, aim for coverage.",
-            start=200,
-            end=300,
-            token_count=15,
+            tokens=15,
+            start_pos=200,
+            end_pos=300,
         )
 
         chunks = [chunk1, chunk2, chunk3]
@@ -156,7 +162,7 @@ class TestQueryAwareSummarization:
         query = "security practices"
 
         summary_parts = []
-        async for chunk in summarizer.summarize(
+        async for chunk in summarizer.summarize_chunks(
             chunks=chunks,
             query=query,
         ):
@@ -179,9 +185,9 @@ class TestQueryAwareSummarization:
         chunks = [
             Chunk(
                 text=f"Section {i}: Content about various Python topics. " * 50,
-                start=i * 1000,
-                end=(i + 1) * 1000,
-                token_count=200,
+                tokens=500,
+                start_pos=i * 1000,
+                end_pos=(i + 1) * 1000,
             )
             for i in range(10)
         ]
@@ -191,9 +197,9 @@ class TestQueryAwareSummarization:
             Chunk(
                 text="Security section: Always validate input to prevent SQL injection attacks. "
                 "Use parameterized queries and hash passwords with bcrypt." * 10,
-                start=10000,
-                end=11000,
-                token_count=200,
+                tokens=500,
+                start_pos=10000,
+                end_pos=11000,
             )
         )
 
@@ -206,7 +212,7 @@ class TestQueryAwareSummarization:
         query = "security vulnerabilities"
 
         summary_parts = []
-        async for chunk in summarizer.summarize(
+        async for chunk in summarizer.summarize_chunks(
             chunks=chunks,
             query=query,
         ):
@@ -229,7 +235,7 @@ class TestQueryAwareSummarization:
         query = None  # No query
 
         summary_parts = []
-        async for chunk in summarizer.summarize(
+        async for chunk in summarizer.summarize_chunks(
             chunks=sample_chunks,
             query=query,
         ):
@@ -252,7 +258,7 @@ class TestQueryAwareSummarization:
         query = "security & <script>alert('xss')</script>"
 
         summary_parts = []
-        async for chunk in summarizer.summarize(
+        async for chunk in summarizer.summarize_chunks(
             chunks=sample_chunks,
             query=query,
         ):
@@ -276,7 +282,7 @@ class TestQueryAwareSummarization:
         query = " ".join(["security", "performance", "testing", "optimization"] * 100)
 
         summary_parts = []
-        async for chunk in summarizer.summarize(
+        async for chunk in summarizer.summarize_chunks(
             chunks=sample_chunks,
             query=query,
         ):
@@ -297,7 +303,7 @@ class TestQueryAwareSummarization:
         query = "testing strategies"
 
         chunk_count = 0
-        async for chunk in summarizer.summarize(
+        async for chunk in summarizer.summarize_chunks(
             chunks=sample_chunks,
             query=query,
         ):

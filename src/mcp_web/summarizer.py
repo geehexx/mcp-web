@@ -64,11 +64,15 @@ class Summarizer:
         # Initialize OpenAI-compatible client
         api_key = config.get_api_key()
         api_base = config.get_api_base()
-
-        if config.provider == "openai" and not api_key:
-            _get_logger().warning(
-                "no_openai_api_key", msg="OPENAI_API_KEY not set for OpenAI provider"
-            )
+        
+        # For local providers without API keys, use placeholder
+        if not api_key:
+            if config.provider == "openai":
+                _get_logger().warning(
+                    "no_openai_api_key", msg="OPENAI_API_KEY not set for OpenAI provider"
+                )
+            # Local LLMs don't need real API keys
+            api_key = "not-needed"
 
         _get_logger().info(
             "summarizer_init",

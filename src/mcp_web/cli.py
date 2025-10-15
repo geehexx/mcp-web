@@ -172,19 +172,19 @@ async def _test_summarize_async(
 
             # Extract
             extract_start = time.perf_counter()
-            extraction = await extractor.extract(fetch_result.content.decode("utf-8"))
+            extraction = await extractor.extract(fetch_result)
             extract_time = time.perf_counter() - extract_start
             metrics["extract_time"] += extract_time
 
             if verbose:
-                click.echo(f"  Extract: {len(extraction.text):,} chars ({extract_time:.2f}s)")
+                click.echo(f"  Extract: {len(extraction.content):,} chars ({extract_time:.2f}s)")
                 click.echo(f"  Title: {extraction.title}")
                 if extraction.metadata:
                     click.echo(f"  Metadata: {len(extraction.metadata)} fields")
 
             # Chunk
             chunk_start = time.perf_counter()
-            chunks = chunker.chunk_text(extraction.text)
+            chunks = chunker.chunk_text(extraction.content)
             chunk_time = time.perf_counter() - chunk_start
             metrics["chunk_time"] += chunk_time
             metrics["chunk_count"] += len(chunks)
@@ -192,7 +192,7 @@ async def _test_summarize_async(
             if verbose:
                 click.echo(f"  Chunk: {len(chunks)} chunks ({chunk_time:.2f}s)")
                 for i, chunk in enumerate(chunks[:3]):  # Show first 3
-                    click.echo(f"    Chunk {i + 1}: {chunk.token_count} tokens")
+                    click.echo(f"    Chunk {i + 1}: {chunk.tokens} tokens")
                 if len(chunks) > 3:
                     click.echo(f"    ... and {len(chunks) - 3} more")
 
@@ -201,7 +201,7 @@ async def _test_summarize_async(
             summarize_start = time.perf_counter()
 
             summary_parts = []
-            async for chunk in summarizer.summarize(
+            async for chunk in summarizer.summarize_chunks(
                 chunks=chunks,
                 query=query,
                 sources=[url],

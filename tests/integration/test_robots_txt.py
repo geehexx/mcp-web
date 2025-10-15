@@ -254,14 +254,14 @@ class TestCrawlDelay:
 
         assert elapsed >= delay
 
-    async def test_no_delay_when_not_specified(self, sample_robots_permissive):
+    async def test_no_delay_when_not_specified(self, sample_robots_empty):
         """Test behavior when no crawl-delay specified."""
         parser = RobotFileParser()
-        parser.parse(sample_robots_permissive.splitlines())
+        parser.parse(sample_robots_empty.splitlines())
 
         delay = parser.crawl_delay("*")
-        # Should have a delay specified in the fixture
-        assert delay == 1
+        # Should be None when no delay specified
+        assert delay is None
 
     async def test_configurable_delay_override(self):
         """Test that crawl-delay can be overridden in config."""
