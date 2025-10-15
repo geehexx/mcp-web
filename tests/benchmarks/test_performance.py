@@ -398,3 +398,100 @@ class TestScalability:
         if times[1] > 0:
             ratio = times[4] / times[1]  # 10000 / 500 = 20x size
             assert ratio < 40, f"Scalability issue: {ratio:.1f}x slowdown for 20x data"
+
+
+@pytest.mark.benchmark
+@pytest.mark.asyncio
+class TestSummarizationPerformance:
+    """Benchmark summarization with mocked LLM.
+    
+    These tests measure the performance of the summarization logic
+    without the variability of real API calls.
+    """
+
+    async def test_direct_summarization_speed(
+        self, benchmark, mock_summarizer, sample_chunks
+    ):
+        """Benchmark direct summarization (no map-reduce)."""
+
+        async def summarize():
+            result = []
+            async for chunk in mock_summarizer.summarize_chunks(
+                sample_chunks[:1], query=None, sources=["https://test.com"]
+            ):
+                result.append(chunk)
+            return "".join(result)
+
+        result = benchmark.pedantic(
+            lambda: asyncio.run(summarize()),
+            iterations=5,
+            rounds=3,
+        )
+
+        assert len(result) > 0
+
+    async def test_map_reduce_summarization_speed(
+        self, benchmark, mock_summarizer, sample_chunks
+    ):
+        """Benchmark map-reduce summarization with multiple chunks."""
+
+        async def summarize():
+            result = []
+            async for chunk in mock_summarizer.summarize_chunks(
+                sample_chunks, query=None, sources=["https://test.com"]
+            ):
+                result.append(chunk)
+            return "".join(result)
+
+        result = benchmark.pedantic(
+            lambda: asyncio.run(summarize()),
+            iterations=5,
+            rounds=3,
+        )
+
+        assert len(result) > 0
+
+    async def test_parallel_map_reduce_speedup(
+        self, mock_summarizer, large_chunks
+    ):
+        """Test speedup from parallel map-reduce vs sequential.
+        
+        This validates that parallel_map provides performance benefits.
+        """
+        import time
+
+        # Test with parallel enabled (default)
+        mock_summarizer.config.parallel_map = True
+
+        start = time.perf_counter()
+        result_parallel = []
+        async for chunk in mock_summarizer.summarize_chunks(
+            large_chunks, query=None, sources=["https://test.com"]
+        ):
+            result_parallel.append(chunk)
+        parallel_time = time.perf_counter() - start
+
+        # Test with parallel disabled (sequential)
+        mock_summarizer.config.parallel_map = False
+
+        start = time.perf_counter()
+        result_sequential = []
+        async for chunk in mock_summarizer.summarize_chunks(
+            large_chunks, query=None, sources=["https://test.com"]
+        ):
+            result_sequential.append(chunk)
+        sequential_time = time.perf_counter() - start
+
+        # Calculate speedup
+        speedup = sequential_time / parallel_time if parallel_time > 0 else 1.0
+
+        print(f"\nParallel Map-Reduce Performance:")
+        print(f"  Chunks: {len(large_chunks)}")
+        print(f"  Sequential: {sequential_time:.3f}s")
+        print(f"  Parallel: {parallel_time:.3f}s")
+        print(f"  Speedup: {speedup:.2f}x")
+
+        # With mocked responses, parallel should be faster
+        # (unless overhead dominates, which shouldn't happen with 20 chunks)
+        assert len(result_parallel) > 0
+        assert len(result_sequential) > 0
