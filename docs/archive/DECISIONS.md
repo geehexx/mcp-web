@@ -1,6 +1,6 @@
 # Design Decisions Log
 
-**Project:** mcp-web summarization tool  
+**Project:** mcp-web summarization tool
 **Purpose:** Track architectural choices, tradeoffs, and rationale
 
 ---
@@ -23,10 +23,10 @@ Each decision includes:
 ## Active Decisions
 
 ### DD-001: httpx Primary, Playwright Fallback
-**Date:** 2025-10-15  
-**Status:** Accepted  
-**Context:** Need to fetch HTML from diverse websites, some with JavaScript rendering  
-**Decision:** Use `httpx` async client as primary method, fall back to Playwright headless browser on failure  
+**Date:** 2025-10-15
+**Status:** Accepted
+**Context:** Need to fetch HTML from diverse websites, some with JavaScript rendering
+**Decision:** Use `httpx` async client as primary method, fall back to Playwright headless browser on failure
 **Rationale:**
 - httpx is 10-100x faster than Playwright for static sites
 - Playwright handles JS-heavy sites (SPAs, dynamic content)
@@ -46,10 +46,10 @@ Each decision includes:
 ---
 
 ### DD-002: Trafilatura for Content Extraction
-**Date:** 2025-10-15  
-**Status:** Accepted  
-**Context:** Need to extract main content from arbitrary HTML (remove boilerplate, ads, navigation)  
-**Decision:** Use `trafilatura` library with `favor_recall=True`  
+**Date:** 2025-10-15
+**Status:** Accepted
+**Context:** Need to extract main content from arbitrary HTML (remove boilerplate, ads, navigation)
+**Decision:** Use `trafilatura` library with `favor_recall=True`
 **Rationale:**
 - Best accuracy in HTML content extraction benchmarks
 - Handles diverse page structures
@@ -70,10 +70,10 @@ Each decision includes:
 ---
 
 ### DD-003: Hierarchical + Semantic Chunking
-**Date:** 2025-10-15  
-**Status:** Accepted  
-**Context:** Need to split long documents for LLM processing while preserving context  
-**Decision:** Implement hierarchical chunking (respect headings/sections) + semantic boundaries (sentences, paragraphs)  
+**Date:** 2025-10-15
+**Status:** Accepted
+**Context:** Need to split long documents for LLM processing while preserving context
+**Decision:** Implement hierarchical chunking (respect headings/sections) + semantic boundaries (sentences, paragraphs)
 **Rationale:**
 - Maintains document structure for better summarization
 - Semantic boundaries prevent mid-sentence splits
@@ -94,10 +94,10 @@ Each decision includes:
 ---
 
 ### DD-004: 512-Token Chunks with 50-Token Overlap
-**Date:** 2025-10-15  
-**Status:** Accepted  
-**Context:** Need to determine optimal chunk size and overlap  
-**Decision:** Default to 512 tokens per chunk, 50 tokens overlap  
+**Date:** 2025-10-15
+**Status:** Accepted
+**Context:** Need to determine optimal chunk size and overlap
+**Decision:** Default to 512 tokens per chunk, 50 tokens overlap
 **Rationale:**
 - 512 tokens = ~1-2 paragraphs (good context unit)
 - 50-token overlap prevents context loss at boundaries
@@ -118,10 +118,10 @@ Each decision includes:
 ---
 
 ### DD-005: tiktoken for Token Counting
-**Date:** 2025-10-15  
-**Status:** Accepted  
-**Context:** Need accurate token counting for chunk sizing and context limits  
-**Decision:** Use `tiktoken` library with cl100k_base encoding (GPT-4/GPT-3.5-turbo)  
+**Date:** 2025-10-15
+**Status:** Accepted
+**Context:** Need accurate token counting for chunk sizing and context limits
+**Decision:** Use `tiktoken` library with cl100k_base encoding (GPT-4/GPT-3.5-turbo)
 **Rationale:**
 - Official OpenAI tokenizer (exact counting)
 - Fast C implementation
@@ -140,10 +140,10 @@ Each decision includes:
 ---
 
 ### DD-006: Map-Reduce Summarization Strategy
-**Date:** 2025-10-15  
-**Status:** Accepted  
-**Context:** Need to summarize documents that exceed LLM context window  
-**Decision:** Use map-reduce pattern: summarize chunks individually (map) → combine summaries (reduce)  
+**Date:** 2025-10-15
+**Status:** Accepted
+**Context:** Need to summarize documents that exceed LLM context window
+**Decision:** Use map-reduce pattern: summarize chunks individually (map) → combine summaries (reduce)
 **Rationale:**
 - Scales to arbitrarily long documents
 - Parallelizable (faster)
@@ -165,10 +165,10 @@ Each decision includes:
 ---
 
 ### DD-007: Disk Cache with 7-Day TTL
-**Date:** 2025-10-15  
-**Status:** Accepted  
-**Context:** Need to avoid redundant fetches and processing for frequently accessed URLs  
-**Decision:** Implement disk-based cache in `~/.cache/mcp-web/` with 7-day TTL  
+**Date:** 2025-10-15
+**Status:** Accepted
+**Context:** Need to avoid redundant fetches and processing for frequently accessed URLs
+**Decision:** Implement disk-based cache in `~/.cache/mcp-web/` with 7-day TTL
 **Rationale:**
 - Disk cache persists across sessions (unlike in-memory)
 - 7 days balances freshness and efficiency
@@ -191,10 +191,10 @@ Each decision includes:
 ---
 
 ### DD-008: OpenAI GPT-4 as Default LLM
-**Date:** 2025-10-15  
-**Status:** Accepted  
-**Context:** Need high-quality abstractive summaries  
-**Decision:** Default to OpenAI GPT-4, make model configurable  
+**Date:** 2025-10-15
+**Status:** Accepted
+**Context:** Need high-quality abstractive summaries
+**Decision:** Default to OpenAI GPT-4, make model configurable
 **Rationale:**
 - GPT-4 produces best summaries (quality, coherence)
 - Widely available, stable API
@@ -215,10 +215,10 @@ Each decision includes:
 ---
 
 ### DD-009: Streaming Output
-**Date:** 2025-10-15  
-**Status:** Accepted  
-**Context:** Long summaries can take 10-30 seconds, need to show progress  
-**Decision:** Stream partial results using async generators  
+**Date:** 2025-10-15
+**Status:** Accepted
+**Context:** Long summaries can take 10-30 seconds, need to show progress
+**Decision:** Stream partial results using async generators
 **Rationale:**
 - Better UX (user sees progress)
 - Aligns with MCP streaming capabilities
@@ -237,10 +237,10 @@ Each decision includes:
 ---
 
 ### DD-010: Monolithic Tool Design
-**Date:** 2025-10-15  
-**Status:** Accepted  
-**Context:** MCP architecture decision: single tool vs. multiple tools  
-**Decision:** Implement as single `summarize_urls` tool with rich parameters  
+**Date:** 2025-10-15
+**Status:** Accepted
+**Context:** MCP architecture decision: single tool vs. multiple tools
+**Decision:** Implement as single `summarize_urls` tool with rich parameters
 **Rationale:**
 - Simpler user interface (one tool to learn)
 - Easier to orchestrate internal pipeline
@@ -261,8 +261,8 @@ Each decision includes:
 ## Deprecated Decisions
 
 ### DD-XXX: Example Deprecated Decision
-**Date:** 2025-XX-XX  
-**Status:** Superseded by DD-YYY  
+**Date:** 2025-XX-XX
+**Status:** Superseded by DD-YYY
 **Reason:** [Explanation]
 
 ---
@@ -270,7 +270,7 @@ Each decision includes:
 ## Pending Decisions
 
 ### PD-001: PDF Extraction Library
-**Context:** Need to extract text from PDFs (research papers, documentation)  
+**Context:** Need to extract text from PDFs (research papers, documentation)
 **Options:**
 1. `pypdf`: Lightweight, pure Python
 2. `pdfplumber`: Better layout preservation
@@ -283,7 +283,7 @@ Each decision includes:
 ---
 
 ### PD-002: Link Scoring Algorithm
-**Context:** When following links recursively, need to prioritize relevant URLs  
+**Context:** When following links recursively, need to prioritize relevant URLs
 **Options:**
 1. Keyword matching (query terms in link text/URL)
 2. Domain reputation (prefer .edu, .gov, known docs sites)
@@ -297,7 +297,7 @@ Each decision includes:
 ---
 
 ### PD-003: Embeddings for Semantic Search
-**Context:** Future enhancement to find most relevant chunks for query  
+**Context:** Future enhancement to find most relevant chunks for query
 **Options:**
 1. OpenAI embeddings API
 2. Local sentence-transformers
@@ -318,6 +318,6 @@ Each decision includes:
 
 ---
 
-**Maintained By:** Cascade (AI Agent)  
-**Review Cadence:** After each milestone, before major refactors  
+**Maintained By:** Cascade (AI Agent)
+**Review Cadence:** After each milestone, before major refactors
 **Format:** Inspired by Michael Nygard's Architecture Decision Records (ADR)

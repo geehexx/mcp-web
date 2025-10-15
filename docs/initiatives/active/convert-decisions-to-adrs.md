@@ -1,10 +1,11 @@
 # Initiative: Convert Legacy Decisions to ADR Format
 
-**Status:** Active
+**Status:** Complete
 **Created:** 2025-10-15
+**Completed:** 2025-10-15
 **Priority:** High
 **Owner:** AI Agent
-**Estimated:** 2-3 hours
+**Actual Time:** 1.5 hours
 
 ---
 
@@ -19,16 +20,16 @@ Convert DD-002 through DD-010 from `DECISIONS.md` to proper ADR format in `docs/
 - [x] ADR-0001 exists (httpx/Playwright - already done)
 - [x] ADR-0002 exists (Windsurf workflows - already done)
 - [x] ADR-0003 exists (Documentation standards - already done)
-- [ ] ADR-0004: Trafilatura for content extraction (DD-002)
-- [ ] ADR-0005: Hierarchical + semantic chunking (DD-003)
-- [ ] ADR-0006: 512-token chunks with 50-token overlap (DD-004)
-- [ ] ADR-0007: tiktoken for token counting (DD-005)
-- [ ] ADR-0008: Map-reduce summarization strategy (DD-006)
-- [ ] ADR-0009: Disk cache with 7-day TTL (DD-007)
-- [ ] ADR-0010: OpenAI GPT-4 as default LLM (DD-008)
-- [ ] ADR-0011: Streaming output (DD-009)
-- [ ] ADR-0012: Monolithic tool design (DD-010)
-- [ ] Archive DECISIONS.md to docs/archive/
+- [x] ADR-0004: Trafilatura for content extraction (DD-002)
+- [x] ADR-0005: Hierarchical + semantic chunking (DD-003)
+- [x] ADR-0006: 512-token chunks with 50-token overlap (DD-004)
+- [x] ADR-0007: tiktoken for token counting (DD-005)
+- [x] ADR-0008: Map-reduce summarization strategy (DD-006)
+- [x] ADR-0009: Disk cache with 7-day TTL (DD-007)
+- [x] ADR-0010: OpenAI GPT-4 as default LLM (DD-008)
+- [x] ADR-0011: Streaming output (DD-009)
+- [x] ADR-0012: Monolithic tool design (DD-010)
+- [x] Archive DECISIONS.md to docs/archive/
 
 ---
 

@@ -64,22 +64,20 @@ If a decision changes, create a new ADR that supersedes the old one.
 
 ### Active ADRs
 
-- [ADR-0001: Use httpx with Playwright Fallback](0001-use-httpx-playwright-fallback.md) (2025-10-15)
-  - **Status:** Implemented
-  - **Summary:** httpx for primary fetching, Playwright for JS-rendered content
-  - **Impact:** Fetcher module
-
-- [ADR-0002: Adopt Windsurf Workflow System](0002-adopt-windsurf-workflow-system.md) (2025-10-15)
-  - **Status:** Implemented
-  - **Summary:** Hierarchical workflow system with central orchestration for AI agents
-  - **Impact:** AI agent operational processes, `.windsurf/workflows/`
-
-- [ADR-0003: Documentation Standards and Structure](0003-documentation-standards-and-structure.md) (2025-10-15)
-  - **Status:** Implemented
-  - **Summary:** Hierarchical docs structure with lifecycle management and quality automation
-  - **Impact:** All documentation, `docs/` structure
-| [0009](0009-enable-streaming-output.md) | Enable streaming output | Implemented | 2025-10-15 |
-| [0010](0010-use-monolithic-tool-design.md) | Use monolithic tool design | Implemented | 2025-10-15 |
+| Number | Title | Status | Date |
+|--------|-------|--------|------|
+| [0001](0001-use-httpx-playwright-fallback.md) | Use httpx with Playwright fallback | Implemented | 2025-10-15 |
+| [0002](0002-adopt-windsurf-workflow-system.md) | Adopt Windsurf workflow system | Implemented | 2025-10-15 |
+| [0003](0003-documentation-standards-and-structure.md) | Documentation standards and structure | Implemented | 2025-10-15 |
+| [0004](0004-trafilatura-content-extraction.md) | Use Trafilatura for content extraction | Implemented | 2025-10-15 |
+| [0005](0005-hierarchical-semantic-chunking.md) | Hierarchical and semantic chunking | Implemented | 2025-10-15 |
+| [0006](0006-chunk-size-and-overlap.md) | 512-token chunks with 50-token overlap | Implemented | 2025-10-15 |
+| [0007](0007-tiktoken-token-counting.md) | Use tiktoken for token counting | Implemented | 2025-10-15 |
+| [0008](0008-map-reduce-summarization.md) | Map-reduce summarization strategy | Implemented | 2025-10-15 |
+| [0009](0009-disk-cache-seven-day-ttl.md) | Disk cache with 7-day TTL | Implemented | 2025-10-15 |
+| [0010](0010-openai-gpt4-default-llm.md) | Use OpenAI GPT-4 as default LLM | Implemented | 2025-10-15 |
+| [0011](0011-enable-streaming-output.md) | Enable streaming output | Implemented | 2025-10-15 |
+| [0012](0012-monolithic-tool-design.md) | Monolithic tool design | Implemented | 2025-10-15 |
 
 ### Superseded ADRs
 
