@@ -8,6 +8,7 @@ Provides shared helpers for:
 """
 
 import re
+from typing import Any
 from urllib.parse import urlparse
 
 import tiktoken
@@ -119,7 +120,7 @@ def normalize_url(url: str) -> str:
 def format_markdown_summary(
     summary: str,
     sources: list[str],
-    metadata: dict | None = None,
+    metadata: dict[str, Any] | None = None,
 ) -> str:
     """Format summary with citations and metadata.
 

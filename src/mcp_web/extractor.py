@@ -11,6 +11,7 @@ Design Decision DD-005: Preserve code blocks and tables in Markdown.
 import re
 from dataclasses import dataclass, field
 from datetime import datetime
+from typing import Any
 
 import trafilatura
 from pypdf import PdfReader
@@ -49,12 +50,12 @@ class ExtractedContent:
     url: str
     title: str
     content: str  # Markdown formatted
-    metadata: dict = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
     links: list[str] = field(default_factory=list)
     code_snippets: list[CodeSnippet] = field(default_factory=list)
     timestamp: datetime = field(default_factory=datetime.now)
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization."""
         return {
             "url": self.url,
@@ -70,7 +71,7 @@ class ExtractedContent:
         }
 
     @classmethod
-    def from_dict(cls, data: dict) -> "ExtractedContent":
+    def from_dict(cls, data: dict[str, Any]) -> "ExtractedContent":
         """Create from dictionary."""
         code_snippets = [CodeSnippet(**cs) for cs in data.get("code_snippets", [])]
         return cls(

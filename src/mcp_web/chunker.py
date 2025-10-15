@@ -12,6 +12,7 @@ Design Decision DD-009: Keep code blocks intact.
 
 import re
 from dataclasses import dataclass, field
+from typing import Any
 
 from mcp_web.config import ChunkerSettings
 from mcp_web.metrics import get_metrics_collector
@@ -38,9 +39,9 @@ class Chunk:
     tokens: int
     start_pos: int
     end_pos: int
-    metadata: dict = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
         return {
             "text": self.text,
@@ -71,7 +72,7 @@ class TextChunker:
         self.token_counter = TokenCounter()
         self.metrics = get_metrics_collector()
 
-    def chunk_text(self, text: str, metadata: dict | None = None) -> list[Chunk]:
+    def chunk_text(self, text: str, metadata: dict[str, Any] | None = None) -> list[Chunk]:
         """Chunk text using configured strategy.
 
         Args:
@@ -118,7 +119,7 @@ class TextChunker:
 
         return chunks
 
-    def _chunk_hierarchical(self, text: str, metadata: dict | None = None) -> list[Chunk]:
+    def _chunk_hierarchical(self, text: str, metadata: dict[str, Any] | None = None) -> list[Chunk]:
         """Chunk text hierarchically (headings → paragraphs → sentences).
 
         Args:
@@ -161,7 +162,7 @@ class TextChunker:
 
         return chunks
 
-    def _chunk_semantic(self, text: str, metadata: dict | None = None) -> list[Chunk]:
+    def _chunk_semantic(self, text: str, metadata: dict[str, Any] | None = None) -> list[Chunk]:
         """Chunk text at semantic boundaries (paragraphs, sentences).
 
         Args:
@@ -232,7 +233,7 @@ class TextChunker:
 
         return chunks
 
-    def _chunk_fixed(self, text: str, metadata: dict | None = None) -> list[Chunk]:
+    def _chunk_fixed(self, text: str, metadata: dict[str, Any] | None = None) -> list[Chunk]:
         """Chunk text into fixed-size chunks with overlap.
 
         Args:
@@ -426,7 +427,7 @@ class TextChunker:
         return blocks
 
     def _chunk_with_code_blocks(
-        self, text: str, code_blocks: list[tuple[int, int, str]], metadata: dict
+        self, text: str, code_blocks: list[tuple[int, int, str]], metadata: dict[str, Any]
     ) -> list[Chunk]:
         """Chunk text while preserving code blocks.
 
