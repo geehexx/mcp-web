@@ -9,8 +9,12 @@ import pytest
 
 
 @pytest.mark.benchmark
+@pytest.mark.io_bound
 class TestTokenCountingPerformance:
-    """Benchmark token counting operations."""
+    """Benchmark token counting operations.
+    
+    These are CPU-bound and can run in parallel efficiently.
+    """
 
     def test_token_counting_speed(self, benchmark):
         """Benchmark token counting performance."""
@@ -47,8 +51,12 @@ class TestTokenCountingPerformance:
 
 
 @pytest.mark.benchmark
+@pytest.mark.io_bound
 class TestChunkingPerformance:
-    """Benchmark chunking operations."""
+    """Benchmark chunking operations.
+    
+    These are CPU-bound and can run in parallel efficiently.
+    """
 
     def test_hierarchical_chunking_speed(self, benchmark, test_config):
         """Benchmark hierarchical chunking."""
@@ -97,8 +105,13 @@ class TestChunkingPerformance:
 
 
 @pytest.mark.benchmark
+@pytest.mark.io_bound
+@pytest.mark.xdist_group(name="cache")
 class TestCachePerformance:
-    """Benchmark cache operations."""
+    """Benchmark cache operations.
+    
+    Grouped to avoid cache contention between parallel workers.
+    """
 
     @pytest.mark.asyncio
     async def test_cache_write_speed(self, benchmark, test_config):

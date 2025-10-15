@@ -44,6 +44,11 @@ tasks:
     cmds:
       - "{{.UV}} run pytest -n {{.PARALLEL_WORKERS}} -m 'not live and not benchmark' -v"
 
+  test:fast:
+    desc: Run fast tests only (exclude slow, live, benchmark)
+    cmds:
+      - "{{.UV}} run pytest -n {{.PARALLEL_WORKERS}} -m 'not slow and not live and not benchmark' -v"
+
   test:unit:
     desc: Run unit tests only
     cmds:
@@ -80,9 +85,19 @@ tasks:
       - "{{.UV}} run pytest -m live -v"
 
   test:bench:
-    desc: Run performance benchmarks
+    desc: Run performance benchmarks (parallel with pytest-xdist)
     cmds:
-      - "{{.UV}} run pytest -m benchmark --benchmark-only -v"
+      - "{{.UV}} run pytest -m benchmark --benchmark-only -v -n {{.PARALLEL_WORKERS}} --dist loadgroup"
+
+  test:bench:single:
+    desc: Run performance benchmarks (single process for accurate timing)
+    cmds:
+      - "{{.UV}} run pytest -m benchmark --benchmark-only -v -o addopts=''"
+
+  test:bench:save:
+    desc: Run benchmarks and save results for comparison
+    cmds:
+      - "{{.UV}} run pytest -m benchmark --benchmark-only --benchmark-autosave -v -o addopts=''"
 
   test:all:
     desc: Run all tests including live tests (requires API keys)

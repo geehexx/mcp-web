@@ -1,0 +1,29 @@
+{
+  "url": "https://python.org",
+  "query": null,
+  "overall_duration_ms": 13089.487285000132,
+  "components": {
+    "fetch": {
+      "duration_ms": 452.74747799999204,
+      "percentage": 3.4588633469151766,
+      "method": "httpx"
+    },
+    "extract": {
+      "duration_ms": 943.8435849999678,
+      "percentage": 7.210699429622146,
+      "tokens": 260
+    },
+    "chunk": {
+      "duration_ms": 0.5396320000272681,
+      "percentage": 0.0041226366493793696,
+      "num_chunks": 6,
+      "tokens": 403
+    },
+    "summarize": {
+      "duration_ms": 11691.32325999999,
+      "percentage": 89.31842023634978,
+      "tokens": 341
+    }
+  },
+  "summary": "# Summary of Python.org\n\n## Overview\n- **Website**: [Python.org](https://www.python.org/)\n- **Description**: The official home of the Python Programming Language.\n- **Date**: October 1, 2025\n- **Tags*..."
+}

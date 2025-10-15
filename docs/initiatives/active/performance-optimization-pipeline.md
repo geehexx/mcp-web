@@ -351,14 +351,14 @@ def select_strategy(chunks, query):
 
 ### Phase 1 Tasks
 
-- [ ] Create profiling decorator and timing utilities
-- [ ] Implement parallel map-reduce with `asyncio.gather()`
-- [ ] Add `asyncio.as_completed()` streaming variant
+- [x] Create profiling decorator and timing utilities
+- [x] Implement parallel map-reduce with `asyncio.gather()`
+- [x] Add `asyncio.as_completed()` streaming variant
 - [ ] Optimize prompts (reduce verbosity, add stop sequences)
 - [ ] Implement adaptive `max_tokens` based on chunk size
-- [ ] Add comprehensive metrics collection
-- [ ] Create benchmark comparison framework
-- [ ] Run baseline vs optimized benchmarks
+- [x] Add comprehensive metrics collection
+- [x] Create benchmark comparison framework
+- [ ] Run baseline vs optimized benchmarks (IN PROGRESS - timeout issues)
 - [ ] Validate quality with golden tests (ensure 90%+ retention)
 
 ### Phase 2 Tasks
