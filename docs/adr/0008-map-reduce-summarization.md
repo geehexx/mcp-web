@@ -19,16 +19,19 @@ The mcp-web tool needs to summarize documents of arbitrary length, including:
 - **Long documents:** 8000-100,000+ tokens (exceeds context window)
 
 LLM context windows impose hard limits:
+
 - GPT-3.5-turbo: 16k tokens
 - GPT-4: 32k tokens
 - GPT-4-turbo: 128k tokens
 
 Even with large context windows, we face challenges:
+
 1. **Cost scaling:** More tokens = higher costs (linear or worse)
 2. **Quality degradation:** LLMs perform worse on very long contexts ("lost in the middle" problem)
 3. **Latency:** Long context = slow response times
 
 Our requirements:
+
 1. Handle documents of any length without truncation
 2. Maintain summary quality regardless of document length
 3. Optimize cost and latency
@@ -41,32 +44,33 @@ We will use a **map-reduce pattern** for document summarization:
 ### Strategy
 
 1. **Short documents (<= 8k tokens):** Direct summarization in single call
-   - Fastest path, best quality
-   - No overhead from chunking/combining
+ - Fastest path, best quality
+ - No overhead from chunking/combining
 
 2. **Long documents (> 8k tokens):** Map-reduce approach
-   - **Map phase:** Summarize each chunk independently (parallel)
-   - **Reduce phase:** Combine chunk summaries into final summary
-   - Recursive reduce if intermediate summaries still too long
+ - **Map phase:** Summarize each chunk independently (parallel)
+ - **Reduce phase:** Combine chunk summaries into final summary
+ - Recursive reduce if intermediate summaries still too long
 
 ### Implementation Details
 
 ```
 Document (15k tokens)
-    ↓ chunk into 3 chunks (5k each)
-    ↓
+ ↓ chunk into 3 chunks (5k each)
+ ↓
 Map Phase (parallel):
-    Chunk 1 → Summary 1 (500 tokens)
-    Chunk 2 → Summary 2 (500 tokens)
-    Chunk 3 → Summary 3 (500 tokens)
-    ↓
+ Chunk 1 → Summary 1 (500 tokens)
+ Chunk 2 → Summary 2 (500 tokens)
+ Chunk 3 → Summary 3 (500 tokens)
+ ↓
 Reduce Phase:
-    Summaries 1+2+3 → Final Summary (800 tokens)
+ Summaries 1+2+3 → Final Summary (800 tokens)
 ```
 
 ### Query-Aware Optimization
 
 When a query is provided:
+
 - Map phase includes query in prompt ("Focus on aspects related to: {query}")
 - Reduce phase emphasizes query-relevant information
 - Irrelevant chunks may be summarized more briefly or skipped
@@ -78,11 +82,13 @@ When a query is provided:
 **Description:** Truncate long documents to fit in context window (e.g., first 30k tokens)
 
 **Pros:**
+
 - Simplest implementation (single API call)
 - Fast (no chunking overhead)
 - Cheapest (fewest tokens)
 
 **Cons:**
+
 - **Information loss:** Misses content beyond truncation point
 - **Biased summaries:** Over-represents beginning of document
 - **Unpredictable:** Quality depends on where truncation occurs
@@ -93,16 +99,19 @@ When a query is provided:
 ### Alternative 2: Refine Iteratively
 
 **Description:** Summarize in stages, iteratively refining:
+
 1. Summarize first chunk
 2. Summarize second chunk + first summary
 3. Continue until all content processed
 
 **Pros:**
+
 - Maintains context across chunks
 - Single final summary (no combining step)
 - Good for narrative flow
 
 **Cons:**
+
 - **Sequential:** Cannot parallelize (slow for long docs)
 - **Error propagation:** Early mistakes compound
 - **Biased:** Later content has less influence
@@ -115,11 +124,13 @@ When a query is provided:
 **Description:** Concatenate all chunks into single context and summarize
 
 **Pros:**
+
 - Single API call
 - No information loss within context limit
 - Simplest logic
 
 **Cons:**
+
 - **Fails on long documents:** Hard limit at context window
 - **Expensive:** Uses maximum tokens per call
 - **Slow:** Large context = slow generation
@@ -154,24 +165,27 @@ When a query is provided:
 ## Implementation
 
 **Key files:**
+
 - `src/mcp_web/summarizer.py` - Core summarization logic
 - `src/mcp_web/chunker.py` - Document chunking for map phase
 - `src/mcp_web/prompts.py` - Map and reduce prompt templates
 
 **Configuration:**
+
 ```python
 SummarizerSettings(
-    map_reduce_threshold: int = 8000,      # Tokens to trigger map-reduce
-    max_chunk_tokens: int = 4000,          # Map phase chunk size
-    reduce_chunk_tokens: int = 8000,       # Reduce phase input size
-    max_summary_tokens: int = 1000,        # Target summary length
-    enable_parallel: bool = True,          # Parallel map phase
+ map_reduce_threshold: int = 8000, # Tokens to trigger map-reduce
+ max_chunk_tokens: int = 4000, # Map phase chunk size
+ reduce_chunk_tokens: int = 8000, # Reduce phase input size
+ max_summary_tokens: int = 1000, # Target summary length
+ enable_parallel: bool = True, # Parallel map phase
 )
 ```
 
 **Prompt patterns:**
 
-*Map phase:*
+_Map phase:_
+
 ```
 Summarize the following section of a larger document.
 Focus on key points and maintain technical accuracy.
@@ -181,7 +195,8 @@ Section:
 {chunk_text}
 ```
 
-*Reduce phase:*
+_Reduce phase:_
+
 ```
 Combine the following chunk summaries into a cohesive final summary.
 Eliminate redundancy while preserving unique information from each chunk.

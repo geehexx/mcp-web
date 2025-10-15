@@ -13,6 +13,7 @@ You: /work
 ```
 
 **Agent will:**
+
 1. Scan project in <30 seconds
 2. Find active initiatives, test failures, or TODOs
 3. Auto-route to appropriate workflow
@@ -29,41 +30,46 @@ You: /work
 **Use it for:** Everything
 
 **It auto-detects:**
+
 - Active initiatives → continues them
 - Test failures → fixes them
 - Planning markers → creates plans
 - Clean state → asks what to do
 
 **Example:**
+
 ```
 You: /work
 
 Agent: Detected initiative "Fix Security Tests" (3/10 complete)
-       Loading context... Starting next task...
+ Loading context... Starting next task...
 ```
 
 ### `/plan` - When You Need a Plan
 
 **Use it when:**
+
 - New complex feature
 - Multi-session work
 - Unclear requirements
 
 **Creates:**
+
 - Research-backed plan
 - Broken into phases
 - Success criteria defined
 - Initiative document
 
 **Example:**
+
 ```
 You: /plan add user authentication
 
 Agent: Researching best practices...
-       Creating comprehensive plan...
-       Phases: 4 (Core → Mgmt → Apply → Docs)
-       Estimated: 8 hours
-       Ready to implement?
+ Creating comprehensive plan...
+ Phases: 4 (Core → Mgmt → Apply → Docs)
+ Estimated: 8 hours
+ Ready to implement?
 ```
 
 ### `/implement` - Focused Execution
@@ -71,6 +77,7 @@ Agent: Researching best practices...
 **Rarely invoked directly** (usually called by `/work`)
 
 **Does:**
+
 - Test-first development
 - Incremental commits
 - Quality gates
@@ -113,11 +120,13 @@ Agent: [reviews diff, guides commit message]
 ## What Changed?
 
 ### Before
+
 - Manual context explanation every time
 - Many clarifying questions
 - Ad-hoc process
 
 ### After
+
 - Auto-detects context from files
 - Minimal questions (only if ambiguous)
 - Structured workflows
@@ -173,11 +182,13 @@ What works? What needs tuning?
 ## Workflow Files
 
 **Created:**
+
 - `work.md` (9.6 KB) - Central orchestration
 - `plan.md` (12.2 KB) - Research-based planning
 - `implement.md` (9.3 KB) - Test-first execution
 
 **Kept:**
+
 - `commit.md` - Git operations
 - `new-adr.md` - Architecture decisions
 - `archive-initiative.md` - Completion tracking
@@ -204,11 +215,13 @@ What works? What needs tuning?
 ## Need Help?
 
 **Detailed docs:**
+
 - `docs/WORKFLOW_OPTIMIZATION_2025_10_15.md` - Complete guide
 - `docs/META_ANALYSIS_TRACKING.md` - Artifact tracking
 - `.windsurf/workflows/*.md` - Individual workflow details
 
 **Just start:**
+
 ```
 /work
 ```

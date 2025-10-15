@@ -29,6 +29,7 @@ Use this workflow for staging and committing changes with proper validation.
 ## Validation Checklist
 
 Before committing:
+
 - [ ] All tests pass (`task test:fast`)
 - [ ] Linting passes (`task lint`)
 - [ ] Documentation updated

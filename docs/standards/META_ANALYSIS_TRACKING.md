@@ -17,6 +17,7 @@
 **Tracking:** Via git commits during session
 
 **Example:**
+
 ```markdown
 Session: "Implement API Authentication"
 
@@ -40,6 +41,7 @@ Commits:
 **Tracking:** Clearly marked in meta-analysis document
 
 **Example:**
+
 ```markdown
 Session: "Implement API Authentication"
 
@@ -65,6 +67,7 @@ Commits:
 **Tracking:** Initiative documents or issue tracker
 
 **Example:**
+
 ```markdown
 Session: "Implement API Authentication"
 
@@ -84,11 +87,13 @@ Rationale: MVP complete, enhancements planned for Phase 2
 ### In Commits
 
 **Session work:**
+
 ```bash
 git commit -m "feat(auth): add API key validation"
 ```
 
 **Meta-analysis:**
+
 ```bash
 git commit -m "docs(meta): add authentication workflow
 
@@ -99,6 +104,7 @@ Refs: META_ANALYSIS_SESSION_2025_10_15.md"
 ```
 
 **Deferred work:**
+
 ```bash
 git commit -m "docs(initiative): create OAuth2 integration plan
 
@@ -118,46 +124,46 @@ Refs: docs/initiatives/active/oauth2-integration.md"
 ### During Session (Primary Objective)
 
 1. **API Authentication Module**
-   - Files: src/mcp_web/auth.py, tests/unit/test_auth.py
-   - Commits: abc1234, def5678
-   - Status: ✅ Complete, production-ready
+ - Files: src/mcp_web/auth.py, tests/unit/test_auth.py
+ - Commits: abc1234, def5678
+ - Status: ✅ Complete, production-ready
 
 ### During Meta-Analysis (Process Improvements)
 
 1. **Security Review Workflow**
-   - File: .windsurf/workflows/security-review.md
-   - Commits: ghi9012
-   - Reason: Identified gap in security validation process
-   - Status: ✅ Complete, ready for use
+ - File: .windsurf/workflows/security-review.md
+ - Commits: ghi9012
+ - Reason: Identified gap in security validation process
+ - Status: ✅ Complete, ready for use
 
 2. **Authentication Patterns Documentation**
-   - File: .windsurf/rules/02_python_standards.md (updated)
-   - Commits: jkl3456
-   - Reason: Establish consistent auth patterns for future features
-   - Status: ✅ Complete
+ - File: .windsurf/rules/02_python_standards.md (updated)
+ - Commits: jkl3456
+ - Reason: Establish consistent auth patterns for future features
+ - Status: ✅ Complete
 
 ### Deferred to Future Work
 
 1. **OAuth2 Integration**
-   - Initiative: docs/initiatives/active/oauth2-integration.md
-   - Priority: Medium
-   - Estimated Effort: 16 hours
-   - Reason: Phase 2 enhancement, MVP sufficient
-   - Status: 📋 Planned
+ - Initiative: docs/initiatives/active/oauth2-integration.md
+ - Priority: Medium
+ - Estimated Effort: 16 hours
+ - Reason: Phase 2 enhancement, MVP sufficient
+ - Status: 📋 Planned
 
 2. **Database Key Storage**
-   - Location: TODO comment in src/mcp_web/auth.py
-   - Priority: Low
-   - Estimated Effort: 4 hours
-   - Reason: In-memory sufficient for current scale
-   - Status: 📋 Planned
+ - Location: TODO comment in src/mcp_web/auth.py
+ - Priority: Low
+ - Estimated Effort: 4 hours
+ - Reason: In-memory sufficient for current scale
+ - Status: 📋 Planned
 
 3. **Automated Key Rotation**
-   - Location: Issue #47
-   - Priority: Low
-   - Estimated Effort: 8 hours
-   - Reason: Manual rotation adequate for MVP
-   - Status: 📋 Backlog
+ - Location: Issue #47
+ - Priority: Low
+ - Estimated Effort: 8 hours
+ - Reason: Manual rotation adequate for MVP
+ - Status: 📋 Backlog
 ```
 
 ---
@@ -169,12 +175,14 @@ Refs: docs/initiatives/active/oauth2-integration.md"
 **Location:** `docs/archive/session-summaries/YYYY-MM-DD-description.md`
 
 **Contains:**
+
 - What was implemented (session work)
 - What was improved (meta-analysis)
 - What was deferred (future work)
 - Clear differentiation between categories
 
 **Template Section:**
+
 ```markdown
 ## Artifact Classification
 
@@ -191,10 +199,12 @@ Refs: docs/initiatives/active/oauth2-integration.md"
 ### Initiatives
 
 **Active:** `docs/initiatives/active/name.md`
+
 - Current work
 - Deferred enhancements from previous sessions
 
 **Completed:** `docs/initiatives/completed/YYYY-QN-name.md`
+
 - Archived when fully done
 - Include meta-analysis insights
 
@@ -205,6 +215,7 @@ Refs: docs/initiatives/active/oauth2-integration.md"
 ### DO
 
 ✅ **Clearly mark meta-analysis commits**
+
 ```bash
 git commit -m "docs(meta): add workflow
 
@@ -212,16 +223,19 @@ Meta-analysis: ..."
 ```
 
 ✅ **Create initiatives for deferred work**
+
 ```markdown
 Don't just leave TODO comments, create tracked initiative
 ```
 
 ✅ **Document rationale for deferral**
+
 ```markdown
 Why defer? Too complex? Out of scope? Lower priority?
 ```
 
 ✅ **Link between artifacts**
+
 ```markdown
 Session summary → Initiative document
 Initiative → ADR (if architectural)
@@ -235,10 +249,12 @@ ADR → Implementation commits
 ❌ **Leave deferred work untracked**
 
 ❌ **Create meta-analysis artifacts without clear value**
+
 - Don't document "obvious" patterns
 - Don't create workflows for one-off scenarios
 
 ❌ **Forget to update tracking locations**
+
 - Initiative status
 - TODO markers
 - Issue tracker

@@ -24,6 +24,7 @@
 > "We're not committing intelligently, which we should do so... A failing we have learnt from is I called /work without any context hoping it would pick up from the conversation that stated we should commit as well."
 
 **Root causes:**
+
 1. **Batch commits at end:** Previous sessions committed all work in single large commit
 2. **Context loss:** Without recent commits, `/work` couldn't detect state from conversation alone
 3. **Poor history:** Large batches hide logical progression
@@ -33,12 +34,14 @@
 ### Solution Implemented
 
 **Commit after each logical unit:**
+
 - ✅ Per ADR or small grouping (2-3 related ADRs)
 - ✅ Per feature or fix
 - ✅ Per documentation section
 - ❌ NOT all at session end
 
 **Benefits demonstrated:**
+
 1. **Clear history:** Each commit has single purpose
 2. **Easy review:** Small, focused diffs
 3. **Granular rollback:** Can revert specific ADR without affecting others
@@ -50,6 +53,7 @@
 ## Commits This Session
 
 ### Commit 1: Consolidation (b7ee70b)
+
 ```
 docs(consolidation): consolidate workflows and create ADRs 0002-0003
 
@@ -70,6 +74,7 @@ docs(consolidation): consolidate workflows and create ADRs 0002-0003
 ---
 
 ### Commit 2: Initiative Plan (4cd54f1)
+
 ```
 docs(initiative): create plan for converting DD-002 to DD-010 to ADRs
 
@@ -86,6 +91,7 @@ docs(initiative): create plan for converting DD-002 to DD-010 to ADRs
 ---
 
 ### Commit 3: Work Status Tracking (f2900a5)
+
 ```
 docs(meta): add current work status tracking
 
@@ -100,6 +106,7 @@ of work state across context windows.
 ---
 
 ### Commit 4: ADR-0004 (3bc16ea)
+
 ```
 docs(adr): add ADR-0004 trafilatura content extraction
 
@@ -118,6 +125,7 @@ Converts DD-002 from DECISIONS.md to proper ADR format.
 ---
 
 ### Commit 5: ADR-0005 and ADR-0006 (3648619)
+
 ```
 docs(adr): add ADR-0005 and ADR-0006 chunking strategy
 
@@ -167,12 +175,14 @@ ADR-0006: Chunk size and overlap parameters
 ### 1. Commit After Each Logical Unit
 
 ✅ **DO:**
+
 - One ADR → one commit
 - One feature → one commit
 - One fix → one commit
 - Related items (2-3) → one commit if closely coupled
 
 ❌ **DON'T:**
+
 - Batch unrelated work
 - Wait until end of session
 - Mix multiple concerns
@@ -182,6 +192,7 @@ ADR-0006: Chunk size and overlap parameters
 **Format:** `type(scope): description`
 
 **Good example:**
+
 ```
 docs(adr): add ADR-0004 trafilatura content extraction
 
@@ -193,6 +204,7 @@ Converts DD-002 from DECISIONS.md to proper ADR format.
 ```
 
 **Bad example:**
+
 ```
 add adr
 ```
@@ -200,11 +212,13 @@ add adr
 ### 3. Group Related Changes
 
 **When to group:**
+
 - Strategy + parameters (ADR-0005 + ADR-0006)
 - Interface + implementation
 - Code + tests (for same feature)
 
 **When NOT to group:**
+
 - Unrelated ADRs
 - Different features
 - Multiple bug fixes
@@ -224,11 +238,13 @@ add adr
 ### Git Best Practices
 
 **Consulted:**
+
 - [Conventional Commits](https://www.conventionalcommits.org/)
 - [Git Best Practices (Seth Robertson)](http://sethrobertson.github.io/GitBestPractices/)
 - [Commit Often, Perfect Later](http://sethrobertson.github.io/GitBestPractices/#commit)
 
 **Key principles:**
+
 1. Commit early and often
 2. Don't commit half-done work (but DO commit logical units)
 3. Test before you commit
@@ -248,16 +264,19 @@ add adr
 ### `/work` Context Detection
 
 **Before (batch commits):**
+
 - Large time gap between commits
 - Recent work not visible in git history
 - `/work` relies on conversation context (which doesn't persist across sessions)
 
 **After (frequent commits):**
+
 - Recent commits show current work
 - Git history provides context
 - `/work` can detect state from commits alone
 
 **Example:**
+
 ```bash
 $ git log --oneline -5
 3648619 docs(adr): add ADR-0005 and ADR-0006 chunking strategy
@@ -278,6 +297,7 @@ b7ee70b docs(consolidation): consolidate workflows and create ADRs 0002-0003
 **Target:** 1 commit per 15-30 minutes of focused work
 
 **Metrics:**
+
 - Short sessions (<1 hour): 2-4 commits
 - Medium sessions (1-2 hours): 4-8 commits
 - Long sessions (2+ hours): 8+ commits
@@ -287,6 +307,7 @@ b7ee70b docs(consolidation): consolidate workflows and create ADRs 0002-0003
 **Idea:** Create checkpoint markers in workflow
 
 **Implementation:**
+
 - After completing each ADR
 - After passing tests
 - Before context window fills up
@@ -311,6 +332,7 @@ Refs: DD-NNN, docs/initiatives/active/convert-decisions-to-adrs.md
 ### 4. Pre-commit Checklist
 
 **Before each commit:**
+
 - [ ] Tests pass (if code changed)
 - [ ] Linting clean (if code changed)
 - [ ] Docs updated (if API changed)
@@ -392,6 +414,7 @@ Refs: DD-NNN, docs/initiatives/active/convert-decisions-to-adrs.md
 ## Action Items
 
 ### For This Session
+
 - [x] Demonstrate intelligent commit pattern
 - [x] Create 3 ADRs with individual commits
 - [x] Document learnings in meta-analysis
@@ -399,6 +422,7 @@ Refs: DD-NNN, docs/initiatives/active/convert-decisions-to-adrs.md
 - [ ] Continue with remaining ADRs (future session)
 
 ### For Future Sessions
+
 - [ ] Review hexacore-command commit patterns
 - [ ] Create commit message templates
 - [ ] Add workflow checkpoint markers

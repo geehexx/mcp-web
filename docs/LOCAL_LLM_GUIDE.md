@@ -1,7 +1,7 @@
 # Local LLM Support Guide
 
-**Project:** mcp-web  
-**Version:** 0.2.0  
+**Project:** mcp-web 
+**Version:** 0.2.0 
 **Last Updated:** 2025-10-15
 
 ---
@@ -9,6 +9,7 @@
 ## Overview
 
 mcp-web now supports multiple LLM providers, including local models for:
+
 - **Privacy:** Keep data on your machine
 - **Cost:** No API costs
 - **Speed:** Lower latency for local inference
@@ -74,9 +75,9 @@ export MCP_WEB_SUMMARIZER_MODEL=llama3.2:3b
 from mcp_web.config import SummarizerSettings
 
 config = SummarizerSettings(
-    provider="ollama",
-    model="llama3.2:3b",
-    temperature=0.3,
+ provider="ollama",
+ model="llama3.2:3b",
+ temperature=0.3,
 )
 ```
 
@@ -99,33 +100,36 @@ pytest -m golden -v
 **Best for:** General use, easy setup, good model selection
 
 **Setup:**
+
 ```bash
 # Install
-brew install ollama  # macOS
+brew install ollama # macOS
 # or
-curl -fsSL https://ollama.com/install.sh | sh  # Linux
+curl -fsSL https://ollama.com/install.sh | sh # Linux
 
 # Start server
 ollama serve
 
 # Pull models
-ollama pull llama3.2:3b    # Fast, 3B params
-ollama pull llama3.2:8b    # Better, 8B params  
-ollama pull mistral:7b     # Alternative
-ollama pull phi3:mini      # Microsoft's small model
+ollama pull llama3.2:3b # Fast, 3B params
+ollama pull llama3.2:8b # Better, 8B params 
+ollama pull mistral:7b # Alternative
+ollama pull phi3:mini # Microsoft's small model
 ```
 
 **Configuration:**
+
 ```python
 SummarizerSettings(
-    provider="ollama",
-    model="llama3.2:3b",  # or any pulled model
-    api_base="http://localhost:11434/v1",  # auto-detected
-    api_key="not-needed",  # auto-set
+ provider="ollama",
+ model="llama3.2:3b", # or any pulled model
+ api_base="http://localhost:11434/v1", # auto-detected
+ api_key="not-needed", # auto-set
 )
 ```
 
 **Environment Variables:**
+
 ```bash
 export MCP_WEB_SUMMARIZER_PROVIDER=ollama
 export MCP_WEB_SUMMARIZER_MODEL=llama3.2:3b
@@ -146,21 +150,24 @@ export MCP_WEB_SUMMARIZER_MODEL=llama3.2:3b
 **Best for:** GUI users, model experimentation
 
 **Setup:**
+
 1. Download LM Studio: https://lmstudio.ai
 2. Install and launch
 3. Download models from the UI
 4. Start local server (Server tab, port 1234)
 
 **Configuration:**
+
 ```python
 SummarizerSettings(
-    provider="lmstudio",
-    model="local-model",  # Model loaded in LM Studio
-    api_base="http://localhost:1234/v1",
+ provider="lmstudio",
+ model="local-model", # Model loaded in LM Studio
+ api_base="http://localhost:1234/v1",
 )
 ```
 
 **Environment Variables:**
+
 ```bash
 export MCP_WEB_SUMMARIZER_PROVIDER=lmstudio
 export MCP_WEB_SUMMARIZER_MODEL=local-model
@@ -171,22 +178,24 @@ export MCP_WEB_SUMMARIZER_MODEL=local-model
 **Best for:** Docker deployments, production
 
 **Setup:**
+
 ```bash
 # Docker
 docker run -p 8080:8080 \
-  -v $PWD/models:/models \
-  quay.io/go-skynet/local-ai:latest
+ -v $PWD/models:/models \
+ quay.io/go-skynet/local-ai:latest
 
 # Or docker-compose
 docker-compose up -d
 ```
 
 **Configuration:**
+
 ```python
 SummarizerSettings(
-    provider="localai",
-    model="gpt-3.5-turbo",  # Model name in LocalAI
-    api_base="http://localhost:8080/v1",
+ provider="localai",
+ model="gpt-3.5-turbo", # Model name in LocalAI
+ api_base="http://localhost:8080/v1",
 )
 ```
 
@@ -196,10 +205,10 @@ SummarizerSettings(
 
 ```python
 SummarizerSettings(
-    provider="custom",
-    model="your-model-name",
-    api_base="https://your-api.com/v1",
-    api_key="your-api-key",
+ provider="custom",
+ model="your-model-name",
+ api_base="https://your-api.com/v1",
+ api_key="your-api-key",
 )
 ```
 
@@ -214,31 +223,31 @@ from mcp_web.config import Config, SummarizerSettings
 
 # Ollama
 config = Config(
-    summarizer=SummarizerSettings(
-        provider="ollama",
-        model="llama3.2:3b",
-        temperature=0.3,  # 0.0 = deterministic, 2.0 = creative
-        max_tokens=2048,
-        map_reduce_threshold=8000,  # Use map-reduce for docs > 8k tokens
-    )
+ summarizer=SummarizerSettings(
+ provider="ollama",
+ model="llama3.2:3b",
+ temperature=0.3, # 0.0 = deterministic, 2.0 = creative
+ max_tokens=2048,
+ map_reduce_threshold=8000, # Use map-reduce for docs > 8k tokens
+ )
 )
 
 # LM Studio
 config = Config(
-    summarizer=SummarizerSettings(
-        provider="lmstudio",
-        model="local-model",
-        temperature=0.5,
-    )
+ summarizer=SummarizerSettings(
+ provider="lmstudio",
+ model="local-model",
+ temperature=0.5,
+ )
 )
 
 # OpenAI (cloud)
 config = Config(
-    summarizer=SummarizerSettings(
-        provider="openai",
-        model="gpt-4o-mini",
-        api_key="sk-...",  # or from env
-    )
+ summarizer=SummarizerSettings(
+ provider="openai",
+ model="gpt-4o-mini",
+ api_key="sk-...", # or from env
+ )
 )
 ```
 
@@ -274,8 +283,8 @@ config = SummarizerSettings(provider="ollama")
 # - api_base = "http://localhost:11434/v1"
 # - api_key = "not-needed"
 
-config.get_api_base()  # "http://localhost:11434/v1"
-config.get_api_key()   # "not-needed"
+config.get_api_base() # "http://localhost:11434/v1"
+config.get_api_key() # "not-needed"
 ```
 
 ---
@@ -329,17 +338,18 @@ Use fast, small models:
 
 ```bash
 # Ollama
-ollama pull llama3.2:3b      # Recommended
+ollama pull llama3.2:3b # Recommended
 ollama pull phi3:mini
 ```
 
 Configuration:
+
 ```python
 SummarizerSettings(
-    provider="ollama",
-    model="llama3.2:3b",
-    temperature=0.0,  # Deterministic for tests
-    max_tokens=1024,  # Lower for speed
+ provider="ollama",
+ model="llama3.2:3b",
+ temperature=0.0, # Deterministic for tests
+ max_tokens=1024, # Lower for speed
 )
 ```
 
@@ -351,17 +361,18 @@ Use larger, more capable models:
 # Ollama
 ollama pull llama3.2:8b
 ollama pull mistral:7b
-ollama pull mixtral:8x7b    # Mixture of experts
+ollama pull mixtral:8x7b # Mixture of experts
 ```
 
 Configuration:
+
 ```python
 SummarizerSettings(
-    provider="ollama",
-    model="llama3.2:8b",
-    temperature=0.3,  # Balanced
-    max_tokens=2048,
-    map_reduce_threshold=8000,
+ provider="ollama",
+ model="llama3.2:8b",
+ temperature=0.3, # Balanced
+ max_tokens=2048,
+ map_reduce_threshold=8000,
 )
 ```
 
@@ -382,16 +393,19 @@ SummarizerSettings(
 ### Hardware Recommendations
 
 **Minimum (Development):**
+
 - CPU: 4 cores
 - RAM: 8GB
 - Models: llama3.2:3b, phi3:mini
 
 **Recommended (Production):**
+
 - CPU: 8+ cores (or GPU)
 - RAM: 16GB+
 - Models: llama3.2:8b, mistral:7b
 
 **High Performance:**
+
 - GPU: NVIDIA with 8GB+ VRAM
 - RAM: 32GB+
 - Models: mixtral:8x7b, llama3.2:70b
@@ -414,8 +428,8 @@ OLLAMA_NUM_GPU=0 ollama serve
 
 ```python
 SummarizerSettings(
-    max_tokens=1024,  # Lower for speed
-    map_reduce_threshold=4000,  # Lower threshold = more chunking
+ max_tokens=1024, # Lower for speed
+ map_reduce_threshold=4000, # Lower threshold = more chunking
 )
 ```
 
@@ -427,7 +441,7 @@ chunks = chunker.chunk_text(long_document)
 
 # Map-reduce automatically batches
 async for summary_chunk in summarizer.summarize_chunks(chunks):
-    print(summary_chunk)
+ print(summary_chunk)
 ```
 
 #### 4. Caching
@@ -438,8 +452,8 @@ Enable caching to avoid re-summarizing:
 from mcp_web.cache import CacheManager
 
 cache = CacheManager(
-    cache_dir="~/.cache/mcp-web",
-    ttl=7 * 24 * 3600,  # 7 days
+ cache_dir="~/.cache/mcp-web",
+ ttl=7 * 24 * 3600, # 7 days
 )
 ```
 
@@ -452,6 +466,7 @@ cache = CacheManager(
 **Problem:** `Connection refused` or `Failed to connect to localhost:11434`
 
 **Solution:**
+
 ```bash
 # Check if Ollama is running
 ps aux | grep ollama
@@ -468,6 +483,7 @@ curl http://localhost:11434/api/tags
 **Problem:** `Model 'llama3.2:3b' not found`
 
 **Solution:**
+
 ```bash
 # List available models
 ollama list
@@ -481,9 +497,10 @@ ollama pull llama3.2:3b
 **Problem:** `Out of memory` or system freezing
 
 **Solution:**
+
 ```bash
 # Use smaller model
-ollama pull llama3.2:3b  # instead of 8b
+ollama pull llama3.2:3b # instead of 8b
 
 # Or limit memory
 OLLAMA_MAX_LOADED_MODELS=1 ollama serve
@@ -494,6 +511,7 @@ OLLAMA_MAX_LOADED_MODELS=1 ollama serve
 **Problem:** Slow summarization
 
 **Solutions:**
+
 1. Use smaller model (llama3.2:3b vs 8b)
 2. Reduce max_tokens
 3. Enable GPU acceleration
@@ -504,6 +522,7 @@ OLLAMA_MAX_LOADED_MODELS=1 ollama serve
 **Problem:** `No LLM available for testing`
 
 **Solution:**
+
 ```bash
 # Start Ollama
 ollama serve
@@ -545,6 +564,7 @@ task info:env
 ### Local LLMs (Ollama, LM Studio)
 
 **Pros:**
+
 - ✅ Privacy (data stays local)
 - ✅ No API costs
 - ✅ Lower latency (once loaded)
@@ -552,6 +572,7 @@ task info:env
 - ✅ Unlimited requests
 
 **Cons:**
+
 - ❌ Requires powerful hardware
 - ❌ Lower quality (vs GPT-4)
 - ❌ Slower cold start
@@ -560,12 +581,14 @@ task info:env
 ### Cloud LLMs (OpenAI, Anthropic)
 
 **Pros:**
+
 - ✅ Higher quality
 - ✅ No hardware requirements
 - ✅ Fast cold start
 - ✅ Larger context windows
 
 **Cons:**
+
 - ❌ Costs per request
 - ❌ Requires internet
 - ❌ Data sent to cloud
@@ -578,6 +601,7 @@ task info:env
 **Testing:** Use temperature=0 with either local or cloud for determinism
 
 **Production:** Choose based on:
+
 - Privacy needs → Local
 - Quality needs → Cloud
 - Cost constraints → Local
@@ -595,30 +619,30 @@ from mcp_web.config import Config, SummarizerSettings
 
 # Configure for Ollama
 config = Config(
-    summarizer=SummarizerSettings(
-        provider="ollama",
-        model="llama3.2:3b",
-    )
+ summarizer=SummarizerSettings(
+ provider="ollama",
+ model="llama3.2:3b",
+ )
 )
 
 # Use in pipeline
 async def summarize_url(url: str) -> str:
-    async with MCPWebServer(config) as server:
-        result = await server.summarize_urls([url])
-        return result
+ async with MCPWebServer(config) as server:
+ result = await server.summarize_urls([url])
+ return result
 ```
 
 ### With Custom Settings
 
 ```python
 config = Config(
-    summarizer=SummarizerSettings(
-        provider="ollama",
-        model="llama3.2:8b",
-        temperature=0.5,  # More creative
-        max_tokens=4096,  # Longer summaries
-        map_reduce_threshold=16000,  # Larger docs before chunking
-    )
+ summarizer=SummarizerSettings(
+ provider="ollama",
+ model="llama3.2:8b",
+ temperature=0.5, # More creative
+ max_tokens=4096, # Longer summaries
+ map_reduce_threshold=16000, # Larger docs before chunking
+ )
 )
 ```
 
@@ -631,9 +655,9 @@ import os
 provider = os.getenv("LLM_PROVIDER", "ollama")
 
 configs = {
-    "ollama": SummarizerSettings(provider="ollama", model="llama3.2:3b"),
-    "openai": SummarizerSettings(provider="openai", model="gpt-4o-mini"),
-    "lmstudio": SummarizerSettings(provider="lmstudio", model="local-model"),
+ "ollama": SummarizerSettings(provider="ollama", model="llama3.2:3b"),
+ "openai": SummarizerSettings(provider="openai", model="gpt-4o-mini"),
+ "lmstudio": SummarizerSettings(provider="lmstudio", model="local-model"),
 }
 
 config = Config(summarizer=configs[provider])
@@ -700,6 +724,6 @@ config = Config(summarizer=configs[provider])
 
 ---
 
-**Author:** mcp-web team  
-**Version:** 0.2.0  
+**Author:** mcp-web team 
+**Version:** 0.2.0 
 **Status:** ✅ Local LLM support fully implemented

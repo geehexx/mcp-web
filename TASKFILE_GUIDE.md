@@ -8,6 +8,7 @@
 ## What is Taskfile?
 
 Taskfile is a task runner and build tool that replaces Make and bash scripts. It's:
+
 - **Cross-platform:** Works on Linux, macOS, Windows
 - **Simple:** YAML-based configuration
 - **Fast:** Written in Go, minimal overhead
@@ -338,6 +339,7 @@ task security
 ```
 
 Dependency graph:
+
 ```
 ci
 ├── lint
@@ -363,6 +365,7 @@ ci
 ```
 
 **Problems:**
+
 - ❌ Not cross-platform (bash-specific)
 - ❌ Manual dependency management
 - ❌ No task discovery
@@ -377,6 +380,7 @@ task analyze
 ```
 
 **Benefits:**
+
 - ✅ Cross-platform (Linux, macOS, Windows)
 - ✅ Automatic dependency resolution
 - ✅ Built-in task listing (`task -l`)
@@ -437,6 +441,7 @@ alias tc='task test:coverage'
 ```
 
 Then:
+
 ```bash
 t test:fast   # Instead of task test:fast
 tl            # Instead of task --list

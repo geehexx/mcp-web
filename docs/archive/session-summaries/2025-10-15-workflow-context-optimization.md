@@ -22,6 +22,7 @@
 **File:** `.windsurf/workflows/work.md`
 
 **Changes:**
+
 - ✅ Added session summaries as **priority 0** context source (before initiatives)
 - ✅ Added "Why session summaries matter" explanation
 - ✅ Updated cross-session resumption logic to prioritize summaries
@@ -29,6 +30,7 @@
 - ✅ Documented that session summaries = compressed context from previous sessions
 
 **Impact:**
+
 - AI agents can now pick up work from previous sessions without conversation history
 - Session summaries provide 2-3 most recent work contexts automatically
 - Cross-session continuity improved significantly
@@ -38,6 +40,7 @@
 **File:** `.windsurf/workflows/plan.md`
 
 **Changes:**
+
 - ✅ Changed from "Web search for best practices" to "ALWAYS use web search"
 - ✅ Added explicit `search_web()` tool examples
 - ✅ Documented why web search is essential (evolving tech, security, patterns)
@@ -45,6 +48,7 @@
 - ✅ Emphasized citing actual URLs from search results
 
 **Rationale:**
+
 - User feedback: workflows should use [web] command for research
 - Technology evolves rapidly - 2025 best practices differ from 2023
 - Security vulnerabilities discovered regularly
@@ -55,6 +59,7 @@
 **File:** `docs/standards/SUMMARY_STANDARDS.md`
 
 **Changes:**
+
 - ✅ Added "CRITICAL" marker to "Next Steps" section
 - ✅ Added format requirements for AI agent context detection
 - ✅ Added priority indicators with emojis (🔴🟡🟢⚪)
@@ -63,6 +68,7 @@
 - ✅ Emphasized: no assumptions about prior conversation
 
 **Key additions:**
+
 ```markdown
 **Format requirements for AI agent context detection:**
 - ✅ Be explicit: "Fix 4 failing tests in tests/unit/test_security.py"
@@ -76,6 +82,7 @@
 **File:** `.windsurf/workflows/meta-analysis.md`
 
 **Changes:**
+
 - ✅ Added section 1.3: "Validate Context-Friendly Format"
 - ✅ Added validation checklist for "Next Steps" section
 - ✅ Added good vs bad examples of context-friendly summaries
@@ -83,6 +90,7 @@
 - ✅ Added test: "Could a new AI agent pick up work from this summary alone?"
 
 **Validation checklist:**
+
 - [ ] Specific file paths
 - [ ] Initiative links
 - [ ] Commands included
@@ -99,12 +107,14 @@
 **Source:** https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents
 
 **Key insights applied:**
+
 1. **Compaction strategy:** Session summaries as compressed context
 2. **Context rot:** As tokens increase, recall decreases - need curation
 3. **Structured note-taking:** Persistent memory outside context window
 4. **High-fidelity summarization:** Preserve decisions, bugs, implementation details
 
 **Applied pattern:**
+
 ```
 Session summaries = Compacted context from previous sessions
 - Preserve: Architectural decisions, unresolved bugs, next steps
@@ -117,11 +127,13 @@ Session summaries = Compacted context from previous sessions
 **Source:** https://skywork.ai/blog/claude-agent-sdk-best-practices-ai-agents-2025/
 
 **Key insights applied:**
+
 1. **Control context and memory:** Isolate, compact, standardize
 2. **Periodic reset or prune context:** Prefer retrieval and summaries
 3. **Compress global state aggressively:** Store just plan, decisions, artifacts
 
 **Applied pattern:**
+
 - Session summaries = periodic context pruning mechanism
 - Next steps section = compressed global state
 - Initiative links = retrieval mechanism
@@ -172,28 +184,28 @@ Refs: https://www.anthropic.com/engineering/effective-context-engineering-for-ai
 ### Immediate (This Session)
 
 1. 🔴 **Critical:** Commit workflow and standards improvements
-   - Files: `.windsurf/workflows/{work,plan,meta-analysis}.md`, `docs/standards/SUMMARY_STANDARDS.md`
-   - Command: `git add -A && git commit`
-   - Message: Use conventional commit format with research references
+ - Files: `.windsurf/workflows/{work,plan,meta-analysis}.md`, `docs/standards/SUMMARY_STANDARDS.md`
+ - Command: `git add -A && git commit`
+ - Message: Use conventional commit format with research references
 
 ### Next Session
 
 2. 🟡 **High:** Test improved `/work` workflow with actual continuation
-   - Scenario: Start new session, run `/work`, verify it uses session summaries
-   - Expected: Agent reads 2-3 most recent summaries automatically
-   - Validation: Picks up from "Next Steps" without user prompting
+ - Scenario: Start new session, run `/work`, verify it uses session summaries
+ - Expected: Agent reads 2-3 most recent summaries automatically
+ - Validation: Picks up from "Next Steps" without user prompting
 
 3. 🟢 **Medium:** Continue docs/initiatives/active/quality-foundation.md Phase 2
-   - Tasks: Install markdownlint-cli2, configure Vale
-   - Estimated: 1-2 hours
-   - Context: See initiative file for full checklist
+ - Tasks: Install markdownlint-cli2, configure Vale
+ - Estimated: 1-2 hours
+ - Context: See initiative file for full checklist
 
 ### Future
 
 4. ⚪ **Low:** Create ADR documenting session summary strategy
-   - Decision: Session summaries as cross-session context mechanism
-   - Alternatives: Persistent database, conversation export, external memory
-   - Rationale: File-based, git-tracked, human-readable, AI-parseable
+ - Decision: Session summaries as cross-session context mechanism
+ - Alternatives: Persistent database, conversation export, external memory
+ - Rationale: File-based, git-tracked, human-readable, AI-parseable
 
 ---
 

@@ -92,16 +92,18 @@ Use snake_case for scope names.
 ## Body Guidelines
 
 **When to include:**
+
 - Complex changes needing explanation
 - Breaking changes rationale
 - Migration instructions
 - Performance impact
 
 **Format:**
+
 - Separate from description with blank line
 - Wrap at 72 characters
 - Use bullet points for lists
-- Explain *why*, not *what* (code shows what)
+- Explain _why_, not _what_ (code shows what)
 
 **Example:**
 
@@ -201,6 +203,7 @@ DO NOT MERGE - Work in progress
 ### Atomic Commits
 
 Each commit should be:
+
 - **Self-contained:** Represents one logical change
 - **Reversible:** Can be reverted without breaking others
 - **Testable:** Tests pass after this commit
@@ -226,11 +229,13 @@ docs(api): document user search endpoint
 ### Squashing Commits
 
 Before merging, squash:
+
 - Fix commits (`fix: typo`)
 - WIP commits
 - Repeated iterations
 
 Keep separate:
+
 - Different features
 - Bug fixes
 - Refactorings
@@ -277,7 +282,7 @@ Users can now provide custom system prompts for summarization.
 - Add validation for prompt injection
 
 Example usage:
-    summarizer.summarize(text, custom_prompt="Summarize as bullet points")
+ summarizer.summarize(text, custom_prompt="Summarize as bullet points")
 
 Closes #234
 ```
@@ -354,16 +359,17 @@ Add to `~/.gitconfig`:
 
 ```ini
 [alias]
-    # Conventional commit shortcuts
-    feat = "!f() { git commit -m \"feat: $*\"; }; f"
-    fix = "!f() { git commit -m \"fix: $*\"; }; f"
-    docs = "!f() { git commit -m \"docs: $*\"; }; f"
-    refactor = "!f() { git commit -m \"refactor: $*\"; }; f"
-    test = "!f() { git commit -m \"test: $*\"; }; f"
-    chore = "!f() { git commit -m \"chore: $*\"; }; f"
+ # Conventional commit shortcuts
+ feat = "!f() { git commit -m \"feat: $*\"; }; f"
+ fix = "!f() { git commit -m \"fix: $*\"; }; f"
+ docs = "!f() { git commit -m \"docs: $*\"; }; f"
+ refactor = "!f() { git commit -m \"refactor: $*\"; }; f"
+ test = "!f() { git commit -m \"test: $*\"; }; f"
+ chore = "!f() { git commit -m \"chore: $*\"; }; f"
 ```
 
 Usage:
+
 ```bash
 git feat "add new feature"
 # Creates: feat: add new feature

@@ -38,11 +38,13 @@ Do NOT plan for:
 ### 1.1 Capture Requirements
 
 **If user provided description:**
+
 - Restate in own words for confirmation
 - Ask clarifying questions (max 3)
 - Document assumptions explicitly
 
 **Example:**
+
 ```markdown
 ## Requirement: User Authentication
 
@@ -62,6 +64,7 @@ Do NOT plan for:
 ### 1.2 Define Success Criteria
 
 **SMART criteria:**
+
 - **Specific:** Exactly what will be delivered?
 - **Measurable:** How to verify completion?
 - **Achievable:** Realistic given constraints?
@@ -69,6 +72,7 @@ Do NOT plan for:
 - **Time-bound:** Estimated effort?
 
 **Example:**
+
 ```markdown
 ## Success Criteria
 
@@ -93,17 +97,20 @@ Do NOT plan for:
 **Check project first:**
 
 1. **Similar implementations**
+
    ```bash
    grep_search("authentication\\|auth\\|api.?key", "src/", recursive=true)
    ```
 
 2. **Related ADRs**
+
    ```bash
    list_dir("docs/adr/")
    # Read any security-related ADRs
    ```
 
 3. **Security guidelines**
+
    ```bash
    read_file(".windsurf/rules/04_security.md")
    ```
@@ -122,6 +129,7 @@ search_web("API security patterns microservices 2025")
 ```
 
 **Why web search is essential:**
+
 - Technology evolves rapidly (2025 best practices differ from 2023)
 - Security vulnerabilities discovered regularly
 - New libraries and patterns emerge
@@ -129,6 +137,7 @@ search_web("API security patterns microservices 2025")
 - Community consensus shifts
 
 **Search strategy:**
+
 1. **Broad context** - General best practices for the domain
 2. **Specific technology** - Framework/library-specific patterns
 3. **Security focus** - OWASP, CVE, security advisories
@@ -136,6 +145,7 @@ search_web("API security patterns microservices 2025")
 5. **Production examples** - Real-world implementations
 
 **Document findings:**
+
 ```markdown
 ## Research Findings
 
@@ -248,11 +258,13 @@ Tasks:
 ## Dependencies
 
 ```
+
 Phase 1 (Core Auth) → Phase 2 (Key Mgmt)
                    ↘
                     → Phase 3 (Apply All)
                                          ↘
                                           → Phase 4 (Docs)
+
 ```
 
 **Blockers:**
@@ -425,16 +437,19 @@ Before proceeding, verify:
 ### Good Plan Indicators
 
 ✅ **Comprehensive:**
+
 - All requirements captured
 - Research documented with sources
 - Risks identified
 
 ✅ **Actionable:**
+
 - Tasks are concrete (not vague)
 - Each task <4 hours
 - Clear acceptance criteria
 
 ✅ **Realistic:**
+
 - Effort estimates reasonable
 - Dependencies identified
 - Risks have mitigations
@@ -442,16 +457,19 @@ Before proceeding, verify:
 ### Poor Plan Indicators
 
 ❌ **Vague:**
+
 - "Implement authentication" (what kind?)
 - "Make it secure" (how?)
 - No specific tasks
 
 ❌ **Unrealistic:**
+
 - "Complete in 1 hour" for complex feature
 - Ignoring dependencies
 - No risk assessment
 
 ❌ **Incomplete:**
+
 - No research
 - Missing acceptance criteria
 - No documentation plan

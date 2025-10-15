@@ -1,0 +1,11 @@
+# Generated files
+.pytest_cache/
+node_modules/
+.venv/
+
+# Lock files and archives
+uv.lock
+docs/archive/
+
+# External dependencies
+.git/

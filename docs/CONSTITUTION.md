@@ -100,6 +100,7 @@ This document establishes the principles, standards, and processes that govern t
 - Prefer stable URLs (avoid blog posts that may disappear)
 
 **Preferred sources:**
+
 - Official documentation (Python, OpenAI, OWASP, etc.)
 - Established standards (RFCs, OWASP, ISO, etc.)
 - Academic papers (arXiv, ACM, IEEE)
@@ -121,6 +122,7 @@ This document establishes the principles, standards, and processes that govern t
 - **String quotes:** Double quotes for strings, single for keys
 
 **Enforced by:**
+
 - `ruff` (linting and formatting)
 - `mypy` (type checking)
 - `pydocstyle` (docstring validation)
@@ -148,6 +150,7 @@ This document establishes the principles, standards, and processes that govern t
 - **LLM10:** Resource consumption limits (required)
 
 **All LLM interactions must:**
+
 - Validate and sanitize inputs
 - Use structured prompts (separate instructions from data)
 - Validate outputs for security issues
@@ -167,17 +170,19 @@ This document establishes the principles, standards, and processes that govern t
 - **Performance tests:** Benchmarks for critical paths
 
 **Test organization:**
+
 ```
 tests/
-├── unit/           # Fast, isolated tests
-├── integration/    # Multi-component tests
-├── security/       # Security-focused tests
-├── golden/         # Regression tests
-├── live/           # Network/API tests (marked)
-└── benchmarks/     # Performance tests
+├── unit/ # Fast, isolated tests
+├── integration/ # Multi-component tests
+├── security/ # Security-focused tests
+├── golden/ # Regression tests
+├── live/ # Network/API tests (marked)
+└── benchmarks/ # Performance tests
 ```
 
 **Test requirements:**
+
 - Use AAA pattern (Arrange, Act, Assert)
 - One test per scenario
 - Descriptive test names
@@ -203,6 +208,7 @@ tests/
 8. Reference ADR in code comments where relevant
 
 **What qualifies as "significant":**
+
 - New dependencies
 - Major algorithm changes
 - Security-related changes
@@ -250,6 +256,7 @@ tests/
 ### 1. Always Reference the Constitution
 
 **Before making changes, consult:**
+
 - This constitution for principles and standards
 - `DOCUMENTATION_STRUCTURE.md` for documentation organization
 - Windsurf rules (`.windsurf/rules/`) for detailed guidelines
@@ -258,6 +265,7 @@ tests/
 ### 2. Documentation is Mandatory
 
 **For every code change:**
+
 - Update or create documentation
 - Add references to external sources
 - Create ADRs for architectural decisions
@@ -267,6 +275,7 @@ tests/
 ### 3. Quality Checks
 
 **Before committing:**
+
 - Run all linters (`task lint`)
 - Run all tests (`task test`)
 - Run security checks (`task security`)
@@ -276,6 +285,7 @@ tests/
 ### 4. External Research
 
 **When making decisions:**
+
 - Search for best practices (use @web search)
 - Reference authoritative sources
 - Include URLs in documentation
@@ -285,6 +295,7 @@ tests/
 ### 5. Avoid LLM Artifacts
 
 **Clean up all output:**
+
 - Remove double-spaces
 - Remove placeholder comments ("TODO: implement this")
 - Remove overly enthusiastic language
@@ -294,6 +305,7 @@ tests/
 ### 6. Update This Constitution
 
 **If standards evolve:**
+
 - Propose changes via PR
 - Document rationale
 - Update version number
@@ -317,6 +329,7 @@ task test
 ```
 
 **Benefits:**
+
 - Consistent commands across environments
 - Centralized configuration
 - Documentation in task descriptions
@@ -343,6 +356,7 @@ References: #123, ADR-0005
 ```
 
 **Types:**
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation only
@@ -355,6 +369,7 @@ References: #123, ADR-0005
 ### 4. CI/CD
 
 **All PRs must pass:**
+
 - Linting (`task lint`)
 - Type checking (`task lint:mypy`)
 - Tests with coverage (`task test:coverage:min`)
@@ -362,6 +377,7 @@ References: #123, ADR-0005
 - Documentation linting (`task docs:lint`)
 
 **On merge to main:**
+
 - Run full test suite including live tests
 - Generate API documentation
 - Update CHANGELOG
@@ -374,6 +390,7 @@ References: #123, ADR-0005
 ### 1. Quarterly Review
 
 **Every quarter, review:**
+
 - All active initiatives (move completed ones to archive)
 - All active documentation (update or archive)
 - Dependencies (update or replace)
@@ -383,6 +400,7 @@ References: #123, ADR-0005
 ### 2. Post-Release Review
 
 **After each release:**
+
 - Review what went well / what didn't
 - Update processes if needed
 - Archive old documentation
@@ -391,6 +409,7 @@ References: #123, ADR-0005
 ### 3. Security Review
 
 **Monthly security review:**
+
 - Check for security vulnerabilities (`task security`)
 - Review security test coverage
 - Update dependencies with security fixes
@@ -403,17 +422,20 @@ References: #123, ADR-0005
 ### When to Break the Rules
 
 **Exceptions are allowed when:**
+
 - Emergency security fix (skip some docs, add later)
 - Prototype/spike (clearly mark as temporary)
 - External constraint (dependency limitation)
 
 **Process for exceptions:**
+
 1. Document the exception and rationale
 2. Create issue to fix properly later
 3. Add TODO comment in code
 4. Add to technical debt log
 
 **Never skip:**
+
 - Security checks
 - Critical tests
 - Security-related documentation
@@ -435,6 +457,7 @@ References: #123, ADR-0005
 ### 2. Conflict Resolution
 
 **If standards conflict:**
+
 1. Constitution takes precedence over Windsurf rules
 2. Security takes precedence over convenience
 3. Documented standards take precedence over undocumented practices
@@ -443,6 +466,7 @@ References: #123, ADR-0005
 ### 3. Evolution
 
 **This constitution evolves with the project:**
+
 - Proposals via PR with rationale
 - Discussion period (1 week minimum)
 - Consensus required for major changes
@@ -483,6 +507,7 @@ References: #123, ADR-0005
 ### Version 1.0.0 (2025-10-15)
 
 **Initial constitution including:**
+
 - Core principles established
 - Documentation standards defined
 - Code standards specified
@@ -492,6 +517,7 @@ References: #123, ADR-0005
 - Governance structure
 
 **References:**
+
 - Based on research from OWASP, ADR community, and Python best practices
 - Incorporates lessons from initial project development (v0.1.0 - v0.2.1)
 

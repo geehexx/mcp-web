@@ -1,0 +1,19 @@
+# Project-specific technical terms and correct capitalization
+extends: substitution
+message: "Use '%s' instead of '%s'"
+level: warning
+ignorecase: true
+swap:
+  mcp-web: MCP-Web
+  httpx: HTTPX
+  playwright: Playwright
+  openai: OpenAI
+  api key: API key
+  url: URL
+  urls: URLs
+  json: JSON
+  yaml: YAML
+  toml: TOML
+  html: HTML
+  javascript: JavaScript
+  typescript: TypeScript

@@ -15,6 +15,7 @@
 What is the issue that we're seeing that is motivating this decision or change?
 
 Include:
+
 - Background information
 - Problem statement
 - Business/technical drivers
@@ -31,12 +32,14 @@ Use active voice and present tense: "We will..."
 What other options did we consider?
 
 ### Alternative 1: [Name]
+
 - **Description:** Brief description
 - **Pros:** What are the benefits?
 - **Cons:** What are the drawbacks?
 - **Reason for rejection:** Why didn't we choose this?
 
 ### Alternative 2: [Name]
+
 - **Description:** Brief description
 - **Pros:** What are the benefits?
 - **Cons:** What are the drawbacks?
@@ -47,20 +50,24 @@ What other options did we consider?
 What becomes easier or more difficult to do because of this change?
 
 ### Positive Consequences
+
 - Benefit 1
 - Benefit 2
 
 ### Negative Consequences
+
 - Tradeoff 1
 - Tradeoff 2
 
 ### Neutral Consequences
+
 - Change 1
 - Change 2
 
 ## Implementation
 
 Brief notes on implementation if relevant:
+
 - Key files/modules affected
 - Migration steps required
 - Dependencies introduced/removed

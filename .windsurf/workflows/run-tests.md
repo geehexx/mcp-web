@@ -56,18 +56,21 @@ task ci:parallel
 **Reference:** [pytest-xdist](https://pytest-xdist.readthedocs.io/) (October 2025)
 
 ### CPU-bound tests (pure Python logic)
+
 ```bash
 # Use auto (number of CPU cores)
 pytest -n auto tests/unit/
 ```
 
 ### IO-bound tests (external APIs, network)
+
 ```bash
 # Use more workers than CPU cores
 PYTEST_XDIST_AUTO_NUM_WORKERS=16 pytest -n auto tests/integration/
 ```
 
 ### Distribution strategies
+
 - `--dist load` (default): Any available worker
 - `--dist loadscope`: Group by module/class (better fixture reuse)
 - `--dist worksteal`: Reassign from slow to fast workers
@@ -117,6 +120,7 @@ task ci:parallel
 ## Test Markers
 
 Filter tests by marker:
+
 ```bash
 # Only unit tests
 pytest -m unit

@@ -10,13 +10,13 @@ globs: ["**/*.py"]
 
 **Reference:** [PEP 8 Style Guide](https://peps.python.org/pep-0008/) (October 2025)
 
-* **Line length:** 100 characters maximum
-* **Quotes:** Double quotes for strings, single for dictionary keys
-* **Import order:**
+- **Line length:** 100 characters maximum
+- **Quotes:** Double quotes for strings, single for dictionary keys
+- **Import order:**
   1. Standard library
   2. Third-party packages
   3. Local modules
-* **Naming conventions:**
+- **Naming conventions:**
   - `snake_case` for functions, variables, modules
   - `PascalCase` for classes
   - `UPPER_CASE` for constants
@@ -26,11 +26,11 @@ globs: ["**/*.py"]
 
 **Reference:** [PEP 484 Type Hints](https://peps.python.org/pep-0484/)
 
-* **Always use type hints** on all function signatures
-* **Return types:** Always specify, use `-> None` for procedures
-* **Optional types:** Use `Optional[T]` or `T | None` (Python 3.10+)
-* **Collections:** Use `list[str]`, `dict[str, int]` (Python 3.9+ built-ins)
-* **Type aliases:** Define for complex types
+- **Always use type hints** on all function signatures
+- **Return types:** Always specify, use `-> None` for procedures
+- **Optional types:** Use `Optional[T]` or `T | None` (Python 3.10+)
+- **Collections:** Use `list[str]`, `dict[str, int]` (Python 3.9+ built-ins)
+- **Type aliases:** Define for complex types
 
 ```python
 from typing import Optional, AsyncIterator
@@ -57,10 +57,10 @@ async def stream_response() -> AsyncIterator[str]:
 
 **Reference:** [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html)
 
-* **All public functions, classes, modules** must have docstrings
-* **Format:** Google style (not NumPy or Sphinx)
-* **Sections:** Args, Returns, Raises, Yields, Example
-* **ADR references:** Reference decisions where applicable
+- **All public functions, classes, modules** must have docstrings
+- **Format:** Google style (not NumPy or Sphinx)
+- **Sections:** Args, Returns, Raises, Yields, Example
+- **ADR references:** Reference decisions where applicable
 
 ```python
 def summarize_content(
@@ -100,11 +100,11 @@ def summarize_content(
 
 **Reference:** [Real Python - Async IO](https://realpython.com/async-io-python/) (October 2025)
 
-* **Use `async def` only for I/O operations**
-* **Always `await` async calls** - never block in async context
-* **Concurrency:** Use `asyncio.gather()` for parallel operations
-* **Resource cleanup:** Use `async with` context managers
-* **Semaphores:** Use for rate limiting concurrent operations
+- **Use `async def` only for I/O operations**
+- **Always `await` async calls** - never block in async context
+- **Concurrency:** Use `asyncio.gather()` for parallel operations
+- **Resource cleanup:** Use `async with` context managers
+- **Semaphores:** Use for rate limiting concurrent operations
 
 ```python
 import asyncio
@@ -160,10 +160,10 @@ async def process_with_cleanup():
 
 ## 2.5 Error Handling
 
-* **Specific exceptions:** Never use bare `except:`
-* **Context logging:** Use structlog with context
-* **Resource cleanup:** Use `finally` or context managers
-* **User-friendly errors:** Provide actionable error messages in streaming output
+- **Specific exceptions:** Never use bare `except:`
+- **Context logging:** Use structlog with context
+- **Resource cleanup:** Use `finally` or context managers
+- **User-friendly errors:** Provide actionable error messages in streaming output
 
 ```python
 import structlog
@@ -368,6 +368,7 @@ async def good_async():
 ## 2.10 Quality Checklist
 
 Before committing Python code:
+
 - ✅ Type hints on all function signatures
 - ✅ Google-style docstrings on public APIs
 - ✅ Proper async/await usage (no blocking in async)

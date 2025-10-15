@@ -8,6 +8,7 @@
 ## Overview
 
 This document tracks comprehensive improvements based on:
+
 - OWASP LLM Top 10 (2025) security standards
 - Python asyncio best practices (2024)
 - pytest testing patterns
@@ -18,16 +19,16 @@ This document tracks comprehensive improvements based on:
 ## Research Sources
 
 1. **OWASP LLM Security**
-   - https://genai.owasp.org/llmrisk/llm01-prompt-injection/
-   - https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html
+ - https://genai.owasp.org/llmrisk/llm01-prompt-injection/
+ - https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html
 
 2. **Python Async Patterns**
-   - https://realpython.com/async-io-python/
-   - Real Python async best practices guide
+ - https://realpython.com/async-io-python/
+ - Real Python async best practices guide
 
 3. **Testing Best Practices**
-   - https://www.nerdwallet.com/blog/engineering/5-pytest-best-practices/
-   - pytest patterns and AAA pattern
+ - https://www.nerdwallet.com/blog/engineering/5-pytest-best-practices/
+ - pytest patterns and AAA pattern
 
 ---
 
@@ -38,6 +39,7 @@ This document tracks comprehensive improvements based on:
 **File:** `src/mcp_web/security.py` (300+ lines)
 
 **Components:**
+
 - `PromptInjectionFilter` - Detects and filters prompt injection attacks
 - `OutputValidator` - Validates LLM outputs for security issues
 - `RateLimiter` - Token bucket rate limiting
@@ -46,12 +48,14 @@ This document tracks comprehensive improvements based on:
 - `create_structured_prompt()` - Secure prompt pattern
 
 **OWASP LLM Top 10 Coverage:**
+
 - ✅ LLM01:2025 - Prompt Injection Prevention
 - ✅ LLM05:2025 - Improper Output Handling
 - ✅ LLM07:2025 - System Prompt Leakage
 - ✅ LLM10:2025 - Unbounded Consumption
 
 **Features:**
+
 - Pattern matching for instruction override detection
 - Typoglycemia attack detection (scrambled words)
 - API key exposure detection in outputs
@@ -64,6 +68,7 @@ This document tracks comprehensive improvements based on:
 **File:** `src/mcp_web/summarizer.py`
 
 **Changes:**
+
 - Integrated `PromptInjectionFilter` for query validation
 - Integrated `OutputValidator` for response validation
 - Structured prompt pattern (OWASP LLM01:2025)
@@ -72,6 +77,7 @@ This document tracks comprehensive improvements based on:
 - Security logging for all detections
 
 **Benefits:**
+
 - Prevents prompt injection via user queries
 - Detects unsafe LLM outputs in real-time
 - Clear separation of system instructions vs user data
@@ -80,10 +86,12 @@ This document tracks comprehensive improvements based on:
 ### 3. Windsurf Rules Enhancement
 
 **Files:**
+
 - `.windsurf/rules/python.md` (300+ lines)
 - `.windsurf/rules/security.md` (600+ lines)
 
 **Python Rules Cover:**
+
 - PEP 8 style standards
 - Type hints (PEP 484)
 - Google-style docstrings
@@ -94,6 +102,7 @@ This document tracks comprehensive improvements based on:
 - Security basics
 
 **Security Rules Cover:**
+
 - Complete OWASP LLM Top 10 guide
 - Prompt injection prevention patterns
 - Output validation patterns
@@ -104,6 +113,7 @@ This document tracks comprehensive improvements based on:
 - Secure defaults
 
 **Trigger Configuration:**
+
 - `python.md` - Glob trigger for `**/*.py` files
 - `security.md` - Model decision trigger for security-sensitive code
 
@@ -112,6 +122,7 @@ This document tracks comprehensive improvements based on:
 **File:** `tests/unit/test_security.py` (400+ lines)
 
 **Test Classes:**
+
 1. `TestPromptInjectionFilter` - Injection detection tests
 2. `TestOutputValidator` - Output validation tests
 3. `TestRateLimiter` - Rate limiting tests
@@ -121,6 +132,7 @@ This document tracks comprehensive improvements based on:
 7. `TestSecurityIntegration` - End-to-end security tests
 
 **Coverage:**
+
 - ✅ Direct prompt injection detection
 - ✅ Typoglycemia attack detection
 - ✅ False positive prevention
@@ -138,11 +150,13 @@ This document tracks comprehensive improvements based on:
 ### Input Security
 
 **Before:**
+
 - No prompt injection detection
 - No input sanitization
 - No query validation
 
 **After:**
+
 - ✅ Pattern-based injection detection
 - ✅ Typoglycemia attack detection
 - ✅ Input sanitization (whitespace, repetition, length)
@@ -151,11 +165,13 @@ This document tracks comprehensive improvements based on:
 ### Output Security
 
 **Before:**
+
 - No output validation
 - No system prompt leakage detection
 - Streaming without safety checks
 
 **After:**
+
 - ✅ Output validation for all responses
 - ✅ System prompt leakage detection
 - ✅ API key exposure detection
@@ -165,11 +181,13 @@ This document tracks comprehensive improvements based on:
 ### Prompt Engineering
 
 **Before:**
+
 - Simple concatenation of instructions + data
 - No separation of concerns
 - Vulnerable to injection
 
 **After:**
+
 - ✅ Structured prompt pattern (OWASP LLM01:2025)
 - ✅ Clear separation: SYSTEM_INSTRUCTIONS vs USER_DATA
 - ✅ Explicit security rules in prompts
@@ -178,11 +196,13 @@ This document tracks comprehensive improvements based on:
 ### Resource Protection
 
 **Before:**
+
 - No rate limiting
 - No concurrent request limits
 - No timeout enforcement
 
 **After:**
+
 - ✅ Token bucket rate limiter
 - ✅ Semaphore-based concurrency control
 - ✅ Configurable timeouts
@@ -191,10 +211,12 @@ This document tracks comprehensive improvements based on:
 ### URL Security
 
 **Before:**
+
 - No URL validation
 - Potential SSRF vulnerability
 
 **After:**
+
 - ✅ Scheme validation (http/https only)
 - ✅ Localhost blocking
 - ✅ Private IP blocking
@@ -207,6 +229,7 @@ This document tracks comprehensive improvements based on:
 ### Type Hints
 
 **Enhanced:**
+
 - All security functions have complete type hints
 - Optional types clearly marked
 - Complex types properly annotated
@@ -214,6 +237,7 @@ This document tracks comprehensive improvements based on:
 ### Documentation
 
 **Added:**
+
 - Comprehensive docstrings for all security classes
 - Examples in docstrings
 - OWASP references in code comments
@@ -222,6 +246,7 @@ This document tracks comprehensive improvements based on:
 ### Error Handling
 
 **Improved:**
+
 - Specific exception types
 - Structured logging with context
 - Graceful degradation (sanitize vs reject)
@@ -230,6 +255,7 @@ This document tracks comprehensive improvements based on:
 ### Logging
 
 **Enhanced:**
+
 - Structured logging for all security events
 - Context-rich log messages
 - Different levels (warning, error) for different events
@@ -242,11 +268,13 @@ This document tracks comprehensive improvements based on:
 ### Coverage Increase
 
 **Before:**
+
 - ~60% coverage (estimated)
 - No security tests
 - Limited edge case testing
 
 **After:**
+
 - ~85% coverage (with security module)
 - Comprehensive security test suite
 - Edge cases covered (typoglycemia, obfuscation)
@@ -255,6 +283,7 @@ This document tracks comprehensive improvements based on:
 ### Test Organization
 
 **Follows pytest best practices:**
+
 - ✅ AAA pattern (Arrange, Act, Assert)
 - ✅ One test per scenario
 - ✅ Descriptive test names
@@ -265,6 +294,7 @@ This document tracks comprehensive improvements based on:
 ### Test Quality
 
 **Improvements:**
+
 - Clear test documentation
 - Both positive and negative tests
 - False positive testing
@@ -278,6 +308,7 @@ This document tracks comprehensive improvements based on:
 ### Rate Limiting
 
 **Implemented:**
+
 - Sliding window algorithm
 - O(1) amortized time complexity
 - Lock-based thread safety
@@ -286,6 +317,7 @@ This document tracks comprehensive improvements based on:
 ### Input Validation
 
 **Optimized:**
+
 - Compiled regex patterns
 - Early exit on detection
 - Configurable max lengths
@@ -294,6 +326,7 @@ This document tracks comprehensive improvements based on:
 ### Output Validation
 
 **Balanced:**
+
 - Periodic validation (every 10 chunks)
 - Final validation at end
 - Configurable max output length
@@ -337,19 +370,19 @@ This document tracks comprehensive improvements based on:
 ```python
 # Before
 def _build_summary_prompt(content, query):
-    return f"Summarize: {content}"
+ return f"Summarize: {content}"
 
 # After
 def _build_summary_prompt(content, query):
-    # Check for injection
-    if self.injection_filter.detect_injection(query):
-        query = self.injection_filter.sanitize(query)
+ # Check for injection
+ if self.injection_filter.detect_injection(query):
+ query = self.injection_filter.sanitize(query)
 
-    # Use structured prompt
-    return create_structured_prompt(
-        system_instructions=instructions,
-        user_data=content
-    )
+ # Use structured prompt
+ return create_structured_prompt(
+ system_instructions=instructions,
+ user_data=content
+ )
 ```
 
 ### Streaming Integration
@@ -357,14 +390,14 @@ def _build_summary_prompt(content, query):
 ```python
 # After - with validation
 async for chunk in stream:
-    accumulated_output.append(chunk)
+ accumulated_output.append(chunk)
 
-    # Periodic validation
-    if len(accumulated_output) % 10 == 0:
-        if not self.output_validator.validate(full_output):
-            break  # Stop if unsafe
+ # Periodic validation
+ if len(accumulated_output) % 10 == 0:
+ if not self.output_validator.validate(full_output):
+ break # Stop if unsafe
 
-    yield chunk
+ yield chunk
 ```
 
 ---
@@ -375,15 +408,15 @@ async for chunk in stream:
 
 ```python
 class SummarizerSettings:
-    # Security settings (already present, enhanced)
-    max_summary_length: int = 10000  # Used by OutputValidator
-    content_filtering: bool = True    # Enable/disable filtering
+ # Security settings (already present, enhanced)
+ max_summary_length: int = 10000 # Used by OutputValidator
+ content_filtering: bool = True # Enable/disable filtering
 
-    # Could add:
-    enable_injection_detection: bool = True
-    enable_output_validation: bool = True
-    rate_limit_requests: int = 60
-    max_concurrent_requests: int = 10
+ # Could add:
+ enable_injection_detection: bool = True
+ enable_output_validation: bool = True
+ rate_limit_requests: int = 60
+ max_concurrent_requests: int = 10
 ```
 
 ---
@@ -456,6 +489,7 @@ class SummarizerSettings:
 ### None
 
 All changes are additive and backward compatible:
+
 - Security features enabled by default but configurable
 - Existing tests still pass
 - API unchanged
@@ -478,7 +512,7 @@ No migration needed! All changes are automatic:
 
 ```python
 config = SummarizerSettings(
-    content_filtering=False,  # Disable filtering
+ content_filtering=False, # Disable filtering
 )
 ```
 
@@ -536,6 +570,7 @@ task ci
 This comprehensive improvement pass brings mcp-web to production-grade security standards while maintaining backward compatibility and adding minimal performance overhead.
 
 **Key Achievements:**
+
 - ✅ Complete OWASP LLM Top 10 coverage
 - ✅ 35+ security tests with 95%+ coverage
 - ✅ 1,700+ lines of security code and documentation

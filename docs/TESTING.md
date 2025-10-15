@@ -1,7 +1,7 @@
 # Testing & Validation Strategy
 
-**Project:** mcp-web  
-**Version:** 0.2.0  
+**Project:** mcp-web 
+**Version:** 0.2.0 
 **Last Updated:** 2025-10-15
 
 ---
@@ -33,19 +33,19 @@ The mcp-web project implements a comprehensive multi-layered testing strategy fo
 ### Test Pyramid
 
 ```
-           Live Tests (Slow, Few)
-        ┌────────────────────────┐
-        │  Network + API required │
-        └────────────────────────┘
-                    
-       Integration Tests (Medium)
-    ┌──────────────────────────────┐
-    │   Multi-component testing     │
-    └──────────────────────────────┘
-            
-        Unit Tests (Fast, Many)
+ Live Tests (Slow, Few)
+ ┌────────────────────────┐
+ │ Network + API required │
+ └────────────────────────┘
+ 
+ Integration Tests (Medium)
+ ┌──────────────────────────────┐
+ │ Multi-component testing │
+ └──────────────────────────────┘
+ 
+ Unit Tests (Fast, Many)
  ┌────────────────────────────────────┐
- │  Isolated component testing         │
+ │ Isolated component testing │
  └────────────────────────────────────┘
 ```
 
@@ -60,24 +60,27 @@ The mcp-web project implements a comprehensive multi-layered testing strategy fo
 **Markers:** `@pytest.mark.unit`
 
 **Coverage:**
+
 - `test_utils.py` - TokenCounter, URL validation, formatting
 - `test_config.py` - Configuration loading and validation
 - `test_cache.py` - Cache CRUD operations, TTL, eviction
 - `test_chunker.py` - Chunking strategies, overlap, metadata
 
 **Characteristics:**
+
 - No external dependencies (network, filesystem, APIs)
 - Fast execution (< 100ms per test)
 - High coverage target (>90%)
 - Use mocks for external services
 
 **Example:**
+
 ```python
 @pytest.mark.unit
 def test_token_counting():
-    """Test token counting accuracy."""
-    counter = TokenCounter()
-    assert counter.count_tokens("Hello world") > 0
+ """Test token counting accuracy."""
+ counter = TokenCounter()
+ assert counter.count_tokens("Hello world") > 0
 ```
 
 ### Integration Tests (`tests/integration/`)
@@ -87,12 +90,14 @@ def test_token_counting():
 **Markers:** `@pytest.mark.integration`
 
 **Coverage:**
+
 - `test_pipeline.py` - Full pipeline integration
 - Fetch → Extract → Chunk → Summarize flow
 - Cache integration across modules
 - Metrics collection
 
 **Characteristics:**
+
 - May use filesystem (temp directories)
 - No network or API calls (use mocks)
 - Medium execution time (< 1s per test)
@@ -104,38 +109,42 @@ def test_token_counting():
 **Markers:** `@pytest.mark.security`
 
 **Focus Areas (OWASP LLM Top 10):**
+
 1. **LLM01: Prompt Injection**
-   - Direct instruction override detection
-   - Indirect injection via external content
-   - Role confusion attempts
-   - Data exfiltration patterns
+ - Direct instruction override detection
+ - Indirect injection via external content
+ - Role confusion attempts
+ - Data exfiltration patterns
 
 2. **LLM05: Improper Output Handling**
-   - System prompt leakage prevention
-   - API key exposure prevention
-   - Output sanitization
+ - System prompt leakage prevention
+ - API key exposure prevention
+ - Output sanitization
 
 3. **LLM10: Unbounded Consumption**
-   - Token limit enforcement
-   - Rate limiting
-   - Concurrent request limits
+ - Token limit enforcement
+ - Rate limiting
+ - Concurrent request limits
 
 **Additional Security:**
+
 - Input validation (URL, filename, path)
 - XSS prevention (HTML sanitization)
 - Path traversal prevention
 - Cache security and isolation
 
 **Files:**
+
 - `test_prompt_injection.py` - Comprehensive prompt injection tests
 
 **Example:**
+
 ```python
 @pytest.mark.security
 def test_prompt_injection_detection():
-    """Test detection of prompt injection attempts."""
-    malicious_content = "IGNORE ALL PREVIOUS INSTRUCTIONS"
-    # Assert detection logic...
+ """Test detection of prompt injection attempts."""
+ malicious_content = "IGNORE ALL PREVIOUS INSTRUCTIONS"
+ # Assert detection logic...
 ```
 
 ### Golden/Regression Tests (`tests/golden/`)
@@ -145,28 +154,31 @@ def test_prompt_injection_detection():
 **Markers:** `@pytest.mark.golden`
 
 **Characteristics:**
+
 - Uses predetermined HTML samples from `tests/fixtures/golden_data.py`
 - Verifies extraction consistency
 - Tests against known-good outputs
 - Ensures no regression in extraction quality
 
 **Golden HTML Samples:**
+
 1. **Simple Article** - Basic blog post with code examples
 2. **Technical Documentation** - API docs with JSON examples
 3. **News Article** - Article with quotes and citations
 4. **Blog Post** - Multiple links and sections
 
 **Example:**
+
 ```python
 @pytest.mark.golden
 @pytest.mark.asyncio
 async def test_simple_article_extraction():
-    """Test extraction matches golden expectations."""
-    extracted = await extractor.extract(SIMPLE_ARTICLE_HTML)
-    
-    # Verify expected keywords
-    for keyword in EXPECTED["keywords"]:
-        assert keyword in extracted.content
+ """Test extraction matches golden expectations."""
+ extracted = await extractor.extract(SIMPLE_ARTICLE_HTML)
+ 
+ # Verify expected keywords
+ for keyword in EXPECTED["keywords"]:
+ assert keyword in extracted.content
 ```
 
 ### Live Tests (`tests/live/`)
@@ -176,26 +188,29 @@ async def test_simple_article_extraction():
 **Markers:** `@pytest.mark.live`, `@pytest.mark.requires_network`
 
 **Golden URLs:**
+
 1. **example.com** - IANA example domain
 2. **Python PEP 8** - Style guide (static)
 3. **IETF RFC** - HTTP/1.1 spec (text)
 4. **W3C HTML5 Spec** - Historical snapshot
 
 **Characteristics:**
+
 - Requires internet connectivity
 - May require API keys for summarization tests
 - Slower execution (seconds per test)
 - Used as acceptance tests
 
 **Example:**
+
 ```python
 @pytest.mark.live
 @pytest.mark.requires_api
 @pytest.mark.asyncio
 async def test_summarize_golden_url():
-    """Test full summarization pipeline."""
-    summary = await pipeline.summarize_urls(["https://example.com"])
-    assert len(summary) > 100
+ """Test full summarization pipeline."""
+ summary = await pipeline.summarize_urls(["https://example.com"])
+ assert len(summary) > 100
 ```
 
 ### Benchmark Tests (`tests/benchmarks/`)
@@ -205,6 +220,7 @@ async def test_summarize_golden_url():
 **Markers:** `@pytest.mark.benchmark`
 
 **Metrics:**
+
 - Token counting speed
 - Chunking performance (hierarchical, semantic, fixed)
 - Cache read/write speeds
@@ -213,12 +229,13 @@ async def test_summarize_golden_url():
 - Scalability with increasing data size
 
 **Example:**
+
 ```python
 @pytest.mark.benchmark
 def test_chunking_speed(benchmark):
-    """Benchmark chunking performance."""
-    result = benchmark(chunker.chunk_text, large_text)
-    assert len(result) > 0
+ """Benchmark chunking performance."""
+ result = benchmark(chunker.chunk_text, large_text)
+ assert len(result) > 0
 ```
 
 ---
@@ -228,6 +245,7 @@ def test_chunking_speed(benchmark):
 ### OWASP LLM Top 10 Coverage
 
 Based on research from:
+
 - https://genai.owasp.org/llmrisk/llm01-prompt-injection/
 - https://www.hackerone.com/blog/how-prompt-injection-vulnerability-led-data-exfiltration
 
@@ -236,6 +254,7 @@ Based on research from:
 **Vulnerability:** Malicious inputs alter LLM behavior
 
 **Test Coverage:**
+
 - Direct prompt injection (jailbreaking attempts)
 - Indirect injection via external content
 - Hidden instructions in HTML comments
@@ -244,14 +263,16 @@ Based on research from:
 - Role confusion patterns
 
 **Mitigation Tests:**
+
 ```python
 def test_instruction_override_detection():
-    """Test detection of instruction override attempts."""
-    content = "IGNORE ALL PREVIOUS INSTRUCTIONS..."
-    # Verify filtering or detection
+ """Test detection of instruction override attempts."""
+ content = "IGNORE ALL PREVIOUS INSTRUCTIONS..."
+ # Verify filtering or detection
 ```
 
 **Prevention Strategies Tested:**
+
 1. Input sanitization
 2. System prompt protection
 3. Output validation
@@ -262,18 +283,20 @@ def test_instruction_override_detection():
 **Vulnerability:** Sensitive data in outputs
 
 **Test Coverage:**
+
 - System prompt leakage prevention
 - API key exposure prevention
 - Internal path disclosure
 - Conversation history leakage
 
 **Example:**
+
 ```python
 def test_no_api_key_in_output():
-    """Ensure API keys never appear in output."""
-    output = generate_summary(...)
-    assert "sk-" not in output
-    assert os.getenv("OPENAI_API_KEY") not in output
+ """Ensure API keys never appear in output."""
+ output = generate_summary(...)
+ assert "sk-" not in output
+ assert os.getenv("OPENAI_API_KEY") not in output
 ```
 
 #### LLM10: Unbounded Consumption
@@ -281,6 +304,7 @@ def test_no_api_key_in_output():
 **Vulnerability:** Resource exhaustion via API abuse
 
 **Test Coverage:**
+
 - Token limit enforcement
 - Rate limiting
 - Concurrent request limits
@@ -288,27 +312,31 @@ def test_no_api_key_in_output():
 - Cache size limits
 
 **Example:**
+
 ```python
 def test_token_limit_enforced():
-    """Verify max token limits prevent unbounded consumption."""
-    assert config.summarizer.max_tokens > 0
-    assert config.summarizer.max_tokens <= 10000
+ """Verify max token limits prevent unbounded consumption."""
+ assert config.summarizer.max_tokens > 0
+ assert config.summarizer.max_tokens <= 10000
 ```
 
 ### Additional Security Tests
 
 #### Input Validation
+
 - URL scheme validation (http/https only)
 - Path traversal prevention
 - Filename sanitization
 - Query length limits
 
 #### XSS Prevention
+
 - HTML script tag stripping
 - Event handler removal
 - Iframe filtering
 
 #### Cache Security
+
 - Cache key collision resistance
 - Directory permission checks
 - TTL enforcement
@@ -320,6 +348,7 @@ def test_token_limit_enforced():
 ### Purpose
 
 Golden tests provide deterministic validation against known-good data, ensuring:
+
 1. Extraction consistency across versions
 2. No regression in content quality
 3. Proper handling of various HTML structures
@@ -331,35 +360,36 @@ All golden test data is in: `tests/fixtures/golden_data.py`
 ### Samples Included
 
 1. **SIMPLE_ARTICLE_HTML**
-   - Content: Async/await tutorial
-   - Tests: Title extraction, keyword presence, code blocks, links
+ - Content: Async/await tutorial
+ - Tests: Title extraction, keyword presence, code blocks, links
 
 2. **TECHNICAL_DOC_HTML**
-   - Content: API documentation
-   - Tests: Endpoint extraction, JSON examples, structure preservation
+ - Content: API documentation
+ - Tests: Endpoint extraction, JSON examples, structure preservation
 
 3. **NEWS_ARTICLE_HTML**
-   - Content: Quantum computing breakthrough
-   - Tests: Quote preservation, metadata extraction, citations
+ - Content: Quantum computing breakthrough
+ - Tests: Quote preservation, metadata extraction, citations
 
 4. **BLOG_POST_HTML**
-   - Content: Python best practices
-   - Tests: Multiple sections, link extraction
+ - Content: Python best practices
+ - Tests: Multiple sections, link extraction
 
 5. **PROMPT_INJECTION_SAMPLES**
-   - Content: Malicious injection attempts
-   - Tests: Detection and mitigation
+ - Content: Malicious injection attempts
+ - Tests: Detection and mitigation
 
 ### Expected Results
 
 Each sample has associated expected results:
+
 ```python
 SIMPLE_ARTICLE_EXPECTED = {
-    "title": "Understanding Async/Await in Python",
-    "content_keywords": ["async", "await", "asyncio"],
-    "sections": ["Introduction", "Basic Concepts"],
-    "code_blocks": 2,
-    "min_content_length": 500,
+ "title": "Understanding Async/Await in Python",
+ "content_keywords": ["async", "await", "asyncio"],
+ "sections": ["Introduction", "Basic Concepts"],
+ "code_blocks": 2,
+ "min_content_length": 500,
 }
 ```
 
@@ -380,6 +410,7 @@ pytest tests/golden/test_golden_extraction.py::test_simple_article_extraction -v
 ### Purpose
 
 Live tests validate the complete system against real-world URLs, ensuring:
+
 1. Network fetching works correctly
 2. Real content extraction succeeds
 3. Full pipeline integration functions
@@ -388,6 +419,7 @@ Live tests validate the complete system against real-world URLs, ensuring:
 ### Golden URLs
 
 Selected for:
+
 - Static, unchanging content
 - Public availability
 - No authentication required
@@ -403,6 +435,7 @@ Selected for:
 ### Configuration
 
 Live tests require:
+
 ```bash
 # For summarization tests
 export OPENAI_API_KEY="sk-..."
@@ -413,6 +446,7 @@ export OPENAI_API_KEY="sk-..."
 ### Skipping Live Tests
 
 Tests automatically skip if:
+
 - Network unavailable
 - API key not set
 - URL returns error
@@ -441,24 +475,24 @@ Track performance over time and identify bottlenecks.
 ### Metrics Tracked
 
 1. **Token Counting**
-   - Speed for various text sizes
-   - Truncation performance
+ - Speed for various text sizes
+ - Truncation performance
 
 2. **Chunking**
-   - Hierarchical vs semantic vs fixed
-   - Scalability with document size
+ - Hierarchical vs semantic vs fixed
+ - Scalability with document size
 
 3. **Cache Operations**
-   - Read/write throughput
-   - Concurrent operation performance
+ - Read/write throughput
+ - Concurrent operation performance
 
 4. **Memory Usage**
-   - Peak memory for large documents
-   - Cache memory overhead
+ - Peak memory for large documents
+ - Cache memory overhead
 
 5. **Concurrency**
-   - Parallel vs sequential speedup
-   - Async operation efficiency
+ - Parallel vs sequential speedup
+ - Async operation efficiency
 
 ### Running Benchmarks
 
@@ -490,23 +524,23 @@ pytest -m benchmark --benchmark-compare
 ### Tools Used
 
 1. **Ruff** - Fast Python linter
-   - Replaces flake8, isort, pyupgrade
-   - Configuration in `pyproject.toml`
+ - Replaces flake8, isort, pyupgrade
+ - Configuration in `pyproject.toml`
 
 2. **MyPy** - Static type checker
-   - Enforces type hints
-   - Configuration in `pyproject.toml`
+ - Enforces type hints
+ - Configuration in `pyproject.toml`
 
 3. **Bandit** - Security vulnerability scanner
-   - Checks for common security issues
-   - Configuration in `.bandit`
+ - Checks for common security issues
+ - Configuration in `.bandit`
 
 4. **Semgrep** - Pattern-based code scanner
-   - Custom rules for LLM security
-   - Configuration in `.semgrep.yml`
+ - Custom rules for LLM security
+ - Configuration in `.semgrep.yml`
 
 5. **Safety** - Dependency vulnerability scanner
-   - Checks for known CVEs in dependencies
+ - Checks for known CVEs in dependencies
 
 ### Custom Semgrep Rules
 
@@ -582,16 +616,16 @@ pytest -n auto
 
 ```bash
 # Run by marker
-pytest -m unit              # Unit tests only
-pytest -m security          # Security tests only
-pytest -m golden            # Golden tests only
-pytest -m live              # Live tests only
-pytest -m benchmark         # Benchmarks only
-pytest -m slow              # Slow tests only
+pytest -m unit # Unit tests only
+pytest -m security # Security tests only
+pytest -m golden # Golden tests only
+pytest -m live # Live tests only
+pytest -m benchmark # Benchmarks only
+pytest -m slow # Slow tests only
 
 # Combine markers
-pytest -m "unit or security"        # Unit OR security
-pytest -m "live and not requires_api"  # Live without API
+pytest -m "unit or security" # Unit OR security
+pytest -m "live and not requires_api" # Live without API
 ```
 
 ### Environment Variables
@@ -618,35 +652,35 @@ name: Tests
 on: [push, pull_request]
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-      
-      - name: Install dependencies
-        run: |
-          pip install -e ".[dev]"
-          playwright install chromium
-      
-      - name: Run linting
-        run: ruff check src/ tests/
-      
-      - name: Run type checking
-        run: mypy src/
-      
-      - name: Run security scan
-        run: bandit -r src/ -c .bandit
-      
-      - name: Run unit tests
-        run: pytest -m "unit or security or golden" --cov=mcp_web
-      
-      - name: Upload coverage
-        uses: codecov/codecov-action@v3
+ test:
+ runs-on: ubuntu-latest
+ steps:
+ - uses: actions/checkout@v3
+ 
+ - name: Set up Python
+ uses: actions/setup-python@v4
+ with:
+ python-version: '3.10'
+ 
+ - name: Install dependencies
+ run: |
+ pip install -e ".[dev]"
+ playwright install chromium
+ 
+ - name: Run linting
+ run: ruff check src/ tests/
+ 
+ - name: Run type checking
+ run: mypy src/
+ 
+ - name: Run security scan
+ run: bandit -r src/ -c .bandit
+ 
+ - name: Run unit tests
+ run: pytest -m "unit or security or golden" --cov=mcp_web
+ 
+ - name: Upload coverage
+ uses: codecov/codecov-action@v3
 ```
 
 ### Pre-commit Hook
@@ -687,23 +721,23 @@ echo "All checks passed!"
 
 ```python
 class TestFeatureName:
-    """Test suite for specific feature."""
-    
-    @pytest.fixture
-    def setup_data(self):
-        """Fixture for test data."""
-        return {"key": "value"}
-    
-    @pytest.mark.unit
-    def test_happy_path(self, setup_data):
-        """Test normal operation."""
-        # Test code
-    
-    @pytest.mark.unit
-    def test_error_handling(self):
-        """Test error conditions."""
-        with pytest.raises(ValueError):
-            # Code that should raise
+ """Test suite for specific feature."""
+ 
+ @pytest.fixture
+ def setup_data(self):
+ """Fixture for test data."""
+ return {"key": "value"}
+ 
+ @pytest.mark.unit
+ def test_happy_path(self, setup_data):
+ """Test normal operation."""
+ # Test code
+ 
+ @pytest.mark.unit
+ def test_error_handling(self):
+ """Test error conditions."""
+ with pytest.raises(ValueError):
+ # Code that should raise
 ```
 
 ### Security Testing
@@ -727,18 +761,21 @@ class TestFeatureName:
 ### Common Issues
 
 **Import errors:**
+
 ```bash
 # Ensure package is installed in editable mode
 pip install -e .
 ```
 
 **Playwright errors:**
+
 ```bash
 # Install browsers
 playwright install chromium
 ```
 
 **API key errors:**
+
 ```bash
 # Set environment variable
 export OPENAI_API_KEY="sk-..."
@@ -746,6 +783,7 @@ export OPENAI_API_KEY="sk-..."
 ```
 
 **Cache permission errors:**
+
 ```bash
 # Clear cache
 rm -rf ~/.cache/mcp-web
@@ -774,6 +812,6 @@ export MCP_WEB_CACHE_DIR="/tmp/mcp-web-test"
 
 ---
 
-**Last Updated:** 2025-10-15  
-**Version:** 0.2.0  
+**Last Updated:** 2025-10-15 
+**Version:** 0.2.0 
 **Status:** ✅ Comprehensive testing framework implemented

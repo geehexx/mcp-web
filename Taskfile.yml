@@ -236,7 +236,7 @@ tasks:
   docs:fix:
     desc: Auto-fix markdown issues
     cmds:
-      - npx markdownlint-cli2-fix "**/*.md" "#node_modules" "#.venv"
+      - npx markdownlint-cli2 --fix "**/*.md" "#node_modules" "#.venv"
 
   docs:clean:
     desc: Remove double-spaces and LLM artifacts

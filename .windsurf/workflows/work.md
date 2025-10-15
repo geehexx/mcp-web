@@ -31,6 +31,7 @@ mcp0_read_multiple_files([
 ```
 
 **Scan for:**
+
 - **Session summaries** (`docs/archive/session-summaries/` - most recent 2-3)
 - Active initiatives (`docs/initiatives/active/`)
 - Recent git activity (last 5 commits)
@@ -39,6 +40,7 @@ mcp0_read_multiple_files([
 - Open issues mentioned in docs
 
 **Why session summaries matter:**
+
 - Provide cross-session continuity when conversation context lost
 - Show recent work patterns and decisions
 - Identify deferred work and next steps
@@ -49,40 +51,49 @@ mcp0_read_multiple_files([
 **Prioritized search pattern:**
 
 0. **Recent Session Summaries** (cross-session context)
+
    ```bash
    # Get 2-3 most recent summaries
    ls -t docs/archive/session-summaries/*.md | head -3
    ```
+
    - Read "Next Steps" sections
    - Check "Unresolved" issues
    - Review "Key Learnings"
    - Identify continuation points
 
 1. **Initiatives** (highest context value)
+
    ```
    docs/initiatives/active/
    ```
+
    - Look for unchecked `[ ]` items
    - Check "Status:" field
    - Identify "Next Steps" sections
 
 2. **Recent Changes** (git intelligence)
+
    ```bash
    git log --oneline -5
    git status --short
    ```
+
    - Unstaged changes → incomplete work
    - Recent commits → continuation context
 
 3. **Test Results**
+
    ```bash
    # Check last test run
    task test:fast 2>&1 | tail -20
    ```
+
    - Failures → implementation needed
    - Pending tests → TDD workflow
 
 4. **Documentation TODOs**
+
    ```bash
    # Efficient grep for markers
    grep_search("TODO\\|FIXME\\|XXX", "docs/", recursive=true)
@@ -112,6 +123,7 @@ Based on detected signals, classify intent:
 **If clear signal detected, automatically route:**
 
 **Example 1: Active Initiative**
+
 ```markdown
 Detected: docs/initiatives/active/fix-security-unit-tests.md
 Status: Active, 3/10 tasks completed
@@ -119,6 +131,7 @@ Status: Active, 3/10 tasks completed
 ```
 
 **Example 2: Test Failures**
+
 ```markdown
 Detected: 10 test failures in tests/unit/test_security.py
 Last modified: 2 hours ago
@@ -126,6 +139,7 @@ Last modified: 2 hours ago
 ```
 
 **Example 3: Planning Markers**
+
 ```markdown
 Detected: Multiple "needs design" comments
 Detected: ADR placeholder markers
@@ -172,6 +186,7 @@ Which would you like to continue?
 Before executing routed workflow, load complete context:
 
 **For Implementation:**
+
 ```markdown
 1. Read initiative file completely
 2. Read related source files (identified from initiative)
@@ -181,6 +196,7 @@ Before executing routed workflow, load complete context:
 ```
 
 **For Planning:**
+
 ```markdown
 1. Read PROJECT_SUMMARY.md
 2. Read ARCHITECTURE.md
@@ -223,10 +239,12 @@ Workflows can call each other:
 1. **Cannot access prior conversation** (new session)
 2. Rely on file system state and session summaries
 3. **Primary context source: Session summaries**
+
    ```bash
    # Read 2-3 most recent summaries
    ls -t docs/archive/session-summaries/*.md | head -3 | xargs cat
    ```
+
    - Extract "Next Steps" section
    - Note "Unresolved" issues
    - Review recent decisions
@@ -239,6 +257,7 @@ Workflows can call each other:
    - Open test failures
 
 **Context compaction strategy** (per Anthropic research):
+
 - Session summaries = compressed context from previous sessions
 - Preserve critical decisions, unresolved issues, next steps
 - Discard verbose details (available in git history if needed)
@@ -250,6 +269,7 @@ Workflows can call each other:
 ### Batch Operations (Always)
 
 ❌ **Bad** (Sequential reads):
+
 ```python
 read_file("docs/initiatives/active/initiative1.md")
 read_file("docs/initiatives/active/initiative2.md")
@@ -258,6 +278,7 @@ read_file("docs/PROJECT_SUMMARY.md")
 ```
 
 ✅ **Good** (Batch read):
+
 ```python
 mcp0_read_multiple_files([
     "docs/initiatives/active/initiative1.md",
@@ -270,12 +291,14 @@ mcp0_read_multiple_files([
 ### Smart Grep (Targeted)
 
 ❌ **Bad** (Broad search):
+
 ```python
 grep_search("TODO", "/", recursive=true)
 # Searches entire file system, including node_modules, .git, etc.
 ```
 
 ✅ **Good** (Focused search):
+
 ```python
 grep_search("TODO", "docs/", recursive=true, includes=["*.md"])
 grep_search("FIXME", "src/", recursive=true, includes=["*.py"])
@@ -328,6 +351,7 @@ If 80% confident on route, take it. Don't ask permission for obvious continuatio
 **User:** `/work`
 
 **Agent Actions:**
+
 1. Read active initiatives (batch)
 2. Found: `fix-security-unit-tests.md` with 3/10 tasks done
 3. Auto-route to `/implement`
@@ -335,6 +359,7 @@ If 80% confident on route, take it. Don't ask permission for obvious continuatio
 5. Begin fixing next failing test
 
 **Output:**
+
 ```markdown
 ## Continuing: Fix Security Unit Tests (3/10 complete)
 
@@ -354,6 +379,7 @@ Proceeding with implementation...
 **User:** `/work create user authentication`
 
 **Agent Actions:**
+
 1. Detected: New feature request
 2. No existing initiative found
 3. Auto-route to `/plan`
@@ -367,6 +393,7 @@ Proceeding with implementation...
 **User:** `/work`
 
 **Agent Actions:**
+
 1. Run `task test:fast`
 2. Detected: 2 new test failures
 3. No related initiative
@@ -403,6 +430,7 @@ Proceeding with implementation...
 4. Final commit of meta-analysis
 
 **This ensures:**
+
 - ✅ Session summaries always created in proper location
 - ✅ Learnings captured for future sessions
 - ✅ Cross-session context preserved
@@ -421,12 +449,14 @@ Before finishing `/work`, verify:
 - [ ] No uncommitted changes remain
 
 **If meta-analysis not run:**
+
 - **STOP** - Do not proceed
 - Execute `/meta-analysis` immediately
 - Document violation in session summary
 - Propose workflow improvements
 
 **Auto-detection:**
+
 ```bash
 # Check if meta-analysis is overdue
 if [ -f .windsurf/.last-meta-analysis ]; then
@@ -470,11 +500,13 @@ grep -l "Status.*Completed\|Status.*✅" docs/initiatives/active/*.md
 ```
 
 **If any found:**
+
 1. MUST call `/archive-initiative` workflow for each
 2. Do NOT skip this - completed initiatives pollute active directory
 3. Archiving must complete before meta-analysis
 
 **Why this matters:**
+
 - Active directory should only contain active work
 - Completed initiatives provide historical context when archived
 - Skipping creates clutter and confusion in next session
@@ -489,12 +521,14 @@ grep -l "Status.*Completed\|Status.*✅" docs/initiatives/active/*.md
 ```
 
 **Why this is mandatory:**
+
 - Creates session summary for cross-session continuity
 - Identifies workflow/rule improvements
 - Enables next session to pick up context
 - Documents decisions and learnings
 
 **Enforcement:**
+
 - Agent MUST NOT present final summary without running meta-analysis
 - User should never see work completion without session summary created
 - If skipped, this is a CRITICAL workflow violation
@@ -504,6 +538,7 @@ grep -l "Status.*Completed\|Status.*✅" docs/initiatives/active/*.md
 **ONLY after all exit criteria met:**
 
 Present structured summary to user:
+
 ```markdown
 # ✅ Session Complete
 
@@ -528,6 +563,7 @@ Created: docs/archive/session-summaries/YYYY-MM-DD-description.md
 ## Success Metrics
 
 ✅ **Good Performance:**
+
 - Context detection in <30 seconds
 - <5 tool calls for context gathering
 - Correct routing 90%+ of time
@@ -535,6 +571,7 @@ Created: docs/archive/session-summaries/YYYY-MM-DD-description.md
 - **Session end protocol executed 100% of time**
 
 ❌ **Needs Improvement:**
+>
 - >1 minute for context detection
 - >10 tool calls
 - Asking user "what to work on" when context is clear

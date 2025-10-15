@@ -19,6 +19,7 @@ The mcp-web project accumulated documentation organically, resulting in:
 - **Missing decision records:** Architectural decisions not systematically documented
 
 **Specific Problems:**
+
 - Session summaries in root directory (polluting workspace)
 - Improvement documents with no clear archival strategy
 - Decisions in single `DECISIONS.md` file (not scalable)
@@ -27,6 +28,7 @@ The mcp-web project accumulated documentation organically, resulting in:
 - No prose quality checking
 
 **Key Requirements:**
+
 - Clear organizational hierarchy
 - Sustainable documentation lifecycle
 - AI-optimized structure and formatting
@@ -43,67 +45,69 @@ We will adopt a hierarchical, lifecycle-managed documentation structure based on
 
 ```
 docs/
-├── standards/              # Documentation standards and style guides
-│   ├── DOCUMENTATION_STANDARDS.md
-│   ├── COMMIT_STYLE_GUIDE.md
-│   ├── SUMMARY_STANDARDS.md
-│   └── META_ANALYSIS_TRACKING.md
-├── adr/                    # Architecture Decision Records (immutable)
-│   ├── README.md
-│   ├── template.md
-│   └── NNNN-verb-noun-phrase.md
-├── initiatives/            # Project initiatives
-│   ├── active/            # Current work
-│   └── completed/         # Archived initiatives
-├── guides/                 # How-to guides
-│   ├── QUICK_START_WORKFLOWS.md
-│   └── [topic]-GUIDE.md
-├── api/                    # API documentation
-├── architecture/           # Architecture docs & diagrams
-├── reference/              # Reference documentation
-├── archive/                # Historical documentation
-│   └── session-summaries/ # AI agent session summaries
-├── ARCHITECTURE.md         # System architecture overview
-├── API.md                  # API documentation
-├── TESTING.md              # Testing strategy
-├── PROJECT_SUMMARY.md      # High-level project summary
+├── standards/ # Documentation standards and style guides
+│ ├── DOCUMENTATION_STANDARDS.md
+│ ├── COMMIT_STYLE_GUIDE.md
+│ ├── SUMMARY_STANDARDS.md
+│ └── META_ANALYSIS_TRACKING.md
+├── adr/ # Architecture Decision Records (immutable)
+│ ├── README.md
+│ ├── template.md
+│ └── NNNN-verb-noun-phrase.md
+├── initiatives/ # Project initiatives
+│ ├── active/ # Current work
+│ └── completed/ # Archived initiatives
+├── guides/ # How-to guides
+│ ├── QUICK_START_WORKFLOWS.md
+│ └── [topic]-GUIDE.md
+├── api/ # API documentation
+├── architecture/ # Architecture docs & diagrams
+├── reference/ # Reference documentation
+├── archive/ # Historical documentation
+│ └── session-summaries/ # AI agent session summaries
+├── ARCHITECTURE.md # System architecture overview
+├── API.md # API documentation
+├── TESTING.md # Testing strategy
+├── PROJECT_SUMMARY.md # High-level project summary
 ├── DOCUMENTATION_STRUCTURE.md
-└── CONSTITUTION.md         # Project principles
+└── CONSTITUTION.md # Project principles
 ```
 
 ### Document Types and Standards
 
 1. **Architecture Decision Records (ADRs)**
-   - Template-based (Status, Context, Decision, Alternatives, Consequences)
-   - Numbered sequentially (0001, 0002, ...)
-   - Immutable once accepted
-   - Clear lifecycle: Proposed → Accepted → Implemented
+ - Template-based (Status, Context, Decision, Alternatives, Consequences)
+ - Numbered sequentially (0001, 0002, ...)
+ - Immutable once accepted
+ - Clear lifecycle: Proposed → Accepted → Implemented
 
 2. **Initiatives**
-   - Track multi-session projects
-   - Clear success criteria
-   - Active vs completed separation
-   - Regular updates with timestamps
+ - Track multi-session projects
+ - Clear success criteria
+ - Active vs completed separation
+ - Regular updates with timestamps
 
 3. **Session Summaries**
-   - Location: `docs/archive/session-summaries/`
-   - Naming: `YYYY-MM-DD-descriptive-name.md`
-   - Standard structure (objectives, accomplishments, commits, next steps)
+ - Location: `docs/archive/session-summaries/`
+ - Naming: `YYYY-MM-DD-descriptive-name.md`
+ - Standard structure (objectives, accomplishments, commits, next steps)
 
 4. **Standards/Guides**
-   - Location: `docs/standards/` or `docs/guides/`
-   - SCREAMING_SNAKE_CASE naming
-   - Comprehensive, actionable content
+ - Location: `docs/standards/` or `docs/guides/`
+ - SCREAMING_SNAKE_CASE naming
+ - Comprehensive, actionable content
 
 ### Quality Standards
 
 **Automated Enforcement:**
+
 - Markdown linting (markdownlint-cli2)
 - Prose linting (Vale + Microsoft Writing Style Guide)
 - Pre-commit hooks
 - CI/CD validation
 
 **Manual Standards:**
+
 - No double-spaces
 - No LLM artifacts
 - External references with URLs
@@ -113,12 +117,14 @@ docs/
 ### Lifecycle Management
 
 **Archival Triggers:**
+
 - Initiative completed (→ `initiatives/completed/`)
 - Document superseded (→ `docs/archive/`)
 - Session summary (→ `docs/archive/session-summaries/`)
 - Historical reference (→ `docs/archive/`)
 
 **Update Triggers:**
+
 | Trigger | Update | Frequency |
 |---------|--------|-----------|
 | New feature | ADR, API docs, guides | Per feature |
@@ -135,11 +141,13 @@ docs/
 **Approach:** All docs in `docs/` with prefixes (ADR-, GUIDE-, etc.)
 
 **Pros:**
+
 - Simple
 - No subdirectories
 - Easy to browse
 
 **Cons:**
+
 - **❌ Poor scalability:** Becomes cluttered with many docs
 - **❌ No semantic separation:** Active vs archived mixed
 - **❌ Hard to discover:** No clear categorization
@@ -152,12 +160,14 @@ docs/
 **Approach:** Use GitHub Wiki, Confluence, Notion, etc.
 
 **Pros:**
+
 - Rich formatting
 - Search functionality
 - Collaboration features
 - Version history
 
 **Cons:**
+
 - **❌ External dependency:** Not in repository
 - **❌ Context loss:** AI agents can't easily access
 - **❌ Synchronization issues:** Code and docs separate
@@ -170,11 +180,13 @@ docs/
 **Approach:** Auto-generate all docs from code (Sphinx, MkDocs, etc.)
 
 **Pros:**
+
 - Always in sync with code
 - Automated updates
 - Consistent format
 
 **Cons:**
+
 - **❌ Limited to code structure:** Can't document decisions, processes
 - **❌ No ADRs:** Decisions not captured
 - **❌ No initiatives:** Project planning not covered
@@ -218,6 +230,7 @@ docs/
 ### Phase 1: Directory Structure (Completed 2025-10-15)
 
 ✅ Created directory structure:
+
 ```
 docs/
 ├── standards/
@@ -232,6 +245,7 @@ docs/
 ### Phase 2: Standard Documents (Completed 2025-10-15)
 
 ✅ Created foundational documents:
+
 - `DOCUMENTATION_STRUCTURE.md` - Structure definition
 - `CONSTITUTION.md` - Project principles
 - `docs/standards/DOCUMENTATION_STANDARDS.md` - AI-friendly docs
@@ -244,6 +258,7 @@ docs/
 ### Phase 3: Linting Tools (Completed 2025-10-15)
 
 ✅ Configured quality tools:
+
 - `.markdownlint.json` - Markdown structure rules
 - `.vale.ini` - Prose quality rules
 - `.pre-commit-config.yaml` - Git hooks
@@ -252,6 +267,7 @@ docs/
 ### Phase 4: Migration (Completed 2025-10-15)
 
 ✅ Moved documents to proper locations:
+
 - Session summaries → `docs/archive/session-summaries/`
 - Standards → `docs/standards/`
 - Guides → `docs/guides/`
@@ -260,6 +276,7 @@ docs/
 ### Phase 5: Conversion (In Progress)
 
 ⏳ Convert legacy documents:
+
 - [ ] Convert DD-002 through DD-010 to ADR format
 - [ ] Archive IMPROVEMENTS_V1/V2
 - [ ] Consolidate redundant documentation

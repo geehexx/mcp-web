@@ -19,11 +19,13 @@ The mcp-web tool needs to fetch HTML content from diverse websites to extract an
 - **Hybrid:** Progressive enhancement, partial server rendering
 
 The challenge is to handle both efficiently:
+
 - Static sites need fast fetching (minimize latency)
 - CSR sites require JavaScript execution to render content
 - Some sites use anti-bot measures that may block simple HTTP clients
 
 Our requirements:
+
 1. Fast fetching for common static sites (>80% of web pages)
 2. Reliable extraction from JS-heavy sites
 3. Async/await compatibility for high concurrency
@@ -34,19 +36,19 @@ Our requirements:
 We will use **httpx** as the primary fetch method with **Playwright** as a fallback:
 
 1. **Primary attempt:** Use `httpx.AsyncClient` to fetch HTML
-   - Fast HTTP/2 client with connection pooling
-   - Minimal overhead (~50-100ms per request)
-   - Async-native design
+ - Fast HTTP/2 client with connection pooling
+ - Minimal overhead (~50-100ms per request)
+ - Async-native design
 
 2. **Fallback trigger:** If httpx fails OR content appears incomplete
-   - HTTP error status (4xx, 5xx)
-   - Empty or minimal body (<100 bytes)
-   - Detection of JS-rendered markers (`<div id="root"></div>` with no content)
+ - HTTP error status (4xx, 5xx)
+ - Empty or minimal body (<100 bytes)
+ - Detection of JS-rendered markers (`<div id="root"></div>` with no content)
 
 3. **Fallback method:** Launch Playwright headless browser
-   - Execute JavaScript to render page
-   - Wait for network idle or specific selectors
-   - Extract final rendered HTML
+ - Execute JavaScript to render page
+ - Wait for network idle or specific selectors
+ - Extract final rendered HTML
 
 ## Alternatives Considered
 
@@ -55,11 +57,13 @@ We will use **httpx** as the primary fetch method with **Playwright** as a fallb
 **Description:** Use Playwright for all requests, no httpx
 
 **Pros:**
+
 - Simpler code path (single method)
 - Guaranteed JS execution
 - Handles all anti-bot measures
 
 **Cons:**
+
 - 10-100x slower for static sites (~2-5s vs ~100ms)
 - High memory usage (~100MB per browser instance)
 - CPU intensive (Chromium process overhead)
@@ -72,11 +76,13 @@ We will use **httpx** as the primary fetch method with **Playwright** as a fallb
 **Description:** Use httpx for all requests, no browser fallback
 
 **Pros:**
+
 - Fastest possible fetching
 - Minimal dependencies
 - Low resource usage
 
 **Cons:**
+
 - Fails on JS-rendered content (20% of modern web)
 - Cannot handle SPAs, dynamic loading
 - No anti-bot evasion capabilities
@@ -88,10 +94,12 @@ We will use **httpx** as the primary fetch method with **Playwright** as a fallb
 **Description:** Use synchronous `requests` library instead of httpx
 
 **Pros:**
+
 - More mature, widely used
 - Extensive middleware ecosystem
 
 **Cons:**
+
 - Not async-native (blocks event loop or requires threads)
 - Slower than httpx for concurrent requests
 - HTTP/1.1 only (no HTTP/2 benefits)
@@ -123,24 +131,28 @@ We will use **httpx** as the primary fetch method with **Playwright** as a fallb
 ## Implementation
 
 **Key files:**
+
 - `src/mcp_web/fetcher.py` - Core fetching logic with fallback
 - `src/mcp_web/config.py` - Timeout and User-Agent configuration
 
 **Dependencies:**
+
 - `httpx >= 0.27.0` - Async HTTP client
 - `playwright >= 1.41.0` - Browser automation
 
 **Configuration:**
+
 ```python
 FetcherSettings(
-    timeout: int = 30,              # HTTP timeout
-    user_agent: str = "mcp-web/1.0",
-    playwright_timeout: int = 60,   # Browser timeout (longer)
-    enable_fallback: bool = True,   # Can disable for speed
+ timeout: int = 30, # HTTP timeout
+ user_agent: str = "mcp-web/1.0",
+ playwright_timeout: int = 60, # Browser timeout (longer)
+ enable_fallback: bool = True, # Can disable for speed
 )
 ```
 
 **Metrics tracked:**
+
 - Fetch method used (httpx vs playwright)
 - Fetch duration
 - Success/failure rate by method

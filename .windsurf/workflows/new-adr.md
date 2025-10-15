@@ -10,6 +10,7 @@ Use this workflow when a significant architectural decision needs to be document
 ## When to Use
 
 Create an ADR for:
+
 - New dependencies or technology choices
 - Major algorithm or data structure changes
 - Security-related decisions
@@ -56,6 +57,7 @@ Create an ADR for:
    - Configuration examples if applicable
 
 7. **Commit:** Use conventional commit format:
+
    ```
    docs(adr): add ADR-NNNN for [decision topic]
    ```
@@ -65,6 +67,7 @@ Create an ADR for:
 Location: `docs/adr/template.md`
 
 Key sections:
+
 - **Status:** Proposed | Accepted | Implemented | Deprecated | Superseded
 - **Context:** Why is this needed? What problem does it solve?
 - **Decision:** What are we doing? (active voice, present tense)

@@ -36,6 +36,7 @@ Use clear heading structures (H1 → H2 → H3). Each level should represent a m
 Use the same terms throughout. Define domain-specific terms on first use.
 
 **Project Glossary:**
+
 - **MCP:** Model Context Protocol
 - **LLM:** Large Language Model
 - **ADR:** Architecture Decision Record
@@ -57,26 +58,26 @@ Include dates for time-sensitive information and external references.
 
 ```
 docs/
-├── standards/                # Documentation standards and style guides
-│   ├── DOCUMENTATION_STANDARDS.md (this file)
-│   ├── COMMIT_STYLE_GUIDE.md
-│   ├── PYTHON_STYLE_GUIDE.md
-│   └── SUMMARY_STANDARDS.md
-├── adr/                      # Architecture Decision Records
-│   ├── README.md
-│   ├── template.md
-│   └── NNNN-verb-noun-phrase.md
-├── initiatives/              # Project initiatives
-│   ├── active/              # Current initiatives
-│   └── archived/            # Completed initiatives
-├── archive/                  # Historical documentation
-│   └── session-summaries/   # AI agent session summaries
-├── ARCHITECTURE.md           # System architecture overview
-├── API.md                    # API documentation
-├── TESTING.md                # Testing strategy and guide
-├── PROJECT_SUMMARY.md        # High-level project summary
+├── standards/ # Documentation standards and style guides
+│ ├── DOCUMENTATION_STANDARDS.md (this file)
+│ ├── COMMIT_STYLE_GUIDE.md
+│ ├── PYTHON_STYLE_GUIDE.md
+│ └── SUMMARY_STANDARDS.md
+├── adr/ # Architecture Decision Records
+│ ├── README.md
+│ ├── template.md
+│ └── NNNN-verb-noun-phrase.md
+├── initiatives/ # Project initiatives
+│ ├── active/ # Current initiatives
+│ └── archived/ # Completed initiatives
+├── archive/ # Historical documentation
+│ └── session-summaries/ # AI agent session summaries
+├── ARCHITECTURE.md # System architecture overview
+├── API.md # API documentation
+├── TESTING.md # Testing strategy and guide
+├── PROJECT_SUMMARY.md # High-level project summary
 ├── DOCUMENTATION_STRUCTURE.md # Meta-documentation guide
-└── CONSTITUTION.md           # Project principles and values
+└── CONSTITUTION.md # Project principles and values
 ```
 
 ### Document Placement Rules
@@ -101,6 +102,7 @@ docs/
 **Template:** `docs/adr/template.md`
 
 **Required Sections:**
+
 1. **Title:** Number + verb-noun phrase (`0001-use-httpx-playwright-fallback.md`)
 2. **Status:** Proposed → Accepted → Implemented (or Rejected/Superseded)
 3. **Context:** What is the issue we're addressing?
@@ -110,12 +112,14 @@ docs/
 7. **Implementation:** How is this being/was implemented?
 
 **When to Create:**
+
 - Choosing between major libraries/frameworks
 - Defining system boundaries
 - Establishing architectural patterns
 - Making technology stack decisions
 
 **References:**
+
 - [Michael Nygard's ADR Template](https://github.com/joelparkerhenderson/architecture-decision-record/blob/main/templates/decision-record-template-by-michael-nygard/index.md)
 - [ADR Tools](https://adr.github.io/)
 
@@ -124,6 +128,7 @@ docs/
 **Purpose:** Track multi-session projects
 
 **Required Sections:**
+
 1. **Status:** Active/Completed/Abandoned
 2. **Created Date**
 3. **Priority:** High/Medium/Low
@@ -135,12 +140,14 @@ docs/
 9. **Timeline:** Estimates and deadlines (if applicable)
 
 **When to Create:**
+
 - Work that spans multiple sessions
 - Complex refactoring projects
 - Feature development
 - Technical debt remediation
 
 **Archive When:**
+
 - All acceptance criteria met
 - Replaced by newer approach
 - Explicitly abandoned
@@ -156,6 +163,7 @@ docs/
 **Purpose:** Define conventions for code, commits, documentation
 
 **Required Sections:**
+
 1. **Purpose:** Why this standard exists
 2. **Scope:** What it covers
 3. **Rules:** Specific, enumerated guidelines (MUST/SHOULD/MAY)
@@ -164,6 +172,7 @@ docs/
 6. **References:** External authoritative sources
 
 **When to Create:**
+
 - Establishing project conventions
 - Formalizing informal practices
 - Preventing repeated mistakes
@@ -171,6 +180,7 @@ docs/
 ### 5. Core Documentation
 
 **Types:**
+
 - **ARCHITECTURE.md:** System design and component relationships
 - **API.md:** Public API reference
 - **TESTING.md:** Test strategy, markers, and practices
@@ -178,6 +188,7 @@ docs/
 - **README.md:** Quick start and overview
 
 **Update Frequency:**
+
 - After major architectural changes
 - When adding new public APIs
 - Quarterly reviews
@@ -216,14 +227,14 @@ Content here.
 
 ```markdown
 - Item 1
-  - Nested item
-  - Another nested
+ - Nested item
+ - Another nested
 - Item 2
 
 1. First step
 2. Second step
-   - Substep a
-   - Substep b
+ - Substep a
+ - Substep b
 3. Third step
 ```
 
@@ -236,7 +247,7 @@ Content here.
 ````markdown
 ```python
 def example():
-    return "hello"
+ return "hello"
 ```
 
 ```bash
@@ -282,8 +293,8 @@ Edit the `pytest.ini` file to add markers.
 ```markdown
 | Header 1 | Header 2 | Header 3 |
 |----------|----------|----------|
-| Cell 1   | Cell 2   | Cell 3   |
-| Cell 4   | Cell 5   | Cell 6   |
+| Cell 1 | Cell 2 | Cell 3 |
+| Cell 4 | Cell 5 | Cell 6 |
 ```
 
 #### Horizontal Rules
@@ -375,11 +386,13 @@ See [SUMMARY_STANDARDS.md](./SUMMARY_STANDARDS.md) for complete specification.
 #### Define Acronyms
 
 **First use:**
+
 ```markdown
 The *Model Context Protocol* (MCP) defines...
 ```
 
 **Subsequent uses:**
+
 ```markdown
 MCP servers provide...
 ```
@@ -409,8 +422,8 @@ The cache system supports:
 ```markdown
 | Feature | Option A | Option B |
 |---------|----------|----------|
-| Speed   | Fast     | Slow     |
-| Memory  | High     | Low      |
+| Speed | Fast | Slow |
+| Memory | High | Low |
 ```
 
 ### Example-Driven
@@ -422,14 +435,14 @@ Don't just describe—show:
 ```python
 # Good: Concrete example
 def fetch_with_cache(url: str) -> str:
-    """Fetch URL with caching.
+ """Fetch URL with caching.
 
-    Example:
-        >>> result = fetch_with_cache("https://example.com")
-        >>> print(result[:100])
-        '<!DOCTYPE html>...'
-    """
-    return cache.get_or_fetch(url)
+ Example:
+ >>> result = fetch_with_cache("https://example.com")
+ >>> print(result[:100])
+ '<!DOCTYPE html>...'
+ """
+ return cache.get_or_fetch(url)
 ```
 
 #### Show Command Output

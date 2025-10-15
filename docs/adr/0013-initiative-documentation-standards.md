@@ -15,6 +15,7 @@
 The mcp-web project uses initiatives to track multi-session work efforts (e.g., Quality Foundation, ADR Conversion). However, the initiative documentation structure is inconsistent compared to our well-defined ADR system:
 
 **Current state of initiatives:**
+
 - No README.md explaining purpose or structure
 - No template.md for creating new initiatives
 - Inconsistent formatting across initiatives
@@ -23,6 +24,7 @@ The mcp-web project uses initiatives to track multi-session work efforts (e.g., 
 - Mixed quality and completeness
 
 **Problems this causes:**
+
 - New initiatives created with varying quality
 - Difficult to find or navigate initiatives
 - Unclear when to create an initiative vs other documentation
@@ -31,6 +33,7 @@ The mcp-web project uses initiatives to track multi-session work efforts (e.g., 
 - Inconsistent with ADR professionalism
 
 Our requirements:
+
 1. Professional structure matching ADR quality standards
 2. Clear templates and guidelines for creation
 3. Proper lifecycle management (proposed → active → completed → archived)
@@ -46,15 +49,15 @@ We will establish **comprehensive initiative documentation standards** following
 
 ```
 docs/initiatives/
-├── README.md              # Index and guidelines
-├── template.md            # Template for new initiatives
-├── active/                # Currently in progress
-│   ├── initiative-1.md
-│   └── initiative-2.md
-├── completed/             # Finished initiatives
-│   └── initiative-3.md
-└── archived/              # Deprecated/superseded
-    └── initiative-4.md
+├── README.md # Index and guidelines
+├── template.md # Template for new initiatives
+├── active/ # Currently in progress
+│ ├── initiative-1.md
+│ └── initiative-2.md
+├── completed/ # Finished initiatives
+│ └── initiative-3.md
+└── archived/ # Deprecated/superseded
+ └── initiative-4.md
 ```
 
 ### Standard Template Format
@@ -152,6 +155,7 @@ descriptive-name.md
 ```
 
 Examples:
+
 - `2024-q4-quality-foundation.md`
 - `fix-security-unit-tests.md`
 - `documentation-infrastructure.md`
@@ -166,6 +170,7 @@ Examples:
 ### README.md Structure
 
 The initiatives README provides:
+
 - Purpose and overview
 - How to create new initiatives
 - Lifecycle explanation
@@ -179,11 +184,13 @@ The initiatives README provides:
 **Description:** Keep initiatives as freeform documents without standards
 
 **Pros:**
+
 - No migration effort
 - Flexibility in format
 - Minimal overhead
 
 **Cons:**
+
 - Continued inconsistency
 - Poor discoverability
 - Unprofessional appearance
@@ -197,12 +204,14 @@ The initiatives README provides:
 **Description:** Track initiatives as GitHub issues with projects board
 
 **Pros:**
+
 - Built-in tooling
 - Good for collaboration
 - Status tracking built-in
 - Integrates with PRs
 
 **Cons:**
+
 - Locked into GitHub ecosystem
 - Not portable (can't backup in repo)
 - Less readable for AI agents
@@ -216,11 +225,13 @@ The initiatives README provides:
 **Description:** Add only README.md, no template or strict format
 
 **Pros:**
+
 - Faster to implement
 - Less restrictive
 - Still provides some structure
 
 **Cons:**
+
 - Won't solve consistency issues
 - No clear template for new initiatives
 - Minimal improvement over current state
@@ -233,11 +244,13 @@ The initiatives README provides:
 **Description:** Track initiatives in external project management tool
 
 **Pros:**
+
 - Rich features (dashboards, reporting)
 - Collaboration tools built-in
 - Established workflows
 
 **Cons:**
+
 - External dependency
 - Not in git (poor for AI agents)
 - Cost (if not free tier)
@@ -274,16 +287,19 @@ The initiatives README provides:
 ## Implementation
 
 **Key files created:**
+
 - `docs/initiatives/README.md` - Index and guidelines
 - `docs/initiatives/template.md` - Standard template
 - `docs/adr/0013-initiative-documentation-standards.md` - This ADR
 
 **Migration required:**
+
 - Update `docs/initiatives/active/2024-q4-quality-foundation.md`
 - Update `docs/initiatives/active/fix-security-unit-tests.md`
 - Update `docs/initiatives/completed/convert-decisions-to-adrs.md`
 
 **Metadata fields:**
+
 - **Status:** Lifecycle stage
 - **Created:** Start date
 - **Owner:** Responsible party
@@ -292,6 +308,7 @@ The initiatives README provides:
 - **Target Completion:** Deadline (optional)
 
 **Content requirements:**
+
 - **Objective:** Single paragraph, clear goal
 - **Success Criteria:** Checkboxes, measurable outcomes
 - **Motivation:** Problem/impact/value

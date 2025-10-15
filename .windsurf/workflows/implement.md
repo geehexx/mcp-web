@@ -16,6 +16,7 @@ auto_execution_mode: 3
 ## Prerequisites
 
 **Before starting:**
+
 - [ ] Plan exists (from `/plan` or initiative file)
 - [ ] Requirements clear
 - [ ] Tests identified (what to verify)
@@ -30,6 +31,7 @@ auto_execution_mode: 3
 ### 1.1 Load Initiative Context
 
 **If initiative provided:**
+
 ```markdown
 Read initiative file:
 - Current phase
@@ -39,6 +41,7 @@ Read initiative file:
 ```
 
 **If no initiative:**
+
 ```markdown
 Clarify:
 - What to implement?
@@ -85,6 +88,7 @@ task test:fast
 **Before any production code:**
 
 1. **Write failing test**
+
    ```python
    def test_new_feature():
        """Test for feature X."""
@@ -93,6 +97,7 @@ task test:fast
    ```
 
 2. **Run test (verify it fails)**
+
    ```bash
    uv run pytest tests/path/to/test.py::test_new_feature -xvs
    ```
@@ -117,6 +122,7 @@ def new_feature():
 ```
 
 **DO NOT:**
+
 - Add extra features
 - Optimize prematurely
 - Handle untested edge cases
@@ -133,6 +139,7 @@ uv run pytest tests/path/to/test.py::test_new_feature -xvs
 ### 2.4 Refactor (If Needed)
 
 **Now improve code quality:**
+
 - Extract functions
 - Improve names
 - Add docstrings
@@ -154,6 +161,7 @@ uv run pytest tests/path/to/test.py::test_new_feature -xvs
 4. Move to next
 
 **Common edge cases:**
+
 - Empty input
 - None/null values
 - Boundary conditions
@@ -240,6 +248,7 @@ task test
 ```
 
 **Requirements:**
+
 - Zero failures (except known async issues)
 - Zero regressions
 - New tests passing
@@ -255,6 +264,7 @@ task lint
 ```
 
 **Requirements:**
+
 - Zero auto-fixable issues
 - Address or suppress remaining
 - Follow project style
@@ -279,6 +289,7 @@ task security:semgrep
 **One logical change per commit:**
 
 ✅ **Good:**
+
 ```bash
 git add src/mcp_web/auth.py tests/unit/test_auth.py
 git commit -m "feat(auth): add API key validation
@@ -292,6 +303,7 @@ Refs: docs/initiatives/active/2025-10-15-api-key-auth.md"
 ```
 
 ❌ **Bad:**
+
 ```bash
 git add .
 git commit -m "wip"
@@ -398,6 +410,7 @@ Write Test (RED) → Implement (GREEN) → Refactor (GREEN) → Commit
 ### ❌ Don't: Implement Without Tests
 
 **Bad:**
+
 ```markdown
 1. Write all code
 2. Then write tests
@@ -407,6 +420,7 @@ Write Test (RED) → Implement (GREEN) → Refactor (GREEN) → Commit
 ```
 
 **Good:**
+
 ```markdown
 1. Write one test
 2. Implement that feature
@@ -417,12 +431,14 @@ Write Test (RED) → Implement (GREEN) → Refactor (GREEN) → Commit
 ### ❌ Don't: Batch Too Many Changes
 
 **Bad:**
+
 ```bash
 # 50 files changed, 2000+ lines
 git commit -m "add feature"
 ```
 
 **Good:**
+
 ```bash
 # 3 files changed, 50 lines
 git commit -m "feat(auth): add validation"
@@ -434,12 +450,14 @@ git commit -m "feat(auth): add CLI commands"
 ### ❌ Don't: Skip Testing After Refactor
 
 **Bad:**
+
 ```markdown
 Refactor code → Looks good → Move on
 (broke something, didn't notice)
 ```
 
 **Good:**
+
 ```markdown
 Refactor code → Run tests → Verify green → Move on
 ```
@@ -447,6 +465,7 @@ Refactor code → Run tests → Verify green → Move on
 ### ❌ Don't: Ignore Linting Failures
 
 **Bad:**
+
 ```bash
 $ task lint
 ERROR: 5 linting issues
@@ -454,6 +473,7 @@ $ git commit  # Commit anyway
 ```
 
 **Good:**
+
 ```bash
 $ task lint
 ERROR: 5 linting issues
@@ -511,6 +531,7 @@ $ git commit
 ## Success Metrics
 
 ✅ **Good Implementation:**
+
 - Tests written first (or simultaneously)
 - Commits every 30-60 minutes
 - Zero failing tests
@@ -518,6 +539,7 @@ $ git commit
 - Documentation updated
 
 ❌ **Poor Implementation:**
+
 - Tests written after code
 - Large infrequent commits
 - Failing tests ignored

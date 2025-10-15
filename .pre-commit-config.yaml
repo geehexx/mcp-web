@@ -66,14 +66,12 @@ repos:
         additional_dependencies: ["validate-pyproject-schema-store[all]"]
 
   # Markdown - Linting
-  # Note: Disabled due to nodeenv installation issues
-  # Run manually: markdownlint-cli2 --fix "**/*.md"
-  # - repo: https://github.com/igorshubovych/markdownlint-cli
-  #   rev: v0.43.0
-  #   hooks:
-  #     - id: markdownlint
-  #       name: "📝 markdown · Lint with markdownlint"
-  #       args: [--fix, --config, .markdownlint.json]
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.43.0
+    hooks:
+      - id: markdownlint
+        name: "📝 markdown · Lint with markdownlint"
+        args: [--fix, --config, .markdownlint.json]
 
   # Git - Commit Message Validation
   - repo: https://github.com/compilerla/conventional-pre-commit

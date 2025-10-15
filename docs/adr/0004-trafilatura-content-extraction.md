@@ -10,18 +10,21 @@
 ## Context
 
 The web summarization tool needs to extract main content from arbitrary HTML pages while:
+
 - Removing boilerplate (navigation, ads, footers, sidebars)
 - Preserving formatting (code blocks, lists, tables)
 - Extracting metadata (title, author, date)
 - Handling diverse page structures (news, blogs, documentation, etc.)
 
 **Requirements:**
+
 - High extraction accuracy across diverse sites
 - Preserve document structure and formatting
 - Fast enough for real-time use (<2 seconds per page)
 - Handle edge cases (malformed HTML, unusual layouts)
 
 **Constraints:**
+
 - Must work with Python async/await
 - Should not require per-site configuration
 - Minimal dependencies
@@ -37,11 +40,11 @@ import trafilatura
 
 html = await fetch_url(url)
 content = trafilatura.extract(
-    html,
-    favor_recall=True,
-    include_comments=False,
-    include_tables=True,
-    include_links=False,
+ html,
+ favor_recall=True,
+ include_comments=False,
+ include_tables=True,
+ include_links=False,
 )
 ```
 
@@ -54,11 +57,13 @@ content = trafilatura.extract(
 **Description:** Use BeautifulSoup with hand-crafted rules to identify main content
 
 **Pros:**
+
 - Full control over extraction logic
 - No additional dependencies (BeautifulSoup already used)
 - Can optimize for specific site patterns
 
 **Cons:**
+
 - ❌ Requires extensive per-site rules (Wikipedia, Medium, GitHub, etc.)
 - ❌ Maintenance burden as sites change layouts
 - ❌ Lower accuracy on unfamiliar sites
@@ -71,11 +76,13 @@ content = trafilatura.extract(
 **Description:** Python library specifically for news article extraction
 
 **Pros:**
+
 - Simple API
 - Good for news sites
 - Extracts authors, dates automatically
 
 **Cons:**
+
 - ❌ Last updated 2019 (unmaintained)
 - ❌ Lower accuracy than trafilatura (per benchmarks)
 - ❌ Focused on news, poor for documentation/blogs
@@ -88,11 +95,13 @@ content = trafilatura.extract(
 **Description:** Port of Firefox's Reader View extraction algorithm
 
 **Pros:**
+
 - Battle-tested (Firefox Reader View)
 - Good accuracy
 - Handles diverse content types
 
 **Cons:**
+
 - ❌ Python port is dated (readability-lxml)
 - ❌ Less maintained than trafilatura
 - ❌ No `favor_recall` option (precision-focused)
@@ -105,11 +114,13 @@ content = trafilatura.extract(
 **Description:** Train ML model to identify main content blocks
 
 **Pros:**
+
 - Potentially highest accuracy
 - Can adapt to new patterns
 - State-of-art approach
 
 **Cons:**
+
 - ❌ Requires labeled training data
 - ❌ Inference overhead (latency)
 - ❌ Model maintenance burden
@@ -154,27 +165,31 @@ content = trafilatura.extract(
 **Module:** `src/mcp_web/extractor.py`
 
 **Key functions:**
+
 - `extract_content(html: str, url: str) -> ExtractedContent`
 - `extract_metadata(html: str) -> Metadata`
 
 **Configuration:**
+
 ```python
 class ExtractorSettings(BaseSettings):
-    favor_recall: bool = True
-    include_tables: bool = True
-    include_comments: bool = False
-    include_links: bool = False
+ favor_recall: bool = True
+ include_tables: bool = True
+ include_comments: bool = False
+ include_links: bool = False
 ```
 
 ### Testing
 
 **Unit tests:** `tests/unit/test_extractor.py`
+
 - Test extraction accuracy on sample HTML
 - Test metadata extraction
 - Test handling of malformed HTML
 - Test preservation of formatting
 
 **Golden tests:** `tests/golden/test_golden_extraction.py`
+
 - Verify consistent extraction on real-world pages
 - Regression testing for extraction quality
 
@@ -185,12 +200,14 @@ class ExtractorSettings(BaseSettings):
 ### Extraction Accuracy Benchmark
 
 Tested on 20 diverse websites:
+
 - News: 95% accuracy (main article extracted)
 - Blogs: 92% accuracy (post content extracted)
 - Documentation: 90% accuracy (main content extracted)
 - GitHub: 88% accuracy (README extracted)
 
 **Compared to alternatives:**
+
 - newspaper3k: 78% average
 - BeautifulSoup naive: 65% average
 - Readability: 85% average

@@ -82,6 +82,7 @@ git checkout -b feature/your-feature-name
 ```
 
 Branch naming conventions:
+
 - `feature/` - New features
 - `bugfix/` - Bug fixes
 - `docs/` - Documentation updates
@@ -134,6 +135,7 @@ git commit -m "test: add chunker edge case tests"
 ```
 
 Types:
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation changes
@@ -335,6 +337,7 @@ async def test_with_mock():
 ### When to Update Documentation
 
 Update documentation when:
+
 - Adding new features or tools
 - Changing existing APIs
 - Adding configuration options
@@ -448,6 +451,7 @@ Follow [Semantic Versioning](https://semver.org/):
 ## Recognition
 
 Contributors will be:
+
 - Listed in the project README
 - Credited in release notes
 - Acknowledged in commit history

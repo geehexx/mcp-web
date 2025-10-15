@@ -42,11 +42,13 @@ YYYY-MM-DD-descriptive-kebab-case-name.md
 ### Examples
 
 **Good:**
+
 - `2025-10-15-comprehensive-overhaul-v3.md`
 - `2024-12-20-security-testing-implementation.md`
 - `2025-01-15-migration-to-uv-package-manager.md`
 
 **Bad:**
+
 - `session.md` (not descriptive, no date)
 - `2025-10-15.md` (no description)
 - `big-refactor.md` (no date)
@@ -63,6 +65,7 @@ docs/archive/session-summaries/
 ```
 
 **DO NOT** place in:
+
 - Root directory
 - `docs/` directly
 - `.windsurf/` directory
@@ -125,9 +128,11 @@ docs/archive/session-summaries/
 List significant commits with brief explanations:
 
 ```
+
 abc1234 feat(module): add new feature
 def5678 fix(security): resolve vulnerability
 ghi9012 docs: update documentation
+
 ```
 
 Total commits: X
@@ -238,6 +243,7 @@ Include if relevant:
 **Length:** 2-3 sentences, maximum 100 words
 
 **Example:**
+
 ```markdown
 ## Executive Summary
 
@@ -250,6 +256,7 @@ and resolved all auto-fixable code quality issues.
 ### What Was Accomplished
 
 **Group by category:**
+
 - Code changes (by module/feature)
 - Testing improvements
 - Documentation updates
@@ -257,28 +264,32 @@ and resolved all auto-fixable code quality issues.
 - Tooling updates
 
 **Be specific:**
+
 - ✅ "Added 15 unit tests for security module, achieving 95% coverage"
 - ❌ "Improved tests"
 
 ### Known Issues
 
 **Categorize:**
+
 1. **Resolved** - Fixed during session
 2. **Unresolved** - Identified but deferred
 
 **Format:**
+
 ```markdown
 ### Unresolved
 
 - **Issue:** Brief description
-  - **Impact:** How it affects system
-  - **Workaround:** Temporary solution (if any)
-  - **Tracked:** Link to issue/initiative
+ - **Impact:** How it affects system
+ - **Workaround:** Temporary solution (if any)
+ - **Tracked:** Link to issue/initiative
 ```
 
 ### Next Steps
 
 **Be actionable and AI-parseable:**
+
 - ✅ "Fix 4 remaining async test timeouts in `tests/unit/test_security.py`"
 - ✅ "Continue initiative: docs/initiatives/active/quality-foundation.md Phase 2"
 - ✅ "Create ADR-0007 through ADR-0012 per docs/initiatives/active/convert-decisions-to-adrs.md"
@@ -286,12 +297,14 @@ and resolved all auto-fixable code quality issues.
 - ❌ "Continue work" (what work? what context?)
 
 **Prioritize with clear indicators:**
+
 1. 🔴 **Critical** (blocks progress) - "MUST fix before any other work"
 2. 🟡 **High** (should do soon) - "Next session priority"
 3. 🟢 **Medium** (do when convenient) - "When time permits"
 4. ⚪ **Low** (nice-to-have) - "Future enhancement"
 
 **Cross-session context requirements:**
+
 - Include enough context that a new AI agent can pick up work
 - No assumptions about prior conversation history
 - File paths, test names, command examples
@@ -319,6 +332,7 @@ and resolved all auto-fixable code quality issues.
 ### Examples
 
 **Good:**
+
 ```markdown
 ### Testing Infrastructure
 
@@ -336,6 +350,7 @@ Implemented parallel testing as default across all test commands.
 ```
 
 **Bad:**
+
 ```markdown
 ### Testing
 
@@ -355,8 +370,8 @@ Archive summaries immediately after creation. Do not leave them in root or `docs
 ```bash
 1. Create summary: docs/archive/session-summaries/2025-10-15-description.md
 2. Commit with appropriate message:
-   git add docs/archive/session-summaries/
-   git commit -m "docs: add session summary for [description]"
+ git add docs/archive/session-summaries/
+ git commit -m "docs: add session summary for [description]"
 ```
 
 ### Index Maintenance
@@ -398,6 +413,7 @@ Before committing a session summary:
 ### ❌ Vague Descriptions
 
 **Bad:**
+
 ```markdown
 ## What Was Accomplished
 
@@ -405,6 +421,7 @@ Made some improvements to the code. Fixed bugs and updated docs.
 ```
 
 **Good:**
+
 ```markdown
 ## What Was Accomplished
 
@@ -419,11 +436,13 @@ Made some improvements to the code. Fixed bugs and updated docs.
 ### ❌ Missing Context
 
 **Bad:**
+
 ```markdown
 Fixed the tests that were broken.
 ```
 
 **Good:**
+
 ```markdown
 Fixed 6 security tests that were failing due to implementation changes:
 - `test_no_false_positives`: Exclude exact matches from typoglycemia detection
@@ -434,6 +453,7 @@ Fixed 6 security tests that were failing due to implementation changes:
 ### ❌ No Actionable Next Steps
 
 **Bad:**
+
 ```markdown
 ## Next Steps
 
@@ -441,6 +461,7 @@ Continue improving the project.
 ```
 
 **Good:**
+
 ```markdown
 ## Next Steps
 
@@ -483,28 +504,30 @@ Fixed 3 critical bugs in cache module affecting production deployments.
 ### Bug Fixes
 
 1. **Cache Key Sanitization**
-   - Fixed URL encoding in cache keys
-   - Added tests for special characters
-   - File: `src/mcp_web/cache.py`
+ - Fixed URL encoding in cache keys
+ - Added tests for special characters
+ - File: `src/mcp_web/cache.py`
 
 2. **Redis Timeout**
-   - Increased connection timeout to 5s
-   - Added retry logic
-   - File: `src/mcp_web/config.py`
+ - Increased connection timeout to 5s
+ - Added retry logic
+ - File: `src/mcp_web/config.py`
 
 3. **Eviction Policy**
-   - Changed from LRU to LFU
-   - Updated configuration defaults
-   - File: `src/mcp_web/cache.py`
+ - Changed from LRU to LFU
+ - Updated configuration defaults
+ - File: `src/mcp_web/cache.py`
 
 ---
 
 ## Git Commits
 
 ```
+
 a1b2c3d fix(cache): sanitize URLs in cache keys
 e4f5g6h fix(cache): increase Redis connection timeout
 i7j8k9l refactor(cache): change eviction policy to LFU
+
 ```
 
 ---

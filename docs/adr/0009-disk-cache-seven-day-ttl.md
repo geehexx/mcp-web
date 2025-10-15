@@ -19,17 +19,20 @@ The mcp-web tool performs expensive operations that should be cached:
 3. **LLM summarization:** API calls ($0.001-0.01 per summary, 2-10s latency)
 
 Without caching:
+
 - Repeated queries to same URL = redundant work
 - High API costs for frequently accessed content
 - Poor user experience (waiting for repeated processing)
 
 Caching challenges:
+
 - **Freshness:** Content may change over time
 - **Storage:** Cache size must be bounded
 - **Persistence:** Cache should survive process restarts
 - **Invalidation:** Need strategy for stale content
 
 Our requirements:
+
 1. Persist cache across sessions (not just in-memory)
 2. Reasonable freshness guarantees (content not too stale)
 3. Automatic eviction to prevent unbounded growth
@@ -47,9 +50,9 @@ We will use **disk-based caching** with **7-day TTL** using the `diskcache` libr
 3. **Eviction policy:** LRU (Least Recently Used) when size limit reached
 4. **Size limit:** 1GB maximum cache size
 5. **Cache levels:**
-   - **L1:** Fetched HTML (raw, before extraction)
-   - **L2:** Extracted content (after trafilatura)
-   - **L3:** Summaries (final output)
+ - **L1:** Fetched HTML (raw, before extraction)
+ - **L2:** Extracted content (after trafilatura)
+ - **L3:** Summaries (final output)
 
 ### HTTP Cache Validation
 
@@ -78,11 +81,13 @@ key = f"summary:{content_hash}:{query_hash}:{model}:{prompt_hash}"
 **Description:** Use Python dictionary or `functools.lru_cache` for caching
 
 **Pros:**
+
 - Fastest access (no disk I/O)
 - Simplest implementation
 - No external dependencies
 
 **Cons:**
+
 - **Lost on restart:** Cache cleared every session
 - **Memory limited:** Cannot cache large corpus
 - **No persistence:** Poor for long-running agents
@@ -95,12 +100,14 @@ key = f"summary:{content_hash}:{query_hash}:{model}:{prompt_hash}"
 **Description:** Use Redis, Memcached, or similar for caching
 
 **Pros:**
+
 - Very fast (network overhead minimal on localhost)
 - Shared between processes
 - Rich eviction policies
 - Production-ready
 
 **Cons:**
+
 - **Operational overhead:** Requires running Redis server
 - **Overkill:** Single-user tool doesn't need distributed cache
 - **Complexity:** Connection management, error handling
@@ -113,11 +120,13 @@ key = f"summary:{content_hash}:{query_hash}:{model}:{prompt_hash}"
 **Description:** Use same disk cache but with 30-day TTL
 
 **Pros:**
+
 - Fewer cache misses
 - Lower API costs
 - Better performance
 
 **Cons:**
+
 - **Stale content:** News articles, documentation updates missed
 - **Storage growth:** More entries retained
 - **Staleness risk:** Content may be significantly outdated
@@ -129,11 +138,13 @@ key = f"summary:{content_hash}:{query_hash}:{model}:{prompt_hash}"
 **Description:** Cache indefinitely, require explicit invalidation
 
 **Pros:**
+
 - Maximum cache hit rate
 - Lowest API costs
 - Simplest logic (no expiration checking)
 
 **Cons:**
+
 - **Unbounded staleness:** Content could be years old
 - **User burden:** Must remember to invalidate
 - **Poor UX:** Unexpected stale results
@@ -168,24 +179,28 @@ key = f"summary:{content_hash}:{query_hash}:{model}:{prompt_hash}"
 ## Implementation
 
 **Key files:**
+
 - `src/mcp_web/cache.py` - Cache management and operations
 - `src/mcp_web/config.py` - Cache configuration settings
 
 **Dependencies:**
+
 - `diskcache >= 5.6.0` - Disk-based cache library
 
 **Configuration:**
+
 ```python
 CacheSettings(
-    dir: str = "~/.cache/mcp-web",     # Cache directory
-    ttl: int = 604800,                 # 7 days in seconds
-    size_limit: int = 1073741824,      # 1GB in bytes
-    eviction_policy: str = "least-recently-used",
-    enabled: bool = True,              # Can disable for debugging
+ dir: str = "~/.cache/mcp-web", # Cache directory
+ ttl: int = 604800, # 7 days in seconds
+ size_limit: int = 1073741824, # 1GB in bytes
+ eviction_policy: str = "least-recently-used",
+ enabled: bool = True, # Can disable for debugging
 )
 ```
 
 **Cache management tools:**
+
 ```python
 # Get cache statistics
 stats = get_cache_stats()
@@ -202,16 +217,17 @@ prune_cache()
 ```
 
 **HTTP cache validation:**
+
 ```python
 # Fetch with cache validation
 cached_html, headers = fetch_from_cache(url)
 if cached_html:
-    response = httpx.get(url, headers={
-        'If-None-Match': headers.get('etag'),
-        'If-Modified-Since': headers.get('last-modified')
-    })
-    if response.status_code == 304:
-        return cached_html  # Content unchanged
+ response = httpx.get(url, headers={
+ 'If-None-Match': headers.get('etag'),
+ 'If-Modified-Since': headers.get('last-modified')
+ })
+ if response.status_code == 304:
+ return cached_html # Content unchanged
 ```
 
 ## References

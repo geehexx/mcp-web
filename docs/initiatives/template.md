@@ -27,6 +27,7 @@ Define measurable outcomes. Each criterion should be a checkbox that can be obje
 - [ ] Criterion 4 (specific, measurable)
 
 **Examples:**
+
 - [ ] Test coverage reaches ≥90% across all modules
 - [ ] All documentation passes markdownlint and Vale
 - [ ] Zero P0/P1 security vulnerabilities in security scan
@@ -138,6 +139,7 @@ Provide high-level schedule. Adjust as needed based on actual progress.
 - **Week 4:** Phase 3, final testing, documentation
 
 **Milestones:**
+
 - Milestone 1 (Date): Description
 - Milestone 2 (Date): Description
 
@@ -148,14 +150,17 @@ Provide high-level schedule. Adjust as needed based on actual progress.
 How will we measure success beyond binary checkboxes?
 
 **Baseline metrics (before):**
+
 - Metric 1: Current value
 - Metric 2: Current value
 
 **Target metrics (after):**
+
 - Metric 1: Target value
 - Metric 2: Target value
 
 **Example:**
+
 - Test coverage: 65% → 90%
 - Build time: 180s → <120s
 - Documentation lint errors: 50 → 0
@@ -180,16 +185,20 @@ Document major milestones, blockers, and progress. Add new entries at the top (m
 ### YYYY-MM-DD (Update Title)
 
 **Completed:**
+
 - Item 1
 - Item 2
 
 **In Progress:**
+
 - Item 1 (X% complete)
 
 **Blockers:**
+
 - Blocker description and status
 
 **Next Steps:**
+
 - Next action 1
 - Next action 2
 
@@ -214,9 +223,9 @@ When this initiative is complete:
 2. Update **Status:** to "Complete" or "✅ Completed"
 3. Add **Completed:** date in metadata
 4. **IMPORTANT:** The `/archive-initiative` workflow will automatically move this to `completed/` directory
-   - This happens automatically as part of session end protocol
-   - Do NOT manually move the file
-   - Ensures proper tracking and historical record
+ - This happens automatically as part of session end protocol
+ - Do NOT manually move the file
+ - Ensures proper tracking and historical record
 
 ---
 
@@ -227,6 +236,7 @@ When this initiative is complete:
 ### Required Sections
 
 These must be filled in:
+
 - Title
 - All metadata fields
 - Objective
@@ -238,6 +248,7 @@ These must be filled in:
 ### Optional Sections
 
 These can be omitted if not applicable:
+
 - Target Completion (if no deadline)
 - Dependencies (if none)
 - Risks (if low-risk initiative)
@@ -256,12 +267,14 @@ These can be omitted if not applicable:
 ### When to Use This Template
 
 ✅ **Use for:**
+
 - Multi-session work (>1 day)
 - Complex features requiring planning
 - Work affecting multiple areas
 - Efforts requiring coordination
 
 ❌ **Don't use for:**
+
 - Single bug fixes
 - Quick improvements (<4 hours)
 - Exploratory work (create ADR instead)
@@ -270,11 +283,13 @@ These can be omitted if not applicable:
 ### Example Titles
 
 Good:
+
 - "Quality Foundation & Testing Excellence"
 - "Security Audit and Hardening"
 - "API Rate Limiting Implementation"
 
 Bad:
+
 - "Improvements" (too vague)
 - "Fix stuff" (not descriptive)
 - "V2" (use descriptive name)

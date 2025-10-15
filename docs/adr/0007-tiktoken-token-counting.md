@@ -20,11 +20,13 @@ The mcp-web tool needs accurate token counting for several purposes:
 4. **Validation:** Prevent exceeding model token limits
 
 Token counting accuracy is critical because:
+
 - **Underestimation** leads to API errors (exceeding context window)
 - **Overestimation** wastes context capacity and increases costs
 - Different tokenizers produce different counts for the same text
 
 Our requirements:
+
 1. Accurate token counts for OpenAI models (GPT-4, GPT-3.5-turbo)
 2. Fast performance (minimal overhead in chunk processing)
 3. Support for multiple encodings if needed
@@ -53,11 +55,13 @@ token_count = len(encoding.encode(text))
 **Description:** Use HuggingFace `tokenizers` library with GPT-2 tokenizer
 
 **Pros:**
+
 - Supports many model types
 - Well-maintained library
 - Good for non-OpenAI models
 
 **Cons:**
+
 - Not exact match for OpenAI tokenizers (±5-10% variance)
 - Slower than tiktoken for OpenAI models
 - Requires loading model files
@@ -69,11 +73,13 @@ token_count = len(encoding.encode(text))
 **Description:** Estimate tokens using character count heuristics (e.g., 1 token ≈ 4 characters)
 
 **Pros:**
+
 - Extremely fast (no tokenization needed)
 - No external dependencies
 - Simple implementation
 
 **Cons:**
+
 - Very inaccurate (±20-30% variance)
 - Fails on non-English text (CJK characters ≈ 1-2 chars per token)
 - Fails on code (more tokens per character)
@@ -86,11 +92,13 @@ token_count = len(encoding.encode(text))
 **Description:** Estimate tokens using word count (e.g., 1 token ≈ 0.75 words)
 
 **Pros:**
+
 - Faster than full tokenization
 - Better than character-based estimation
 - Works reasonably for English prose
 
 **Cons:**
+
 - Still inaccurate (±15-20% variance)
 - Fails on compound words, punctuation
 - Fails on non-English text
@@ -123,26 +131,30 @@ token_count = len(encoding.encode(text))
 ## Implementation
 
 **Key files:**
+
 - `src/mcp_web/utils.py` - Token counting functions
 - `src/mcp_web/chunker.py` - Uses token counts for chunk sizing
 - `src/mcp_web/summarizer.py` - Uses token counts for context management
 
 **Dependencies:**
+
 - `tiktoken >= 0.7.0` - OpenAI token counting library
 
 **Configuration:**
+
 ```python
 # Encoding selection based on model
 ENCODINGS = {
-    "gpt-4": "cl100k_base",
-    "gpt-4-turbo": "cl100k_base",
-    "gpt-3.5-turbo": "cl100k_base",
-    "gpt-4o": "o200k_base",
-    "text-davinci-003": "p50k_base",
+ "gpt-4": "cl100k_base",
+ "gpt-4-turbo": "cl100k_base",
+ "gpt-3.5-turbo": "cl100k_base",
+ "gpt-4o": "o200k_base",
+ "text-davinci-003": "p50k_base",
 }
 ```
 
 **Usage pattern:**
+
 ```python
 from mcp_web.utils import count_tokens
 

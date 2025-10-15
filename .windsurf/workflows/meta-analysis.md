@@ -10,6 +10,7 @@ auto_execution_mode: 3
 **When to invoke:** Automatically at end of work sessions via `/work` workflow.
 
 **Critical Rules:**
+
 1. **Always create session summary** in `docs/archive/session-summaries/YYYY-MM-DD-description.md`
 2. **Never create summary documents** outside session-summaries directory
 3. **Never add historical context** to live documentation (except ADRs)
@@ -32,6 +33,7 @@ cat .windsurf/.last-meta-analysis 2>/dev/null || echo "NEVER"
 ```
 
 **Warning triggers:**
+
 - File doesn't exist → Meta-analysis never run before
 - Timestamp >24 hours old → Overdue for meta-analysis
 - Multiple commits since last run → Protocol violation likely
@@ -50,11 +52,13 @@ git add .windsurf/.last-meta-analysis
 ### 0.3 Protocol Violation Detection
 
 **Check for common violations:**
+
 - Session summary not created in proper location
 - Meta-analysis not run after work session completion
 - Timestamp file not updated
 
 **If violation detected:**
+
 1. Document in session summary "Critical Improvements" section
 2. Propose workflow fixes
 3. Flag for immediate attention
@@ -68,11 +72,13 @@ git add .windsurf/.last-meta-analysis
 **CRITICAL:** Always create in `docs/archive/session-summaries/YYYY-MM-DD-description.md`
 
 **Never create:**
+
 - Summary documents in `docs/` root
 - Files like `CURRENT_WORK_STATUS.md`, `SESSION_NOTES.md`
 - Historical content in live documentation
 
 **Naming format:** `YYYY-MM-DD-brief-description.md`
+
 - Use actual date (not placeholder)
 - 2-5 words for description
 - Hyphenated lowercase
@@ -80,6 +86,7 @@ git add .windsurf/.last-meta-analysis
 ### 1.2 Summary Content (Concise Format)
 
 **Required sections:**
+
 1. **Header** - Date, duration, focus
 2. **Objectives** - What was the goal
 3. **Completed** - What was achieved (bullet list)
@@ -88,6 +95,7 @@ git add .windsurf/.last-meta-analysis
 6. **Next Steps** - What's queued for next session
 
 **Keep it concise:**
+
 - Total length: 200-400 lines (not 1000+)
 - Focus on decisions and learnings
 - Avoid repeating what's in commits
@@ -98,6 +106,7 @@ git add .windsurf/.last-meta-analysis
 **CRITICAL:** Session summaries must enable cross-session context detection.
 
 **Validation checklist for "Next Steps" section:**
+
 - [ ] **Specific file paths** - Not "fix the tests" but "Fix tests in tests/unit/test_security.py"
 - [ ] **Initiative links** - Reference active initiatives by full path
 - [ ] **Commands included** - Exact commands to run (e.g., `task test:security`)
@@ -108,6 +117,7 @@ git add .windsurf/.last-meta-analysis
 **Test:** Could a new AI agent pick up work from this summary alone?
 
 **Good example:**
+
 ```markdown
 ## Next Steps
 
@@ -121,6 +131,7 @@ git add .windsurf/.last-meta-analysis
 ```
 
 **Bad example:**
+
 ```markdown
 ## Next Steps
 
@@ -132,6 +143,7 @@ git add .windsurf/.last-meta-analysis
 ### 1.4 Identify Critical Improvements
 
 **Focus only on:**
+
 - **Protocol violations** - Meta-analysis not run, Session End Protocol skipped
 - **Documentation pollution** - Summary docs created outside proper location
 - **Workflow gaps** - Missing automation that caused friction
@@ -140,6 +152,7 @@ git add .windsurf/.last-meta-analysis
 - **Context detection failures** - Summary lacked cross-session continuity info
 
 **Ignore:**
+
 - Minor inefficiencies
 - One-time issues
 - Already-documented patterns
@@ -231,6 +244,7 @@ When creating or updating content for AI agents:
 ### 4.1 Language Clarity
 
 **DO:**
+
 - Use active voice and imperative mood
 - Be specific and explicit (avoid "typically", "usually")
 - Use consistent terminology
@@ -238,6 +252,7 @@ When creating or updating content for AI agents:
 - Define acronyms on first use
 
 **DON'T:**
+
 - Use vague qualifiers ("might", "could", "should consider")
 - Assume implied context
 - Use jargon without explanation
@@ -247,6 +262,7 @@ When creating or updating content for AI agents:
 ### 4.2 Structure
 
 **Effective Patterns:**
+
 - **Hierarchical:** Clear heading structure (H1 → H2 → H3)
 - **Sequential:** Numbered steps for procedures
 - **Categorical:** Grouped related concepts
@@ -254,6 +270,7 @@ When creating or updating content for AI agents:
 - **Referenced:** Link to authoritative sources
 
 **Ineffective Patterns:**
+
 - Long prose paragraphs without structure
 - Mixing multiple concepts in one section
 - Missing context or prerequisites
@@ -263,6 +280,7 @@ When creating or updating content for AI agents:
 ### 4.3 Content Types
 
 **Rules (`.windsurf/rules/`):**
+
 ```markdown
 # Imperative statement
 
@@ -280,6 +298,7 @@ Links to official documentation
 ```
 
 **Workflows (`.windsurf/workflows/`):**
+
 ```markdown
 ---
 description: Short action phrase
@@ -303,6 +322,7 @@ Common issues and fixes
 ```
 
 **Documentation (`docs/`):**
+
 ```markdown
 # Topic
 

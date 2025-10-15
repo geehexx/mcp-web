@@ -13,12 +13,14 @@ An **initiative** is a planned, goal-oriented work effort that:
 - Needs proper planning, tracking, and documentation
 
 **Examples:**
+
 - Quality Foundation & Testing Excellence
 - Security Audit and Hardening
 - Documentation Infrastructure Overhaul
 - Performance Optimization Campaign
 
 **Not initiatives:**
+
 - Single bug fixes (use git commits)
 - Small features (use git commits)
 - Quick improvements (use git commits)
@@ -74,15 +76,15 @@ Proposed → Active → Complete → (Archived if superseded)
 
 ```
 docs/initiatives/
-├── README.md              # This file
-├── template.md            # Template for new initiatives
-├── active/                # In progress
-│   ├── initiative-1.md
-│   └── initiative-2.md
-├── completed/             # Successfully finished
-│   └── initiative-3.md
-└── archived/              # Deprecated/superseded
-    └── initiative-4.md
+├── README.md # This file
+├── template.md # Template for new initiatives
+├── active/ # In progress
+│ ├── initiative-1.md
+│ └── initiative-2.md
+├── completed/ # Successfully finished
+│ └── initiative-3.md
+└── archived/ # Deprecated/superseded
+ └── initiative-4.md
 ```
 
 ## Creating a New Initiative
@@ -130,23 +132,30 @@ git commit -m "docs(initiative): create [initiative name]"
 Use descriptive kebab-case names:
 
 ### Pattern 1: Quarterly Initiatives
+
 ```
 YYYY-QN-brief-description.md
 ```
+
 Examples:
+
 - `2024-q4-quality-foundation.md`
 - `2025-q1-security-hardening.md`
 
 ### Pattern 2: Descriptive Names
+
 ```
 descriptive-name.md
 ```
+
 Examples:
+
 - `fix-security-unit-tests.md`
 - `documentation-infrastructure.md`
 - `performance-optimization.md`
 
 **Guidelines:**
+
 - Use lowercase
 - Hyphenate words (kebab-case)
 - Be specific but concise (2-5 words)
@@ -173,15 +182,16 @@ Add to the "Updates" section at the bottom:
 2. Update status: `**Status:** Complete` or `**Status:** ✅ Completed`
 3. Add completion date: `**Completed:** YYYY-MM-DD`
 4. **Archive via workflow:** The `/archive-initiative` workflow will automatically:
-   - Move file to `completed/` directory
-   - Update this README index
-   - Create proper git commit
-   - This runs automatically during session end protocol
+ - Move file to `completed/` directory
+ - Update this README index
+ - Create proper git commit
+ - This runs automatically during session end protocol
 5. Manual archival (if needed):
-   ```bash
-   git mv docs/initiatives/active/name.md docs/initiatives/completed/name.md
-   git commit -m "docs(initiative): complete [initiative name]"
-   ```
+
+ ```bash
+ git mv docs/initiatives/active/name.md docs/initiatives/completed/name.md
+ git commit -m "docs(initiative): complete [initiative name]"
+ ```
 
 **Note:** Step 4 (automatic archival) is preferred and happens as part of the session end protocol.
 
@@ -236,17 +246,20 @@ None yet.
 The template is flexible. Adapt sections as needed:
 
 **Add sections for:**
+
 - Technical design details
 - API specifications
 - Performance benchmarks
 - Security considerations
 
 **Remove sections if:**
+
 - No dependencies (skip Dependencies)
 - No identified risks (skip Risks)
 - Simple timeline (simplify Timeline)
 
 **Core sections are required:**
+
 - Objective
 - Success Criteria
 - Motivation
@@ -262,6 +275,7 @@ Track initiative health:
 - **Update frequency:** Days since last update
 
 **Red flags:**
+
 - No updates in 7+ days
 - >50% behind timeline
 - Multiple unresolved blockers

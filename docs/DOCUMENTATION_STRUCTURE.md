@@ -1,6 +1,6 @@
 # Documentation Structure
 
-**Version:** 1.0.0  
+**Version:** 1.0.0 
 **Last Updated:** 2025-10-15
 
 This document defines the organization and lifecycle of all documentation in the mcp-web project.
@@ -11,52 +11,52 @@ This document defines the organization and lifecycle of all documentation in the
 
 ```
 docs/
-├── README.md                      # Index and navigation
-├── DOCUMENTATION_STRUCTURE.md     # This file
-├── CONSTITUTION.md                # Project principles and AI guidelines
+├── README.md # Index and navigation
+├── DOCUMENTATION_STRUCTURE.md # This file
+├── CONSTITUTION.md # Project principles and AI guidelines
 │
-├── adr/                           # Architecture Decision Records
-│   ├── README.md
-│   ├── 0001-httpx-playwright-fallback.md
-│   ├── 0002-trafilatura-extraction.md
-│   └── template.md
+├── adr/ # Architecture Decision Records
+│ ├── README.md
+│ ├── 0001-httpx-playwright-fallback.md
+│ ├── 0002-trafilatura-extraction.md
+│ └── template.md
 │
-├── initiatives/                   # Active initiatives and roadmap
-│   ├── README.md
-│   ├── active/                    # Current initiatives
-│   │   └── 2024-q4-security-hardening.md
-│   └── completed/                 # Completed initiatives (archive)
-│       └── 2024-q3-local-llm-support.md
+├── initiatives/ # Active initiatives and roadmap
+│ ├── README.md
+│ ├── active/ # Current initiatives
+│ │ └── 2024-q4-security-hardening.md
+│ └── completed/ # Completed initiatives (archive)
+│ └── 2024-q3-local-llm-support.md
 │
-├── guides/                        # How-to guides
-│   ├── LOCAL_LLM_GUIDE.md
-│   ├── TASKFILE_GUIDE.md
-│   ├── TESTING_GUIDE.md
-│   └── CONTRIBUTING.md
+├── guides/ # How-to guides
+│ ├── LOCAL_LLM_GUIDE.md
+│ ├── TASKFILE_GUIDE.md
+│ ├── TESTING_GUIDE.md
+│ └── CONTRIBUTING.md
 │
-├── api/                           # API documentation
-│   ├── README.md
-│   ├── fetcher.md
-│   ├── extractor.md
-│   ├── chunker.md
-│   ├── summarizer.md
-│   └── security.md
+├── api/ # API documentation
+│ ├── README.md
+│ ├── fetcher.md
+│ ├── extractor.md
+│ ├── chunker.md
+│ ├── summarizer.md
+│ └── security.md
 │
-├── architecture/                  # Architecture documentation
-│   ├── ARCHITECTURE.md            # System architecture
-│   ├── SECURITY_ARCHITECTURE.md
-│   └── diagrams/
+├── architecture/ # Architecture documentation
+│ ├── ARCHITECTURE.md # System architecture
+│ ├── SECURITY_ARCHITECTURE.md
+│ └── diagrams/
 │
-├── reference/                     # Reference documentation
-│   ├── ENVIRONMENT_VARIABLES.md
-│   ├── CONFIGURATION.md
-│   ├── ERROR_CODES.md
-│   └── CHANGELOG.md
+├── reference/ # Reference documentation
+│ ├── ENVIRONMENT_VARIABLES.md
+│ ├── CONFIGURATION.md
+│ ├── ERROR_CODES.md
+│ └── CHANGELOG.md
 │
-└── archive/                       # Historical documents
-    ├── README.md
-    ├── IMPROVEMENTS_V1.md
-    └── IMPROVEMENTS_V2.md
+└── archive/ # Historical documents
+ ├── README.md
+ ├── IMPROVEMENTS_V1.md
+ └── IMPROVEMENTS_V2.md
 ```
 
 ---
@@ -74,16 +74,19 @@ docs/
 **Template:** See `docs/adr/template.md`
 
 **Lifecycle:**
+
 - **Proposed** → **Accepted** → **Implemented**
 - ADRs are **immutable** once accepted
 - Superseded ADRs reference the new ADR but remain in place
 - Never delete ADRs
 
 **Naming Convention:**
+
 - `NNNN-verb-noun-phrase.md`
 - Example: `0003-use-structured-prompts.md`
 
 **References:**
+
 - [ADR GitHub](https://adr.github.io/)
 - [Joel Parker Henderson's ADR repo](https://github.com/joelparkerhenderson/architecture-decision-record)
 
@@ -94,10 +97,12 @@ docs/
 **Location:** `docs/initiatives/`
 
 **Subdirectories:**
+
 - `active/` - Current initiatives (Q4 2024, etc.)
 - `completed/` - Finished initiatives (archived automatically)
 
 **Format:**
+
 ```markdown
 # Initiative: [Name]
 
@@ -126,6 +131,7 @@ Progress update...
 ```
 
 **Lifecycle:**
+
 - Active initiatives reviewed weekly/monthly
 - Completed initiatives moved to `completed/` with completion date
 - On-hold initiatives documented with reason and review date
@@ -137,11 +143,13 @@ Progress update...
 **Location:** `docs/guides/`
 
 **Types:**
+
 - User guides (installation, configuration, usage)
 - Developer guides (contributing, testing, debugging)
 - Operational guides (deployment, monitoring)
 
 **Format:**
+
 - Clear headings
 - Code examples
 - Troubleshooting sections
@@ -164,6 +172,7 @@ Progress update...
 **Location:** `docs/architecture/`
 
 **Contents:**
+
 - High-level architecture diagrams
 - Component interactions
 - Design patterns used
@@ -178,6 +187,7 @@ Progress update...
 **Location:** `docs/reference/`
 
 **Contents:**
+
 - Environment variables
 - Configuration options
 - Error codes and messages
@@ -192,12 +202,14 @@ Progress update...
 **Location:** `docs/archive/`
 
 **Triggers for Archiving:**
+
 - Document superseded by newer version
 - Initiative completed (after 6 months)
 - Temporary documents no longer relevant
 - Old roadmaps/plans
 
 **Process:**
+
 1. Add "ARCHIVED" notice at top with date and reason
 2. Link to replacement document if applicable
 3. Move to `docs/archive/`
@@ -221,6 +233,7 @@ Progress update...
 ### Quality Standards
 
 **All documentation must:**
+
 - Pass markdown linting (markdownlint)
 - Pass prose linting (Vale with project style)
 - Have no double-spaces or LLM artifacts
@@ -229,6 +242,7 @@ Progress update...
 - Reference external sources when applicable
 
 **Enforced by:**
+
 - Pre-commit hooks
 - CI/CD pipeline
 - Documentation linter tasks
@@ -251,16 +265,19 @@ Progress update...
 ### Linting Tools
 
 **Markdown Structure:**
+
 - Tool: `markdownlint-cli2`
 - Config: `.markdownlint.json`
 - Rules: MD001-MD048 (standard rules)
 
 **Prose Quality:**
+
 - Tool: `Vale`
 - Config: `.vale.ini`
 - Styles: Microsoft, Google, custom mcp-web style
 
 **Python Docstrings:**
+
 - Tool: `pydocstyle` or `darglint`
 - Style: Google docstring format
 - Enforced by: pre-commit and CI
@@ -311,11 +328,13 @@ task docs:serve
 ### Archiving Documents
 
 1. **Add ARCHIVED notice** at top:
-   ```markdown
-   > **⚠️ ARCHIVED:** This document was archived on YYYY-MM-DD.
-   > Reason: [superseded by / no longer relevant / initiative completed]
-   > See [replacement.md] for current information.
-   ```
+
+ ```markdown
+ > **⚠️ ARCHIVED:** This document was archived on YYYY-MM-DD.
+ > Reason: [superseded by / no longer relevant / initiative completed]
+ > See [replacement.md] for current information.
+ ```
+
 2. **Move to `docs/archive/`**
 3. **Update referring documents**
 4. **Add entry to archive README**
@@ -325,6 +344,7 @@ task docs:serve
 ## Migration from Current State
 
 ### Phase 1: Restructure (Immediate)
+
 - [x] Create directory structure
 - [ ] Move existing docs to appropriate locations
 - [ ] Convert DECISIONS.md to ADR format
@@ -332,6 +352,7 @@ task docs:serve
 - [ ] Archive old improvement docs
 
 ### Phase 2: Tooling (Week 1)
+
 - [ ] Install markdownlint-cli2
 - [ ] Install Vale
 - [ ] Create linting configs
@@ -339,6 +360,7 @@ task docs:serve
 - [ ] Add pre-commit hooks
 
 ### Phase 3: Content (Week 2)
+
 - [ ] Write missing API docs
 - [ ] Create testing guide
 - [ ] Expand architecture docs
@@ -346,6 +368,7 @@ task docs:serve
 - [ ] Remove LLM artifacts
 
 ### Phase 4: Automation (Week 3)
+
 - [ ] CI/CD integration
 - [ ] Auto-generate API docs
 - [ ] Documentation coverage checks
@@ -421,5 +444,5 @@ A: Generate from docstrings + manual curation in `docs/api/`.
 
 ---
 
-**Maintained by:** mcp-web core team  
+**Maintained by:** mcp-web core team 
 **Questions:** Open GitHub issue with "docs:" prefix

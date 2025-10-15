@@ -20,6 +20,7 @@ Use this workflow to properly archive a completed initiative.
 ## Phase 2: Archival Actions
 
 1. **Add archived notice:** At top of initiative document:
+
    ```markdown
    > **⚠️ ARCHIVED:** This initiative was completed on YYYY-MM-DD.
    > See [related ADRs / outcomes] for implemented decisions.
@@ -48,6 +49,7 @@ Use this workflow to properly archive a completed initiative.
 3. **Review staged:** Use `mcp2_git_diff_staged` to confirm accuracy.
 
 4. **Commit:** Use descriptive message:
+
    ```
    chore(docs): archive initiative [name]
    

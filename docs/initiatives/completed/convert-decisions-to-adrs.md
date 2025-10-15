@@ -41,11 +41,13 @@ Convert DD-002 through DD-010 from `DECISIONS.md` to proper ADR format in `docs/
 **Principle:** Commit after each logical unit of work, not just at the end.
 
 **Pattern:**
+
 - **Per ADR:** Commit each ADR individually (allows easy revert if needed)
 - **Grouping:** Can group 2-3 related ADRs if they're small
 - **Archival:** Separate commit for archiving DECISIONS.md
 
 **Benefits:**
+
 - Clear history (one ADR per commit)
 - Easy rollback (can revert specific ADR)
 - Better code review (smaller diffs)
@@ -61,6 +63,7 @@ Convert DD-002 through DD-010 from `DECISIONS.md` to proper ADR format in `docs/
 
 **Input:** DD-003, DD-004 from DECISIONS.md
 **Output:**
+
 - docs/adr/0005-hierarchical-semantic-chunking.md
 - docs/adr/0006-chunk-size-and-overlap.md
 **Commit:** `docs(adr): add ADR-0005 and ADR-0006 chunking strategy`
@@ -88,6 +91,7 @@ Convert DD-002 through DD-010 from `DECISIONS.md` to proper ADR format in `docs/
 
 **Input:** DD-008, DD-009 from DECISIONS.md
 **Output:**
+
 - docs/adr/0010-openai-gpt4-default-llm.md
 - docs/adr/0011-streaming-output.md
 **Commit:** `docs(adr): add ADR-0010 and ADR-0011 LLM and streaming`
@@ -102,6 +106,7 @@ Convert DD-002 through DD-010 from `DECISIONS.md` to proper ADR format in `docs/
 ### Phase 8: Cleanup
 
 **Actions:**
+
 - Update ADR README with all new ADRs
 - Archive DECISIONS.md to docs/archive/
 **Commit:** `docs(adr): update index and archive legacy DECISIONS.md`
@@ -115,49 +120,49 @@ Convert DD-002 through DD-010 from `DECISIONS.md` to proper ADR format in `docs/
 Based on previous session decisions:
 
 1. **ADR-0013: uv Package Manager Adoption** (from comprehensive-overhaul)
-   - Context: Replaced pip with uv for 10x speed improvement
-   - Decision: Use uv for all package operations
-   - Rationale: Performance, reproducibility, better dependency resolution
+ - Context: Replaced pip with uv for 10x speed improvement
+ - Decision: Use uv for all package operations
+ - Rationale: Performance, reproducibility, better dependency resolution
 
 2. **ADR-0014: pytest-xdist Parallelization** (from comprehensive-overhaul)
-   - Context: Tests were slow (225s sequential)
-   - Decision: Use pytest-xdist with IO-optimized worker count (16)
-   - Rationale: 7.5x speedup for IO-bound tests
+ - Context: Tests were slow (225s sequential)
+ - Decision: Use pytest-xdist with IO-optimized worker count (16)
+ - Rationale: 7.5x speedup for IO-bound tests
 
 3. **ADR-0015: Pre-commit Hooks** (from comprehensive-overhaul)
-   - Context: Need automated quality enforcement
-   - Decision: Use pre-commit framework with ruff, vale, markdownlint
-   - Rationale: Catch issues before commit, consistent formatting
+ - Context: Need automated quality enforcement
+ - Decision: Use pre-commit framework with ruff, vale, markdownlint
+ - Rationale: Catch issues before commit, consistent formatting
 
 4. **ADR-0016: Windsurf Rules Structure** (from comprehensive-overhaul)
-   - Context: Need AI agent guidance system
-   - Decision: Numbered priority system (00-04) with trigger types
-   - Rationale: Clear precedence, intelligent rule application
+ - Context: Need AI agent guidance system
+ - Decision: Numbered priority system (00-04) with trigger types
+ - Rationale: Clear precedence, intelligent rule application
 
 5. **ADR-0017: Documentation Linting** (from quality foundation)
-   - Context: Documentation quality inconsistent
-   - Decision: markdownlint-cli2 + Vale with Microsoft style
-   - Rationale: Automated quality, AI-friendly docs
+ - Context: Documentation quality inconsistent
+ - Decision: markdownlint-cli2 + Vale with Microsoft style
+ - Rationale: Automated quality, AI-friendly docs
 
 ### Guides to Create
 
 1. **docs/guides/TESTING_GUIDE.md**
-   - How to run tests
-   - Test markers and categories
-   - Parallel testing with pytest-xdist
-   - Writing new tests
+ - How to run tests
+ - Test markers and categories
+ - Parallel testing with pytest-xdist
+ - Writing new tests
 
 2. **docs/guides/CONTRIBUTING_GUIDE.md** (expand existing CONTRIBUTING.md)
-   - Development setup with uv
-   - Workflow usage
-   - ADR creation process
-   - Commit conventions
+ - Development setup with uv
+ - Workflow usage
+ - ADR creation process
+ - Commit conventions
 
 3. **docs/guides/DEPLOYMENT_GUIDE.md** (expand existing DEPLOYMENT.md)
-   - Production deployment
-   - Configuration management
-   - Monitoring and logging
-   - Troubleshooting
+ - Production deployment
+ - Configuration management
+ - Monitoring and logging
+ - Troubleshooting
 
 ---
 
@@ -174,7 +179,7 @@ Based on previous session decisions:
 ## References
 
 - ADR template: docs/adr/template.md
-- Existing ADRs: docs/adr/0001-*.md, 0002-*.md, 0003-*.md
+- Existing ADRs: docs/adr/0001-_.md, 0002-_.md, 0003-*.md
 - Legacy decisions: docs/DECISIONS.md
 - ADR best practices: https://adr.github.io/
 

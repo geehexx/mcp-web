@@ -17,12 +17,14 @@ AI agents working on the mcp-web project need structured guidance for common ope
 - Had no systematic way to detect context and resume work
 
 **Key Requirements:**
+
 - Reduce cognitive load on users
 - Provide consistent execution patterns
 - Enable intelligent context detection
 - Support workflow chaining for complex operations
 
 **Constraints:**
+
 - Must work within Windsurf IDE system
 - Must be maintainable as markdown files
 - Should minimize token usage while providing clarity
@@ -38,13 +40,13 @@ We will adopt a hierarchical Windsurf workflow system with a central orchestrati
 
 ```
 /work (Central Orchestrator)
-  ├─→ /plan (Research-based planning)
-  ├─→ /implement (Test-first execution)
-  ├─→ /commit (Git operations)
-  ├─→ /new-adr (Architecture decisions)
-  ├─→ /archive-initiative (Completion)
-  ├─→ /run-tests (Testing guidance)
-  └─→ /meta-analysis (Session review)
+ ├─→ /plan (Research-based planning)
+ ├─→ /implement (Test-first execution)
+ ├─→ /commit (Git operations)
+ ├─→ /new-adr (Architecture decisions)
+ ├─→ /archive-initiative (Completion)
+ ├─→ /run-tests (Testing guidance)
+ └─→ /meta-analysis (Session review)
 ```
 
 ### Key Design Principles
@@ -73,11 +75,13 @@ We will adopt a hierarchical Windsurf workflow system with a central orchestrati
 **Approach:** One large workflow with all guidance
 
 **Pros:**
+
 - Simple mental model
 - No routing logic needed
 - Single source of truth
 
 **Cons:**
+
 - **❌ Token inefficiency:** Load all guidance even for simple tasks
 - **❌ Maintenance burden:** Changes require updating massive file
 - **❌ Cognitive overload:** Too much information at once
@@ -90,11 +94,13 @@ We will adopt a hierarchical Windsurf workflow system with a central orchestrati
 **Approach:** Encode all guidance in `.windsurf/rules/`
 
 **Pros:**
+
 - Always loaded automatically
 - No invocation needed
 - Consistent application
 
 **Cons:**
+
 - **❌ Global token cost:** Rules loaded on every request
 - **❌ Not task-specific:** Can't provide step-by-step guidance
 - **❌ Limited structure:** Rules are guidelines, not procedures
@@ -107,11 +113,13 @@ We will adopt a hierarchical Windsurf workflow system with a central orchestrati
 **Approach:** Use external tools (GitHub Actions, custom scripts)
 
 **Pros:**
+
 - More powerful
 - Can integrate with CI/CD
 - Language-agnostic
 
 **Cons:**
+
 - **❌ Not AI-native:** Doesn't integrate with Windsurf
 - **❌ Complex setup:** Requires external infrastructure
 - **❌ Context loss:** Agent can't directly observe execution
@@ -154,6 +162,7 @@ We will adopt a hierarchical Windsurf workflow system with a central orchestrati
 ### Phase 1: Core Workflows (Completed 2025-10-15)
 
 ✅ **Created workflows:**
+
 - `/work` (9.6 KB) - Central orchestration with context detection
 - `/plan` (12.2 KB) - Research-driven planning with @web search
 - `/implement` (9.3 KB) - Test-first implementation with quality gates
@@ -167,6 +176,7 @@ We will adopt a hierarchical Windsurf workflow system with a central orchestrati
 ### Phase 2: Context Detection Logic
 
 ✅ **Implemented intelligent file system analysis:**
+
 - Batch reads of active initiatives
 - Git status and recent commit analysis
 - TODO/FIXME marker detection
@@ -176,6 +186,7 @@ We will adopt a hierarchical Windsurf workflow system with a central orchestrati
 ### Phase 3: Workflow Integration
 
 ✅ **Enabled workflow chaining:**
+
 - `/work` → `/plan` → `/implement` → `/commit`
 - Explicit workflow invocation within workflows
 - Context passing between workflows
@@ -185,15 +196,15 @@ We will adopt a hierarchical Windsurf workflow system with a central orchestrati
 ```
 .windsurf/
 └── workflows/
-    ├── work.md                 # Central orchestrator ⭐
-    ├── plan.md                 # Research-based planning
-    ├── implement.md            # Test-first execution
-    ├── commit.md               # Git operations
-    ├── new-adr.md              # ADR creation
-    ├── archive-initiative.md   # Initiative archival
-    ├── run-tests.md            # Testing guidance
-    ├── meta-analysis.md        # Session review
-    └── test-before-commit.md   # Testing protocol
+ ├── work.md # Central orchestrator ⭐
+ ├── plan.md # Research-based planning
+ ├── implement.md # Test-first execution
+ ├── commit.md # Git operations
+ ├── new-adr.md # ADR creation
+ ├── archive-initiative.md # Initiative archival
+ ├── run-tests.md # Testing guidance
+ ├── meta-analysis.md # Session review
+ └── test-before-commit.md # Testing protocol
 ```
 
 ---

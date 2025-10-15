@@ -19,6 +19,7 @@ LLM summarization can take significant time, especially for long documents:
 - **Long documents (map-reduce):** 15-60 seconds
 
 User experience challenges:
+
 1. **Long wait times:** No feedback during processing creates poor UX
 2. **Perceived slowness:** Batch response feels slower than streaming
 3. **Cancellation:** Cannot interrupt long-running operations
@@ -27,6 +28,7 @@ User experience challenges:
 The Model Context Protocol (MCP) supports streaming tool outputs, allowing partial results to be displayed progressively.
 
 Our requirements:
+
 - Show progress to user during summarization
 - Allow cancellation of long operations
 - Minimize perceived latency
@@ -40,16 +42,16 @@ We will implement **streaming output** for all LLM-based operations using async 
 
 ```python
 async def summarize_urls(urls: List[str], query: str) -> AsyncIterator[str]:
-    """Stream summary results progressively."""
-    for url in urls:
-        yield f"## Fetching: {url}\n"
-        content = await fetch(url)
+ """Stream summary results progressively."""
+ for url in urls:
+ yield f"## Fetching: {url}\n"
+ content = await fetch(url)
 
-        yield f"## Summarizing: {url}\n"
-        async for chunk in llm_summarize_stream(content, query):
-            yield chunk  # Stream LLM tokens as they arrive
+ yield f"## Summarizing: {url}\n"
+ async for chunk in llm_summarize_stream(content, query):
+ yield chunk # Stream LLM tokens as they arrive
 
-        yield "\n\n---\n\n"
+ yield "\n\n---\n\n"
 ```
 
 ### Streaming Levels
@@ -72,12 +74,14 @@ async def summarize_urls(urls: List[str], query: str) -> AsyncIterator[str]:
 **Description:** Wait for complete summary, return all at once
 
 **Pros:**
+
 - **Simplest implementation:** No streaming logic needed
 - **Easier error handling:** Atomic success/failure
 - **Cleaner output:** No partial results
 - **Easier testing:** Deterministic output
 
 **Cons:**
+
 - **Poor UX:** Long waits with no feedback (30-60s silence)
 - **Perceived slowness:** Feels much slower than reality
 - **No cancellation:** Must wait for completion
@@ -91,17 +95,19 @@ async def summarize_urls(urls: List[str], query: str) -> AsyncIterator[str]:
 
 ```python
 def on_progress(stage: str, percent: float):
-    print(f"{stage}: {percent}%")
+ print(f"{stage}: {percent}%")
 
 summarize_urls(urls, on_progress=on_progress)
 ```
 
 **Pros:**
+
 - **Structured progress:** Percentage-based tracking
 - **Flexible:** Client controls how to display progress
 - **Less coupling:** Doesn't force streaming
 
 **Cons:**
+
 - **Not MCP-native:** Callbacks don't map to MCP streaming
 - **Less elegant:** Callback hell in async code
 - **No content streaming:** Progress only, not partial results
@@ -114,11 +120,13 @@ summarize_urls(urls, on_progress=on_progress)
 **Description:** Use SSE protocol for streaming
 
 **Pros:**
+
 - **Standard protocol:** Well-defined, widely supported
 - **HTTP-based:** Works through proxies/firewalls
 - **Automatic reconnection:** Client can resume
 
 **Cons:**
+
 - **Not MCP:** MCP has own streaming protocol
 - **Overkill:** More complex than needed
 - **HTTP-specific:** Doesn't work for other transports
@@ -135,11 +143,13 @@ status = get_status(job_id)
 ```
 
 **Pros:**
+
 - **Simple server:** No streaming infrastructure
 - **Resilient:** Works with disconnections
 - **Scalable:** Stateless requests
 
 **Cons:**
+
 - **High latency:** Polling interval creates delay
 - **Inefficient:** Many wasteful requests
 - **Complex client:** Polling logic, state management
@@ -176,74 +186,78 @@ status = get_status(job_id)
 ## Implementation
 
 **Key files:**
+
 - `src/mcp_web/mcp_server.py` - MCP tool with streaming output
 - `src/mcp_web/summarizer.py` - Streaming LLM client
 - `src/mcp_web/fetcher.py` - Status updates during fetch
 
 **Streaming pattern:**
+
 ```python
 @mcp.tool()
 async def summarize_urls(
-    urls: List[str],
-    query: Optional[str] = None
+ urls: List[str],
+ query: Optional[str] = None
 ) -> AsyncIterator[str]:
-    """MCP tool with streaming output."""
-    for i, url in enumerate(urls, 1):
-        # Status update
-        yield f"\n## [{i}/{len(urls)}] Processing: {url}\n"
+ """MCP tool with streaming output."""
+ for i, url in enumerate(urls, 1):
+ # Status update
+ yield f"\n## [{i}/{len(urls)}] Processing: {url}\n"
 
-        try:
-            # Fetch with status
-            yield "Fetching content...\n"
-            content = await fetch_url(url)
+ try:
+ # Fetch with status
+ yield "Fetching content...\n"
+ content = await fetch_url(url)
 
-            # Extract with status
-            yield "Extracting main content...\n"
-            extracted = extract_content(content)
+ # Extract with status
+ yield "Extracting main content...\n"
+ extracted = extract_content(content)
 
-            # Summarize with streaming
-            yield "Summarizing...\n"
-            async for token in stream_summary(extracted, query):
-                yield token
+ # Summarize with streaming
+ yield "Summarizing...\n"
+ async for token in stream_summary(extracted, query):
+ yield token
 
-            yield "\n\n"
+ yield "\n\n"
 
-        except Exception as e:
-            yield f"\n❌ Error: {str(e)}\n\n"
-            # Continue with next URL
+ except Exception as e:
+ yield f"\n❌ Error: {str(e)}\n\n"
+ # Continue with next URL
 ```
 
 **OpenAI streaming:**
+
 ```python
 async def stream_summary(text: str, query: str) -> AsyncIterator[str]:
-    """Stream LLM summary token by token."""
-    response = await openai_client.chat.completions.create(
-        model="gpt-4-turbo-preview",
-        messages=[...],
-        stream=True  # Enable streaming
-    )
+ """Stream LLM summary token by token."""
+ response = await openai_client.chat.completions.create(
+ model="gpt-4-turbo-preview",
+ messages=[...],
+ stream=True # Enable streaming
+ )
 
-    async for chunk in response:
-        if chunk.choices[0].delta.content:
-            yield chunk.choices[0].delta.content
+ async for chunk in response:
+ if chunk.choices[0].delta.content:
+ yield chunk.choices[0].delta.content
 ```
 
 **Metrics collection:**
+
 ```python
 # Track streaming performance
 metrics.log_stream_event(
-    event="stream_start",
-    url=url,
-    timestamp=time.time()
+ event="stream_start",
+ url=url,
+ timestamp=time.time()
 )
 
 # ... streaming ...
 
 metrics.log_stream_event(
-    event="stream_complete",
-    url=url,
-    total_bytes=len(output),
-    duration_ms=elapsed
+ event="stream_complete",
+ url=url,
+ total_bytes=len(output),
+ duration_ms=elapsed
 )
 ```
 

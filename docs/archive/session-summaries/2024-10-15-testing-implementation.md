@@ -26,49 +26,57 @@ Successfully implemented a comprehensive, production-grade testing and security 
 ### 1. Test Infrastructure (7 Categories)
 
 #### Unit Tests (`tests/unit/`)
+
 - ✅ 4 test modules covering core utilities
 - ✅ Fast, isolated component testing
 - ✅ No external dependencies
 - ✅ Mock-based testing for external services
 
 **Files:**
+
 - `test_utils.py` (180 lines) - Token counting, URL validation, formatting
 - `test_config.py` (100 lines) - Configuration management
 - `test_cache.py` (200 lines) - Cache operations, TTL, eviction
 - `test_chunker.py` (160 lines) - Chunking strategies
 
 #### Security Tests (`tests/security/`)
+
 - ✅ Comprehensive prompt injection test suite
 - ✅ OWASP LLM Top 10 focused
 - ✅ Both malicious and benign samples
 - ✅ Input validation and output sanitization
 
 **Files:**
+
 - `test_prompt_injection.py` (400+ lines) - 9 test classes covering:
-  - Prompt injection detection (direct and indirect)
-  - False positive prevention
-  - Output sanitization
-  - Input validation
-  - Rate limiting
-  - Cache security
+ - Prompt injection detection (direct and indirect)
+ - False positive prevention
+ - Output sanitization
+ - Input validation
+ - Rate limiting
+ - Cache security
 
 **Test Coverage:**
+
 - LLM01:2025 - Prompt Injection (primary focus)
 - LLM05:2025 - Improper Output Handling
 - LLM10:2025 - Unbounded Consumption
 - Additional: XSS, path traversal, SQL injection patterns
 
 #### Golden/Regression Tests (`tests/golden/`)
+
 - ✅ Static HTML samples with expected results
 - ✅ Deterministic extraction validation
 - ✅ Consistency checks across runs
 - ✅ No network or API dependencies
 
 **Files:**
+
 - `test_golden_extraction.py` (350 lines) - 10 test cases
 - `golden_data.py` (500 lines) - 4 HTML samples + expectations
 
 **Samples:**
+
 1. Simple article (async/await tutorial)
 2. Technical documentation (API reference)
 3. News article (quantum computing)
@@ -76,21 +84,25 @@ Successfully implemented a comprehensive, production-grade testing and security 
 5. Prompt injection samples (malicious + benign)
 
 #### Live Integration Tests (`tests/live/`)
+
 - ✅ Real URL testing with static content
 - ✅ Full pipeline validation
 - ✅ Network and API integration
 - ✅ Auto-skip if dependencies unavailable
 
 **Files:**
+
 - `test_live_urls.py` (300+ lines) - 4 test classes
 
 **Golden URLs:**
+
 1. `https://example.com` - IANA example domain
 2. `https://peps.python.org/pep-0008/` - Python PEP 8
 3. `https://www.rfc-editor.org/rfc/rfc2616.txt` - HTTP RFC
 4. `https://www.w3.org/TR/2011/WD-html5-20110405/` - W3C HTML5
 
 #### Performance Benchmarks (`tests/benchmarks/`)
+
 - ✅ Token counting benchmarks
 - ✅ Chunking strategy comparison
 - ✅ Cache operation benchmarks
@@ -98,9 +110,11 @@ Successfully implemented a comprehensive, production-grade testing and security 
 - ✅ Scalability tests
 
 **Files:**
+
 - `test_performance.py` (400 lines) - 6 benchmark classes
 
 **Metrics Tracked:**
+
 - Token counting speed
 - Chunking performance (3 strategies)
 - Cache read/write throughput
@@ -109,6 +123,7 @@ Successfully implemented a comprehensive, production-grade testing and security 
 - Scalability with data size
 
 #### Test Configuration
+
 - ✅ `pytest.ini` - Comprehensive pytest configuration
 - ✅ `conftest.py` - Shared fixtures and utilities
 - ✅ Markers for test categorization
@@ -120,17 +135,20 @@ Successfully implemented a comprehensive, production-grade testing and security 
 #### Static Analysis Tools
 
 **Bandit** (`.bandit`)
+
 - Security vulnerability scanner for Python
 - 70+ security checks configured
 - Excludes: tests, build, dist directories
 - Focus: Hardcoded credentials, unsafe functions, weak crypto
 
 **Semgrep** (`.semgrep.yml`)
+
 - Pattern-based code scanner
 - 14 custom rules for LLM security
 - Detects: Prompt injection risks, hardcoded API keys, unsafe operations
 
 **Custom Semgrep Rules:**
+
 1. `potential-prompt-injection-risk` - Direct LLM input without sanitization
 2. `llm-unvalidated-external-content` - Indirect injection via URLs
 3. `hardcoded-api-key` - API keys in code
@@ -145,6 +163,7 @@ Successfully implemented a comprehensive, production-grade testing and security 
 12. `unvalidated-redirect` - Open redirect
 
 **Safety**
+
 - Dependency vulnerability scanner
 - Checks for known CVEs in dependencies
 - Integrated in analysis script
@@ -152,47 +171,52 @@ Successfully implemented a comprehensive, production-grade testing and security 
 #### Security Test Patterns
 
 **Prompt Injection Detection:**
+
 ```python
 PROMPT_INJECTION_SAMPLES = [
-    "IGNORE ALL PREVIOUS INSTRUCTIONS",
-    "FROM NOW ON",
-    "SYSTEM:",
-    "---END OF PROMPT---",
-    # + Unicode obfuscation, nested instructions, etc.
+ "IGNORE ALL PREVIOUS INSTRUCTIONS",
+ "FROM NOW ON",
+ "SYSTEM:",
+ "---END OF PROMPT---",
+ # + Unicode obfuscation, nested instructions, etc.
 ]
 ```
 
 **Benign Content (False Positive Testing):**
+
 ```python
 BENIGN_CONTENT_SAMPLES = [
-    "ignore files in .gitignore",  # Legitimate "ignore"
-    "# Ignore empty values",        # Code comment
+ "ignore files in .gitignore", # Legitimate "ignore"
+ "# Ignore empty values", # Code comment
 ]
 ```
 
 ### 3. Configuration Enhancements
 
 #### Temperature Control
+
 Added configurable temperature (0.0-2.0) for deterministic testing:
+
 ```python
 class SummarizerSettings(BaseSettings):
-    temperature: float = Field(
-        default=0.3,
-        ge=0.0,
-        le=2.0,
-        description="LLM temperature (0=deterministic, 2=creative)"
-    )
-    max_summary_length: int = Field(
-        default=10000,
-        description="Maximum summary length (safety limit)"
-    )
-    content_filtering: bool = Field(
-        default=True,
-        description="Enable content filtering"
-    )
+ temperature: float = Field(
+ default=0.3,
+ ge=0.0,
+ le=2.0,
+ description="LLM temperature (0=deterministic, 2=creative)"
+ )
+ max_summary_length: int = Field(
+ default=10000,
+ description="Maximum summary length (safety limit)"
+ )
+ content_filtering: bool = Field(
+ default=True,
+ description="Enable content filtering"
+ )
 ```
 
 #### Security Settings
+
 - Token limits
 - Rate limiting defaults
 - Cache size limits
@@ -201,23 +225,25 @@ class SummarizerSettings(BaseSettings):
 ### 4. Developer Tools
 
 #### Test Runner Script (`scripts/run_tests.sh`)
+
 ```bash
 #!/bin/bash
 # Comprehensive test runner
 
 # Options:
---all              # Run all test categories
---live             # Include live tests
---bench            # Include benchmarks
---integration      # Include integration tests
---no-coverage      # Skip coverage report
---parallel         # Run tests in parallel
+--all # Run all test categories
+--live # Include live tests
+--bench # Include benchmarks
+--integration # Include integration tests
+--no-coverage # Skip coverage report
+--parallel # Run tests in parallel
 
 # Usage:
 ./scripts/run_tests.sh --all --parallel
 ```
 
 #### Analysis Runner Script (`scripts/run_analysis.sh`)
+
 ```bash
 #!/bin/bash
 # Static analysis runner
@@ -235,6 +261,7 @@ class SummarizerSettings(BaseSettings):
 ```
 
 #### Windsurf Development Rules (`.windsurf/rules.md`)
+
 - 400+ lines of development guidelines
 - Code style standards
 - Security guidelines
@@ -243,6 +270,7 @@ class SummarizerSettings(BaseSettings):
 - Module-specific patterns
 
 **Key sections:**
+
 - Python code style (PEP 8, type hints, docstrings)
 - Async/await patterns
 - Security guidelines (OWASP LLM Top 10)
@@ -254,7 +282,9 @@ class SummarizerSettings(BaseSettings):
 ### 5. Documentation
 
 #### TESTING.md (600+ lines)
+
 Comprehensive testing documentation covering:
+
 - Test categories and markers
 - Security testing strategy (OWASP LLM Top 10)
 - Golden test approach
@@ -266,6 +296,7 @@ Comprehensive testing documentation covering:
 - Troubleshooting
 
 **Key sections:**
+
 1. Overview & test pyramid
 2. Test categories (6 types)
 3. Security testing (OWASP focus)
@@ -285,6 +316,7 @@ Comprehensive testing documentation covering:
 #### OWASP LLM Top 10 Coverage
 
 **LLM01:2025 - Prompt Injection** (Primary Focus)
+
 - ✅ Direct injection detection (instruction override)
 - ✅ Indirect injection via external content
 - ✅ Hidden instructions (HTML comments, Unicode)
@@ -293,16 +325,19 @@ Comprehensive testing documentation covering:
 - ✅ Code execution patterns
 
 **LLM05:2025 - Improper Output Handling**
+
 - ✅ System prompt leakage prevention
 - ✅ API key exposure prevention
 - ✅ Sensitive data filtering
 
 **LLM10:2025 - Unbounded Consumption**
+
 - ✅ Token limit enforcement
 - ✅ Rate limiting
 - ✅ Cache size limits
 
 **Additional Security**
+
 - ✅ XSS prevention (HTML sanitization)
 - ✅ Path traversal prevention
 - ✅ SQL injection pattern detection
@@ -312,6 +347,7 @@ Comprehensive testing documentation covering:
 #### Static Analysis
 
 **Tools Integrated:**
+
 1. **Bandit** - Security-focused Python linter
 2. **Semgrep** - Pattern-based code scanner with custom rules
 3. **Safety** - Dependency vulnerability scanner
@@ -323,24 +359,27 @@ Comprehensive testing documentation covering:
 ### Testing
 
 #### Deterministic Testing
+
 - ✅ Temperature=0.0 for consistent LLM outputs
 - ✅ Golden HTML samples with expected results
 - ✅ Fixed random seeds where applicable
 - ✅ Mocked external dependencies
 
 #### Test Coverage
-```
-Unit Tests:        4 modules, 40+ tests
-Security Tests:    9 test classes, 30+ tests
-Golden Tests:      10 test cases, 4 HTML samples
-Integration Tests: 5 test classes, 15+ tests
-Live Tests:        4 test classes, 10+ tests
-Benchmarks:        6 test classes, 20+ benchmarks
 
-Total:             100+ tests across 6 categories
+```
+Unit Tests: 4 modules, 40+ tests
+Security Tests: 9 test classes, 30+ tests
+Golden Tests: 10 test cases, 4 HTML samples
+Integration Tests: 5 test classes, 15+ tests
+Live Tests: 4 test classes, 10+ tests
+Benchmarks: 6 test classes, 20+ benchmarks
+
+Total: 100+ tests across 6 categories
 ```
 
 #### Performance Tracking
+
 - ✅ Token counting benchmarks
 - ✅ Chunking strategy comparison
 - ✅ Cache operation benchmarks
@@ -350,18 +389,21 @@ Total:             100+ tests across 6 categories
 ### Developer Experience
 
 #### Scripts
+
 - ✅ `run_tests.sh` - Comprehensive test runner
 - ✅ `run_analysis.sh` - Static analysis runner
 - ✅ Parallel test execution support
 - ✅ Selective test category execution
 
 #### Documentation
+
 - ✅ TESTING.md - 600+ lines of testing docs
 - ✅ Windsurf rules - 400+ lines of guidelines
 - ✅ Code comments with security notes
 - ✅ Inline examples and patterns
 
 #### Configuration
+
 - ✅ pytest.ini with markers
 - ✅ Coverage configuration
 - ✅ Timeout settings
@@ -374,24 +416,24 @@ Total:             100+ tests across 6 categories
 ### Research Sources
 
 1. **OWASP GenAI Security Project**
-   - URL: https://genai.owasp.org/llmrisk/llm01-prompt-injection/
-   - Used for: LLM security vulnerability patterns
-   - Applied: Prompt injection test cases
+ - URL: https://genai.owasp.org/llmrisk/llm01-prompt-injection/
+ - Used for: LLM security vulnerability patterns
+ - Applied: Prompt injection test cases
 
 2. **HackerOne LLM Vulnerability Blog**
-   - URL: https://www.hackerone.com/blog/how-prompt-injection-vulnerability-led-data-exfiltration
-   - Used for: Real-world attack patterns
-   - Applied: Data exfiltration test cases
+ - URL: https://www.hackerone.com/blog/how-prompt-injection-vulnerability-led-data-exfiltration
+ - Used for: Real-world attack patterns
+ - Applied: Data exfiltration test cases
 
 3. **Confident AI LLM Testing**
-   - URL: https://www.confident-ai.com/blog/llm-testing-in-2024-top-methods-and-strategies
-   - Used for: LLM testing best practices
-   - Applied: Test structure and metrics approach
+ - URL: https://www.confident-ai.com/blog/llm-testing-in-2024-top-methods-and-strategies
+ - Used for: LLM testing best practices
+ - Applied: Test structure and metrics approach
 
 4. **Semgrep vs Bandit Comparison**
-   - URL: https://semgrep.dev/blog/2021/python-static-analysis-comparison-bandit-semgrep/
-   - Used for: Tool selection and configuration
-   - Applied: Combined Bandit + Semgrep strategy
+ - URL: https://semgrep.dev/blog/2021/python-static-analysis-comparison-bandit-semgrep/
+ - Used for: Tool selection and configuration
+ - Applied: Combined Bandit + Semgrep strategy
 
 ### Standards Followed
 
@@ -410,7 +452,7 @@ Total:             100+ tests across 6 categories
 ```bash
 # Install dependencies (requires virtual environment)
 python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
+source venv/bin/activate # Windows: venv\Scripts\activate
 pip install -e ".[dev]"
 playwright install chromium
 
@@ -437,9 +479,9 @@ pytest --cov=mcp_web --cov-report=html
 pytest -n auto
 
 # Using scripts
-./scripts/run_tests.sh              # Standard suite
+./scripts/run_tests.sh # Standard suite
 ./scripts/run_tests.sh --all --live # Everything
-./scripts/run_tests.sh --bench      # With benchmarks
+./scripts/run_tests.sh --bench # With benchmarks
 ```
 
 ### Running Static Analysis
@@ -459,15 +501,15 @@ safety check
 ### Test Markers
 
 ```bash
-pytest -m unit              # Unit tests
-pytest -m security          # Security tests
-pytest -m golden            # Golden tests
-pytest -m integration       # Integration tests
-pytest -m live              # Live tests
-pytest -m benchmark         # Benchmarks
-pytest -m slow              # Slow tests
-pytest -m requires_api      # API-dependent tests
-pytest -m requires_network  # Network-dependent tests
+pytest -m unit # Unit tests
+pytest -m security # Security tests
+pytest -m golden # Golden tests
+pytest -m integration # Integration tests
+pytest -m live # Live tests
+pytest -m benchmark # Benchmarks
+pytest -m slow # Slow tests
+pytest -m requires_api # API-dependent tests
+pytest -m requires_network # Network-dependent tests
 ```
 
 ---
@@ -492,12 +534,12 @@ pytest -m requires_network  # Network-dependent tests
 ### Test Coverage
 
 ```
-Test Files:         17
-Test Classes:       35+
-Test Functions:     100+
-Test Markers:       9
+Test Files: 17
+Test Classes: 35+
+Test Functions: 100+
+Test Markers: 9
 Golden HTML Samples: 4
-Golden URLs:        4
+Golden URLs: 4
 Custom Semgrep Rules: 14
 Security Test Cases: 30+
 ```
@@ -511,17 +553,17 @@ pytest-asyncio>=0.24.0
 pytest-cov>=6.0.0
 pytest-mock>=3.14.0
 pytest-timeout>=2.3.0
-pytest-benchmark>=4.0.0  # NEW
-pytest-xdist>=3.6.0      # NEW
+pytest-benchmark>=4.0.0 # NEW
+pytest-xdist>=3.6.0 # NEW
 
 # LLM Testing
-deepeval>=1.2.0          # NEW
-responses>=0.25.0        # NEW
+deepeval>=1.2.0 # NEW
+responses>=0.25.0 # NEW
 
 # Security
-bandit[toml]>=1.7.9      # NEW
-semgrep>=1.87.0          # NEW
-safety>=3.2.0            # NEW
+bandit[toml]>=1.7.9 # NEW
+semgrep>=1.87.0 # NEW
+safety>=3.2.0 # NEW
 ```
 
 ---
@@ -531,34 +573,39 @@ safety>=3.2.0            # NEW
 ### Immediate (Before Deployment)
 
 1. **Install dependencies in virtual environment**
-   ```bash
-   python -m venv venv
-   source venv/bin/activate
-   pip install -e ".[dev]"
-   playwright install chromium
-   ```
+
+ ```bash
+ python -m venv venv
+ source venv/bin/activate
+ pip install -e ".[dev]"
+ playwright install chromium
+ ```
 
 2. **Run test suite**
-   ```bash
-   ./scripts/run_tests.sh
-   ```
+
+ ```bash
+ ./scripts/run_tests.sh
+ ```
 
 3. **Run static analysis**
-   ```bash
-   ./scripts/run_analysis.sh
-   ```
+
+ ```bash
+ ./scripts/run_analysis.sh
+ ```
 
 4. **Run live tests** (optional, requires API key)
-   ```bash
-   export OPENAI_API_KEY="sk-..."
-   pytest -m live -v
-   ```
+
+ ```bash
+ export OPENAI_API_KEY="sk-..."
+ pytest -m live -v
+ ```
 
 5. **Generate coverage report**
-   ```bash
-   pytest --cov=mcp_web --cov-report=html
-   open htmlcov/index.html
-   ```
+
+ ```bash
+ pytest --cov=mcp_web --cov-report=html
+ open htmlcov/index.html
+ ```
 
 ### Short Term (v0.2.1)
 

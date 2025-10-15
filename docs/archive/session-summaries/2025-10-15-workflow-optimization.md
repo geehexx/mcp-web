@@ -27,6 +27,7 @@ Optimized the Windsurf rules and workflows system to create an intelligent orche
 **Purpose:** Intelligent entry point that detects project state and routes to appropriate workflows.
 
 **Key Features:**
+
 - **Automatic context detection** in ≤5 tool calls
 - **Batch file operations** for efficiency
 - **Smart routing** based on git state, initiatives, test results
@@ -34,12 +35,13 @@ Optimized the Windsurf rules and workflows system to create an intelligent orche
 - **Clarification only when ambiguous** - 70%+ autonomous
 
 **Efficiency Optimizations:**
+
 ```python
 # Batch reads (3x faster)
 mcp0_read_multiple_files([
-    "docs/initiatives/active/*.md",
-    "docs/PROJECT_SUMMARY.md",
-    ".windsurf/rules/00_agent_directives.md"
+ "docs/initiatives/active/*.md",
+ "docs/PROJECT_SUMMARY.md",
+ ".windsurf/rules/00_agent_directives.md"
 ])
 
 # Focused grep (not broad search)
@@ -47,6 +49,7 @@ grep_search("TODO", "docs/", includes=["*.md"])
 ```
 
 **Context Detection Matrix:**
+
 | Signal | Interpretation | Auto-Route |
 |--------|---------------|------------|
 | Unchecked initiative tasks | Continue work | `/implement` |
@@ -55,6 +58,7 @@ grep_search("TODO", "docs/", includes=["*.md"])
 | Clean state | New work | Prompt user |
 
 **References:**
+
 - [Agentic AI Workflows (2025)](https://devcom.com/tech-blog/ai-agentic-workflows/)
 - [Claude Agent Best Practices (2025)](https://skywork.ai/blog/claude-agent-sdk-best-practices-ai-agents-2025/)
 - hexacore-command intelligent search patterns
@@ -75,17 +79,20 @@ grep_search("TODO", "docs/", includes=["*.md"])
 6. **Handoff** - Prepare context for implementation
 
 **Planning Methodology:**
+
 - **SMART criteria** for success
 - **Hierarchical decomposition** (phases → tasks)
 - **Risk assessment** with mitigations
 - **Out-of-scope** explicitly documented
 
 **Quality Standards:**
+
 - ✅ Comprehensive (all requirements, research documented)
 - ✅ Actionable (concrete tasks, not vague)
 - ✅ Realistic (reasonable estimates, dependencies identified)
 
 **Example Output:**
+
 ```markdown
 ## Plan: API Key Authentication
 
@@ -108,6 +115,7 @@ Phase 1: Core Authentication (4h)
 ```
 
 **References:**
+
 - [Agentic AI Planning Pattern (2025)](https://www.analyticsvidhya.com/blog/2024/11/agentic-ai-planning-pattern/)
 - [IBM AI Agent Planning (2025)](https://www.ibm.com/think/topics/ai-agent-planning)
 - [Design Patterns for AI Agents (2025)](https://valanor.co/design-patterns-for-ai-agents/)
@@ -119,38 +127,43 @@ Phase 1: Core Authentication (4h)
 **Purpose:** Execute planned work with TDD discipline and incremental validation.
 
 **Key Principles:**
+
 - **Test-first** - Write test before code (Red → Green → Refactor)
 - **Small increments** - 15-minute cycles, 3-file rule
 - **Quality gates** - Tests, linting, security before commit
 - **Atomic commits** - One logical change per commit
 
 **Implementation Cycle:**
+
 ```
 Write Test (RED)
-    ↓
+ ↓
 Implement (GREEN)
-    ↓
+ ↓
 Refactor (GREEN)
-    ↓
+ ↓
 Run Tests
-    ↓
+ ↓
 Commit (if green)
-    ↓
+ ↓
 Next Feature
 ```
 
 **Validation Rules:**
+
 - **15-minute rule**: Test every 15 minutes
 - **3-file rule**: Test after changing 3 files
 - **Zero-tolerance**: No commits with failing tests
 
 **Integration:**
+
 - Calls `/test-before-commit` after changes
 - Calls `/commit` when ready
 - Updates initiative progress
 - Documents decisions
 
 **References:**
+
 - [TDD with AI Agents (2025)](https://www.latent.space/p/anita-tdd)
 - [Red-Green-Refactor](https://www.jamesshore.com/v2/books/aoad1/test_driven_development)
 
@@ -171,6 +184,7 @@ Next Feature
 **Current Status:** Kept for now (detailed testing protocol)
 
 **Recommendation:** Consider deprecating in favor of:
+
 - Testing guidance in `/implement` workflow
 - Testing rules in `01_testing_and_tooling.md`
 - Task commands in `run-tests.md`
@@ -190,6 +204,7 @@ Next Feature
 **Key Concepts:**
 
 **1. Session Implementation** - Primary objective work
+
 ```markdown
 Example: Implementing authentication feature
 - Source code changes
@@ -198,6 +213,7 @@ Example: Implementing authentication feature
 ```
 
 **2. Meta-Analysis Additions** - Process improvements
+
 ```markdown
 Example: During auth work, noticed security review gap
 - Create security-review.md workflow
@@ -206,6 +222,7 @@ Example: During auth work, noticed security review gap
 ```
 
 **3. Deferred Work** - Identified but not done
+
 ```markdown
 Example: OAuth2 integration
 - Create initiative document
@@ -214,11 +231,13 @@ Example: OAuth2 integration
 ```
 
 **Tracking Methods:**
+
 - **Git commits** - Marked with "Meta-analysis:" prefix
 - **Section headers** - Clear separation in summaries
 - **File locations** - Different directories for each type
 
 **Example Summary Template:**
+
 ```markdown
 ## Artifact Classification
 
@@ -243,6 +262,7 @@ Example: OAuth2 integration
 ### Current State Assessment
 
 **File sizes:**
+
 - `00_agent_directives.md` - 3.7 KB ✓ (concise)
 - `01_testing_and_tooling.md` - 5.7 KB ✓ (appropriate)
 - `02_python_standards.md` - 10.0 KB ⚠️ (could be more concise)
@@ -250,6 +270,7 @@ Example: OAuth2 integration
 - `04_security.md` - 10.2 KB ⚠️ (appropriate for security)
 
 **Analysis:**
+
 - Global rules (00) are appropriately concise
 - Testing rules (01) have good balance
 - Python standards (02) could reference external docs more
@@ -312,19 +333,19 @@ Agent:
 
 ```
 /work (detects: "needs planning")
-  ↓
+ ↓
 /plan (creates comprehensive plan)
-  ↓
+ ↓
 /implement (phase 1)
-  ↓
+ ↓
 /test-before-commit (validates)
-  ↓
+ ↓
 /commit (git commit)
-  ↓
+ ↓
 /implement (phase 2)
-  ↓
+ ↓
 [repeat until complete]
-  ↓
+ ↓
 /meta-analysis (session review)
 ```
 
@@ -332,11 +353,11 @@ Agent:
 
 ```
 /work (detects: test failures)
-  ↓
+ ↓
 /implement (fix specific test)
-  ↓
+ ↓
 /test-before-commit (verify)
-  ↓
+ ↓
 /commit (git commit)
 ```
 
@@ -344,11 +365,11 @@ Agent:
 
 ```
 /work (detects: architecture markers)
-  ↓
+ ↓
 /new-adr (create ADR)
-  ↓
+ ↓
 /plan (based on ADR)
-  ↓
+ ↓
 /implement (execute plan)
 ```
 
@@ -362,6 +383,7 @@ Agent:
 **After:** ≤5 tool calls using batch operations
 
 **Example:**
+
 ```python
 # OLD (10 calls)
 read_file("file1.md")
@@ -371,18 +393,20 @@ read_file("file3.md")
 
 # NEW (1 call)
 mcp0_read_multiple_files([
-    "file1.md", "file2.md", "file3.md", ...
+ "file1.md", "file2.md", "file3.md", ...
 ])
 ```
 
 ### Smart Search Patterns
 
 **Before:** Broad recursive grep
+
 ```bash
-grep -r "TODO" /  # Searches everything
+grep -r "TODO" / # Searches everything
 ```
 
 **After:** Focused search with filters
+
 ```bash
 grep_search("TODO", "docs/", includes=["*.md"])
 ```
@@ -423,32 +447,32 @@ grep_search("TODO", "docs/", includes=["*.md"])
 
 ```
 /work (Central Orchestrator)
-  ├─→ /plan (Strategic Planning)
-  │     └─→ /new-adr (if architectural)
-  │
-  ├─→ /implement (Execution)
-  │     ├─→ /test-before-commit (Validation)
-  │     └─→ /commit (Git Operations)
-  │
-  ├─→ /run-tests (Testing)
-  ├─→ /archive-initiative (Completion)
-  └─→ /meta-analysis (Reflection)
+ ├─→ /plan (Strategic Planning)
+ │ └─→ /new-adr (if architectural)
+ │
+ ├─→ /implement (Execution)
+ │ ├─→ /test-before-commit (Validation)
+ │ └─→ /commit (Git Operations)
+ │
+ ├─→ /run-tests (Testing)
+ ├─→ /archive-initiative (Completion)
+ └─→ /meta-analysis (Reflection)
 ```
 
 ### Context Flow
 
 ```
 Project Files → Context Detection → Route Decision
-                        ↓
-            ┌───────────┴──────────┐
-            ↓                      ↓
-      Planning Needed        Implementation Needed
-            ↓                      ↓
-        /plan                 /implement
-            ↓                      ↓
-      Initiative            Execute Phase
-            ↓                      ↓
-         └──────→ Track Progress ←──────┘
+ ↓
+ ┌───────────┴──────────┐
+ ↓ ↓
+ Planning Needed Implementation Needed
+ ↓ ↓
+ /plan /implement
+ ↓ ↓
+ Initiative Execute Phase
+ ↓ ↓
+ └──────→ Track Progress ←──────┘
 ```
 
 ---
@@ -504,6 +528,7 @@ Project Files → Context Detection → Route Decision
 ### From Old System
 
 **Before:**
+
 ```markdown
 User manually describes entire context each time
 Agent asks many clarifying questions
@@ -511,6 +536,7 @@ Work proceeds without clear structure
 ```
 
 **After:**
+
 ```markdown
 User invokes /work
 Agent detects context automatically
@@ -532,19 +558,23 @@ Structured execution with checkpoints
 ### Research Sources
 
 **Agentic AI Workflows:**
+
 - [DevCom: Agentic AI Workflows (2025)](https://devcom.com/tech-blog/ai-agentic-workflows/)
 - [Ampcome: Enterprise AI Workflows (2025)](https://www.ampcome.com/post/ai-agents-enterprise-workflows-2025-guide)
 
 **AI Agent Best Practices:**
+
 - [Claude Agent SDK Best Practices (2025)](https://skywork.ai/blog/claude-agent-sdk-best-practices-ai-agents-2025/)
 - [Analytics Vidhya: Agentic Planning (2025)](https://www.analyticsvidhya.com/blog/2024/11/agentic-ai-planning-pattern/)
 - [IBM: AI Agent Planning (2025)](https://www.ibm.com/think/topics/ai-agent-planning)
 
 **Design Patterns:**
+
 - [Valanor: Design Patterns for AI Agents (2025)](https://valanor.co/design-patterns-for-ai-agents/)
 - [Phaedra: AI Agent Workflow Benefits (2025)](https://www.phaedrasolutions.com/blog/ai-agent-workflow)
 
 **Project-Specific:**
+
 - hexacore-command: Intelligent documentation search patterns
 - Windsurf documentation: [https://docs.windsurf.com/](https://docs.windsurf.com/)
 

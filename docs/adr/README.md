@@ -26,6 +26,7 @@ NNNN-verb-noun-phrase.md
 ```
 
 Examples:
+
 - `0001-use-httpx-playwright-fallback.md`
 - `0002-use-trafilatura-extraction.md`
 - `0003-implement-map-reduce-summarization.md`
@@ -45,6 +46,7 @@ Proposed → Accepted → Implemented → [Deprecated/Superseded]
 ## ADRs are Immutable
 
 Once an ADR is accepted, it should not be modified except to:
+
 - Fix typos or formatting
 - Add clarifications
 - Update status (Accepted → Implemented)

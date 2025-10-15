@@ -36,11 +36,11 @@ docs/
 
 **Reference:** [ADR GitHub](https://adr.github.io/) (October 2025)
 
-* **Purpose:** Document significant architectural decisions
-* **Format:** Use `docs/adr/template.md`
-* **Naming:** `NNNN-verb-noun-phrase.md` (e.g., `0001-use-httpx-playwright-fallback.md`)
-* **Lifecycle:** Proposed → Accepted → Implemented (immutable once accepted)
-* **When to create:**
+- **Purpose:** Document significant architectural decisions
+- **Format:** Use `docs/adr/template.md`
+- **Naming:** `NNNN-verb-noun-phrase.md` (e.g., `0001-use-httpx-playwright-fallback.md`)
+- **Lifecycle:** Proposed → Accepted → Implemented (immutable once accepted)
+- **When to create:**
   - New dependencies
   - Major algorithm changes
   - Security-related decisions
@@ -49,9 +49,10 @@ docs/
 
 ### Initiatives
 
-* **Location:** `docs/initiatives/active/` or `docs/initiatives/completed/`
-* **Purpose:** Track strategic projects and features
-* **Format:**
+- **Location:** `docs/initiatives/active/` or `docs/initiatives/completed/`
+- **Purpose:** Track strategic projects and features
+- **Format:**
+
   ```markdown
   # Initiative: [Name]
   
@@ -80,19 +81,19 @@ docs/
 
 ### Guides
 
-* **Location:** `docs/guides/`
-* **Types:** User guides, developer guides, operational guides
-* **Format:** Step-by-step instructions with code examples
-* **Required sections:** Prerequisites, Steps, Troubleshooting, Related docs
+- **Location:** `docs/guides/`
+- **Types:** User guides, developer guides, operational guides
+- **Format:** Step-by-step instructions with code examples
+- **Required sections:** Prerequisites, Steps, Troubleshooting, Related docs
 
 ## 3.3 Documentation Standards
 
 ### Markdown Quality
 
-* **Linting:** All markdown must pass markdownlint-cli2
-* **Command:** `task docs:lint:markdown`
-* **Auto-fix:** `task docs:fix`
-* **Common issues:**
+- **Linting:** All markdown must pass markdownlint-cli2
+- **Command:** `task docs:lint:markdown`
+- **Auto-fix:** `task docs:fix`
+- **Common issues:**
   - No double-spaces between words
   - No trailing whitespace
   - Consistent heading levels
@@ -100,9 +101,9 @@ docs/
 
 ### Prose Quality
 
-* **Linting:** Use Vale with Microsoft/Google style guides
-* **Command:** `task docs:lint:prose`
-* **Style:**
+- **Linting:** Use Vale with Microsoft/Google style guides
+- **Command:** `task docs:lint:prose`
+- **Style:**
   - Active voice
   - Present tense
   - Be concise
@@ -111,15 +112,16 @@ docs/
 
 ### External References
 
-* **Always link first mentions:**
+- **Always link first mentions:**
+
   ```markdown
   We use [uv](https://docs.astral.sh/uv/) as our package manager.
   ```
-* **Prefer official documentation:**
+- **Prefer official documentation:**
   - Python: https://docs.python.org/3/
   - pytest: https://docs.pytest.org/
   - OWASP: https://owasp.org/
-* **Include current date context:** "As of October 2025, uv is the recommended..."
+- **Include current date context:** "As of October 2025, uv is the recommended..."
 
 ### Code Examples
 
@@ -160,19 +162,21 @@ task test:parallel
 
 ### When to Archive
 
-* Document superseded by newer version
-* Initiative completed (after 6 months in completed/)
-* Temporary documents no longer relevant
-* Old roadmaps/plans
+- Document superseded by newer version
+- Initiative completed (after 6 months in completed/)
+- Temporary documents no longer relevant
+- Old roadmaps/plans
 
 ### How to Archive
 
 1. Add archived notice at top:
+
    ```markdown
    > **⚠️ ARCHIVED:** This document was archived on YYYY-MM-DD.
    > Reason: [superseded by / no longer relevant / initiative completed]
    > See [replacement.md] for current information.
    ```
+
 2. Move to `docs/archive/`
 3. Update any referring documents
 4. Add entry to `docs/archive/README.md`
@@ -183,9 +187,10 @@ task test:parallel
 
 ### Rules
 
-* **Format:** YAML frontmatter + Markdown content
-* **Naming:** `NN_descriptive_name.md` (numbered for priority)
-* **Metadata:**
+- **Format:** YAML frontmatter + Markdown content
+- **Naming:** `NN_descriptive_name.md` (numbered for priority)
+- **Metadata:**
+
   ```yaml
   ---
   trigger: always_on | glob | model_decision
@@ -193,30 +198,31 @@ task test:parallel
   globs: ["**/*.py"]  # Optional, for glob trigger
   ---
   ```
-* **Content:** Clear, actionable instructions
-* **Validation:** After changes, verify Windsurf IDE loads artifact correctly
+- **Content:** Clear, actionable instructions
+- **Validation:** After changes, verify Windsurf IDE loads artifact correctly
 
 ### Workflows
 
-* **Format:** YAML frontmatter + Markdown steps
-* **Naming:** `descriptive-name.md` (kebab-case)
-* **Metadata:**
+- **Format:** YAML frontmatter + Markdown steps
+- **Naming:** `descriptive-name.md` (kebab-case)
+- **Metadata:**
+
   ```yaml
   ---
   description: Brief workflow description
   auto_execution_mode: 3  # Checkpoints at key steps
   ---
   ```
-* **Content:** Numbered steps with clear instructions
-* **Invocation:** `/workflow-name` in Cascade
+- **Content:** Numbered steps with clear instructions
+- **Invocation:** `/workflow-name` in Cascade
 
 ## 3.7 Documentation Maintenance
 
 ### Regular Reviews
 
-* **Weekly:** Active initiatives
-* **Monthly:** Guides and API docs
-* **Quarterly:** ADRs (ensure still valid), architecture docs
+- **Weekly:** Active initiatives
+- **Monthly:** Guides and API docs
+- **Quarterly:** ADRs (ensure still valid), architecture docs
 
 ### Quality Checks
 
@@ -235,19 +241,19 @@ task docs:clean
 
 ### Cross-References
 
-* **Internal links:** Use relative paths: `[ADR-0001](../adr/0001-decision.md)`
-* **External links:** Full URLs with context
-* **Code references:** Use backticks: `config.py`, `MCPWebConfig`
-* **Check links:** Use automated link checker in CI
+- **Internal links:** Use relative paths: `[ADR-0001](../adr/0001-decision.md)`
+- **External links:** Full URLs with context
+- **Code references:** Use backticks: `config.py`, `MCPWebConfig`
+- **Check links:** Use automated link checker in CI
 
 ## 3.8 Living Documentation
 
 **Principle:** Documentation must stay synchronized with code
 
-* **Update docs with code changes** (not after)
-* **Tests verify docs** (especially code examples)
-* **CI enforces:** Documentation linting and link checking
-* **README as entry point:** Always keep README.md current
+- **Update docs with code changes** (not after)
+- **Tests verify docs** (especially code examples)
+- **CI enforces:** Documentation linting and link checking
+- **README as entry point:** Always keep README.md current
 
 ## 3.9 Version Control
 
@@ -263,6 +269,7 @@ docs: fix typos in README and CONTRIBUTING
 ### PR Requirements
 
 Documentation PRs must:
+
 - [ ] Pass `task docs:lint`
 - [ ] Have no broken links
 - [ ] Update related documents

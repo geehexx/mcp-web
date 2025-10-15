@@ -12,12 +12,14 @@
 Long documents exceed LLM context windows and need to be split into smaller chunks for processing. The chunking strategy significantly impacts summarization quality:
 
 **Challenges:**
+
 - Arbitrary splits break context (mid-sentence, mid-paragraph)
 - Losing document structure reduces summary coherence
 - Different content types need different approaches (code, prose, lists)
 - Need balance between chunk size and context preservation
 
 **Requirements:**
+
 - Preserve document structure (headings, sections)
 - Respect semantic boundaries (sentences, paragraphs)
 - Handle diverse content (articles, documentation, code)
@@ -30,25 +32,26 @@ Long documents exceed LLM context windows and need to be split into smaller chun
 We will implement **hierarchical chunking** that respects document structure, combined with **semantic boundary detection** to prevent mid-unit splits.
 
 **Strategy:**
+
 1. **Hierarchical:** Prefer splitting at heading boundaries (H1 > H2 > H3)
 2. **Semantic:** Fall back to paragraph boundaries, then sentence boundaries
 3. **Fixed-size:** Only split mid-sentence as last resort if chunk too large
 
 ```python
 def chunk_document(text: str, chunk_size: int = 512) -> list[Chunk]:
-    # 1. Try hierarchical split (by headings)
-    chunks = split_by_headings(text, chunk_size)
+ # 1. Try hierarchical split (by headings)
+ chunks = split_by_headings(text, chunk_size)
 
-    # 2. If chunks too large, split by paragraphs
-    chunks = [split_by_paragraphs(c, chunk_size) if len(c) > chunk_size
-              else c for c in chunks]
+ # 2. If chunks too large, split by paragraphs
+ chunks = [split_by_paragraphs(c, chunk_size) if len(c) > chunk_size
+ else c for c in chunks]
 
-    # 3. If still too large, split by sentences
-    chunks = [split_by_sentences(c, chunk_size) if len(c) > chunk_size
-              else c for c in chunks]
+ # 3. If still too large, split by sentences
+ chunks = [split_by_sentences(c, chunk_size) if len(c) > chunk_size
+ else c for c in chunks]
 
-    # 4. Last resort: fixed-size split
-    return flatten(chunks)
+ # 4. Last resort: fixed-size split
+ return flatten(chunks)
 ```
 
 ---
@@ -60,11 +63,13 @@ def chunk_document(text: str, chunk_size: int = 512) -> list[Chunk]:
 **Description:** Split text every N tokens regardless of content
 
 **Pros:**
+
 - Simplest implementation
 - Predictable chunk sizes
 - Fast
 
 **Cons:**
+
 - ❌ Breaks context arbitrarily (mid-sentence, mid-paragraph)
 - ❌ Loses document structure
 - ❌ Poor summary quality
@@ -77,11 +82,13 @@ def chunk_document(text: str, chunk_size: int = 512) -> list[Chunk]:
 **Description:** Split by newlines, then sentences, then characters
 
 **Pros:**
+
 - Simpler than hierarchical
 - Respects some boundaries
 - Used by LangChain
 
 **Cons:**
+
 - ❌ No awareness of headings
 - ❌ Treats all newlines equally
 - ❌ Doesn't preserve document structure
@@ -94,11 +101,13 @@ def chunk_document(text: str, chunk_size: int = 512) -> list[Chunk]:
 **Description:** Use semantic embeddings to group similar sentences
 
 **Pros:**
+
 - Truly semantic grouping
 - Can find thematic boundaries
 - State-of-art approach
 
 **Cons:**
+
 - ❌ Requires embedding model (adds dependency)
 - ❌ Inference overhead (latency)
 - ❌ More complex implementation
@@ -112,11 +121,13 @@ def chunk_document(text: str, chunk_size: int = 512) -> list[Chunk]:
 **Description:** Split only at paragraph boundaries
 
 **Pros:**
+
 - Simple implementation
 - Respects natural breaks
 - Fast
 
 **Cons:**
+
 - ❌ Paragraphs can be very long (>1000 tokens)
 - ❌ No heading awareness
 - ❌ Can't handle documents with few paragraphs
@@ -159,28 +170,32 @@ def chunk_document(text: str, chunk_size: int = 512) -> list[Chunk]:
 **File:** `src/mcp_web/chunker.py`
 
 **Key classes:**
+
 - `ChunkingStrategy` (enum): HIERARCHICAL, SEMANTIC, FIXED
 - `Chunker`: Main chunking class
 - `Chunk`: Data class for chunk with metadata
 
 **Configuration:**
+
 ```python
 class ChunkerSettings(BaseSettings):
-    strategy: ChunkingStrategy = ChunkingStrategy.HIERARCHICAL
-    chunk_size: int = 512  # tokens
-    chunk_overlap: int = 50  # tokens
-    preserve_code_blocks: bool = True
+ strategy: ChunkingStrategy = ChunkingStrategy.HIERARCHICAL
+ chunk_size: int = 512 # tokens
+ chunk_overlap: int = 50 # tokens
+ preserve_code_blocks: bool = True
 ```
 
 ### Algorithm Details
 
 **Hierarchical split logic:**
+
 1. Parse document for heading markers (ATX: `#`, `##`, etc.)
 2. Create hierarchy tree of sections
 3. Split at lowest-level headings that fit within chunk_size
 4. Recursively split oversized sections
 
 **Semantic boundary detection:**
+
 - Paragraph: Double newline `\n\n`
 - Sentence: Period/question mark/exclamation + space + capital
 - Respect quote boundaries
@@ -189,12 +204,14 @@ class ChunkerSettings(BaseSettings):
 ### Testing
 
 **Unit tests:** `tests/unit/test_chunker.py`
+
 - Test hierarchical splitting
 - Test semantic boundary detection
 - Test code block preservation
 - Test edge cases (no structure, very long sentences)
 
 **Integration tests:** `tests/integration/test_chunking_quality.py`
+
 - Verify summary quality with different strategies
 - Compare hierarchical vs fixed-size on real documents
 

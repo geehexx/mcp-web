@@ -1,7 +1,7 @@
 # Comprehensive Repository Overhaul v3.0
 
-**Date:** October 15, 2025  
-**Status:** Complete  
+**Date:** October 15, 2025 
+**Status:** Complete 
 **Commit:** [To be added]
 
 This document summarizes the comprehensive improvements to mcp-web, establishing world-class quality standards, modern tooling (uv), optimized testing (pytest-xdist parallelization), and sustainable documentation practices based on proven patterns from hexacore-command.
@@ -47,15 +47,17 @@ This document summarizes the comprehensive improvements to mcp-web, establishing
 ### Taskfile Updates
 
 **New variables:**
+
 ```yaml
 vars:
-  UV: uv
-  PARALLEL_WORKERS: auto  # For pytest-xdist
+ UV: uv
+ PARALLEL_WORKERS: auto # For pytest-xdist
 ```
 
 **All 60+ tasks updated** to use `{{.UV}} run <command>`
 
 **Key tasks:**
+
 - `task install` - Fast uv sync
 - `task test:parallel` - Parallel testing
 - `task test:coverage:parallel` - Parallel with coverage
@@ -98,6 +100,7 @@ vars:
 ### Parallel Task Commands
 
 **New parallel variants:**
+
 - `task test:parallel` - All tests except live (auto workers)
 - `task test:unit:parallel` - Unit tests parallel
 - `task test:integration:parallel` - Integration tests parallel
@@ -108,6 +111,7 @@ vars:
 ### IO-Bound Optimization
 
 **For external LLM/API calls:**
+
 ```bash
 # Override for IO-bound workloads
 PYTEST_XDIST_AUTO_NUM_WORKERS=16 task test:parallel
@@ -139,12 +143,12 @@ Based on proven hexacore-command pattern:
 
 ```
 .windsurf/rules/
-├── 00_agent_directives.md         # Highest priority (persona, principles)
-├── 01_testing_and_tooling.md      # TDD, pytest-xdist, task usage
-├── 02_python_standards.md          # PEP 8, type hints, async patterns
-├── 03_documentation_lifecycle.md   # Docs structure, ADRs, archival
-├── 04_security.md                  # OWASP LLM Top 10 (2025)
-└── 99_old_*.md.backup              # Old rules (backed up)
+├── 00_agent_directives.md # Highest priority (persona, principles)
+├── 01_testing_and_tooling.md # TDD, pytest-xdist, task usage
+├── 02_python_standards.md # PEP 8, type hints, async patterns
+├── 03_documentation_lifecycle.md # Docs structure, ADRs, archival
+├── 04_security.md # OWASP LLM Top 10 (2025)
+└── 99_old_*.md.backup # Old rules (backed up)
 ```
 
 ### Key Features
@@ -212,6 +216,7 @@ Based on hexacore-command proven patterns:
 **Purpose:** Standardized commit process with validation
 
 **Steps:**
+
 1. Capture baseline with `mcp2_git_status`
 2. Review unstaged changes with `mcp2_git_diff_unstaged`
 3. Verify ownership (no unrelated changes)
@@ -220,6 +225,7 @@ Based on hexacore-command proven patterns:
 6. Commit with conventional format
 
 **Conventional commit examples:**
+
 ```bash
 feat(cli): add test-robots command
 fix(fetcher): handle Playwright timeout errors
@@ -233,6 +239,7 @@ security(extractor): strip HTML comments
 **Purpose:** Document significant architectural decisions
 
 **When to use:**
+
 - New dependencies
 - Major algorithm changes
 - Security decisions
@@ -240,6 +247,7 @@ security(extractor): strip HTML comments
 - API design decisions
 
 **Process:**
+
 1. Identify decision need
 2. Clarify requirements
 3. Research alternatives (web search)
@@ -253,6 +261,7 @@ security(extractor): strip HTML comments
 **Purpose:** Properly archive completed initiatives
 
 **Phases:**
+
 1. **Verification:** Confirm completion, inventory references
 2. **Archival:** Add notice, move to completed/, update index
 3. **Validation:** Lint docs, check links
@@ -263,19 +272,22 @@ security(extractor): strip HTML comments
 **Purpose:** Guide for various testing scenarios
 
 **Quick commands:**
+
 ```bash
-task test:fast:parallel           # Fast tests parallel
-task test:parallel                # All except live
-task test:coverage:parallel       # With coverage
-task ci:parallel                  # Full CI
+task test:fast:parallel # Fast tests parallel
+task test:parallel # All except live
+task test:coverage:parallel # With coverage
+task ci:parallel # Full CI
 ```
 
 **Parallelization guidance:**
+
 - CPU-bound: `-n auto`
 - IO-bound: `-n 16` or `PYTEST_XDIST_AUTO_NUM_WORKERS=16`
 - Distribution strategies: load, loadscope, worksteal
 
 **Environment variables:**
+
 ```bash
 export PYTEST_XDIST_AUTO_NUM_WORKERS=16
 export MCP_WEB_SUMMARIZER_PROVIDER=ollama
@@ -307,6 +319,7 @@ export MCP_WEB_SUMMARIZER_PROVIDER=ollama
 ### Key Documentation
 
 **Created/Updated:**
+
 - `DOCUMENTATION_STRUCTURE.md` - Complete structure guide
 - `CONSTITUTION.md` - Project principles and governance
 - `docs/adr/README.md` - ADR index and lifecycle
@@ -318,14 +331,16 @@ export MCP_WEB_SUMMARIZER_PROVIDER=ollama
 ### Documentation Quality
 
 **Linting configured:**
+
 - `.markdownlint.json` - Structure linting
 - `.vale.ini` - Prose quality (Microsoft/Google styles)
 
 **Commands:**
+
 ```bash
-task docs:lint          # All linting
-task docs:fix           # Auto-fix issues
-task docs:clean         # Remove double-spaces
+task docs:lint # All linting
+task docs:fix # Auto-fix issues
+task docs:clean # Remove double-spaces
 ```
 
 ---
@@ -354,31 +369,31 @@ task docs:clean         # Remove double-spaces
 ```
 mcp-web/
 ├── .windsurf/
-│   ├── rules/
-│   │   ├── 00_agent_directives.md          ← NEW
-│   │   ├── 01_testing_and_tooling.md       ← NEW
-│   │   ├── 02_python_standards.md          ← NEW
-│   │   ├── 03_documentation_lifecycle.md   ← NEW
-│   │   └── 04_security.md                  ← Renamed from security.md
-│   └── workflows/
-│       ├── commit.md                        ← NEW
-│       ├── propose-new-adr.md               ← NEW
-│       ├── archive-initiative.md            ← NEW
-│       └── run-tests.md                     ← NEW
+│ ├── rules/
+│ │ ├── 00_agent_directives.md ← NEW
+│ │ ├── 01_testing_and_tooling.md ← NEW
+│ │ ├── 02_python_standards.md ← NEW
+│ │ ├── 03_documentation_lifecycle.md ← NEW
+│ │ └── 04_security.md ← Renamed from security.md
+│ └── workflows/
+│ ├── commit.md ← NEW
+│ ├── propose-new-adr.md ← NEW
+│ ├── archive-initiative.md ← NEW
+│ └── run-tests.md ← NEW
 ├── docs/
-│   ├── CONSTITUTION.md                      ← NEW
-│   ├── DOCUMENTATION_STRUCTURE.md           ← NEW
-│   ├── adr/                                 ← NEW structure
-│   ├── initiatives/                         ← NEW structure
-│   ├── guides/
-│   ├── api/
-│   ├── architecture/
-│   ├── reference/
-│   └── archive/
-├── Taskfile.yml                             ← Completely rewritten for uv
-├── pytest.ini                               ← Enhanced with parallelization
-├── pyproject.toml                           ← Updated for uv
-└── uv.lock                                  ← Dependency lockfile
+│ ├── CONSTITUTION.md ← NEW
+│ ├── DOCUMENTATION_STRUCTURE.md ← NEW
+│ ├── adr/ ← NEW structure
+│ ├── initiatives/ ← NEW structure
+│ ├── guides/
+│ ├── api/
+│ ├── architecture/
+│ ├── reference/
+│ └── archive/
+├── Taskfile.yml ← Completely rewritten for uv
+├── pytest.ini ← Enhanced with parallelization
+├── pyproject.toml ← Updated for uv
+└── uv.lock ← Dependency lockfile
 ```
 
 ---
@@ -425,10 +440,10 @@ task ci:parallel
 In Windsurf Cascade:
 
 ```
-/commit                  # Guided commit workflow
-/propose-new-adr         # Create new ADR
-/archive-initiative      # Archive completed initiative
-/run-tests               # Testing guidance
+/commit # Guided commit workflow
+/propose-new-adr # Create new ADR
+/archive-initiative # Archive completed initiative
+/run-tests # Testing guidance
 ```
 
 ### Testing Parallelization
@@ -498,6 +513,7 @@ task llm:test:local
 All references verified for October 2025:
 
 ### Tools & Standards
+
 - [uv Package Manager](https://docs.astral.sh/uv/)
 - [pytest-xdist Documentation](https://pytest-xdist.readthedocs.io/)
 - [PEP 8 Style Guide](https://peps.python.org/pep-0008/)
@@ -505,15 +521,18 @@ All references verified for October 2025:
 - [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html)
 
 ### Security
+
 - [OWASP LLM Top 10 (2025)](https://genai.owasp.org/)
 - [Real Python - Async IO](https://realpython.com/async-io-python/)
 
 ### Documentation
+
 - [ADR GitHub](https://adr.github.io/)
 - [Windsurf Workflows](https://docs.windsurf.com/)
 - [Microsoft Writing Style Guide](https://learn.microsoft.com/en-us/style-guide/welcome/)
 
 ### Testing
+
 - [Pytest with Eric - pytest-xdist](https://pytest-with-eric.com/plugins/pytest-xdist/)
 
 ---
@@ -562,6 +581,6 @@ This comprehensive overhaul establishes mcp-web as a world-class Python project 
 
 ---
 
-**Maintained by:** mcp-web core team  
-**Last updated:** October 15, 2025  
+**Maintained by:** mcp-web core team 
+**Last updated:** October 15, 2025 
 **Next review:** Quarterly (January 2026)

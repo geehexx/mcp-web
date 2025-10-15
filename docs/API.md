@@ -25,12 +25,15 @@
 Create MCP server with summarization tools.
 
 **Parameters:**
+
 - `config` (Config, optional): Configuration object (loads defaults if not provided)
 
 **Returns:**
+
 - `FastMCP`: Configured MCP server instance
 
 **Example:**
+
 ```python
 from mcp_web import create_server, load_config
 
@@ -43,34 +46,38 @@ mcp = create_server(config)
 ### MCP Tool: `summarize_urls`
 
 **Signature:**
+
 ```python
 async def summarize_urls(
-    urls: List[str],
-    query: Optional[str] = None,
-    follow_links: bool = False,
-    max_depth: int = 1,
+ urls: List[str],
+ query: Optional[str] = None,
+ follow_links: bool = False,
+ max_depth: int = 1,
 ) -> str
 ```
 
-**Description:**  
+**Description:** 
 Summarize content from one or more URLs with optional query focus and link following.
 
 **Parameters:**
+
 - `urls` (List[str], required): List of URLs to fetch and summarize
 - `query` (str, optional): Question or topic to focus the summary on
 - `follow_links` (bool, default=False): Whether to follow relevant outbound links
 - `max_depth` (int, default=1): Maximum link following depth
 
 **Returns:**
+
 - `str`: Markdown-formatted summary with sources and metadata
 
 **Example:**
+
 ```python
 result = await summarize_urls(
-    urls=["https://docs.python.org/3/library/asyncio.html"],
-    query="How do I create async tasks?",
-    follow_links=True,
-    max_depth=1
+ urls=["https://docs.python.org/3/library/asyncio.html"],
+ query="How do I create async tasks?",
+ follow_links=True,
+ max_depth=1
 )
 ```
 
@@ -87,6 +94,7 @@ def __init__(self, config: Config)
 ```
 
 **Parameters:**
+
 - `config` (Config): Application configuration
 
 ---
@@ -95,25 +103,27 @@ def __init__(self, config: Config)
 
 ```python
 async def summarize_urls(
-    urls: List[str],
-    query: Optional[str] = None,
-    follow_links: bool = False,
-    max_depth: int = 1,
+ urls: List[str],
+ query: Optional[str] = None,
+ follow_links: bool = False,
+ max_depth: int = 1,
 ) -> AsyncIterator[str]
 ```
 
-**Description:**  
+**Description:** 
 Summarize content from URLs with streaming output.
 
 **Yields:**
+
 - `str`: Summary text chunks (streaming)
 
 **Example:**
+
 ```python
 pipeline = WebSummarizationPipeline(config)
 
 async for chunk in pipeline.summarize_urls(["https://example.com"]):
-    print(chunk, end="")
+ print(chunk, end="")
 ```
 
 ---
@@ -128,8 +138,8 @@ Fetches URLs with automatic fallback from httpx to Playwright.
 
 ```python
 def __init__(
-    config: FetcherSettings,
-    cache: Optional[CacheManager] = None,
+ config: FetcherSettings,
+ cache: Optional[CacheManager] = None,
 )
 ```
 
@@ -139,24 +149,27 @@ def __init__(
 
 ```python
 async def fetch(
-    url: str,
-    force_playwright: bool = False,
-    use_cache: bool = True,
+ url: str,
+ force_playwright: bool = False,
+ use_cache: bool = True,
 ) -> FetchResult
 ```
 
-**Description:**  
+**Description:** 
 Fetch URL with automatic fallback strategy.
 
 **Parameters:**
+
 - `url` (str): URL to fetch
 - `force_playwright` (bool, default=False): Skip httpx, use Playwright directly
 - `use_cache` (bool, default=True): Use cached result if available
 
 **Returns:**
+
 - `FetchResult`: Result with content, headers, and metadata
 
 **Raises:**
+
 - `Exception`: If all fetch methods fail
 
 ---
@@ -165,19 +178,21 @@ Fetch URL with automatic fallback strategy.
 
 ```python
 async def fetch_multiple(
-    urls: List[str],
-    max_concurrent: Optional[int] = None,
+ urls: List[str],
+ max_concurrent: Optional[int] = None,
 ) -> Dict[str, FetchResult]
 ```
 
-**Description:**  
+**Description:** 
 Fetch multiple URLs concurrently with rate limiting.
 
 **Parameters:**
+
 - `urls` (List[str]): URLs to fetch
 - `max_concurrent` (int, optional): Max concurrent requests (defaults to config)
 
 **Returns:**
+
 - `Dict[str, FetchResult]`: Mapping of URL to FetchResult
 
 ---
@@ -187,6 +202,7 @@ Fetch multiple URLs concurrently with rate limiting.
 Dataclass representing fetch result.
 
 **Attributes:**
+
 - `url` (str): Final URL (after redirects)
 - `content` (bytes): Response content
 - `content_type` (str): Content-Type header value
@@ -207,8 +223,8 @@ Extracts main content from HTML and PDF.
 
 ```python
 def __init__(
-    config: ExtractorSettings,
-    cache: Optional[CacheManager] = None,
+ config: ExtractorSettings,
+ cache: Optional[CacheManager] = None,
 )
 ```
 
@@ -218,22 +234,25 @@ def __init__(
 
 ```python
 async def extract(
-    fetch_result: FetchResult,
-    use_cache: bool = True,
+ fetch_result: FetchResult,
+ use_cache: bool = True,
 ) -> ExtractedContent
 ```
 
-**Description:**  
+**Description:** 
 Extract content from fetch result.
 
 **Parameters:**
+
 - `fetch_result` (FetchResult): Result from URLFetcher
 - `use_cache` (bool, default=True): Use cached extraction if available
 
 **Returns:**
+
 - `ExtractedContent`: Extracted content with metadata
 
 **Raises:**
+
 - `Exception`: If extraction fails
 
 ---
@@ -243,6 +262,7 @@ Extract content from fetch result.
 Dataclass representing extracted content.
 
 **Attributes:**
+
 - `url` (str): Source URL
 - `title` (str): Page title
 - `content` (str): Main content (Markdown formatted)
@@ -252,6 +272,7 @@ Dataclass representing extracted content.
 - `timestamp` (datetime): Extraction timestamp
 
 **Methods:**
+
 - `to_dict() -> dict`: Convert to dictionary for serialization
 - `from_dict(data: dict) -> ExtractedContent`: Create from dictionary
 
@@ -275,22 +296,25 @@ def __init__(self, config: ChunkerSettings)
 
 ```python
 def chunk_text(
-    text: str,
-    metadata: Optional[dict] = None,
+ text: str,
+ metadata: Optional[dict] = None,
 ) -> List[Chunk]
 ```
 
-**Description:**  
+**Description:** 
 Chunk text using configured strategy.
 
 **Parameters:**
+
 - `text` (str): Input text to chunk
 - `metadata` (dict, optional): Metadata to attach to chunks
 
 **Returns:**
+
 - `List[Chunk]`: List of text chunks
 
 **Strategies:**
+
 - `hierarchical`: Respects document structure (headings, sections)
 - `semantic`: Splits at paragraph/sentence boundaries
 - `fixed`: Fixed-size chunks with overlap
@@ -302,6 +326,7 @@ Chunk text using configured strategy.
 Dataclass representing a text chunk.
 
 **Attributes:**
+
 - `text` (str): Chunk text
 - `tokens` (int): Token count
 - `start_pos` (int): Start position in original text
@@ -309,6 +334,7 @@ Dataclass representing a text chunk.
 - `metadata` (dict): Chunk metadata (heading, section, etc.)
 
 **Methods:**
+
 - `to_dict() -> dict`: Convert to dictionary
 
 ---
@@ -331,24 +357,27 @@ def __init__(self, config: SummarizerSettings)
 
 ```python
 async def summarize_chunks(
-    chunks: List[Chunk],
-    query: Optional[str] = None,
-    sources: Optional[List[str]] = None,
+ chunks: List[Chunk],
+ query: Optional[str] = None,
+ sources: Optional[List[str]] = None,
 ) -> AsyncIterator[str]
 ```
 
-**Description:**  
+**Description:** 
 Summarize chunks with streaming output.
 
 **Parameters:**
+
 - `chunks` (List[Chunk]): Text chunks to summarize
 - `query` (str, optional): Query for focused summary
 - `sources` (List[str], optional): Source URLs for citations
 
 **Yields:**
+
 - `str`: Summary text chunks (streaming)
 
 **Strategy:**
+
 - If total tokens ≤ `map_reduce_threshold`: Direct summarization (single LLM call)
 - If total tokens > `map_reduce_threshold`: Map-reduce (summarize chunks → combine)
 
@@ -364,14 +393,15 @@ Disk-based cache with TTL and size limits.
 
 ```python
 def __init__(
-    cache_dir: str,
-    ttl: int = 7 * 24 * 3600,
-    max_size: int = 1024 * 1024 * 1024,
-    eviction_policy: str = "lru",
+ cache_dir: str,
+ ttl: int = 7 * 24 * 3600,
+ max_size: int = 1024 * 1024 * 1024,
+ eviction_policy: str = "lru",
 )
 ```
 
 **Parameters:**
+
 - `cache_dir` (str): Directory for cache storage
 - `ttl` (int, default=7 days): Default time-to-live (seconds)
 - `max_size` (int, default=1GB): Maximum cache size (bytes)
@@ -393,11 +423,11 @@ Retrieve cached value if valid.
 
 ```python
 async def set(
-    key: str,
-    value: Any,
-    ttl: Optional[int] = None,
-    etag: Optional[str] = None,
-    last_modified: Optional[str] = None,
+ key: str,
+ value: Any,
+ ttl: Optional[int] = None,
+ etag: Optional[str] = None,
+ last_modified: Optional[str] = None,
 ) -> bool
 ```
 
@@ -450,6 +480,7 @@ Get cache statistics (size, usage, entry count).
 Helper for building consistent cache keys.
 
 **Methods:**
+
 - `fetch_key(url: str, params: Optional[Dict] = None) -> str`
 - `extract_key(url: str, config: Optional[Dict] = None) -> str`
 - `summary_key(url: str, query: Optional[str] = None, config: Optional[Dict] = None) -> str`
@@ -463,6 +494,7 @@ Helper for building consistent cache keys.
 Root configuration class with nested settings.
 
 **Attributes:**
+
 - `fetcher` (FetcherSettings): Fetcher configuration
 - `extractor` (ExtractorSettings): Extractor configuration
 - `chunker` (ChunkerSettings): Chunker configuration
@@ -476,21 +508,24 @@ Root configuration class with nested settings.
 
 ```python
 def load_config(
-    config_file: Optional[Path] = None,
-    overrides: Optional[Dict[str, Any]] = None,
+ config_file: Optional[Path] = None,
+ overrides: Optional[Dict[str, Any]] = None,
 ) -> Config
 ```
 
 Load configuration from environment variables and optional overrides.
 
 **Parameters:**
+
 - `config_file` (Path, optional): Path to YAML config file (not yet implemented)
 - `overrides` (dict, optional): Runtime override values
 
 **Returns:**
+
 - `Config`: Loaded configuration
 
 **Environment Variables:**
+
 - `MCP_WEB_FETCHER_TIMEOUT`: HTTP timeout (default: 30)
 - `MCP_WEB_CHUNKER_CHUNK_SIZE`: Chunk size in tokens (default: 512)
 - `MCP_WEB_SUMMARIZER_MODEL`: LLM model (default: 'gpt-4o-mini')
@@ -567,8 +602,8 @@ Centralized metrics collection and export.
 
 ```python
 def __init__(
-    enabled: bool = True,
-    export_path: Optional[Path] = None,
+ enabled: bool = True,
+ export_path: Optional[Path] = None,
 )
 ```
 
@@ -601,6 +636,7 @@ def export_metrics() -> Dict[str, Any]
 Export all metrics as dictionary with aggregated statistics.
 
 **Returns:**
+
 - `dict`: Contains summary, counters, avg_durations_ms, errors
 
 ---
@@ -615,11 +651,12 @@ def timer(operation: str) -> Iterator[None]
 Context manager for timing operations.
 
 **Example:**
+
 ```python
 metrics = MetricsCollector()
 with metrics.timer("fetch"):
-    # operation
-    pass
+ # operation
+ pass
 ```
 
 ---
@@ -643,6 +680,7 @@ def configure_logging(level: str = "INFO", structured: bool = True) -> None
 Configure structlog logging.
 
 **Parameters:**
+
 - `level` (str): Log level (DEBUG, INFO, WARNING, ERROR)
 - `structured` (bool): Use structured JSON output
 
@@ -695,5 +733,5 @@ See [examples/](../examples/) directory for complete usage examples.
 
 ---
 
-**Last Updated:** 2025-10-15  
+**Last Updated:** 2025-10-15 
 **Version:** 0.1.0

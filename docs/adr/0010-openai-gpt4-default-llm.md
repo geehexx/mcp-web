@@ -20,6 +20,7 @@ The mcp-web tool requires a Large Language Model for abstractive summarization. 
 4. **Capabilities:** Context window size, instruction following, language support
 
 Key requirements:
+
 - High-quality summaries (coherent, accurate, relevant)
 - Large context window (handle long documents)
 - Reliable API (high uptime, stable)
@@ -27,6 +28,7 @@ Key requirements:
 - Configurable (not locked to single provider)
 
 Available LLM options as of Oct 2025:
+
 - **OpenAI:** GPT-4, GPT-4-turbo, GPT-3.5-turbo
 - **Anthropic:** Claude 3 (Opus, Sonnet, Haiku)
 - **Open source:** Llama 3, Mistral, Qwen
@@ -40,8 +42,8 @@ We will use **OpenAI GPT-4-turbo** as the default LLM with configurable model se
 
 ```python
 model = "gpt-4-turbo-preview"
-temperature = 0.3  # Deterministic summaries
-max_tokens = 1000  # Default summary length
+temperature = 0.3 # Deterministic summaries
+max_tokens = 1000 # Default summary length
 ```
 
 ### Model Selection Strategy
@@ -66,11 +68,13 @@ max_tokens = 1000  # Default summary length
 **Description:** Use cheaper GPT-3.5-turbo as default model
 
 **Pros:**
+
 - **Much cheaper:** $0.50/$1.50 per 1M tokens (10x cheaper)
 - **Faster:** ~2-3x faster response times
 - **Good enough:** Acceptable quality for many use cases
 
 **Cons:**
+
 - **Lower quality:** Noticeably worse summarization
 - **Smaller context:** 16k tokens (requires more map-reduce)
 - **Less capable:** Weaker instruction following
@@ -83,12 +87,14 @@ max_tokens = 1000  # Default summary length
 **Description:** Use Anthropic's Claude 3 Opus as default
 
 **Pros:**
+
 - **Quality:** Comparable or better than GPT-4
 - **Long context:** 200k tokens (largest available)
 - **Ethical AI:** Anthropic's constitutional AI approach
 - **Good instruction following:** Strong capabilities
 
 **Cons:**
+
 - **Cost:** $15/$75 per 1M tokens (5x more expensive)
 - **API stability:** Newer provider, more rate limiting
 - **Lower adoption:** Less user familiarity
@@ -101,12 +107,14 @@ max_tokens = 1000  # Default summary length
 **Description:** Use local models like Llama 3 70B
 
 **Pros:**
+
 - **Privacy:** No data leaves user's machine
 - **No API costs:** Free after initial setup
 - **Customizable:** Can fine-tune for specific use cases
 - **No rate limits:** Limited only by hardware
 
 **Cons:**
+
 - **Quality:** Significantly worse than GPT-4
 - **Hardware requirements:** Needs GPU (expensive, not portable)
 - **Slow:** Without good GPU, very slow
@@ -120,11 +128,13 @@ max_tokens = 1000  # Default summary length
 **Description:** Use multiple models and combine/vote on results
 
 **Pros:**
+
 - **Robustness:** Reduces single-model failure risk
 - **Quality:** Ensemble may outperform single model
 - **Redundancy:** Fallback if one provider down
 
 **Cons:**
+
 - **Cost:** 2-3x API costs
 - **Latency:** 2-3x slower (unless parallel, but still increased)
 - **Complexity:** Combining strategies, conflict resolution
@@ -161,58 +171,63 @@ max_tokens = 1000  # Default summary length
 ## Implementation
 
 **Key files:**
+
 - `src/mcp_web/summarizer.py` - LLM client and summarization logic
 - `src/mcp_web/config.py` - Model configuration settings
 - `src/mcp_web/prompts.py` - Model-specific prompt templates
 
 **Dependencies:**
+
 - `openai >= 1.40.0` - OpenAI Python client
 - `anthropic >= 0.34.0` - Anthropic client (optional, for Claude support)
 
 **Configuration:**
+
 ```python
 SummarizerSettings(
-    model: str = "gpt-4-turbo-preview",
-    provider: str = "openai",           # openai, anthropic, local
-    api_key: str = os.getenv("OPENAI_API_KEY"),
-    temperature: float = 0.3,           # Low for consistent summaries
-    max_tokens: int = 1000,             # Target summary length
-    top_p: float = 1.0,
-    presence_penalty: float = 0.0,
-    frequency_penalty: float = 0.0,
+ model: str = "gpt-4-turbo-preview",
+ provider: str = "openai", # openai, anthropic, local
+ api_key: str = os.getenv("OPENAI_API_KEY"),
+ temperature: float = 0.3, # Low for consistent summaries
+ max_tokens: int = 1000, # Target summary length
+ top_p: float = 1.0,
+ presence_penalty: float = 0.0,
+ frequency_penalty: float = 0.0,
 )
 ```
 
 **Model registry:**
+
 ```python
 SUPPORTED_MODELS = {
-    "openai": [
-        "gpt-4-turbo-preview",
-        "gpt-4",
-        "gpt-3.5-turbo",
-        "gpt-4o",
-    ],
-    "anthropic": [
-        "claude-3-opus",
-        "claude-3-sonnet",
-        "claude-3-haiku",
-    ],
-    "local": [
-        "llama-3-70b",
-        "mistral-large",
-    ]
+ "openai": [
+ "gpt-4-turbo-preview",
+ "gpt-4",
+ "gpt-3.5-turbo",
+ "gpt-4o",
+ ],
+ "anthropic": [
+ "claude-3-opus",
+ "claude-3-sonnet",
+ "claude-3-haiku",
+ ],
+ "local": [
+ "llama-3-70b",
+ "mistral-large",
+ ]
 }
 ```
 
 **Cost tracking:**
+
 ```python
 # Track token usage and costs
 metrics.log_llm_call(
-    model="gpt-4-turbo-preview",
-    input_tokens=3500,
-    output_tokens=850,
-    cost=0.045,  # Calculated from pricing
-    latency_ms=4200,
+ model="gpt-4-turbo-preview",
+ input_tokens=3500,
+ output_tokens=850,
+ cost=0.045, # Calculated from pricing
+ latency_ms=4200,
 )
 ```
 

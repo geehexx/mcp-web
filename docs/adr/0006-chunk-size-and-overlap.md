@@ -12,6 +12,7 @@
 After deciding on hierarchical/semantic chunking strategy (ADR-0005), we need to determine optimal chunk size and overlap parameters.
 
 **Considerations:**
+
 - LLM context window limits (typically 8k-32k tokens)
 - Need room for prompts and metadata (~500-1000 tokens)
 - Larger chunks = more context but less precise summaries
@@ -19,6 +20,7 @@ After deciding on hierarchical/semantic chunking strategy (ADR-0005), we need to
 - Overlap prevents information loss at boundaries
 
 **Requirements:**
+
 - Fit within common LLM context windows
 - Balance granularity and context
 - Work with map-reduce summarization
@@ -32,32 +34,35 @@ After deciding on hierarchical/semantic chunking strategy (ADR-0005), we need to
 **Default overlap:** 50 tokens (10% of chunk size)
 
 **Rationale for 512 tokens:**
+
 - Represents 1-2 paragraphs of text (~350-700 words)
 - Good context unit (complete thought/concept)
 - 15-16 chunks fit in 8k context window (with room for prompts)
 - Fast LLM inference (<1 second per chunk)
 
 **Rationale for 50-token overlap:**
+
 - Prevents context loss at chunk boundaries
 - 10% overlap is industry standard
 - Minimal redundancy overhead
 - Catches cross-boundary references
 
 **Configuration:**
+
 ```python
 class ChunkerSettings(BaseSettings):
-    chunk_size: int = Field(
-        default=512,
-        ge=128,
-        le=2048,
-        description="Target chunk size in tokens"
-    )
-    chunk_overlap: int = Field(
-        default=50,
-        ge=0,
-        le=256,
-        description="Overlap between chunks in tokens"
-    )
+ chunk_size: int = Field(
+ default=512,
+ ge=128,
+ le=2048,
+ description="Target chunk size in tokens"
+ )
+ chunk_overlap: int = Field(
+ default=50,
+ ge=0,
+ le=256,
+ description="Overlap between chunks in tokens"
+ )
 ```
 
 ---
@@ -67,11 +72,13 @@ class ChunkerSettings(BaseSettings):
 ### Alternative 1: 256-Token Chunks
 
 **Pros:**
+
 - More granular
 - Faster per-chunk inference
 - More precise summaries
 
 **Cons:**
+
 - ❌ Too fragmented (loses context)
 - ❌ More chunks = more API calls = higher cost
 - ❌ More tokens in reduce phase (chunk summaries)
@@ -82,11 +89,13 @@ class ChunkerSettings(BaseSettings):
 ### Alternative 2: 1024-Token Chunks
 
 **Pros:**
+
 - More context per chunk
 - Fewer chunks = fewer API calls
 - Longer continuous context
 
 **Cons:**
+
 - ❌ Less precise summaries (too much info per chunk)
 - ❌ Slower per-chunk inference
 - ❌ Fewer chunks fit in context window
@@ -97,11 +106,13 @@ class ChunkerSettings(BaseSettings):
 ### Alternative 3: 2048-Token Chunks
 
 **Pros:**
+
 - Maximum context
 - Minimal chunking overhead
 - Very few API calls
 
 **Cons:**
+
 - ❌ Only 3-4 chunks in 8k window
 - ❌ Very slow per-chunk inference
 - ❌ Poor parallelization
@@ -112,11 +123,13 @@ class ChunkerSettings(BaseSettings):
 ### Alternative 4: No Overlap
 
 **Pros:**
+
 - Simpler implementation
 - No redundant processing
 - Fewer total tokens
 
 **Cons:**
+
 - ❌ Information loss at boundaries
 - ❌ Can split related concepts
 - ❌ Misses cross-boundary references
@@ -127,10 +140,12 @@ class ChunkerSettings(BaseSettings):
 ### Alternative 5: 100-Token Overlap (20%)
 
 **Pros:**
+
 - More context preservation
 - Better cross-boundary coverage
 
 **Cons:**
+
 - ❌ 20% redundancy overhead
 - ❌ Higher token costs
 - ❌ Slower processing
@@ -170,15 +185,17 @@ class ChunkerSettings(BaseSettings):
 ### Configuration
 
 **Default settings work for 90% of use cases:**
+
 ```python
 chunker = Chunker(
-    chunk_size=512,
-    chunk_overlap=50,
-    strategy=ChunkingStrategy.HIERARCHICAL
+ chunk_size=512,
+ chunk_overlap=50,
+ strategy=ChunkingStrategy.HIERARCHICAL
 )
 ```
 
 **Custom settings for specific needs:**
+
 ```python
 # Code documentation (larger context needed)
 code_chunker = Chunker(chunk_size=1024, chunk_overlap=100)
@@ -195,6 +212,7 @@ fast_chunker = Chunker(chunk_size=768, chunk_overlap=25)
 **Token counting:** Uses tiktoken (see ADR-0007) for accurate measurement
 
 **Actual chunk sizes:**
+
 - Mean: 487 tokens (95% of target)
 - Std dev: 89 tokens
 - Min: 128 tokens (boundary respect)
@@ -203,11 +221,13 @@ fast_chunker = Chunker(chunk_size=768, chunk_overlap=25)
 ### Testing
 
 **Unit tests:** `tests/unit/test_chunker.py`
+
 - Verify chunk sizes within bounds
 - Verify overlap calculation
 - Test boundary cases
 
 **Performance tests:** `tests/benchmarks/test_chunking_performance.py`
+
 - Benchmark different chunk sizes
 - Measure cost vs quality tradeoff
 
@@ -218,11 +238,13 @@ fast_chunker = Chunker(chunk_size=768, chunk_overlap=25)
 ### Cost-Benefit Analysis
 
 **Token usage (10k token document):**
+
 - No overlap: 20 chunks × 500 tokens = 10,000 tokens
 - 50-token overlap: 20 chunks × 550 tokens = 11,000 tokens
 - Overhead: 10% (+$0.001 per document with GPT-4)
 
 **Quality improvement:**
+
 - With overlap: 95% accuracy on cross-boundary questions
 - Without overlap: 78% accuracy
 - Improvement: +17% for 10% cost

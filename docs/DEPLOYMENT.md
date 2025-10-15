@@ -20,6 +20,7 @@
 ## System Requirements
 
 ### Minimum Requirements
+
 - **OS:** Linux, macOS, or Windows
 - **Python:** 3.10 or higher
 - **RAM:** 2GB minimum, 4GB recommended
@@ -27,6 +28,7 @@
 - **Network:** Internet access for URL fetching and LLM API calls
 
 ### Required Accounts
+
 - OpenAI API account with API key (or compatible API endpoint)
 - Optional: Anthropic API for Claude integration
 
@@ -39,7 +41,7 @@
 ```bash
 # Create virtual environment
 python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
+source venv/bin/activate # Windows: venv\Scripts\activate
 
 # Install from source
 cd mcp-web
@@ -120,8 +122,8 @@ export MCP_WEB_SUMMARIZER_TEMPERATURE=0.3
 export MCP_WEB_SUMMARIZER_MAX_TOKENS=2048
 
 # Cache settings
-export MCP_WEB_CACHE_TTL=604800  # 7 days
-export MCP_WEB_CACHE_MAX_SIZE=1073741824  # 1GB
+export MCP_WEB_CACHE_TTL=604800 # 7 days
+export MCP_WEB_CACHE_MAX_SIZE=1073741824 # 1GB
 ```
 
 ### 3. Directory Structure
@@ -197,15 +199,15 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS)
 
 ```json
 {
-  "mcpServers": {
-    "mcp-web": {
-      "command": "python",
-      "args": ["-m", "mcp_web.mcp_server"],
-      "env": {
-        "OPENAI_API_KEY": "sk-..."
-      }
-    }
-  }
+ "mcpServers": {
+ "mcp-web": {
+ "command": "python",
+ "args": ["-m", "mcp_web.mcp_server"],
+ "env": {
+ "OPENAI_API_KEY": "sk-..."
+ }
+ }
+ }
 }
 ```
 
@@ -216,18 +218,18 @@ import asyncio
 from mcp.client import Client
 
 async def main():
-    async with Client() as client:
-        # Connect to mcp-web server
-        await client.connect_to_server("mcp-web")
-        
-        # Call summarize_urls tool
-        result = await client.call_tool(
-            "summarize_urls",
-            urls=["https://example.com"],
-            query="What is this about?"
-        )
-        
-        print(result)
+ async with Client() as client:
+ # Connect to mcp-web server
+ await client.connect_to_server("mcp-web")
+ 
+ # Call summarize_urls tool
+ result = await client.call_tool(
+ "summarize_urls",
+ urls=["https://example.com"],
+ query="What is this about?"
+ )
+ 
+ print(result)
 
 asyncio.run(main())
 ```
@@ -268,18 +270,19 @@ Log rotation with logrotate (`/etc/logrotate.d/mcp-web`):
 
 ```
 /var/log/mcp-web/*.log {
-    daily
-    rotate 7
-    compress
-    delaycompress
-    notifempty
-    create 0644 mcp-web mcp-web
+ daily
+ rotate 7
+ compress
+ delaycompress
+ notifempty
+ create 0644 mcp-web mcp-web
 }
 ```
 
 ### 3. Cache Maintenance
 
 **Automatic Pruning:**
+
 ```python
 # Schedule periodic pruning
 from mcp_web.cache import CacheManager
@@ -290,6 +293,7 @@ print(f"Pruned {pruned} expired entries")
 ```
 
 **Manual Cleanup:**
+
 ```bash
 # Clear entire cache
 rm -rf ~/.cache/mcp-web/*
@@ -304,6 +308,7 @@ asyncio.run(server.call_tool('clear_cache'))
 ```
 
 **Disk Space Monitoring:**
+
 ```bash
 du -sh ~/.cache/mcp-web
 ```
@@ -311,12 +316,14 @@ du -sh ~/.cache/mcp-web
 ### 4. Performance Monitoring
 
 Key metrics to monitor:
+
 - **Cache hit rate:** Should be >50% for repeated queries
 - **Fetch duration:** httpx should be <1s, Playwright <5s
 - **LLM token usage:** Track costs
 - **Error rates:** Should be <5%
 
 View metrics:
+
 ```bash
 # Export metrics to file
 python -c "
@@ -344,8 +351,9 @@ export OPENAI_API_KEY="sk-..."
 ```
 
 **File permissions:**
+
 ```bash
-chmod 600 ~/.bashrc  # If storing in shell config
+chmod 600 ~/.bashrc # If storing in shell config
 ```
 
 ### 2. Cache Security
@@ -357,6 +365,7 @@ chmod 700 ~/.cache/mcp-web
 ```
 
 For multi-user systems, use per-user caches:
+
 ```bash
 export MCP_WEB_CACHE_DIR="$HOME/.cache/mcp-web"
 ```
@@ -364,10 +373,12 @@ export MCP_WEB_CACHE_DIR="$HOME/.cache/mcp-web"
 ### 3. Network Security
 
 **Firewall rules:**
+
 - Allow outbound HTTPS (443) for API calls and URL fetching
 - No inbound connections required (MCP uses stdio)
 
 **Proxy configuration:**
+
 ```bash
 export HTTP_PROXY="http://proxy.example.com:8080"
 export HTTPS_PROXY="http://proxy.example.com:8080"
@@ -376,11 +387,13 @@ export HTTPS_PROXY="http://proxy.example.com:8080"
 ### 4. Content Security
 
 Be cautious when summarizing:
+
 - Untrusted URLs (may contain malicious content)
 - Sites requiring authentication (credentials exposure)
 - Internal company URLs (data leakage to LLM API)
 
 Consider:
+
 - URL allowlist/blocklist
 - Content filtering
 - Local LLM for sensitive content
@@ -390,9 +403,9 @@ Consider:
 Prevent abuse with configuration limits:
 
 ```bash
-export MCP_WEB_FETCHER_MAX_CONCURRENT=3  # Limit parallel fetches
-export MCP_WEB_FETCHER_TIMEOUT=10        # Shorter timeout
-export MCP_WEB_CACHE_MAX_SIZE=536870912  # 512MB cache limit
+export MCP_WEB_FETCHER_MAX_CONCURRENT=3 # Limit parallel fetches
+export MCP_WEB_FETCHER_TIMEOUT=10 # Shorter timeout
+export MCP_WEB_CACHE_MAX_SIZE=536870912 # 512MB cache limit
 ```
 
 ---
@@ -402,6 +415,7 @@ export MCP_WEB_CACHE_MAX_SIZE=536870912  # 512MB cache limit
 ### Issue: "No module named 'playwright'"
 
 **Solution:**
+
 ```bash
 pip install playwright
 playwright install chromium
@@ -410,6 +424,7 @@ playwright install chromium
 ### Issue: "OPENAI_API_KEY not set"
 
 **Solution:**
+
 ```bash
 export OPENAI_API_KEY="sk-..."
 # Add to ~/.bashrc or ~/.zshrc for persistence
@@ -418,6 +433,7 @@ export OPENAI_API_KEY="sk-..."
 ### Issue: "Cache permission denied"
 
 **Solution:**
+
 ```bash
 mkdir -p ~/.cache/mcp-web
 chmod 755 ~/.cache/mcp-web
@@ -428,6 +444,7 @@ export MCP_WEB_CACHE_DIR="/tmp/mcp-web-cache"
 ### Issue: "Playwright browser not found"
 
 **Solution:**
+
 ```bash
 playwright install chromium
 # Or disable Playwright fallback
@@ -437,22 +454,25 @@ export MCP_WEB_FETCHER_USE_PLAYWRIGHT_FALLBACK=false
 ### Issue: "Extraction returns empty content"
 
 **Possible causes:**
+
 1. Site blocks scrapers (check robots.txt)
 2. JS-heavy site (enable Playwright: `force_playwright=True`)
 3. Paywall or login required
 
 **Solution:**
+
 ```python
 # Force Playwright for problematic sites
 result = await summarize_urls(
-    urls=["https://js-heavy-site.com"],
-    # Will auto-fallback to Playwright if httpx fails
+ urls=["https://js-heavy-site.com"],
+ # Will auto-fallback to Playwright if httpx fails
 )
 ```
 
 ### Issue: "LLM timeout or rate limit"
 
 **Solution:**
+
 ```bash
 # Increase timeout
 export MCP_WEB_SUMMARIZER_TIMEOUT=120
@@ -467,9 +487,10 @@ export MCP_WEB_SUMMARIZER_MAX_TOKENS=1024
 ### Issue: "High memory usage"
 
 **Solution:**
+
 ```bash
 # Reduce cache size
-export MCP_WEB_CACHE_MAX_SIZE=268435456  # 256MB
+export MCP_WEB_CACHE_MAX_SIZE=268435456 # 256MB
 
 # Reduce concurrent fetches
 export MCP_WEB_FETCHER_MAX_CONCURRENT=2
@@ -484,7 +505,7 @@ Enable verbose logging:
 
 ```bash
 export MCP_WEB_METRICS_LOG_LEVEL="DEBUG"
-export MCP_WEB_METRICS_STRUCTURED_LOGGING=false  # Human-readable
+export MCP_WEB_METRICS_STRUCTURED_LOGGING=false # Human-readable
 python -m mcp_web.mcp_server
 ```
 
@@ -499,21 +520,21 @@ import asyncio
 from mcp_web import create_server, load_config
 
 async def health_check():
-    try:
-        config = load_config()
-        server = create_server(config)
-        print("✓ Server initialized successfully")
-        
-        # Check cache
-        if server.pipeline.cache:
-            stats = server.pipeline.cache.get_stats()
-            print(f"✓ Cache operational: {stats['size_mb']:.2f} MB")
-        
-        print("✓ Health check passed")
-        return True
-    except Exception as e:
-        print(f"✗ Health check failed: {e}")
-        return False
+ try:
+ config = load_config()
+ server = create_server(config)
+ print("✓ Server initialized successfully")
+ 
+ # Check cache
+ if server.pipeline.cache:
+ stats = server.pipeline.cache.get_stats()
+ print(f"✓ Cache operational: {stats['size_mb']:.2f} MB")
+ 
+ print("✓ Health check passed")
+ return True
+ except Exception as e:
+ print(f"✗ Health check failed: {e}")
+ return False
 
 asyncio.run(health_check())
 ```
@@ -530,23 +551,23 @@ import asyncio
 from mcp_web import create_server
 
 async def check():
-    try:
-        server = create_server()
-        return True
-    except Exception as e:
-        print(f'Error: {e}')
-        return False
+ try:
+ server = create_server()
+ return True
+ except Exception as e:
+ print(f'Error: {e}')
+ return False
 
 result = asyncio.run(check())
 exit(0 if result else 1)
 "
 
 if [ $? -eq 0 ]; then
-    echo "Health check: OK"
-    exit 0
+ echo "Health check: OK"
+ exit 0
 else
-    echo "Health check: FAILED"
-    exit 1
+ echo "Health check: FAILED"
+ exit 1
 fi
 ```
 
@@ -604,5 +625,5 @@ source mcp-web-env-backup.txt
 
 ---
 
-**Last Updated:** 2025-10-15  
+**Last Updated:** 2025-10-15 
 **Version:** 0.1.0

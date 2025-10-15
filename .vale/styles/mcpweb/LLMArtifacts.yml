@@ -1,0 +1,14 @@
+# Detects common LLM artifacts and patterns
+extends: existence
+message: "Possible LLM artifact: '%s'"
+level: error
+nonword: true
+tokens:
+  - '\s{2,}'  # Multiple spaces (except at line start)
+  - '(?:Here''s|Here is) (?:a|an|the|how)'
+  - 'I apologize'
+  - 'As an AI'
+  - 'I cannot'
+  - 'Let me (?:explain|clarify|demonstrate)'
+  - 'This (?:approach|solution|implementation) (?:should|will) work'
+  - 'You can (?:also|now|simply)'
