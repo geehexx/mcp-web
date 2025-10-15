@@ -69,17 +69,32 @@ class ChunkerSettings(BaseSettings):
 
 
 class SummarizerSettings(BaseSettings):
-    """LLM summarization configuration."""
+    """Summarizer configuration."""
 
     model: str = Field(default="gpt-4o-mini", description="LLM model to use")
-    api_key: Optional[str] = Field(default=None, description="API key (env: OPENAI_API_KEY)")
-    api_base: Optional[str] = Field(default=None, description="Custom API base URL")
-    temperature: float = Field(default=0.3, description="LLM temperature")
-    max_tokens: int = Field(default=2048, description="Max tokens per summary")
-    max_context_tokens: int = Field(default=32000, description="Max total context window")
+    temperature: float = Field(
+        default=0.3,
+        ge=0.0,
+        le=2.0,
+        description="LLM temperature (0=deterministic, 2=creative)",
+    )
+    max_tokens: int = Field(default=2048, description="Max tokens in summary")
     streaming: bool = Field(default=True, description="Enable streaming output")
     map_reduce_threshold: int = Field(
         default=8000, description="Token threshold for map-reduce strategy"
+    )
+    api_key: Optional[str] = Field(default=None, description="OpenAI API key")
+    api_base: Optional[str] = Field(
+        default="https://api.openai.com/v1", description="API base URL"
+    )
+    timeout: int = Field(default=120, description="API request timeout in seconds")
+    
+    # Security settings
+    max_summary_length: int = Field(
+        default=10000, description="Maximum summary length (safety limit)"
+    )
+    content_filtering: bool = Field(
+        default=True, description="Enable content filtering for safety"
     )
 
     model_config = SettingsConfigDict(env_prefix="MCP_WEB_SUMMARIZER_")

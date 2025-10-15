@@ -1,0 +1,195 @@
+rules:
+  # LLM Security: Prompt Injection Detection
+  - id: potential-prompt-injection-risk
+    patterns:
+      - pattern-either:
+          - pattern: $LLM.chat.completions.create(..., messages=[..., {"role": "user", "content": $USER_INPUT}, ...], ...)
+          - pattern: $LLM.completions.create(..., prompt=$USER_INPUT, ...)
+      - pattern-not: $LLM.chat.completions.create(..., messages=[..., {"role": "user", "content": sanitize_input($USER_INPUT)}, ...], ...)
+    message: |
+      Potential prompt injection vulnerability: User input is directly passed to LLM without sanitization.
+      Consider:
+      1. Sanitizing user input to remove instruction-like content
+      2. Using separate channels for instructions vs data
+      3. Implementing input validation and filtering
+      4. Adding output validation
+    languages: [python]
+    severity: WARNING
+    metadata:
+      cwe: "CWE-74: Improper Neutralization of Special Elements"
+      owasp: "OWASP-LLM-01: Prompt Injection"
+      references:
+        - https://genai.owasp.org/llmrisk/llm01-prompt-injection/
+
+  # LLM Security: Unvalidated External Content
+  - id: llm-unvalidated-external-content
+    patterns:
+      - pattern-either:
+          - pattern: $CONTENT = requests.get($URL).text
+          - pattern: $CONTENT = httpx.get($URL).text
+      - pattern: $LLM.chat.completions.create(..., messages=[..., {"role": "user", "content": $CONTENT}, ...], ...)
+    message: |
+      External content fetched from URL is directly passed to LLM without validation.
+      This could enable indirect prompt injection attacks.
+      Consider:
+      1. Validating and sanitizing external content
+      2. Stripping potentially malicious instructions
+      3. Implementing content filtering
+      4. Using separate context for external vs user content
+    languages: [python]
+    severity: ERROR
+    metadata:
+      owasp: "OWASP-LLM-01: Prompt Injection (Indirect)"
+
+  # Secrets Detection: Hardcoded API Keys
+  - id: hardcoded-api-key
+    patterns:
+      - pattern-either:
+          - pattern: openai.api_key = "..."
+          - pattern: $VAR = OpenAI(api_key="...")
+          - pattern: anthropic.api_key = "..."
+      - pattern-not: openai.api_key = os.getenv(...)
+      - pattern-not: $VAR = OpenAI(api_key=os.getenv(...))
+    message: |
+      Hardcoded API key detected. API keys should be stored in environment variables or secrets management.
+      Use: api_key=os.getenv('OPENAI_API_KEY')
+    languages: [python]
+    severity: ERROR
+    metadata:
+      cwe: "CWE-798: Use of Hard-coded Credentials"
+
+  # Security: Unsafe YAML Load
+  - id: unsafe-yaml-load
+    patterns:
+      - pattern-either:
+          - pattern: yaml.load($DATA)
+          - pattern: yaml.load($DATA, Loader=yaml.Loader)
+          - pattern: yaml.unsafe_load($DATA)
+    message: |
+      Using yaml.load() without SafeLoader is dangerous and can lead to arbitrary code execution.
+      Use: yaml.safe_load($DATA) instead
+    languages: [python]
+    severity: ERROR
+    metadata:
+      cwe: "CWE-502: Deserialization of Untrusted Data"
+
+  # Security: Eval Usage
+  - id: dangerous-eval
+    patterns:
+      - pattern-either:
+          - pattern: eval($INPUT)
+          - pattern: exec($INPUT)
+    message: |
+      Using eval() or exec() is dangerous and can lead to arbitrary code execution.
+      Consider using ast.literal_eval() for safe evaluation of literals,
+      or implementing a proper parser for your use case.
+    languages: [python]
+    severity: ERROR
+    metadata:
+      cwe: "CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code"
+
+  # LLM Security: Excessive Token Usage
+  - id: llm-no-token-limit
+    patterns:
+      - pattern: $LLM.chat.completions.create(...)
+      - pattern-not: $LLM.chat.completions.create(..., max_tokens=$LIMIT, ...)
+    message: |
+      LLM call without max_tokens limit may lead to unbounded consumption.
+      Always set max_tokens to prevent excessive API costs and potential DoS.
+    languages: [python]
+    severity: WARNING
+    metadata:
+      owasp: "OWASP-LLM-10: Unbounded Consumption"
+
+  # Security: SQL Injection Risk
+  - id: sql-injection-format-string
+    patterns:
+      - pattern-either:
+          - pattern: $CURSOR.execute(f"... {$VAR} ...")
+          - pattern: $CURSOR.execute("... %s ..." % $VAR)
+          - pattern: $CURSOR.execute("... " + $VAR + "...")
+    message: |
+      Potential SQL injection vulnerability using string formatting.
+      Use parameterized queries instead: cursor.execute("... WHERE id = ?", (var,))
+    languages: [python]
+    severity: ERROR
+    metadata:
+      cwe: "CWE-89: SQL Injection"
+
+  # Security: Path Traversal
+  - id: path-traversal-risk
+    patterns:
+      - pattern-either:
+          - pattern: open($USER_INPUT, ...)
+          - pattern: Path($USER_INPUT)
+      - pattern-not: open(sanitize_path($USER_INPUT), ...)
+    message: |
+      Potential path traversal vulnerability: user input used directly in file path.
+      Validate and sanitize file paths to prevent access to unauthorized files.
+    languages: [python]
+    severity: WARNING
+    metadata:
+      cwe: "CWE-22: Path Traversal"
+
+  # LLM Best Practice: Missing Error Handling
+  - id: llm-missing-error-handling
+    patterns:
+      - pattern: $LLM.chat.completions.create(...)
+      - pattern-not-inside: |
+          try:
+            ...
+          except:
+            ...
+    message: |
+      LLM API calls should be wrapped in try-except blocks to handle:
+      - API errors (rate limits, timeouts, invalid requests)
+      - Network errors
+      - Authentication errors
+    languages: [python]
+    severity: INFO
+    metadata:
+      category: best-practice
+
+  # Security: Pickle Usage
+  - id: dangerous-pickle
+    patterns:
+      - pattern-either:
+          - pattern: pickle.load($DATA)
+          - pattern: pickle.loads($DATA)
+    message: |
+      Using pickle.load() on untrusted data is dangerous and can lead to arbitrary code execution.
+      Use JSON or other safe serialization formats instead.
+    languages: [python]
+    severity: ERROR
+    metadata:
+      cwe: "CWE-502: Deserialization of Untrusted Data"
+
+  # LLM Security: System Prompt Leakage
+  - id: system-prompt-in-response
+    patterns:
+      - pattern: return $RESPONSE
+      - pattern-inside: |
+          $SYSTEM_PROMPT = "..."
+          ...
+          $RESPONSE = $LLM.chat.completions.create(..., messages=[{"role": "system", "content": $SYSTEM_PROMPT}, ...], ...)
+    message: |
+      Ensure system prompts are not leaked in responses.
+      Implement output filtering to prevent system prompt disclosure.
+    languages: [python]
+    severity: WARNING
+    metadata:
+      owasp: "OWASP-LLM-07: System Prompt Leakage"
+
+  # Security: Unvalidated Redirect
+  - id: unvalidated-redirect
+    patterns:
+      - pattern-either:
+          - pattern: redirect($USER_INPUT)
+          - pattern: Response(..., headers={"Location": $USER_INPUT})
+    message: |
+      Unvalidated redirect vulnerability: user input used in redirect location.
+      Validate redirect URLs against an allowlist.
+    languages: [python]
+    severity: WARNING
+    metadata:
+      cwe: "CWE-601: URL Redirection to Untrusted Site"
