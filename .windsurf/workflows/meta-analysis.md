@@ -1,53 +1,67 @@
 ---
-description: Meta-analysis workflow for continuous AI agent improvement
+description: Systematic session review and improvement identification
 auto_execution_mode: 3
 ---
 
 # Meta-Analysis Workflow
 
-**Purpose:** Systematically analyze long AI agent sessions to identify improvement opportunities in rules, documentation, workflows, and processes.
+**Purpose:** Systematically analyze AI agent sessions to identify improvement opportunities and create session summaries.
 
-**When to use:** At the end of significant work sessions (2+ hours) or after completing major initiatives.
+**When to invoke:** Automatically at end of work sessions via `/work` workflow.
 
-**Idempotency:** Designed to avoid low-value additions. Only suggests changes when gaps are clearly identified.
+**Critical Rules:**
+1. **Always create session summary** in `docs/archive/session-summaries/YYYY-MM-DD-description.md`
+2. **Never create summary documents** outside session-summaries directory
+3. **Never add historical context** to live documentation (except ADRs)
+4. **Keep summaries concise** - focus on key decisions and learnings
+5. **Use consistent format** - see docs/standards/SUMMARY_STANDARDS.md
 
 ---
 
-## Stage 1: Session Analysis (Required)
+## Stage 1: Create Session Summary (REQUIRED)
 
-### 1.1 Review Interaction Patterns
+### 1.1 Summary Location and Naming
 
-Analyze the current session for:
+**CRITICAL:** Always create in `docs/archive/session-summaries/YYYY-MM-DD-description.md`
 
-- **Tool Usage Patterns:**
-  - Which tools were used most frequently?
-  - Were there inefficient tool call sequences?
-  - Were there missing tools that would have helped?
-  - Did the agent struggle with any tool parameters?
+**Never create:**
+- Summary documents in `docs/` root
+- Files like `CURRENT_WORK_STATUS.md`, `SESSION_NOTES.md`
+- Historical content in live documentation
 
-- **Workflow Usage:**
-  - Which workflows were invoked?
-  - Were workflows clear and comprehensive?
-  - Were there repeated manual processes that should be workflows?
+**Naming format:** `YYYY-MM-DD-brief-description.md`
+- Use actual date (not placeholder)
+- 2-5 words for description
+- Hyphenated lowercase
 
-- **Rule Adherence:**
-  - Did the agent follow all rules correctly?
-  - Were rules ambiguous or contradictory?
-  - Were there situations where rules were missing?
+### 1.2 Summary Content (Concise Format)
 
-- **Documentation Gaps:**
-  - What information did the agent need to search for repeatedly?
-  - Were there missing code examples or references?
-  - Was existing documentation unclear?
+**Required sections:**
+1. **Header** - Date, duration, focus
+2. **Objectives** - What was the goal
+3. **Completed** - What was achieved (bullet list)
+4. **Commits** - List commit hashes and messages
+5. **Key Learnings** - 2-3 most important insights
+6. **Next Steps** - What's queued for next session
 
-### 1.2 Identify Problem Patterns
+**Keep it concise:**
+- Total length: 200-400 lines (not 1000+)
+- Focus on decisions and learnings
+- Avoid repeating what's in commits
+- No verbose explanations
 
-Look for:
+### 1.3 Identify Critical Improvements
 
-- **Repeated mistakes** (same issue multiple times)
-- **Inefficient approaches** (agent took long route when shortcut exists)
-- **Knowledge gaps** (agent lacked domain-specific information)
-- **Process friction** (manual steps that could be automated)
+**Focus only on:**
+- **Documentation pollution** - Summary docs created outside proper location
+- **Workflow gaps** - Missing automation that caused friction
+- **Rule violations** - Agent didn't follow established rules
+- **Commit patterns** - Not committing frequently enough
+
+**Ignore:**
+- Minor inefficiencies
+- One-time issues
+- Already-documented patterns
 - **Quality issues** (bugs introduced, tests not run until late)
 
 ---

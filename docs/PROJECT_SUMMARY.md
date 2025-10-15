@@ -1,23 +1,25 @@
-# MCP Web Summarization Tool - Project Summary
+# MCP Web Summarization Tool - Project Overview
 
-**Project:** mcp-web  
-**Version:** 0.1.0  
-**Date:** 2025-10-15  
-**Status:** ✅ Initial Implementation Complete
+**Project:** mcp-web
+**Version:** 0.2.0
+**Last Updated:** 2025-10-15
+**Status:** Production Ready
 
 ---
 
-## Executive Summary
+## Overview
 
-Successfully implemented a **production-ready MCP server** for intelligent web summarization. The system provides a monolithic `summarize_urls` tool that fetches, extracts, chunks, and summarizes web content using LLM-based abstractive summarization with streaming output.
+Production-ready MCP server for intelligent web summarization. Provides a `summarize_urls` tool that fetches, extracts, chunks, and summarizes web content using LLM-based abstractive summarization with streaming output.
 
-### Key Achievements
+### Core Features
 
-✅ **Complete Architecture** - Fully documented modular design with 10+ design decisions  
-✅ **Core Implementation** - 9 production modules (~3,500+ lines of code)  
-✅ **Comprehensive Testing** - Unit tests for all core modules  
-✅ **Developer Experience** - Complete documentation, examples, and contribution guidelines  
-✅ **Production Ready** - Caching, metrics, error handling, and configuration management
+- **Smart Fetching:** httpx primary with Playwright fallback for JS-rendered content
+- **Content Extraction:** trafilatura with high-recall mode for maximum content capture
+- **Intelligent Chunking:** Hierarchical + semantic chunking preserves document structure
+- **LLM Summarization:** Map-reduce strategy for long documents with streaming output
+- **Query-Aware:** Optional query parameter for focused summaries
+- **Caching:** 7-day disk cache with ETag support
+- **Metrics:** Comprehensive logging and performance tracking
 
 ---
 
@@ -50,8 +52,8 @@ mcp-web/
 └── CONTRIBUTING.md           # Contribution guidelines
 ```
 
-**Total Files Created:** 30+  
-**Total Lines of Code:** ~7,000+  
+**Total Files Created:** 30+
+**Total Lines of Code:** ~7,000+
 **Documentation:** ~3,500+ lines
 
 ---
@@ -451,57 +453,16 @@ Each example is runnable and demonstrates real-world usage patterns.
 
 ---
 
-## Lessons Learned
+## Documentation
 
-### What Worked Well
-1. **Modular Design:** Clean separation of concerns enabled parallel development
-2. **Comprehensive Documentation:** Living architecture doc maintained throughout
-3. **Type Hints:** Caught errors early and improved IDE experience
-4. **Async Throughout:** Consistent async/await made concurrency manageable
-5. **Configuration System:** Pydantic settings provided validation and clarity
+For detailed information, see:
 
-### Challenges Overcome
-1. **Circular Imports:** Lazy logger initialization solved import cycles
-2. **Token Counting:** tiktoken provided accurate counts for OpenAI models
-3. **Cache Key Design:** CacheKeyBuilder ensured consistent key generation
-4. **Streaming Complexity:** AsyncIterator pattern simplified streaming
-5. **Error Handling:** Graceful degradation maintained user experience
-
-### Technical Debt
-1. **YAML Config:** Planned but not yet implemented
-2. **Advanced Link Scoring:** Basic heuristics, could use ML
-3. **PDF OCR:** Not yet implemented for scanned documents
-4. **Per-Domain Rules:** Manual overrides not yet supported
-5. **Test Coverage:** Some edge cases not yet tested
+- **[ARCHITECTURE.md](ARCHITECTURE.md)** - System design and architecture
+- **[API.md](API.md)** - Complete API reference
+- **[TESTING.md](TESTING.md)** - Testing strategy and guide
+- **[docs/adr/](adr/)** - Architecture Decision Records
+- **[CONTRIBUTING.md](../CONTRIBUTING.md)** - Contribution guidelines
 
 ---
 
-## Conclusion
-
-Successfully delivered a **production-ready MCP web summarization tool** that meets all original requirements and exceeds expectations with comprehensive documentation, testing, and developer experience features.
-
-### Key Strengths
-- ✅ **Complete Implementation:** All core features working
-- ✅ **Well-Documented:** Architecture, API, examples, contribution guide
-- ✅ **Tested:** Unit tests for all core modules
-- ✅ **Production-Ready:** Caching, metrics, error handling, configuration
-- ✅ **Extensible:** Modular design enables future enhancements
-
-### Ready for Use
-The project is ready for:
-- Installation and testing
-- Integration with MCP clients (e.g., Claude Desktop)
-- Extension and customization
-- Community contributions
-
-**Status:** ✅ **Initial Implementation Complete**  
-**Quality:** Production-Ready  
-**Documentation:** Comprehensive  
-**Testing:** Good Coverage  
-**Maintainability:** High
-
----
-
-**Prepared By:** Cascade (AI Agent)  
-**Date:** 2025-10-15  
-**Project:** mcp-web v0.1.0
+**For historical context, see:** [docs/archive/session-summaries/](archive/session-summaries/)

@@ -1,6 +1,6 @@
 # Comprehensive Repository Improvements v0.2.1
 
-**Date:** 2025-10-15  
+**Date:** 2025-10-15
 **Focus:** Security, Code Quality, Best Practices
 
 ---
@@ -20,11 +20,11 @@ This document tracks comprehensive improvements based on:
 1. **OWASP LLM Security**
    - https://genai.owasp.org/llmrisk/llm01-prompt-injection/
    - https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html
-   
+
 2. **Python Async Patterns**
    - https://realpython.com/async-io-python/
    - Real Python async best practices guide
-   
+
 3. **Testing Best Practices**
    - https://www.nerdwallet.com/blog/engineering/5-pytest-best-practices/
    - pytest patterns and AAA pattern
@@ -344,7 +344,7 @@ def _build_summary_prompt(content, query):
     # Check for injection
     if self.injection_filter.detect_injection(query):
         query = self.injection_filter.sanitize(query)
-    
+
     # Use structured prompt
     return create_structured_prompt(
         system_instructions=instructions,
@@ -358,12 +358,12 @@ def _build_summary_prompt(content, query):
 # After - with validation
 async for chunk in stream:
     accumulated_output.append(chunk)
-    
+
     # Periodic validation
     if len(accumulated_output) % 10 == 0:
         if not self.output_validator.validate(full_output):
             break  # Stop if unsafe
-    
+
     yield chunk
 ```
 
@@ -378,7 +378,7 @@ class SummarizerSettings:
     # Security settings (already present, enhanced)
     max_summary_length: int = 10000  # Used by OutputValidator
     content_filtering: bool = True    # Enable/disable filtering
-    
+
     # Could add:
     enable_injection_detection: bool = True
     enable_output_validation: bool = True
@@ -546,6 +546,6 @@ This comprehensive improvement pass brings mcp-web to production-grade security 
 
 ---
 
-**Author:** Cascade AI  
-**Version:** 0.2.1  
+**Author:** Cascade AI
+**Version:** 0.2.1
 **Date:** 2025-10-15

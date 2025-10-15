@@ -356,9 +356,24 @@ Proceeding with implementation...
 - `/implement` - For execution (includes testing)
 - `/commit` - For committing work
 - `/new-adr` - For architectural decisions
-- `/meta-analysis` - For session review
 - `/run-tests` - For testing guidance
 - `/archive-initiative` - For completing initiatives
+- `/meta-analysis` - **AUTOMATIC at session end** (captures learnings)
+
+### Session End Protocol
+
+**When work is complete or context window filling:**
+
+1. Check for uncommitted changes (`git status`)
+2. Commit any remaining work (`/commit`)
+3. **Run `/meta-analysis`** - Creates session summary and captures learnings
+4. Final commit of meta-analysis
+
+**This ensures:**
+- ✅ Session summaries always created in proper location
+- ✅ Learnings captured before context loss
+- ✅ No orphaned summary documents
+- ✅ Consistent session documentation
 
 ---
 

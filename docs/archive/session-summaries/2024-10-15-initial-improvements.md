@@ -1,7 +1,7 @@
 # Comprehensive Repository Improvements Summary
 
-**Version:** 0.2.1  
-**Date:** 2025-10-15  
+**Version:** 0.2.1
+**Date:** 2025-10-15
 **Commits:** 2 major improvements
 
 ---
@@ -336,7 +336,7 @@ from mcp_web.config import SummarizerSettings
 config = SummarizerSettings(
     # Disable if needed (not recommended)
     content_filtering=False,
-    
+
     # Or customize limits
     max_summary_length=5000,
 )
