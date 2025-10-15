@@ -10,6 +10,7 @@ Design Decision DD-007: Disk cache with 7-day TTL.
 Design Decision DD-015: Cache layers for fetch, extract, summarize.
 """
 
+import base64
 import hashlib
 import json
 import time
@@ -259,7 +260,9 @@ class CacheManager:
         return hashlib.sha256(key.encode()).hexdigest()
 
     def _serialize_entry(self, entry: CacheEntry) -> str:
-        """Serialize cache entry to JSON.
+        """Serialize cache entry to JSON with bytes support.
+
+        Handles bytes by base64 encoding (for FetchResult.content).
 
         Args:
             entry: CacheEntry to serialize
@@ -267,10 +270,15 @@ class CacheManager:
         Returns:
             JSON string
         """
-        return json.dumps(asdict(entry))
+        data = asdict(entry)
+        # Recursively encode bytes to base64
+        data = self._encode_bytes(data)
+        return json.dumps(data)
 
     def _deserialize_entry(self, data: str) -> CacheEntry:
-        """Deserialize cache entry from JSON.
+        """Deserialize cache entry from JSON with bytes support.
+
+        Handles base64-encoded bytes (for FetchResult.content).
 
         Args:
             data: JSON string
@@ -279,7 +287,46 @@ class CacheManager:
             CacheEntry instance
         """
         entry_dict = json.loads(data)
+        # Recursively decode base64 to bytes
+        entry_dict = self._decode_bytes(entry_dict)
         return CacheEntry(**entry_dict)
+
+    def _encode_bytes(self, obj: Any) -> Any:
+        """Recursively encode bytes to base64 strings for JSON serialization.
+
+        Args:
+            obj: Object to encode (dict, list, bytes, or primitive)
+
+        Returns:
+            Object with bytes converted to base64 strings
+        """
+        if isinstance(obj, bytes):
+            return {"__bytes__": base64.b64encode(obj).decode("ascii")}
+        elif isinstance(obj, dict):
+            return {k: self._encode_bytes(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [self._encode_bytes(item) for item in obj]
+        else:
+            return obj
+
+    def _decode_bytes(self, obj: Any) -> Any:
+        """Recursively decode base64 strings back to bytes.
+
+        Args:
+            obj: Object to decode (dict, list, or primitive)
+
+        Returns:
+            Object with base64 strings converted back to bytes
+        """
+        if isinstance(obj, dict):
+            if "__bytes__" in obj and len(obj) == 1:
+                # This is a base64-encoded bytes object
+                return base64.b64decode(obj["__bytes__"])
+            return {k: self._decode_bytes(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [self._decode_bytes(item) for item in obj]
+        else:
+            return obj
 
     def _is_expired(self, entry: CacheEntry) -> bool:
         """Check if cache entry is expired.

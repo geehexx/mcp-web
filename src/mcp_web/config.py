@@ -1,19 +1,21 @@
-"""Configuration management for mcp-web.
+"""Configuration management for MCP-Web.
 
-Supports configuration from:
-1. Environment variables (MCP_WEB_*)
-2. Config file (~/.config/mcp-web/config.yaml)
-3. Runtime parameters (highest priority)
-
-Design Decision DD-XXX: Configuration layering allows flexible deployment.
+Uses pydantic-settings for type-safe configuration from environment variables
+and config files. Supports multiple LLM providers (OpenAI, Ollama, etc).
 """
+
+from __future__ import annotations
 
 import os
 from pathlib import Path
 from typing import Any, Literal
 
-from pydantic import Field
+from dotenv import load_dotenv
+from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+# Load .env file at module import (before any config instantiation)
+load_dotenv()
 
 
 class FetcherSettings(BaseSettings):
