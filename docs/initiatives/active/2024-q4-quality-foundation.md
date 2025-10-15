@@ -76,10 +76,10 @@ The project has grown rapidly but needs stronger quality foundations:
 - [x] Create CONSTITUTION.md
 - [x] Create ADR template
 - [x] Create ADR README with index
-- [ ] Convert DD-001 to DD-010 to ADR format
-- [ ] Archive IMPROVEMENTS_V1.md and IMPROVEMENTS_V2.md
-- [ ] Move guides to docs/guides/
-- [ ] Create initiatives/README.md
+- [x] Convert DD-001 to DD-010 to ADR format (ADRs 0001-0012)
+- [x] Archive IMPROVEMENTS_V1.md and IMPROVEMENTS_V2.md (already archived)
+- [x] Move guides to docs/guides/
+- [x] Create initiatives/README.md
 
 ### Phase 2: Documentation Linting (✓ Completed 2025-10-15)
 
