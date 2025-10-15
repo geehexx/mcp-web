@@ -63,6 +63,7 @@ dev = [
     "pytest-timeout>=2.3.0",
     "pytest-benchmark>=4.0.0",
     "pytest-xdist>=3.6.0",  # Parallel testing
+    "pytest-watch>=4.2.0",  # Watch mode for tests
     
     # LLM testing & evaluation
     "deepeval>=1.2.0",  # LLM evaluation framework

@@ -10,10 +10,12 @@ A powerful Model Context Protocol (MCP) server that provides intelligent URL sum
 - 🎯 **Intelligent Content Extraction**: trafilatura-powered main content extraction
 - 📊 **Smart Chunking**: Hierarchical and semantic text splitting with configurable overlap
 - 🤖 **LLM Summarization**: Map-reduce strategy for long documents with streaming output
+- 🏠 **Local LLM Support**: Ollama, LM Studio, LocalAI, or cloud providers (OpenAI, Anthropic)
 - 💾 **Persistent Caching**: Disk-based cache with TTL and LRU eviction
 - 📈 **Metrics & Logging**: Comprehensive observability with structured logging
 - 🔗 **Link Following**: Optional recursive link following for deeper context
 - 📝 **Markdown Output**: Well-formatted summaries with citations and metadata
+- 🧪 **Comprehensive Testing**: Unit, integration, security, golden, and benchmark tests
 
 ## Quick Start
 
@@ -24,25 +26,47 @@ A powerful Model Context Protocol (MCP) server that provides intelligent URL sum
 git clone https://github.com/geehexx/mcp-web.git
 cd mcp-web
 
-# Install dependencies
-pip install -e .
+# Install Taskfile (recommended)
+# macOS: brew install go-task/tap/go-task
+# Linux: snap install task --classic
+# Or see: https://taskfile.dev/installation/
 
-# Or with development dependencies
+# Setup complete environment (recommended)
+task dev:setup
+
+# Or manual installation
 pip install -e ".[dev]"
-
-# Install Playwright browsers (required for fallback)
 playwright install chromium
 ```
 
 ### Configuration
 
-Set your OpenAI API key:
+#### Cloud LLM (OpenAI)
 
 ```bash
 export OPENAI_API_KEY="sk-..."
+export MCP_WEB_SUMMARIZER_PROVIDER=openai
+export MCP_WEB_SUMMARIZER_MODEL=gpt-4o-mini
 ```
 
-Optional configuration via environment variables:
+#### Local LLM (Ollama - Recommended)
+
+```bash
+# Install Ollama: https://ollama.com
+# Start: ollama serve
+# Pull model: ollama pull llama3.2:3b
+
+export MCP_WEB_SUMMARIZER_PROVIDER=ollama
+export MCP_WEB_SUMMARIZER_MODEL=llama3.2:3b
+
+# Or use task commands
+task llm:ollama:pull    # Pull recommended models
+task llm:ollama:start   # Start Ollama server
+```
+
+See [docs/LOCAL_LLM_GUIDE.md](docs/LOCAL_LLM_GUIDE.md) for complete local LLM setup.
+
+#### Other Settings
 
 ```bash
 # Cache settings
@@ -54,7 +78,7 @@ export MCP_WEB_FETCHER_TIMEOUT=30
 export MCP_WEB_FETCHER_MAX_CONCURRENT=5
 
 # Summarizer settings
-export MCP_WEB_SUMMARIZER_MODEL="gpt-4o-mini"
+export MCP_WEB_SUMMARIZER_TEMPERATURE=0.3
 export MCP_WEB_SUMMARIZER_MAX_TOKENS=2048
 ```
 
@@ -177,34 +201,62 @@ mcp-web/
 
 ## Development
 
+### Using Taskfile (Recommended)
+
+```bash
+# Show all available tasks
+task --list
+
+# Complete setup
+task dev:setup
+
+# Run tests
+task test              # All tests except live
+task test:fast         # Unit + security + golden
+task test:coverage     # With coverage report
+task test:parallel     # Parallel execution
+
+# Code quality
+task lint              # All linting
+task format            # Auto-format code
+task security          # Security scans
+task analyze           # Complete analysis
+
+# CI simulation
+task ci                # Full CI pipeline
+task ci:fast           # Quick check
+```
+
+See [TASKFILE_GUIDE.md](TASKFILE_GUIDE.md) for complete task reference.
+
 ### Running Tests
 
 ```bash
-# Install dev dependencies
-pip install -e ".[dev]"
+# With Taskfile
+task test              # Recommended
+task test:unit
+task test:security
+task test:golden       # With local/cloud LLM
 
-# Run all tests
-pytest
-
-# Run with coverage
-pytest --cov=mcp_web --cov-report=html
-
-# Run specific test categories
+# Or with pytest directly
+pytest -m "not live"
 pytest -m unit
-pytest -m integration
+pytest -m golden
 ```
 
 ### Code Quality
 
 ```bash
-# Lint with ruff
+# With Taskfile (recommended)
+task lint
+task format
+task security
+
+# Or directly
 ruff check src/ tests/
-
-# Format code
 ruff format src/ tests/
-
-# Type checking
 mypy src/
+bandit -r src/
 ```
 
 ### Contributing
@@ -278,13 +330,20 @@ python -m mcp_web.mcp_server
 
 ## Roadmap
 
-### v0.2.0
+### v0.2.0 (Current)
+- [x] Local LLM support (Ollama, LM Studio, LocalAI)
+- [x] Comprehensive testing infrastructure
+- [x] Security testing (OWASP LLM Top 10)
+- [x] Taskfile for better tooling
+- [x] Golden tests with deterministic verification
+
+### v0.3.0
 - [ ] PDF OCR support for scanned documents
 - [ ] Multi-language translation
 - [ ] Anthropic Claude integration
 - [ ] Vector embeddings for semantic search
 
-### v0.3.0
+### v0.4.0
 - [ ] Per-domain extraction rules
 - [ ] Image/diagram extraction
 - [ ] Incremental summarization

@@ -1,0 +1,351 @@
+version: '3'
+
+# Taskfile for mcp-web project
+# Install: https://taskfile.dev/installation/
+# Usage: task <command>
+
+vars:
+  PYTHON: python3
+  SRC_DIR: src
+  TEST_DIR: tests
+  COVERAGE_MIN: 90
+
+env:
+  PYTHONPATH: "{{.ROOT_DIR}}/{{.SRC_DIR}}"
+
+tasks:
+  default:
+    desc: Show available tasks
+    cmds:
+      - task --list
+
+  # Installation tasks
+  install:
+    desc: Install package in editable mode with all dependencies
+    cmds:
+      - "{{.PYTHON}} -m pip install -e .[dev]"
+      - task: install:playwright
+
+  install:playwright:
+    desc: Install Playwright browsers
+    cmds:
+      - playwright install chromium
+
+  install:pre-commit:
+    desc: Install pre-commit hooks
+    cmds:
+      - pre-commit install
+
+  # Testing tasks
+  test:
+    desc: Run all tests (except live tests)
+    cmds:
+      - pytest -m "not live" -v
+
+  test:unit:
+    desc: Run unit tests only
+    cmds:
+      - pytest -m unit -v
+
+  test:security:
+    desc: Run security tests
+    cmds:
+      - pytest -m security -v
+
+  test:golden:
+    desc: Run golden/regression tests
+    cmds:
+      - pytest -m golden -v
+
+  test:integration:
+    desc: Run integration tests
+    cmds:
+      - pytest -m integration -v
+
+  test:live:
+    desc: Run live tests (requires network and API key)
+    cmds:
+      - pytest -m live -v
+
+  test:bench:
+    desc: Run performance benchmarks
+    cmds:
+      - pytest -m benchmark --benchmark-only -v
+
+  test:all:
+    desc: Run all tests including live tests
+    cmds:
+      - pytest -v
+
+  test:fast:
+    desc: Run fast tests only (unit + security + golden)
+    cmds:
+      - pytest -m "unit or security or golden" -v
+
+  test:parallel:
+    desc: Run tests in parallel
+    cmds:
+      - pytest -n auto -m "not live"
+
+  test:coverage:
+    desc: Run tests with coverage report
+    cmds:
+      - pytest --cov={{.SRC_DIR}}/mcp_web --cov-report=term-missing --cov-report=html
+      - echo "Coverage report generated in htmlcov/index.html"
+
+  test:coverage:min:
+    desc: Run tests with minimum coverage enforcement
+    cmds:
+      - pytest --cov={{.SRC_DIR}}/mcp_web --cov-report=term-missing --cov-fail-under={{.COVERAGE_MIN}}
+
+  test:watch:
+    desc: Run tests in watch mode (requires pytest-watch)
+    cmds:
+      - ptw -- -m "not live" -v
+
+  # Code quality tasks
+  lint:
+    desc: Run all linting checks
+    deps: [lint:ruff, lint:format, lint:mypy]
+
+  lint:ruff:
+    desc: Run ruff linter
+    cmds:
+      - ruff check {{.SRC_DIR}} {{.TEST_DIR}}
+
+  lint:format:
+    desc: Check code formatting
+    cmds:
+      - ruff format --check {{.SRC_DIR}} {{.TEST_DIR}}
+
+  lint:mypy:
+    desc: Run type checking
+    cmds:
+      - mypy {{.SRC_DIR}} --ignore-missing-imports
+
+  # Code formatting tasks
+  format:
+    desc: Auto-format code with ruff
+    cmds:
+      - ruff format {{.SRC_DIR}} {{.TEST_DIR}}
+      - ruff check --fix {{.SRC_DIR}} {{.TEST_DIR}}
+
+  # Security tasks
+  security:
+    desc: Run all security checks
+    deps: [security:bandit, security:semgrep, security:safety]
+
+  security:bandit:
+    desc: Run Bandit security scanner
+    cmds:
+      - bandit -r {{.SRC_DIR}} -c .bandit -f screen
+
+  security:semgrep:
+    desc: Run Semgrep pattern scanner
+    cmds:
+      - semgrep --config=.semgrep.yml {{.SRC_DIR}} --error
+
+  security:safety:
+    desc: Check for known vulnerabilities in dependencies
+    cmds:
+      - safety check --json
+
+  # Quality analysis
+  analyze:
+    desc: Run complete static analysis
+    deps: [lint, security]
+
+  analyze:complexity:
+    desc: Analyze code complexity (requires radon)
+    cmds:
+      - radon cc {{.SRC_DIR}} -a -nb
+
+  analyze:maintainability:
+    desc: Analyze maintainability index (requires radon)
+    cmds:
+      - radon mi {{.SRC_DIR}} -nb
+
+  # Documentation tasks
+  docs:build:
+    desc: Build documentation (if using Sphinx/MkDocs)
+    cmds:
+      - echo "Documentation build not yet configured"
+
+  docs:serve:
+    desc: Serve documentation locally
+    cmds:
+      - echo "Documentation server not yet configured"
+
+  # Development tasks
+  dev:setup:
+    desc: Complete development environment setup
+    cmds:
+      - task: install
+      - task: install:pre-commit
+      - echo "Development environment ready!"
+
+  dev:clean:
+    desc: Clean build artifacts and caches
+    cmds:
+      - rm -rf build/ dist/ *.egg-info
+      - rm -rf .pytest_cache/ .mypy_cache/ .ruff_cache/
+      - rm -rf htmlcov/ .coverage
+      - find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
+      - echo "Cleaned build artifacts and caches"
+
+  dev:clean:cache:
+    desc: Clean application cache
+    cmds:
+      - rm -rf ~/.cache/mcp-web
+      - echo "Cleaned application cache"
+
+  # Pre-commit tasks
+  pre-commit:
+    desc: Run pre-commit checks
+    deps: [lint, test:fast]
+
+  pre-commit:all:
+    desc: Run pre-commit on all files
+    cmds:
+      - pre-commit run --all-files
+
+  # CI/CD simulation
+  ci:
+    desc: Simulate CI pipeline locally
+    cmds:
+      - echo "=== Running CI Pipeline ==="
+      - task: lint
+      - task: test:coverage:min
+      - task: security
+      - echo "=== CI Pipeline Complete ==="
+
+  ci:fast:
+    desc: Fast CI check (no coverage)
+    cmds:
+      - echo "=== Running Fast CI ==="
+      - task: lint
+      - task: test:fast
+      - task: security:bandit
+      - echo "=== Fast CI Complete ==="
+
+  # Benchmarking tasks
+  bench:
+    desc: Run all benchmarks
+    cmds:
+      - pytest -m benchmark --benchmark-only --benchmark-autosave
+
+  bench:compare:
+    desc: Compare with previous benchmark
+    cmds:
+      - pytest -m benchmark --benchmark-only --benchmark-compare
+
+  bench:profile:
+    desc: Profile performance with cProfile
+    cmds:
+      - python -m cProfile -o profile.stats -m pytest -m benchmark
+      - python -c "import pstats; p = pstats.Stats('profile.stats'); p.sort_stats('cumulative'); p.print_stats(30)"
+
+  # Docker tasks (if needed)
+  docker:build:
+    desc: Build Docker image
+    cmds:
+      - docker build -t mcp-web:latest .
+
+  docker:test:
+    desc: Run tests in Docker
+    cmds:
+      - docker run --rm mcp-web:latest task test
+
+  # Release tasks
+  release:check:
+    desc: Check if ready for release
+    cmds:
+      - task: ci
+      - task: test:all
+      - echo "✓ Ready for release"
+
+  release:build:
+    desc: Build distribution packages
+    cmds:
+      - "{{.PYTHON}} -m build"
+      - echo "Distribution packages built in dist/"
+
+  release:test-pypi:
+    desc: Upload to TestPyPI
+    cmds:
+      - "{{.PYTHON}} -m twine upload --repository testpypi dist/*"
+
+  release:pypi:
+    desc: Upload to PyPI
+    cmds:
+      - "{{.PYTHON}} -m twine upload dist/*"
+
+  # Utility tasks
+  shell:
+    desc: Start Python shell with package imported
+    cmds:
+      - "{{.PYTHON}} -i -c 'from mcp_web import *; print(\"mcp-web shell ready\")'"
+
+  deps:update:
+    desc: Update dependencies
+    cmds:
+      - "{{.PYTHON}} -m pip install --upgrade pip"
+      - "{{.PYTHON}} -m pip install --upgrade -e .[dev]"
+
+  deps:tree:
+    desc: Show dependency tree
+    cmds:
+      - pipdeptree
+
+  deps:outdated:
+    desc: Check for outdated dependencies
+    cmds:
+      - "{{.PYTHON}} -m pip list --outdated"
+
+  # Local LLM tasks
+  llm:ollama:start:
+    desc: Start Ollama server (if installed)
+    cmds:
+      - ollama serve
+
+  llm:ollama:pull:
+    desc: Pull recommended Ollama models
+    cmds:
+      - ollama pull llama3.2:3b
+      - ollama pull mistral:7b
+      - ollama pull phi3:mini
+
+  llm:test:local:
+    desc: Test with local LLM (requires Ollama running)
+    env:
+      MCP_WEB_SUMMARIZER_API_BASE: http://localhost:11434/v1
+      MCP_WEB_SUMMARIZER_MODEL: llama3.2:3b
+      MCP_WEB_SUMMARIZER_API_KEY: ollama
+    cmds:
+      - pytest -m golden -v
+
+  # Golden test management
+  golden:update:
+    desc: Update golden test expectations (use with caution)
+    cmds:
+      - pytest -m golden --update-golden -v
+
+  golden:verify:
+    desc: Verify golden tests with detailed output
+    cmds:
+      - pytest -m golden -vv --tb=long
+
+  # Information tasks
+  info:
+    desc: Show project information
+    cmds:
+      - echo "Project: mcp-web"
+      - echo "Python: $({{.PYTHON}} --version)"
+      - echo "Pytest: $(pytest --version)"
+      - echo "Ruff: $(ruff --version)"
+      - echo "Coverage minimum: {{.COVERAGE_MIN}}%"
+
+  info:env:
+    desc: Show environment configuration
+    cmds:
+      - "{{.PYTHON}} -c 'from mcp_web.config import MCPWebConfig; import json; print(json.dumps(MCPWebConfig().model_dump(), indent=2))'"

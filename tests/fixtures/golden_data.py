@@ -85,6 +85,19 @@ SIMPLE_ARTICLE_EXPECTED = {
     "code_blocks": 2,
     "links": ["https://docs.python.org/3/library/asyncio.html"],
     "min_content_length": 500,
+    "summary_must_contain": [
+        "async",
+        "await",
+        "asyncio",
+        "concurrency",
+    ],
+    "summary_should_contain": [
+        "event loop",
+        "coroutine",
+        "I/O",
+    ],
+    "summary_min_length": 200,
+    "summary_max_length": 2000,
 }
 
 # Golden Test Case 2: Technical Documentation
@@ -173,6 +186,19 @@ TECHNICAL_DOC_EXPECTED = {
     "code_blocks_min": 5,
     "has_json_examples": True,
     "min_content_length": 400,
+    "summary_must_contain": [
+        "API",
+        "endpoint",
+        "authentication",
+    ],
+    "summary_should_contain": [
+        "REST",
+        "JSON",
+        "GET",
+        "POST",
+    ],
+    "summary_min_length": 150,
+    "summary_max_length": 1500,
 }
 
 # Golden Test Case 3: News Article with Quotes
@@ -237,6 +263,18 @@ NEWS_ARTICLE_EXPECTED = {
     "sections": ["Technical Details", "Industry Impact", "Next Steps"],
     "links": ["https://techlab.example.edu/quantum"],
     "min_content_length": 600,
+    "summary_must_contain": [
+        "quantum",
+        "computing",
+        "breakthrough",
+    ],
+    "summary_should_contain": [
+        "qubits",
+        "research",
+        "scientist",
+    ],
+    "summary_min_length": 100,
+    "summary_max_length": 1000,
 }
 
 # Golden Test Case 4: Blog Post with Multiple Links
@@ -293,14 +331,23 @@ BLOG_POST_EXPECTED = {
     "content_keywords": [
         "Python",
         "best practices",
+        "code quality",
+        "PEP 8",
+    ],
+    "list_items": 10,
+    "links": 5,
+    "min_content_length": 800,
+    "summary_must_contain": [
+        "Python",
+        "best practices",
+    ],
+    "summary_should_contain": [
+        "code quality",
         "PEP 8",
         "type hints",
-        "virtual environments",
-        "testing",
     ],
-    "sections": 10,  # Should extract all 10 numbered sections
-    "links_min": 8,  # Should have at least 8 external links
-    "min_content_length": 400,
+    "summary_min_length": 200,
+    "summary_max_length": 1500,
 }
 
 # Prompt Injection Test Cases (Security Testing)

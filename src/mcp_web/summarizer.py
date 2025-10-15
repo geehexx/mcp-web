@@ -52,14 +52,27 @@ class Summarizer:
         self.token_counter = TokenCounter()
         self.metrics = get_metrics_collector()
 
-        # Initialize OpenAI client
-        api_key = config.api_key or os.getenv("OPENAI_API_KEY")
-        if not api_key:
-            _get_logger().warning("no_openai_api_key", msg="OPENAI_API_KEY not set")
+        # Initialize OpenAI-compatible client
+        api_key = config.get_api_key()
+        api_base = config.get_api_base()
+        
+        if config.provider == "openai" and not api_key:
+            _get_logger().warning(
+                "no_openai_api_key",
+                msg="OPENAI_API_KEY not set for OpenAI provider"
+            )
+        
+        _get_logger().info(
+            "summarizer_init",
+            provider=config.provider,
+            model=config.model,
+            api_base=api_base,
+        )
 
         self.client = AsyncOpenAI(
             api_key=api_key,
-            base_url=config.api_base,
+            base_url=api_base,
+            timeout=config.timeout,
         )
 
     async def summarize_chunks(

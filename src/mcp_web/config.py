@@ -69,9 +69,23 @@ class ChunkerSettings(BaseSettings):
 
 
 class SummarizerSettings(BaseSettings):
-    """Summarizer configuration."""
+    """Summarizer configuration.
+    
+    Supports multiple LLM providers:
+    - OpenAI (default): api.openai.com
+    - Ollama: localhost:11434
+    - LM Studio: localhost:1234
+    - LocalAI: localhost:8080
+    - Custom: any OpenAI-compatible API
+    """
 
+    # Provider configuration
+    provider: Literal["openai", "ollama", "lmstudio", "localai", "custom"] = Field(
+        default="openai", description="LLM provider type"
+    )
     model: str = Field(default="gpt-4o-mini", description="LLM model to use")
+    
+    # Generation parameters
     temperature: float = Field(
         default=0.3,
         ge=0.0,
@@ -80,12 +94,16 @@ class SummarizerSettings(BaseSettings):
     )
     max_tokens: int = Field(default=2048, description="Max tokens in summary")
     streaming: bool = Field(default=True, description="Enable streaming output")
+    
+    # Map-reduce configuration
     map_reduce_threshold: int = Field(
         default=8000, description="Token threshold for map-reduce strategy"
     )
-    api_key: Optional[str] = Field(default=None, description="OpenAI API key")
+    
+    # API configuration
+    api_key: Optional[str] = Field(default=None, description="API key (if required)")
     api_base: Optional[str] = Field(
-        default="https://api.openai.com/v1", description="API base URL"
+        default=None, description="API base URL (auto-detected by provider)"
     )
     timeout: int = Field(default=120, description="API request timeout in seconds")
     
@@ -96,6 +114,42 @@ class SummarizerSettings(BaseSettings):
     content_filtering: bool = Field(
         default=True, description="Enable content filtering for safety"
     )
+    
+    def get_api_base(self) -> str:
+        """Get API base URL based on provider.
+        
+        Returns:
+            API base URL for the configured provider
+        """
+        if self.api_base:
+            return self.api_base
+            
+        provider_urls = {
+            "openai": "https://api.openai.com/v1",
+            "ollama": "http://localhost:11434/v1",
+            "lmstudio": "http://localhost:1234/v1",
+            "localai": "http://localhost:8080/v1",
+        }
+        
+        return provider_urls.get(self.provider, "https://api.openai.com/v1")
+    
+    def get_api_key(self) -> Optional[str]:
+        """Get API key based on provider.
+        
+        Local providers don't require API keys.
+        
+        Returns:
+            API key or None for local providers
+        """
+        if self.api_key:
+            return self.api_key
+            
+        # Local providers don't need API keys
+        if self.provider in ["ollama", "lmstudio", "localai"]:
+            return "not-needed"
+            
+        # OpenAI requires key
+        return os.getenv("OPENAI_API_KEY")
 
     model_config = SettingsConfigDict(env_prefix="MCP_WEB_SUMMARIZER_")
 
