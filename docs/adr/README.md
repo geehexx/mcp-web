@@ -78,6 +78,7 @@ If a decision changes, create a new ADR that supersedes the old one.
 | [0010](0010-openai-gpt4-default-llm.md) | Use OpenAI GPT-4 as default LLM | Implemented | 2025-10-15 |
 | [0011](0011-enable-streaming-output.md) | Enable streaming output | Implemented | 2025-10-15 |
 | [0012](0012-monolithic-tool-design.md) | Monolithic tool design | Implemented | 2025-10-15 |
+| [0013](0013-initiative-documentation-standards.md) | Initiative documentation standards | Implemented | 2025-10-15 |
 
 ### Superseded ADRs
 
