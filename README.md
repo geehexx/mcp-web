@@ -17,6 +17,57 @@ A powerful Model Context Protocol (MCP) server that provides intelligent URL sum
 - 📝 **Markdown Output**: Well-formatted summaries with citations and metadata
 - 🧪 **Comprehensive Testing**: Unit, integration, security, golden, and benchmark tests
 
+**Status:** Active Development | **Version:** 0.1.0 | **Test Coverage:** ~85% | **License:** MIT
+
+## Real-World Example
+
+**Input:** Summarize Python's asyncio documentation
+
+```python
+result = await summarize_urls(
+    urls=["https://docs.python.org/3/library/asyncio.html"],
+    query="How do I create and manage concurrent async tasks?"
+)
+```
+
+**Output:**
+
+> ## Summary: Python asyncio - Concurrent Task Management
+>
+> **Source:** https://docs.python.org/3/library/asyncio.html
+>
+> ### Key Points
+>
+> **Creating Tasks:**
+>
+> - Use `asyncio.create_task()` to schedule coroutines concurrently
+> - Tasks are wrappers around coroutines that run them concurrently
+> - `asyncio.gather()` runs multiple awaitables concurrently and collects results
+>
+> **Managing Tasks:**
+>
+> - `asyncio.wait()` for fine-grained control over task completion
+> - `asyncio.TaskGroup()` (Python 3.11+) for structured concurrency
+> - Tasks can be cancelled with `.cancel()` and checked with `.done()`
+>
+> **Best Practices:**
+>
+> - Always await tasks or they'll be garbage collected
+> - Use timeouts with `asyncio.wait_for()` to prevent hanging
+> - Handle exceptions with `try/except` or check `.exception()`
+>
+> **Performance:**
+>
+> - Tasks enable true concurrency for I/O-bound operations
+> - Use semaphores to limit concurrent operations
+> - Prefer `gather()` for simple parallel execution
+>
+> _Summary generated with gpt-4o-mini | Extraction: trafilatura | Chunking: adaptive (512 tokens)_
+
+**Why this matters:** Instead of reading 15,000+ words of documentation, you get focused, actionable answers in seconds.
+
+---
+
 ## Quick Start
 
 ### Installation

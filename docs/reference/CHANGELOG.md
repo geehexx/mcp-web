@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Session consolidation workflow (`/consolidate-summaries`) for managing historical summaries
+- ls-lint integration for file naming convention enforcement
+- ls-lint pre-commit hook and Taskfile commands
+- Agent operational efficiency patterns (batch operations, absolute paths)
+- Real-world example in README demonstrating asyncio summarization
 - Adaptive chunking enabled by default with content heuristics
 - Prompt optimization reducing verbosity by 45-60%
 - Adaptive `max_tokens` based on input size with configurable ratio
@@ -44,6 +49,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Date inconsistencies (2024 → 2025) across 21 documentation files
+- PROJECT_SUMMARY.md location references (root vs docs/)
+- Broken documentation links (WORKFLOW_OPTIMIZATION, META_ANALYSIS_TRACKING)
+- MCP tool relative path issues (now require absolute paths)
+- Workflow examples now show correct absolute path patterns
+- Quick start guide broken reference links
 - Security test failures (6 tests) with async context manager protocol
 - CLI import errors (TextChunker, Config, CacheManager)
 - Cache eviction policy name mapping (short to full names)

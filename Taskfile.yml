@@ -233,10 +233,11 @@ tasks:
       - echo "Documentation server not yet configured"
 
   docs:lint:
-    desc: Lint all documentation (markdown + prose)
+    desc: Lint all documentation (markdown + prose + file naming)
     cmds:
       - task: docs:lint:markdown
       - task: docs:lint:prose
+      - task: docs:lint:names
 
   docs:lint:markdown:
     desc: Lint markdown structure
@@ -247,6 +248,11 @@ tasks:
     desc: Lint prose quality with Vale
     cmds:
       - vale --config=.vale.ini docs/ README.md
+
+  docs:lint:names:
+    desc: Validate file naming conventions with ls-lint
+    cmds:
+      - npx @ls-lint/ls-lint
 
   docs:fix:
     desc: Auto-fix markdown issues

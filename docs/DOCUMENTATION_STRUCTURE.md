@@ -24,9 +24,9 @@ docs/
 ├── initiatives/ # Active initiatives and roadmap
 │ ├── README.md
 │ ├── active/ # Current initiatives
-│ │ └── 2024-q4-security-hardening.md
+│ │ └── 2025-q4-security-hardening.md
 │ └── completed/ # Completed initiatives (archive)
-│ └── 2024-q3-local-llm-support.md
+│ └── 2025-q3-local-llm-support.md
 │
 ├── guides/ # How-to guides
 │ ├── LOCAL_LLM_GUIDE.md
@@ -98,7 +98,7 @@ docs/
 
 **Subdirectories:**
 
-- `active/` - Current initiatives (Q4 2024, etc.)
+- `active/` - Current initiatives (Q4 2025, etc.)
 - `completed/` - Finished initiatives (archived automatically)
 
 **Format:**
@@ -126,7 +126,7 @@ docs/
 - ADR-0003: Use structured prompts
 
 ## Updates
-### 2024-10-15
+### 2025-10-15
 Progress update...
 ```
 
@@ -348,7 +348,7 @@ task docs:serve
 - [x] Create directory structure
 - [ ] Move existing docs to appropriate locations
 - [ ] Convert DECISIONS.md to ADR format
-- [ ] Create initiative for Q4 2024
+- [ ] Create initiative for Q4 2025
 - [ ] Archive old improvement docs
 
 ### Phase 2: Tooling (Week 1)

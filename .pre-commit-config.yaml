@@ -83,6 +83,17 @@ repos:
         stages: [commit-msg]
         args: [--strict]
 
+  # File Naming - Validate naming conventions
+  - repo: local
+    hooks:
+      - id: ls-lint
+        name: "📁 files · Validate naming conventions (ls-lint)"
+        entry: npx @ls-lint/ls-lint
+        language: node
+        pass_filenames: false
+        always_run: false
+        files: \.(md|py|yml|yaml|json|toml)$
+
   # Local - Fast Tests (Optional, can be slow)
   # Uncomment to run fast tests on every commit
   # - repo: local

@@ -139,8 +139,8 @@ YYYY-QN-brief-description.md
 
 Examples:
 
-- `2024-q4-quality-foundation.md`
-- `2025-q1-security-hardening.md`
+- `2025-q4-quality-foundation.md`
+- `2026-q1-security-hardening.md`
 
 ### Pattern 2: Descriptive Names
 
@@ -203,7 +203,7 @@ git commit -m "docs(initiative): complete [initiative name]"
 
 | Initiative | Owner | Started | Target | Progress |
 |------------|-------|---------|--------|----------|
-| [Quality Foundation](active/2024-q4-quality-foundation.md) | Core Team | 2025-10-15 | 2025-11-15 | Phase 2 |
+| [Quality Foundation](active/2025-q4-quality-foundation.md) | Core Team | 2025-10-15 | 2025-11-15 | Phase 2 |
 
 ### Medium Priority
 

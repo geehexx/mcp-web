@@ -54,18 +54,19 @@ Clarify:
 **Batch read relevant files:**
 
 ```python
+# IMPORTANT: MCP tools require absolute paths
 mcp0_read_multiple_files([
     # Source files to modify
-    "src/mcp_web/module.py",
+    "/home/gxx/projects/mcp-web/src/mcp_web/module.py",
 
     # Related source for context
-    "src/mcp_web/related.py",
+    "/home/gxx/projects/mcp-web/src/mcp_web/related.py",
 
     # Test files
-    "tests/unit/test_module.py",
+    "/home/gxx/projects/mcp-web/tests/unit/test_module.py",
 
     # Documentation
-    "docs/API.md",
+    "/home/gxx/projects/mcp-web/docs/API.md",
 ])
 ```text
 

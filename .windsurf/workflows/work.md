@@ -21,7 +21,7 @@ AI agent should understand where to pick up from by analyzing project state, not
 
 ## Stage 0: Read Project Summary and Changelog
 
-Read `docs/PROJECT_SUMMARY.md` and `docs/CHANGELOG.md` to understand project context. The summary provides a high-level overview, while the changelog shows recent changes and releases. This helps set the stage for intelligent context detection.
+Read `PROJECT_SUMMARY.md` (project root) and `docs/reference/CHANGELOG.md` to understand project context. The summary provides a high-level overview, while the changelog shows recent changes and releases. This helps set the stage for intelligent context detection.
 
 ## Stage 1: Context Detection (Automatic)
 
@@ -32,11 +32,11 @@ Intelligently analyze project state using **efficient batch operations**.
 **Use batch reads for efficiency:**
 
 ```python
-# Read multiple key files simultaneously
+# Read multiple key files simultaneously (MUST use absolute paths for MCP tools)
 mcp0_read_multiple_files([
-    "docs/PROJECT_SUMMARY.md",
-    "docs/initiatives/active/*.md",  # All active initiatives
-    ".windsurf/rules/00_agent_directives.md"
+    "/home/gxx/projects/mcp-web/PROJECT_SUMMARY.md",
+    "/home/gxx/projects/mcp-web/docs/initiatives/active/*.md",  # All active initiatives
+    "/home/gxx/projects/mcp-web/.windsurf/rules/00_agent_directives.md"
 ])
 ```text
 
@@ -208,8 +208,8 @@ Before executing routed workflow, load complete context:
 **For Planning:**
 
 ```markdown
-1. Read PROJECT_SUMMARY.md
-2. Read ARCHITECTURE.md
+1. Read PROJECT_SUMMARY.md (project root)
+2. Read docs/architecture/ARCHITECTURE.md
 3. Scan active ADRs
 4. Check completed initiatives for patterns
 5. Execute /plan with strategic context
@@ -281,9 +281,9 @@ Workflows can call each other:
 ❌ **Bad** (Sequential reads):
 
 ```python
-read_file("docs/initiatives/active/initiative1.md")
-read_file("docs/initiatives/active/initiative2.md")
-read_file("docs/PROJECT_SUMMARY.md")
+read_file("/home/gxx/projects/mcp-web/docs/initiatives/active/initiative1.md")
+read_file("/home/gxx/projects/mcp-web/docs/initiatives/active/initiative2.md")
+read_file("/home/gxx/projects/mcp-web/PROJECT_SUMMARY.md")
 # 3 separate tool calls → slow
 ```text
 
@@ -291,9 +291,9 @@ read_file("docs/PROJECT_SUMMARY.md")
 
 ```python
 mcp0_read_multiple_files([
-    "docs/initiatives/active/initiative1.md",
-    "docs/initiatives/active/initiative2.md",
-    "docs/PROJECT_SUMMARY.md"
+    "/home/gxx/projects/mcp-web/docs/initiatives/active/initiative1.md",
+    "/home/gxx/projects/mcp-web/docs/initiatives/active/initiative2.md",
+    "/home/gxx/projects/mcp-web/PROJECT_SUMMARY.md"
 ])
 # 1 tool call → 3x faster
 ```text

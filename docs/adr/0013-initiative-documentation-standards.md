@@ -156,7 +156,7 @@ descriptive-name.md
 
 Examples:
 
-- `2024-q4-quality-foundation.md`
+- `2025-q4-quality-foundation.md`
 - `fix-security-unit-tests.md`
 - `documentation-infrastructure.md`
 
@@ -294,7 +294,7 @@ The initiatives README provides:
 
 **Migration required:**
 
-- Update `docs/initiatives/active/2024-q4-quality-foundation.md`
+- Update `docs/initiatives/active/2025-q4-quality-foundation.md`
 - Update `docs/initiatives/active/fix-security-unit-tests.md`
 - Update `docs/initiatives/completed/convert-decisions-to-adrs.md`
 

@@ -155,7 +155,7 @@ New workflows enforce TDD. Tests written before code.
 
 - **Workflows:** `.windsurf/workflows/` (detailed guides)
 - **Rules:** `.windsurf/rules/` (standards)
-- **Full guide:** `docs/WORKFLOW_OPTIMIZATION_2025_10_15.md`
+- **Full guide:** `docs/archive/session-summaries/2025-10-15-workflow-optimization.md`
 
 ---
 
@@ -216,8 +216,8 @@ What works? What needs tuning?
 
 **Detailed docs:**
 
-- `docs/WORKFLOW_OPTIMIZATION_2025_10_15.md` - Complete guide
-- `docs/META_ANALYSIS_TRACKING.md` - Artifact tracking
+- `docs/archive/session-summaries/2025-10-15-workflow-optimization.md` - Complete guide
+- `docs/standards/META_ANALYSIS_TRACKING.md` - Artifact tracking
 - `.windsurf/workflows/*.md` - Individual workflow details
 
 **Just start:**
