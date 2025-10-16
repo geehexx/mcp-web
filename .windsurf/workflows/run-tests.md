@@ -25,7 +25,7 @@ task test:coverage:parallel
 
 # Full CI simulation
 task ci:parallel
-```text
+```
 
 ## Detailed Process
 
@@ -64,14 +64,14 @@ task ci:parallel
 ```bash
 # Use auto (number of CPU cores)
 pytest -n auto tests/unit/
-```text
+```
 
 ### IO-bound tests (external APIs, network)
 
 ```bash
 # Use more workers than CPU cores
 PYTEST_XDIST_AUTO_NUM_WORKERS=16 pytest -n auto tests/integration/
-```text
+```
 
 ### Distribution strategies
 
@@ -90,7 +90,7 @@ open htmlcov/index.html
 
 # Check specific module
 pytest --cov=src/mcp_web/fetcher tests/unit/test_fetcher.py
-```text
+```
 
 ## Debugging Failed Tests
 
@@ -106,7 +106,7 @@ pytest -s tests/path/to/test_file.py
 
 # Drop into debugger on failure
 pytest --pdb tests/path/to/test_file.py
-```text
+```
 
 ## CI Simulation
 
@@ -119,7 +119,7 @@ task ci:fast
 
 # Parallel CI with coverage
 task ci:parallel
-```text
+```
 
 ## Test Markers
 
@@ -137,7 +137,7 @@ pytest -m "not live"
 
 # Multiple markers
 pytest -m "unit or integration"
-```text
+```
 
 ## Performance Tips
 
@@ -159,4 +159,4 @@ export MCP_WEB_SUMMARIZER_MODEL=llama3.2:3b
 
 # Skip slow tests
 pytest -m "not slow"
-```text
+```

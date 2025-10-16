@@ -60,7 +60,7 @@ Create an ADR for:
 
    ```text
    docs(adr): add ADR-NNNN for [decision topic]
-   ```text
+   ```
 
 ## ADR Template Reference
 

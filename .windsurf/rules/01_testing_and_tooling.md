@@ -28,7 +28,7 @@ globs: ["tests/**/*.py", "src/**/*.py", "*.toml", "*.ini", "Taskfile.yml"]
   ├── golden/            # Regression tests with static data
   ├── live/              # Tests requiring network/API (marked, excluded by default)
   └── benchmarks/        # Performance benchmarks
-  ```text
+  ```
 
 ## 1.3 Parallel Testing (pytest-xdist)
 

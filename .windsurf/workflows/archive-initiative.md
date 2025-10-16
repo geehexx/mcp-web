@@ -24,7 +24,7 @@ Use this workflow to properly archive a completed initiative.
    ```markdown
    > **⚠️ ARCHIVED:** This initiative was completed on YYYY-MM-DD.
    > See [related ADRs / outcomes] for implemented decisions.
-   ```text
+   ```
 
 2. **Move document:** Relocate from `docs/initiatives/active/` to `docs/initiatives/completed/`.
 
@@ -50,13 +50,13 @@ Use this workflow to properly archive a completed initiative.
 
 4. **Commit:** Use descriptive message:
 
-   ```text
+   ```markdown
    chore(docs): archive initiative [name]
 
    - Completed on YYYY-MM-DD
    - All success criteria met
    - Related ADRs: ADR-XXXX, ADR-YYYY
-   ```text
+   ```
 
 5. **Follow-up:** If new work spawned from TODOs, create new initiatives.
 
@@ -77,4 +77,4 @@ mv docs/initiatives/active/2024-q4-quality-foundation.md \
 
 # Commit
 git commit -m "chore(docs): archive Q4 2024 quality foundation initiative"
-```text
+```
