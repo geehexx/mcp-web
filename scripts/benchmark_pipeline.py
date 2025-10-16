@@ -5,7 +5,7 @@ Profiles the entire summarization pipeline and generates detailed reports.
 
 Usage:
     python scripts/benchmark_pipeline.py --url https://example.com
-    python scripts/benchmark_pipeline.py --url https://example.com --profile --export results.json
+    python scripts/benchmark_pipeline.py --url https://example.com --profile --export /tmp/mcp-web-benchmark.json
     python scripts/benchmark_pipeline.py --load-test --concurrent 10 --requests 100
 """
 
@@ -79,11 +79,11 @@ class PipelineBenchmark:
         Returns:
             Benchmark results
         """
-        print(f"\n{'='*80}")
+        print(f"\n{'=' * 80}")
         print(f"Benchmarking: {url}")
         print(f"Query: {query or 'None'}")
         print(f"Cache: {'Enabled' if use_cache else 'Disabled'}")
-        print(f"{'='*80}\n")
+        print(f"{'=' * 80}\n")
 
         overall_start = time.perf_counter()
 
@@ -121,26 +121,21 @@ class PipelineBenchmark:
         summarize_start = time.perf_counter()
 
         with self.timer.time("summarize"):
-            async for chunk in self.summarizer.summarize_chunks(
-                chunks, query=query, sources=[url]
-            ):
+            async for chunk in self.summarizer.summarize_chunks(chunks, query=query, sources=[url]):
                 summary_parts.append(chunk)
 
         summary = "".join(summary_parts)
         summarize_duration = (time.perf_counter() - summarize_start) * 1000
 
         summary_tokens = self.token_counter.count_tokens(summary)
-        print(
-            f"✓ Summarize: {format_duration(summarize_duration)} "
-            f"({summary_tokens:,} tokens)"
-        )
+        print(f"✓ Summarize: {format_duration(summarize_duration)} ({summary_tokens:,} tokens)")
 
         # Overall timing
         overall_duration = (time.perf_counter() - overall_start) * 1000
 
-        print(f"\n{'='*80}")
+        print(f"\n{'=' * 80}")
         print(f"Total: {format_duration(overall_duration)}")
-        print(f"{'='*80}\n")
+        print(f"{'=' * 80}\n")
 
         # Calculate percentages
         fetch_pct = (self.timer.timings["fetch"][-1] / overall_duration) * 100
@@ -181,10 +176,18 @@ class PipelineBenchmark:
 
         # Print breakdown
         print("Component Breakdown:")
-        print(f"  Fetch:      {format_duration(results['components']['fetch']['duration_ms']):>8} ({fetch_pct:>5.1f}%)")
-        print(f"  Extract:    {format_duration(results['components']['extract']['duration_ms']):>8} ({extract_pct:>5.1f}%)")
-        print(f"  Chunk:      {format_duration(results['components']['chunk']['duration_ms']):>8} ({chunk_pct:>5.1f}%)")
-        print(f"  Summarize:  {format_duration(results['components']['summarize']['duration_ms']):>8} ({summarize_pct:>5.1f}%)")
+        print(
+            f"  Fetch:      {format_duration(results['components']['fetch']['duration_ms']):>8} ({fetch_pct:>5.1f}%)"
+        )
+        print(
+            f"  Extract:    {format_duration(results['components']['extract']['duration_ms']):>8} ({extract_pct:>5.1f}%)"
+        )
+        print(
+            f"  Chunk:      {format_duration(results['components']['chunk']['duration_ms']):>8} ({chunk_pct:>5.1f}%)"
+        )
+        print(
+            f"  Summarize:  {format_duration(results['components']['summarize']['duration_ms']):>8} ({summarize_pct:>5.1f}%)"
+        )
 
         return results
 
@@ -204,9 +207,9 @@ class PipelineBenchmark:
         Returns:
             Load test results
         """
-        print(f"\n{'='*80}")
+        print(f"\n{'=' * 80}")
         print(f"Load Test: {num_requests} requests, {concurrent} concurrent")
-        print(f"{'='*80}\n")
+        print(f"{'=' * 80}\n")
 
         semaphore = asyncio.Semaphore(concurrent)
         durations = []
@@ -216,14 +219,10 @@ class PipelineBenchmark:
             async with semaphore:
                 time.perf_counter()
                 try:
-                    result = await self.benchmark_full_pipeline(
-                        url, use_cache=False
-                    )
+                    result = await self.benchmark_full_pipeline(url, use_cache=False)
                     duration = result["overall_duration_ms"]
                     durations.append(duration)
-                    print(
-                        f"Request {request_num + 1}/{num_requests}: {format_duration(duration)}"
-                    )
+                    print(f"Request {request_num + 1}/{num_requests}: {format_duration(duration)}")
                     return duration
                 except Exception as e:
                     print(f"Request {request_num + 1} failed: {e}")
@@ -265,7 +264,7 @@ class PipelineBenchmark:
             }
 
         # Print results
-        print(f"\n{'='*80}")
+        print(f"\n{'=' * 80}")
         print("Load Test Results:")
         print(f"  Total Requests: {results['total_requests']}")
         print(f"  Successful:     {results.get('successful', 0)}")
@@ -279,7 +278,7 @@ class PipelineBenchmark:
             print(f"  P95:    {format_duration(results['latency']['p95_ms'])}")
             print(f"  P99:    {format_duration(results['latency']['p99_ms'])}")
             print(f"  Max:    {format_duration(results['latency']['max_ms'])}")
-        print(f"{'='*80}\n")
+        print(f"{'=' * 80}\n")
 
         return results
 
@@ -294,22 +293,14 @@ async def main() -> None:
     parser = argparse.ArgumentParser(description="Benchmark mcp-web pipeline")
     parser.add_argument("--url", default="https://python.org", help="URL to benchmark")
     parser.add_argument("--query", help="Optional query for focused summary")
-    parser.add_argument(
-        "--no-cache", action="store_true", help="Disable cache for benchmark"
-    )
-    parser.add_argument(
-        "--profile", action="store_true", help="Enable cProfile profiling"
-    )
+    parser.add_argument("--no-cache", action="store_true", help="Disable cache for benchmark")
+    parser.add_argument("--profile", action="store_true", help="Enable cProfile profiling")
     parser.add_argument("--export", help="Export results to JSON file")
-    parser.add_argument(
-        "--load-test", action="store_true", help="Run load test instead"
-    )
+    parser.add_argument("--load-test", action="store_true", help="Run load test instead")
     parser.add_argument(
         "--concurrent", type=int, default=5, help="Concurrent requests for load test"
     )
-    parser.add_argument(
-        "--requests", type=int, default=10, help="Total requests for load test"
-    )
+    parser.add_argument("--requests", type=int, default=10, help="Total requests for load test")
 
     args = parser.parse_args()
 
@@ -324,13 +315,9 @@ async def main() -> None:
             # Run load test
             if args.profile:
                 with cprofile_context("load_test.stats"):
-                    results = await benchmark.load_test(
-                        args.url, args.requests, args.concurrent
-                    )
+                    results = await benchmark.load_test(args.url, args.requests, args.concurrent)
             else:
-                results = await benchmark.load_test(
-                    args.url, args.requests, args.concurrent
-                )
+                results = await benchmark.load_test(args.url, args.requests, args.concurrent)
         else:
             # Run single benchmark
             if args.profile:

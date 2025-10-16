@@ -96,59 +96,79 @@ grep -r "2025-10-15-specific-session.md" docs/ .windsurf/ --include="*.md"
 - Approximate duration (if mentioned)
 - Primary focus area (1-2 words: testing, security, documentation, etc.)
 
-#### Step 2: Extract Accomplishments (Specific Actions)
+#### Step 2: Capture Context Narrative (Preserve Nuance)
+Write 2-3 full sentences (up to 120 words) that capture:
+- Session objectives, constraints, and triggering events
+- Critical observations or inflection points (quote ≤40 words if impactful)
+- Cross-session references (what came before/after)
+
+Use original phrasing where valuable to retain tone. Do NOT reduce to bullet fragments.
+
+#### Step 3: Extract Accomplishments (Specific Actions)
 List ONLY concrete accomplishments in this exact format:
-- **[Action verb]**: [What was done] ([File/Component if applicable])
+- **[Action verb]**: [What was done] ([File/Component if applicable]) — [1 clause of context if needed]
 
 Examples:
-- **Created**: Security audit framework (src/mcp_web/security.py)
-- **Fixed**: 7 failing unit tests (tests/unit/test_security.py)
-- **Updated**: Architecture documentation (docs/architecture/ARCHITECTURE.md)
+- **Created**: Security audit framework (src/mcp_web/security.py) — Foundations for OWASP compliance review
+- **Fixed**: 7 failing unit tests (tests/unit/test_security.py) — Restored green build after validator refactor
 
 DO NOT include vague statements like "made progress" or "worked on".
 
-#### Step 3: Extract Decisions (Explicit Choices Made)
+#### Step 4: Extract Decisions (Explicit Choices Made)
 List ONLY explicit architectural or technical decisions:
-- **[Decision topic]**: [What was decided] - [Brief rationale]
+- **[Decision topic]**: [What was decided] - [Brief rationale] (include trade-offs or rejected alternatives if mentioned)
 
 Example:
-- **Rate limiting**: Implemented token bucket algorithm - Better handles burst traffic than fixed window
+- **Rate limiting**: Implemented token bucket algorithm - Better handles burst traffic than fixed window; leaky bucket rejected due to burst penalties
 
 DO NOT include routine implementation choices.
 
-#### Step 4: Extract Technical Learnings (Knowledge Gained)
+#### Step 5: Extract Technical Learnings (Knowledge Gained)
 List ONLY specific technical insights:
-- **[Technology/Pattern]**: [What was learned/discovered]
+- **[Technology/Pattern]**: [What was learned/discovered] (include measurements, benchmarks, or comparative data)
 
 Example:
-- **pytest-xdist**: Auto scheduling performs 3x faster than loadscope for IO-bound tests
+- **pytest-xdist**: Auto scheduling performs 3x faster than loadscope for IO-bound tests at 16 workers
 
 DO NOT include general observations.
 
-#### Step 5: Extract Issues (Unresolved Problems)
+#### Step 6: Extract Issues (Unresolved Problems)
 List ONLY problems that remain unresolved:
-- **[Component/Area]**: [Problem description] - [Why unresolved]
+- **[Component/Area]**: [Problem description] - [Why unresolved] (note blockers, required data, or pending owners)
 
 Example:
-- **Playwright fallback**: Timeout handling needs refinement - Requires more testing data
+- **Playwright fallback**: Timeout handling needs refinement - Requires more testing data across slow-loading sites and flaky networks
 
 DO NOT include resolved issues.
 
-#### Step 6: Extract Next Steps (Specific Actions)
+#### Step 7: Record Dependencies & Interactions
+Capture dependencies and cross-session links:
+- Upstream work relied upon (session + artifact)
+- Downstream work enabled
+- Open questions directed at other teams or workflows
+
+#### Step 8: Gather Supporting Evidence
+List verifiable artifacts:
+- Commit hashes or PR IDs (if available)
+- Benchmark results, metrics tables, screenshots (describe location)
+- Source quotes (speaker + ≤40 words)
+
+#### Step 9: Extract Next Steps (Specific Actions)
 List ONLY concrete next steps:
-- [ ] [Action verb] [specific task]
+- [ ] [Action verb] [specific task] — [Owner or dependency if noted]
 
 Example:
-- [ ] Add integration tests for rate limiter
-- [ ] Document security architecture decisions in ADR
+- [ ] Add integration tests for rate limiter — Depends on security fixture refresh
+- [ ] Document security architecture decisions in ADR — Reference initiative 2024-Q4
 
 DO NOT include vague intentions like "continue working on".
 
-#### Step 7: Extract Metrics
+#### Step 10: Extract Metrics
 - Files modified: [count or list if ≤5]
 - Commits: [count or list if ≤3]
 - Tests: [passing/failing counts]
 - ADRs: [created/updated]
+- Duration (if quantified): [minutes/hours]
 ```
 
 ### 2.2 Create Extraction Matrix (JSON Format)
@@ -163,18 +183,29 @@ DO NOT include vague intentions like "continue working on".
       "title": "Session 1 Name",
       "duration": "~2 hours",
       "focus": "testing",
+      "context": "Two to three sentences preserving narrative, quotes, and cross-session references.",
       "accomplishments": [
-        {"action": "Created", "what": "Security audit framework", "where": "src/mcp_web/security.py"}
+        {"action": "Created", "what": "Security audit framework", "where": "src/mcp_web/security.py", "context": "Foundational for OWASP review"}
       ],
       "decisions": [
-        {"topic": "Rate limiting", "decision": "Implemented token bucket algorithm", "rationale": "Better handles burst traffic"}
+        {"topic": "Rate limiting", "decision": "Implemented token bucket algorithm", "rationale": "Better handles burst traffic", "tradeoffs": "Rejected leaky bucket due to burst penalties"}
       ],
       "learnings": [
-        {"category": "pytest-xdist", "insight": "Auto scheduling performs 3x faster for IO-bound tests"}
+        {"category": "pytest-xdist", "insight": "Auto scheduling performs 3x faster for IO-bound tests", "measurement": "n=16 workers"}
       ],
       "issues": [
-        {"area": "Playwright fallback", "problem": "Timeout handling needs refinement", "reason": "Requires more testing data"}
+        {"area": "Playwright fallback", "problem": "Timeout handling needs refinement", "reason": "Requires more testing data", "owner": "QA"}
       ],
+      "dependencies": {
+        "upstream": ["2025-10-14-session3"],
+        "downstream": ["2025-10-16-session1"],
+        "notes": "Requires updated fixtures before rollout"
+      },
+      "evidence": {
+        "commits": ["abc1234"],
+        "benchmarks": ["tests/benchmarks/2025-10-15-chunking.md"],
+        "quotes": [{"speaker": "Lead", "text": "Ensure we preserve semantic boundaries"}]
+      },
       "next_steps": [
         "Add integration tests for rate limiter"
       ],
@@ -183,20 +214,23 @@ DO NOT include vague intentions like "continue working on".
         "commits": 3,
         "tests_passing": 45,
         "tests_failing": 2,
-        "adrs_created": 1
+        "adrs_created": 1,
+        "duration_minutes": 120
       }
     }
   ]
 }
 ```
 
-**Why JSON?** It forces structured thinking and prevents LLM from hallucinating or over-summarizing.
+**Why JSON?** It forces structured thinking, preserves narrative context, and prevents LLMs from hallucinating or over-summarizing.
 
 ---
 
 ## Stage 3: Methodical Consolidation (Information Synthesis)
 
 ### 3.1 Merge Using Explicit Rules
+
+**Objective:** Preserve narrative substance while deduplicating factual data. Treat the extraction matrix as the immutable source of truth—never improvise new facts.
 
 **Process the extraction matrix systematically:**
 
@@ -208,12 +242,13 @@ IF two accomplishments have:
   - Same file/component
 THEN merge them:
   - Keep the more specific description
-  - Combine any unique details
+  - Combine any unique contextual clauses ("— …")
+  - Retain references to affected initiatives/risks if present
 
 Example:
   - "Fixed failing tests (test_security.py)"
-  - "Fixed 7 unit tests in security module"
-  → "Fixed 7 failing unit tests (tests/unit/test_security.py)"
+  - "Fixed 7 unit tests in security module — restored build"
+  → "Fixed 7 failing unit tests (tests/unit/test_security.py) — restored build"
 ```
 
 #### Rule 2: Consolidate Decisions
@@ -275,18 +310,19 @@ FOR next steps:
 ```markdown
 # Daily Summary: [Date]
 
-**Date:** YYYY-MM-DD
-**Total Sessions:** N
-**Duration:** ~X hours (combined)
-**Focus Areas:** [List 2-4 primary themes]
+- **Date:** YYYY-MM-DD
+- **Total Sessions:** N
+- **Duration:** ~X hours (combined)
+- **Focus Areas:** [List 2-4 primary themes]
+- **Major Initiatives Touched:** [List initiatives + progress notes]
 
 ---
 
 ## Executive Overview
 
-**Accomplishments:** [1 sentence summarizing major achievements]
-**Decisions:** [1 sentence summarizing key decisions]
-**Status:** [1 sentence on overall progress]
+**Accomplishments:** [1-3 sentences summarizing major achievements with key metrics and initiative impact]
+**Decisions:** [1-3 sentences summarizing critical decisions, trade-offs, and downstream effects]
+**Status:** [1 sentence on overall progress, remaining risks, and upcoming focus]
 
 ---
 
@@ -294,12 +330,17 @@ FOR next steps:
 
 ### Session 1: [Title] (~X hours)
 **Focus:** [1-2 word category]
+**Narrative:** [2-3 sentences preserving objectives, constraints, observations, cross-session references, and tone. Quote ≤40 words if impactful.]
+**Dependencies:** Upstream [sessions/artifacts]; Downstream [sessions/artifacts]; Related initiatives [names]
+**Evidence:** Commits [hashes]; Benchmarks [files]; Metrics [summary]; Quotes [speaker → excerpt]
+
 **Key Actions:**
 - [Accomplishment 1]
 - [Accomplishment 2]
 - [Accomplishment 3]
 
 **Decisions:** [List if any, or "None"]
+**Issues Raised:** [Summarize unresolved issues from this session]
 
 ### Session 2: [Title] (~X hours)
 [Same structure...]
@@ -309,37 +350,48 @@ FOR next steps:
 ## Consolidated Accomplishments
 
 ### Code Changes
-- [List all code-related accomplishments]
+- [List all code-related accomplishments with context clauses and initiative ties]
 
 ### Documentation
-- [List all documentation accomplishments]
+- [List all documentation accomplishments with context and references]
 
 ### Testing
-- [List all testing accomplishments]
+- [List all testing accomplishments with metrics, benchmarks, and coverage impact]
 
 ### Infrastructure/Tooling
-- [List all infrastructure accomplishments]
+- [List all infrastructure accomplishments with rationale and performance data]
 
 ---
 
 ## Technical Decisions
 
 1. **[Decision Topic]**
-   **Decision:** [What was decided]
-   **Rationale:** [Why]
-   **Impact:** [Expected effect]
+
+   - **Decision:** [What was decided]
+   - **Rationale:** [Why]
+   - **Trade-offs:** [Alternatives considered or rejected]
+   - **Impact:** [Expected effect with metrics; mention affected systems/initiatives]
+   - **Follow-up:** [Required actions if any]
 
 ---
 
 ## Key Learnings
 
 ### Technical Insights
-1. **[Technology/Pattern]:** [Specific insight with measurements]
-2. **[Technology/Pattern]:** [Specific insight with measurements]
+1. **[Technology/Pattern]:** [Specific insight with measurements, experiment details, and context]
+2. **[Technology/Pattern]:** [Specific insight with measurements, experiment details, and context]
 
 ### Process Improvements
-1. **[Process/Workflow]:** [What was learned]
-2. **[Process/Workflow]:** [What was learned]
+1. **[Process/Workflow]:** [What was learned, triggering event, expected change]
+2. **[Process/Workflow]:** [What was learned, triggering event, expected change]
+
+---
+
+## Cross-Session Dynamics
+
+- **Continuity Threads:** [Explain how sessions linked; track initiative progression and milestone completion]
+- **Unblocked Work:** [List downstream tasks enabled by completed work; include owners if noted]
+- **Outstanding Questions:** [Document open questions directed to teams/workflows]
 
 ---
 
@@ -347,12 +399,13 @@ FOR next steps:
 
 | Metric | Count | Details |
 |--------|-------|----------|
-| Files Modified | N | [List if ≤ 5] |
-| Commits | N | [List if ≤ 3] |
-| Tests Passing | N | [Context if changed] |
-| Tests Failing | N | [List issues] |
-| ADRs Created | N | [List titles] |
-| Initiatives Updated | N | [List names] |
+| Files Modified | N | [List if ≤ 5 or provide grouped summary] |
+| Commits | N | [Hashes if ≤ 5; else summary with references] |
+| Tests Passing | N | [Context if changed + coverage impact] |
+| Tests Failing | N | [Issues + owners + session origins] |
+| ADRs Created | N | [List titles + decisions] |
+| Initiatives Updated | N | [List names + progress notes] |
+| Total Duration | ~N hours | [Breakdown per initiative or workstream] |
 
 ---
 
@@ -360,8 +413,10 @@ FOR next steps:
 
 ### [Component/Area 1]
 - **Issue:** [Problem description]
-  **Reason:** [Why unresolved]
-  **Priority:** [High/Medium/Low based on mention frequency]
+- **Reason:** [Why unresolved + blockers]
+- **Owner:** [Name/team if mentioned]
+- **Priority:** [High/Medium/Low; justify with frequency or impact]
+- **Next Checkpoint:** [Date or condition if noted]
 
 ### [Component/Area 2]
 [Same structure...]
@@ -371,16 +426,24 @@ FOR next steps:
 ## Next Steps (Prioritized)
 
 ### Immediate (Next Session)
-- [ ] [Highest priority task]
-- [ ] [Second priority task]
+- [ ] [Highest priority task] — [Owner/dependency]
+- [ ] [Second priority task] — [Owner/dependency]
 
 ### Short-term (This Week)
-- [ ] [Important but not urgent]
-- [ ] [Important but not urgent]
+- [ ] [Important but not urgent] — [Owner/dependency]
+- [ ] [Important but not urgent] — [Owner/dependency]
 
 ### Future Considerations
-- [ ] [Nice to have]
-- [ ] [Nice to have]
+- [ ] [Nice to have] — [Context + triggering condition]
+- [ ] [Nice to have] — [Context + triggering condition]
+
+---
+
+## Supporting Evidence Index
+
+- **Commits:** [List hashes → descriptions + initiative reference]
+- **Benchmarks & Artifacts:** [List files/links with context]
+- **Key Quotes:** [Speaker → "Quote" (source session) + relevance]
 
 ---
 
@@ -391,7 +454,7 @@ FOR next steps:
 - `2025-MM-DD-session2.md` → Session 2 above
 
 **Consolidation Method:** Methodical extraction with structured merge rules
-**Workflow Version:** 2.0.0 (LLM-agnostic)
+**Workflow Version:** 2.1.0 (Context-preserving)
 ```
 
 ---
@@ -476,7 +539,7 @@ docs/archive/session-summaries/YYYY-MM-DD-daily-summary.md
 
 ### 5.3 Verify Content (Before Committing)
 
-**Run through validation checklist (Stage 4.1) line by line**
+#### Run through validation checklist (Stage 4.1) line by line
 
 ### 5.4 Remove Original Session Files
 

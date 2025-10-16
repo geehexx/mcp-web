@@ -62,8 +62,7 @@
           ".pre-commit-config.yaml",
           ".semgrep.yml",
           ".test_durations",
-          "pytest.ini",
-          "results.json"
+          "pytest.ini"
         ],
         "message": "No files allowed in project root except specified configuration and documentation files"
       }

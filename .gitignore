@@ -213,3 +213,9 @@ cache/
 
 # Node dependencies
 node_modules/
+
+# Test Timings
+.test_durations
+
+# MarkdownLint JSON Results
+markdownlint-cli2-results.json

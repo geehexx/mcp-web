@@ -79,7 +79,7 @@ print(f"Took {ctx.duration_ms:.2f}ms")
 # Collect all results
 collector = PerformanceCollector.get_instance()
 stats = collector.get_statistics()
-collector.export_json("performance.json")
+collector.export_json("/tmp/mcp-web-performance.json")
 ```
 
 ### 2. Benchmark Pipeline Script (`scripts/benchmark_pipeline.py`)
@@ -93,8 +93,8 @@ python scripts/benchmark_pipeline.py --url https://python.org
 # With profiling
 python scripts/benchmark_pipeline.py --url https://python.org --profile
 
-# Export results
-python scripts/benchmark_pipeline.py --url https://python.org --export results.json
+# Export results to temp location
+python scripts/benchmark_pipeline.py --url https://python.org --export /tmp/mcp-web-benchmark.json
 
 # Load test
 python scripts/benchmark_pipeline.py --load-test --concurrent 10 --requests 100
