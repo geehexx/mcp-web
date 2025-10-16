@@ -32,36 +32,36 @@ During the comprehensive overhaul, we discovered that 10 tests in `tests/unit/te
 - Issue: Detecting "Ignore whitespace when formatting" as injection
 - Root cause: Pattern too broad
 
-2. **`TestPromptInjectionFilter::test_sanitize_input`**
+1. **`TestPromptInjectionFilter::test_sanitize_input`**
 
 - Issue: `assert 1 == 10000` mismatch
 - Root cause: Max length parameter issue
 
-3. **`TestOutputValidator::test_detect_api_key_exposure`**
+1. **`TestOutputValidator::test_detect_api_key_exposure`**
 
 - Issue: Not detecting `sk-proj-` prefixed keys
 - Root cause: Regex pattern incomplete
 
-4-5. **`TestConsumptionLimits` (2 tests)**
+1. **`TestConsumptionLimits` (2 tests)**
 
 - Issue: `'coroutine' object does not support async context manager`
 - Root cause: Incorrect async usage
 
-6. **`TestURLValidation::test_localhost_blocked`**
+1. **`TestURLValidation::test_localhost_blocked`**
 
 - Issue: IPv6 localhost `[::1]` not blocked
 - Root cause: Missing IPv6 validation
 
-7. **`TestSecurityIntegration::test_combined_input_output_validation`**
+1. **`TestSecurityIntegration::test_combined_input_output_validation`**
 
 - Issue: Pattern not detected/sanitized
 - Root cause: Similar to #1
 
-8. **`TestSecurityIntegration::test_rate_limit_with_injection_attempts`**
+1. **`TestSecurityIntegration::test_rate_limit_with_injection_attempts`**
 
 - Issue: (Async-related)
 
-9-10. **`TestRateLimiter` (2 tests)**
+1. **`TestRateLimiter` (2 tests)**
 
 - Issue: (Async-related)
 
@@ -131,7 +131,7 @@ Fixed all 10 failing security unit tests by addressing two root causes:
 - Fixed `RateLimiter.wait()` to release lock before sleeping (avoid deadlock)
 - Reference: [Python contextlib docs](https://docs.python.org/3/library/contextlib.html)
 
-2. **Prompt Injection Detection (4 tests)**
+1. **Prompt Injection Detection (4 tests)**
 
 - Issue: Patterns too narrow, missing common injection variations
 - Solution: Enhanced patterns based on OWASP LLM01:2025 guidance:

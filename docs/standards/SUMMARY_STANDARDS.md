@@ -30,7 +30,7 @@ Do NOT create for:
 
 ### Format
 
-```
+```text
 YYYY-MM-DD-descriptive-kebab-case-name.md
 ```
 
@@ -60,7 +60,7 @@ YYYY-MM-DD-descriptive-kebab-case-name.md
 
 All session summaries go in:
 
-```
+```text
 docs/archive/session-summaries/
 ```
 
@@ -133,7 +133,7 @@ abc1234 feat(module): add new feature
 def5678 fix(security): resolve vulnerability
 ghi9012 docs: update documentation
 
-```
+```text
 
 Total commits: X
 
@@ -528,7 +528,7 @@ a1b2c3d fix(cache): sanitize URLs in cache keys
 e4f5g6h fix(cache): increase Redis connection timeout
 i7j8k9l refactor(cache): change eviction policy to LFU
 
-```
+```text
 
 ---
 

@@ -87,7 +87,7 @@
 
 ## Commits
 
-```
+```text
 53c7d45 docs(adr): add ADR-0013 to index
 637d243 docs(initiatives): establish comprehensive initiative documentation standards
 6d7f77e docs(initiatives): archive completed ADR conversion initiative
@@ -218,14 +218,14 @@
 - Implement timestamp tracking
 - File: `.windsurf/workflows/meta-analysis.md`
 
-2. 🔴 **Critical:** Update `/work` workflow with protocol enforcement
+1. 🔴 **Critical:** Update `/work` workflow with protocol enforcement
 
 - Add meta-analysis validation
 - Check for stale session summaries
 - Warn if Session End Protocol not followed
 - File: `.windsurf/workflows/work.md`
 
-3. 🟡 **High:** Commit meta-analysis improvements
+1. 🟡 **High:** Commit meta-analysis improvements
 
 - Commit this session summary
 - Commit workflow improvements
@@ -233,14 +233,14 @@
 
 ### Next Session
 
-4. 🟡 **High:** Continue Quality Foundation Phase 2
+1. 🟡 **High:** Continue Quality Foundation Phase 2
 
 - Install markdownlint-cli2 and Vale
 - Configure linting rules
 - Set up pre-commit hooks
 - Initiative: `docs/initiatives/active/2024-q4-quality-foundation.md`
 
-5. 🟢 **Medium:** Fix security unit tests
+1. 🟢 **Medium:** Fix security unit tests
 
 - 10 failing tests in `tests/unit/test_security.py`
 - Quick wins available (API key patterns, IPv6 localhost)

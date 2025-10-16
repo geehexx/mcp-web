@@ -59,7 +59,7 @@ Do NOT plan for:
 - API key authentication (simplest for API use case)
 - In-memory storage for now (future: database)
 - Scope: API only (MCP later)
-```
+```text
 
 ### 1.2 Define Success Criteria
 
@@ -86,7 +86,7 @@ Do NOT plan for:
 
 **Verification:** `task test:security` passes all auth tests
 **Estimated Effort:** 6-8 hours (2 sessions)
-```
+```text
 
 ---
 
@@ -100,20 +100,20 @@ Do NOT plan for:
 
    ```bash
    grep_search("authentication\\|auth\\|api.?key", "src/", recursive=true)
-   ```
+   ```text
 
 2. **Related ADRs**
 
    ```bash
    list_dir("docs/adr/")
    # Read any security-related ADRs
-   ```
+   ```text
 
 3. **Security guidelines**
 
    ```bash
    read_file(".windsurf/rules/04_security.md")
-   ```
+   ```text
 
 ### 2.2 External Research
 
@@ -126,7 +126,7 @@ Do NOT plan for:
 search_web("Python API key authentication best practices 2025")
 search_web("FastAPI JWT authentication security OWASP 2025")
 search_web("API security patterns microservices 2025")
-```
+```text
 
 **Why web search is essential:**
 
@@ -167,7 +167,7 @@ search_web("API security patterns microservices 2025")
 - [Additional sources from web search]
 
 **Note:** Always cite actual URLs from search results, not placeholder examples
-```
+```text
 
 ### 2.3 Architecture Assessment
 
@@ -248,7 +248,7 @@ Tasks:
 4. Create ADR-XXXX-api-key-authentication.md
 
 **Exit Criteria:** Documentation complete, security passed
-```
+```text
 
 ### 3.2 Identify Dependencies
 
@@ -257,7 +257,7 @@ Tasks:
 ```markdown
 ## Dependencies
 
-```
+```text
 
 Phase 1 (Core Auth) → Phase 2 (Key Mgmt)
                    ↘
@@ -265,7 +265,7 @@ Phase 1 (Core Auth) → Phase 2 (Key Mgmt)
                                          ↘
                                           → Phase 4 (Docs)
 
-```
+```text
 
 **Blockers:**
 - None (can start immediately)
@@ -273,7 +273,7 @@ Phase 1 (Core Auth) → Phase 2 (Key Mgmt)
 **Assumptions:**
 - Using FastAPI (already in project)
 - Python 3.10+ (already required)
-```
+```text
 
 ### 3.3 Risk Assessment
 
@@ -293,7 +293,7 @@ Phase 1 (Core Auth) → Phase 2 (Key Mgmt)
 - OAuth/OIDC integration (future: ADR needed)
 - User management UI (API only)
 - Database storage (Phase 2: separate initiative)
-```
+```text
 
 ---
 
@@ -348,7 +348,7 @@ Implement secure API key authentication for all MCP web service endpoints.
 
 ### 2025-10-15
 Initiative created. Ready to begin Phase 1.
-```
+```text
 
 **Save to:** `docs/initiatives/active/YYYY-MM-DD-descriptive-name.md`
 
@@ -359,7 +359,7 @@ Initiative created. Ready to begin Phase 1.
 ```bash
 # Invoke ADR workflow
 /new-adr
-```
+```text
 
 ---
 
@@ -402,7 +402,7 @@ Before proceeding, verify:
 3. I'll begin Phase 1 implementation
 
 **Ready to proceed?**
-```
+```text
 
 ---
 
@@ -422,13 +422,13 @@ Before proceeding, verify:
 **Constraints:** [List out-of-scope items]
 
 **Start with:** Task 1 (Create auth.py module)
-```
+```text
 
 ### 6.2 Invoke Implementation
 
 ```markdown
 /implement --initiative=docs/initiatives/active/2025-10-15-api-key-auth.md --phase=1
-```
+```text
 
 ---
 

@@ -71,7 +71,8 @@ repos:
     hooks:
       - id: markdownlint-cli2-docker
         name: "📝 markdown · Lint with markdownlint-cli2 (Docker)"
-        args: [--fix, --config, .markdownlint.json]
+        args: [--fix, --config, .markdownlint-cli2.jsonc]
+        exclude: ^(node_modules/|\.venv/|docs/archive/)
 
   # Git - Commit Message Validation
   - repo: https://github.com/compilerla/conventional-pre-commit

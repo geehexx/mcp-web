@@ -5,11 +5,17 @@ auto_execution_mode: 3
 
 # Work Orchestration Workflow
 
-**Purpose:** Central orchestration workflow that intelligently detects project context and routes to appropriate specialized workflows.
+## Purpose
 
-**Invocation:** `/work` (with optional context) or `/work` (autonomous detection)
+Central orchestration workflow that intelligently detects project context and routes to appropriate specialized workflows.
 
-**Philosophy:** AI agent should understand where to pick up from by analyzing project state, not by requiring explicit direction.
+## Invocation
+
+`/work` (with optional context) or `/work` (autonomous detection)
+
+## Philosophy
+
+AI agent should understand where to pick up from by analyzing project state, not by requiring explicit direction.
 
 ---
 
@@ -32,7 +38,7 @@ mcp0_read_multiple_files([
     "docs/initiatives/active/*.md",  # All active initiatives
     ".windsurf/rules/00_agent_directives.md"
 ])
-```
+```text
 
 **Scan for:**
 
@@ -59,7 +65,7 @@ mcp0_read_multiple_files([
    ```bash
    # Get 2-3 most recent summaries
    ls -t docs/archive/session-summaries/*.md | head -3
-   ```
+   ```text
 
    - Read "Next Steps" sections
    - Check "Unresolved" issues
@@ -68,9 +74,9 @@ mcp0_read_multiple_files([
 
 1. **Initiatives** (highest context value)
 
-   ```
+   ```text
    docs/initiatives/active/
-   ```
+   ```text
 
    - Look for unchecked `[ ]` items
    - Check "Status:" field
@@ -81,7 +87,7 @@ mcp0_read_multiple_files([
    ```bash
    git log --oneline -5
    git status --short
-   ```
+   ```text
 
    - Unstaged changes → incomplete work
    - Recent commits → continuation context
@@ -91,7 +97,7 @@ mcp0_read_multiple_files([
    ```bash
    # Check last test run
    task test:fast 2>&1 | tail -20
-   ```
+   ```text
 
    - Failures → implementation needed
    - Pending tests → TDD workflow
@@ -101,7 +107,7 @@ mcp0_read_multiple_files([
    ```bash
    # Efficient grep for markers
    grep_search("TODO\\|FIXME\\|XXX", "docs/", recursive=true)
-   ```
+   ```text
 
 ### 1.3 Context Interpretation Matrix
 
@@ -132,7 +138,7 @@ Based on detected signals, classify intent:
 Detected: docs/initiatives/active/fix-security-unit-tests.md
 Status: Active, 3/10 tasks completed
 → AUTO-ROUTE: /implement with context loaded
-```
+```text
 
 **Example 2: Test Failures**
 
@@ -140,7 +146,7 @@ Status: Active, 3/10 tasks completed
 Detected: 10 test failures in tests/unit/test_security.py
 Last modified: 2 hours ago
 → AUTO-ROUTE: /implement focusing on test fixes
-```
+```text
 
 **Example 3: Planning Markers**
 
@@ -148,7 +154,7 @@ Last modified: 2 hours ago
 Detected: Multiple "needs design" comments
 Detected: ADR placeholder markers
 → AUTO-ROUTE: /plan to create comprehensive plan
-```
+```text
 
 ### 2.2 Clarify (Ambiguous)
 
@@ -179,7 +185,7 @@ Which would you like to continue?
 3. Review and commit recent changes (/commit)
 4. Create new plan (/plan)
 5. Something else (please specify)
-```
+```text
 
 ---
 
@@ -197,7 +203,7 @@ Before executing routed workflow, load complete context:
 3. Check test status
 4. Review recent commits for this area
 5. Execute /implement with full context
-```
+```text
 
 **For Planning:**
 
@@ -207,7 +213,7 @@ Before executing routed workflow, load complete context:
 3. Scan active ADRs
 4. Check completed initiatives for patterns
 5. Execute /plan with strategic context
-```
+```text
 
 ### 3.2 Workflow Chaining
 
@@ -221,7 +227,7 @@ Workflows can call each other:
   → calls /implement with plan context
   → implementation complete (tests integrated)
   → calls /commit
-```
+```text
 
 ---
 
@@ -247,7 +253,7 @@ Workflows can call each other:
    ```bash
    # Read 2-3 most recent summaries
    ls -t docs/archive/session-summaries/*.md | head -3 | xargs cat
-   ```
+   ```text
 
    - Extract "Next Steps" section
    - Note "Unresolved" issues
@@ -279,7 +285,7 @@ read_file("docs/initiatives/active/initiative1.md")
 read_file("docs/initiatives/active/initiative2.md")
 read_file("docs/PROJECT_SUMMARY.md")
 # 3 separate tool calls → slow
-```
+```text
 
 ✅ **Good** (Batch read):
 
@@ -290,7 +296,7 @@ mcp0_read_multiple_files([
     "docs/PROJECT_SUMMARY.md"
 ])
 # 1 tool call → 3x faster
-```
+```text
 
 ### Smart Grep (Targeted)
 
@@ -299,7 +305,7 @@ mcp0_read_multiple_files([
 ```python
 grep_search("TODO", "/", recursive=true)
 # Searches entire file system, including node_modules, .git, etc.
-```
+```text
 
 ✅ **Good** (Focused search):
 
@@ -307,7 +313,7 @@ grep_search("TODO", "/", recursive=true)
 grep_search("TODO", "docs/", recursive=true, includes=["*.md"])
 grep_search("FIXME", "src/", recursive=true, includes=["*.py"])
 # Targeted, fast, relevant results
-```
+```text
 
 ### Minimal Tool Calls
 
@@ -328,7 +334,7 @@ grep_search("FIXME", "src/", recursive=true, includes=["*.py"])
 ```markdown
 BAD: "What would you like to work on?"
 GOOD: "I detected initiative X is 60% complete. Continuing..."
-```
+```text
 
 ### ❌ Don't: Read Files One-by-One
 
@@ -376,7 +382,7 @@ Loading context...
 ✓ Checked test results
 
 Proceeding with implementation...
-```
+```text
 
 ### Example 2: Clean Slate Planning
 
@@ -470,7 +476,7 @@ if [ -f .windsurf/.last-meta-analysis ]; then
 else
   echo "WARNING: Meta-analysis never run before"
 fi
-```
+```text
 
 ---
 
@@ -492,7 +498,7 @@ Before ending any work session, verify:
 - [ ] Completed initiatives archived (see 5.2)
 - [ ] Meta-analysis executed (see 5.3)
 - [ ] Session summary created in proper location
-```
+```text
 
 ### 5.2 Archive Completed Initiatives (AUTOMATIC)
 
@@ -501,7 +507,7 @@ Before ending any work session, verify:
 ```bash
 # Search for completed status markers in active initiatives
 grep -l "Status.*Completed\|Status.*✅" docs/initiatives/active/*.md
-```
+```text
 
 **If any found:**
 
@@ -522,7 +528,7 @@ grep -l "Status.*Completed\|Status.*✅" docs/initiatives/active/*.md
 ```bash
 # This is NOT optional - it's a mandatory exit gate
 /meta-analysis
-```
+```text
 
 **Why this is mandatory:**
 
@@ -560,7 +566,7 @@ Created: docs/archive/session-summaries/YYYY-MM-DD-description.md
 
 ## Next Session Starting Points
 [Top 3 priorities from session summary]
-```
+```text
 
 ---
 

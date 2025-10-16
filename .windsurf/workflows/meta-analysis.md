@@ -30,7 +30,7 @@ Read timestamp file to detect if meta-analysis is being run regularly:
 ```bash
 # Check if .windsurf/.last-meta-analysis exists
 cat .windsurf/.last-meta-analysis 2>/dev/null || echo "NEVER"
-```
+```text
 
 **Warning triggers:**
 
@@ -47,7 +47,7 @@ Update timestamp file when meta-analysis runs:
 date -u +"%Y-%m-%dT%H:%M:%SZ" > .windsurf/.last-meta-analysis
 git add .windsurf/.last-meta-analysis
 # Will be committed with session summary
-```
+```text
 
 ### 0.3 Protocol Violation Detection
 
@@ -128,7 +128,7 @@ git add .windsurf/.last-meta-analysis
 2. 🟡 **High:** Continue docs/initiatives/active/quality-foundation.md Phase 2
    - Tasks: Install markdownlint-cli2, configure Vale
    - Estimated: 1-2 hours
-```
+```text
 
 **Bad example:**
 
@@ -138,7 +138,7 @@ git add .windsurf/.last-meta-analysis
 1. Continue the work from earlier
 2. Fix remaining issues
 3. Complete the feature
-```
+```text
 
 ### 1.4 Identify Critical Improvements
 
@@ -295,7 +295,7 @@ Concrete code/command examples
 
 ## References
 Links to official documentation
-```
+```text
 
 **Workflows (`.windsurf/workflows/`):**
 
@@ -319,7 +319,7 @@ How to confirm success
 
 ## Troubleshooting
 Common issues and fixes
-```
+```text
 
 **Documentation (`docs/`):**
 
@@ -340,7 +340,7 @@ Typical use cases
 
 ## References
 External authoritative sources with URLs
-```
+```text
 
 ---
 
@@ -379,7 +379,7 @@ git commit -m "docs(rules): add guidance for [specific topic]
 - Update [outdated reference]
 
 Rationale: [why this improves agent performance]"
-```
+```text
 
 ---
 
@@ -415,7 +415,7 @@ Generate a structured summary:
 
 ### Recommendations for Next Session
 [Specific action items for user or future agents]
-```
+```text
 
 ---
 

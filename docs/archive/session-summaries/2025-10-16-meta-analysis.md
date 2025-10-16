@@ -1,7 +1,7 @@
 # Meta-Analysis: Prompt Optimization Session
 
-**Date:** 2025-10-16  
-**Session:** Prompt Optimization & Adaptive max_tokens  
+**Date:** 2025-10-16
+**Session:** Prompt Optimization & Adaptive max_tokens
 **Duration:** ~1.5 hours
 
 ---
@@ -136,24 +136,24 @@ No critical protocol violations or workflow gaps detected this session.
    ```bash
    # View optimized prompts
    grep -A 10 "_build_map_prompt\|_build_reduce_prompt" src/mcp_web/summarizer.py
-   ```
+```
 
 2. **Configuration Options:**
 
    ```bash
    # Check new config fields
    grep -A 3 "adaptive_max_tokens\|stop_sequences\|max_tokens_ratio" src/mcp_web/config.py
-   ```
+```
 
 3. **Functionality:**
 
    ```bash
    # Run benchmarks
    task test:bench
-   
+
    # Run golden tests
    task test:golden
-   ```
+```
 
 4. **Live Testing (when ready):**
 
@@ -162,7 +162,7 @@ No critical protocol violations or workflow gaps detected this session.
    MCP_WEB_SUMMARIZER_ADAPTIVE_MAX_TOKENS=true \
    MCP_WEB_SUMMARIZER_MAX_TOKENS_RATIO=0.5 \
    task test:manual URL=https://python.org
-   ```
+```
 
 ---
 
@@ -188,14 +188,14 @@ None - all critical work completed
 
 ### 🟢 Medium Priority
 
-3. **Live Performance Validation**
+1. **Live Performance Validation**
    - A/B test prompt optimizations with real URLs
    - Measure actual latency improvements
    - Compare adaptive vs fixed max_tokens
    - Sample size: 50-100 URLs
    - Estimated effort: 1-2 hours
 
-4. **Add Chunk-Level Caching**
+2. **Add Chunk-Level Caching**
    - Cache summaries of common chunks
    - Semantic deduplication
    - Expected impact: 20-30% for repeat content

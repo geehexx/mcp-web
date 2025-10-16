@@ -1,6 +1,6 @@
 # Taskfile Guide
 
-**Project:** mcp-web  
+**Project:** mcp-web
 **Task Version:** 3.x
 
 ---
@@ -340,7 +340,7 @@ task security
 
 Dependency graph:
 
-```
+```text
 ci
 ├── lint
 │   ├── lint:ruff
@@ -629,6 +629,6 @@ task --version
 
 ---
 
-**Last Updated:** 2025-10-15  
-**Taskfile Version:** 3.x  
+**Last Updated:** 2025-10-15
+**Taskfile Version:** 3.x
 **Status:** ✅ Complete migration from bash scripts

@@ -38,7 +38,7 @@ Read initiative file:
 - Unchecked tasks
 - Acceptance criteria
 - References
-```
+```text
 
 **If no initiative:**
 
@@ -47,7 +47,7 @@ Clarify:
 - What to implement?
 - Expected behavior?
 - How to verify?
-```
+```text
 
 ### 1.2 Identify Files
 
@@ -67,7 +67,7 @@ mcp0_read_multiple_files([
     # Documentation
     "docs/API.md",
 ])
-```
+```text
 
 ### 1.3 Check Current State
 
@@ -77,7 +77,7 @@ git status
 
 # Run relevant tests (establish baseline)
 task test:fast
-```
+```text
 
 ---
 
@@ -94,13 +94,13 @@ task test:fast
        """Test for feature X."""
        result = new_feature()
        assert result == expected
-   ```
+   ```text
 
 2. **Run test (verify it fails)**
 
    ```bash
    uv run pytest tests/path/to/test.py::test_new_feature -xvs
-   ```
+   ```text
 
 3. **Confirm failure reason**
    - Not implemented yet? ✓ Good
@@ -119,7 +119,7 @@ def new_feature():
     """
     # Minimal implementation
     return expected
-```
+```text
 
 **DO NOT:**
 
@@ -131,7 +131,7 @@ def new_feature():
 
 ```bash
 uv run pytest tests/path/to/test.py::test_new_feature -xvs
-```
+```text
 
 **If fails:** Debug, fix, re-test (don't proceed)
 **If passes:** Continue to refactor
@@ -176,7 +176,7 @@ uv run pytest tests/path/to/test.py::test_new_feature -xvs
 def test_feature_with_module_b():
     """Test feature X integrated with module B."""
     # Integration test
-```
+```text
 
 ---
 
@@ -193,7 +193,7 @@ Add:
 - New function signatures
 - Usage examples
 - Error cases
-```
+```text
 
 ### 4.2 Update README (If Needed)
 
@@ -206,7 +206,7 @@ Add:
 - Installation steps (if dependencies added)
 - Usage examples
 - Configuration options
-```
+```text
 
 ### 4.3 Inline Documentation
 
@@ -231,7 +231,7 @@ def function(arg: type) -> return_type:
         >>> function(value)
         result
     """
-```
+```text
 
 ---
 
@@ -245,7 +245,7 @@ task test:fast
 
 # Full tests if available
 task test
-```
+```text
 
 **Requirements:**
 
@@ -261,7 +261,7 @@ task format
 
 # Check remaining issues
 task lint
-```
+```text
 
 **Requirements:**
 
@@ -278,7 +278,7 @@ task security
 # Specific scans
 task security:bandit
 task security:semgrep
-```
+```text
 
 ---
 
@@ -300,14 +300,14 @@ git commit -m "feat(auth): add API key validation
 - Follows OWASP API security guidelines
 
 Refs: docs/initiatives/active/2025-10-15-api-key-auth.md"
-```
+```text
 
 ❌ **Bad:**
 
 ```bash
 git add .
 git commit -m "wip"
-```
+```text
 
 ### 6.2 Use `/commit` Workflow
 
@@ -322,7 +322,7 @@ git commit -m "wip"
 # 2. Verify ownership
 # 3. Guide commit message
 # 4. Run pre-commit hooks
-```
+```text
 
 ---
 
@@ -340,7 +340,7 @@ git commit -m "wip"
 - [x] Unit tests (15 tests) ✓
 - [ ] Integration with FastAPI
 - [ ] CLI key management
-```
+```text
 
 ### 7.2 Document Decisions
 
@@ -360,7 +360,7 @@ Completed Phase 1 (Core Authentication):
 **Reason:** Better library support, sufficient security for API keys
 
 Next session: Phase 2 (CLI key management)
-```
+```text
 
 ---
 
@@ -379,7 +379,7 @@ Next session: Phase 2 (CLI key management)
 Commit if green
 ↓
 Next feature
-```
+```text
 
 ### The 3-File Rule
 
@@ -392,16 +392,16 @@ Modified:
 3. src/mcp_web/models.py
 
 → RUN: task test:fast
-```
+```text
 
 ### The Red-Green-Refactor Cycle
 
-```
+```text
 Write Test (RED) → Implement (GREEN) → Refactor (GREEN) → Commit
        ↑                                                      ↓
        └──────────────────────────────────────────────────────┘
                         Next Feature
-```
+```text
 
 ---
 
@@ -417,7 +417,7 @@ Write Test (RED) → Implement (GREEN) → Refactor (GREEN) → Commit
 3. Find bugs
 4. Fix bugs
 5. Find more bugs
-```
+```text
 
 **Good:**
 
@@ -426,7 +426,7 @@ Write Test (RED) → Implement (GREEN) → Refactor (GREEN) → Commit
 2. Implement that feature
 3. Test passes
 4. Next test
-```
+```text
 
 ### ❌ Don't: Batch Too Many Changes
 
@@ -435,7 +435,7 @@ Write Test (RED) → Implement (GREEN) → Refactor (GREEN) → Commit
 ```bash
 # 50 files changed, 2000+ lines
 git commit -m "add feature"
-```
+```text
 
 **Good:**
 
@@ -445,7 +445,7 @@ git commit -m "feat(auth): add validation"
 
 # 2 files changed, 30 lines
 git commit -m "feat(auth): add CLI commands"
-```
+```text
 
 ### ❌ Don't: Skip Testing After Refactor
 
@@ -454,13 +454,13 @@ git commit -m "feat(auth): add CLI commands"
 ```markdown
 Refactor code → Looks good → Move on
 (broke something, didn't notice)
-```
+```text
 
 **Good:**
 
 ```markdown
 Refactor code → Run tests → Verify green → Move on
-```
+```text
 
 ### ❌ Don't: Ignore Linting Failures
 
@@ -470,7 +470,7 @@ Refactor code → Run tests → Verify green → Move on
 $ task lint
 ERROR: 5 linting issues
 $ git commit  # Commit anyway
-```
+```text
 
 **Good:**
 
@@ -480,7 +480,7 @@ ERROR: 5 linting issues
 $ task format  # Auto-fix
 $ task lint  # Verify clean
 $ git commit
-```
+```text
 
 ---
 
@@ -508,7 +508,7 @@ $ git commit
 2. Task 5 (estimated 45 min)
 
 **Blockers:** None
-```
+```text
 
 ---
 

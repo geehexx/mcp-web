@@ -21,7 +21,7 @@ See [template.md](template.md) for the full template.
 
 ADRs are numbered sequentially with a descriptive title:
 
-```
+```text
 NNNN-verb-noun-phrase.md
 ```
 
@@ -33,7 +33,7 @@ Examples:
 
 ## Lifecycle
 
-```
+```text
 Proposed → Accepted → Implemented → [Deprecated/Superseded]
 ```
 

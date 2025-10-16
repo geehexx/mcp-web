@@ -56,7 +56,7 @@ Include dates for time-sensitive information and external references.
 
 ## Directory Structure
 
-```
+```text
 docs/
 ├── standards/ # Documentation standards and style guides
 │ ├── DOCUMENTATION_STANDARDS.md (this file)
@@ -244,16 +244,14 @@ Content here.
 - Include language even for plain text (use `bash`, `text`, `python`, etc.)
 - Add blank line before/after code blocks
 
-````markdown
 ```python
-def example():
- return "hello"
+def example() -> str:
+    return "hello"
 ```
 
 ```bash
 task test:fast
 ```
-````
 
 #### Links
 
@@ -261,7 +259,7 @@ task test:fast
 - Include URL in link text for external references
 - Use relative paths for internal links
 
-```markdown
+```text
 See [Testing Guide](../TESTING.md) for details.
 
 External: [pytest Documentation](https://docs.pytest.org/)

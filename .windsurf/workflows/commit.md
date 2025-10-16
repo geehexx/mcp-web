@@ -59,4 +59,4 @@ test(integration): add robots.txt handling test scenarios
 
 # Security improvement
 security(extractor): strip HTML comments to prevent injection
-```
+```text

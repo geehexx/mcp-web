@@ -135,7 +135,7 @@ Phase 1: Core Authentication (4h)
 
 **Implementation Cycle:**
 
-```
+```text
 Write Test (RED)
  ↓
 Implement (GREEN)
@@ -331,7 +331,7 @@ Agent:
 
 ### Example 1: Complete Feature Flow
 
-```
+```text
 /work (detects: "needs planning")
  ↓
 /plan (creates comprehensive plan)
@@ -351,7 +351,7 @@ Agent:
 
 ### Example 2: Quick Fix Flow
 
-```
+```text
 /work (detects: test failures)
  ↓
 /implement (fix specific test)
@@ -363,7 +363,7 @@ Agent:
 
 ### Example 3: Architectural Decision
 
-```
+```text
 /work (detects: architecture markers)
  ↓
 /new-adr (create ADR)
@@ -445,7 +445,7 @@ grep_search("TODO", "docs/", includes=["*.md"])
 
 ### Workflow Hierarchy
 
-```
+```text
 /work (Central Orchestrator)
  ├─→ /plan (Strategic Planning)
  │ └─→ /new-adr (if architectural)
@@ -461,7 +461,7 @@ grep_search("TODO", "docs/", includes=["*.md"])
 
 ### Context Flow
 
-```
+```text
 Project Files → Context Detection → Route Decision
  ↓
  ┌───────────┴──────────┐

@@ -204,7 +204,7 @@ This document establishes the principles, standards, and processes that govern t
 
 **Test organization:**
 
-```
+```text
 tests/
 ├── unit/ # Fast, isolated tests
 ├── integration/ # Multi-component tests
@@ -380,7 +380,7 @@ task test
 
 **Git commit message format:**
 
-```
+```text
 type(scope): brief description
 
 Detailed explanation of what and why (not how).

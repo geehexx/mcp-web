@@ -47,7 +47,7 @@ This guide documents the performance optimization work for mcp-web, including im
 **Implementation**: Three map-reduce strategies:
 
 1. **Parallel (default)**: `asyncio.gather()` - fastest
-2. **Streaming**: `asyncio.as_completed()` - better UX  
+2. **Streaming**: `asyncio.as_completed()` - better UX
 3. **Sequential**: Original implementation - fallback
 
 **References**:
@@ -214,7 +214,7 @@ MCP_WEB_SUMMARIZER_PARALLEL_MAP=false python scripts/benchmark_pipeline.py --url
 | 30k tokens    | 12-15  | ~45s       | ~5s      | 8-10x            |
 | 100k tokens   | 40-50  | ~2min      | ~10s     | 12x+             |
 
-_Assumptions: 3s average LLM call latency, ~1s reduce phase_
+**Assumptions:** 3s average LLM call latency, ~1s reduce phase
 
 ### Interpreting Results
 
@@ -227,7 +227,7 @@ Look for:
 
 Example output:
 
-```
+```text
 ================================================================================
 Benchmarking: https://python.org
 Cache: Enabled

@@ -221,14 +221,14 @@ async def main():
  async with Client() as client:
  # Connect to mcp-web server
  await client.connect_to_server("mcp-web")
- 
+
  # Call summarize_urls tool
  result = await client.call_tool(
  "summarize_urls",
  urls=["https://example.com"],
  query="What is this about?"
  )
- 
+
  print(result)
 
 asyncio.run(main())
@@ -268,7 +268,7 @@ python -m mcp_web.mcp_server 2>&1 | tee -a /var/log/mcp-web/server.log
 
 Log rotation with logrotate (`/etc/logrotate.d/mcp-web`):
 
-```
+```text
 /var/log/mcp-web/*.log {
  daily
  rotate 7
@@ -524,12 +524,12 @@ async def health_check():
  config = load_config()
  server = create_server(config)
  print("✓ Server initialized successfully")
- 
+
  # Check cache
  if server.pipeline.cache:
  stats = server.pipeline.cache.get_stats()
  print(f"✓ Cache operational: {stats['size_mb']:.2f} MB")
- 
+
  print("✓ Health check passed")
  return True
  except Exception as e:

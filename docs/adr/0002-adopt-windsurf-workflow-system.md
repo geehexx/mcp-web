@@ -38,7 +38,7 @@ We will adopt a hierarchical Windsurf workflow system with a central orchestrati
 
 ### Workflow Architecture
 
-```
+```text
 /work (Central Orchestrator)
  ├─→ /plan (Research-based planning)
  ├─→ /implement (Test-first execution)
@@ -193,7 +193,7 @@ We will adopt a hierarchical Windsurf workflow system with a central orchestrati
 
 ### Directory Structure
 
-```
+```text
 .windsurf/
 └── workflows/
  ├── work.md # Central orchestrator ⭐

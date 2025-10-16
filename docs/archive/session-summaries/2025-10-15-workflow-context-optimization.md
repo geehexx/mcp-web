@@ -115,7 +115,7 @@
 
 **Applied pattern:**
 
-```
+```text
 Session summaries = Compacted context from previous sessions
 - Preserve: Architectural decisions, unresolved bugs, next steps
 - Discard: Verbose details (available in git history)
@@ -142,7 +142,7 @@ Session summaries = Compacted context from previous sessions
 
 ## Commits
 
-```
+```text
 [Pending] docs(workflows): optimize context detection with session summaries
 
 - Enhanced /work workflow to prioritize session summaries (step 0)
@@ -191,13 +191,13 @@ Refs: https://www.anthropic.com/engineering/effective-context-engineering-for-ai
 
 ### Next Session
 
-2. 🟡 **High:** Test improved `/work` workflow with actual continuation
+1. 🟡 **High:** Test improved `/work` workflow with actual continuation
 
 - Scenario: Start new session, run `/work`, verify it uses session summaries
 - Expected: Agent reads 2-3 most recent summaries automatically
 - Validation: Picks up from "Next Steps" without user prompting
 
-3. 🟢 **Medium:** Continue docs/initiatives/active/quality-foundation.md Phase 2
+1. 🟢 **Medium:** Continue docs/initiatives/active/quality-foundation.md Phase 2
 
 - Tasks: Install markdownlint-cli2, configure Vale
 - Estimated: 1-2 hours
@@ -205,7 +205,7 @@ Refs: https://www.anthropic.com/engineering/effective-context-engineering-for-ai
 
 ### Future
 
-4. ⚪ **Low:** Create ADR documenting session summary strategy
+1. ⚪ **Low:** Create ADR documenting session summary strategy
 
 - Decision: Session summaries as cross-session context mechanism
 - Alternatives: Persistent database, conversation export, external memory

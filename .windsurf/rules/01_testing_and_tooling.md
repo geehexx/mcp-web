@@ -20,7 +20,7 @@ globs: ["tests/**/*.py", "src/**/*.py", "*.toml", "*.ini", "Taskfile.yml"]
 - **Coverage requirement:** Maintain ≥90% code coverage (enforced by CI)
 - **Test organization:**
 
-  ```
+  ```text
   tests/
   ├── unit/              # Fast, isolated unit tests
   ├── integration/       # Multi-component tests
@@ -28,7 +28,7 @@ globs: ["tests/**/*.py", "src/**/*.py", "*.toml", "*.ini", "Taskfile.yml"]
   ├── golden/            # Regression tests with static data
   ├── live/              # Tests requiring network/API (marked, excluded by default)
   └── benchmarks/        # Performance benchmarks
-  ```
+  ```text
 
 ## 1.3 Parallel Testing (pytest-xdist)
 

@@ -125,25 +125,25 @@ Based on previous session decisions:
 - Decision: Use uv for all package operations
 - Rationale: Performance, reproducibility, better dependency resolution
 
-2. **ADR-0014: pytest-xdist Parallelization** (from comprehensive-overhaul)
+1. **ADR-0014: pytest-xdist Parallelization** (from comprehensive-overhaul)
 
 - Context: Tests were slow (225s sequential)
 - Decision: Use pytest-xdist with IO-optimized worker count (16)
 - Rationale: 7.5x speedup for IO-bound tests
 
-3. **ADR-0015: Pre-commit Hooks** (from comprehensive-overhaul)
+1. **ADR-0015: Pre-commit Hooks** (from comprehensive-overhaul)
 
 - Context: Need automated quality enforcement
 - Decision: Use pre-commit framework with ruff, vale, markdownlint
 - Rationale: Catch issues before commit, consistent formatting
 
-4. **ADR-0016: Windsurf Rules Structure** (from comprehensive-overhaul)
+1. **ADR-0016: Windsurf Rules Structure** (from comprehensive-overhaul)
 
 - Context: Need AI agent guidance system
 - Decision: Numbered priority system (00-04) with trigger types
 - Rationale: Clear precedence, intelligent rule application
 
-5. **ADR-0017: Documentation Linting** (from quality foundation)
+1. **ADR-0017: Documentation Linting** (from quality foundation)
 
 - Context: Documentation quality inconsistent
 - Decision: markdownlint-cli2 + Vale with Microsoft style
@@ -158,14 +158,14 @@ Based on previous session decisions:
 - Parallel testing with pytest-xdist
 - Writing new tests
 
-2. **docs/guides/CONTRIBUTING_GUIDE.md** (expand existing CONTRIBUTING.md)
+1. **docs/guides/CONTRIBUTING_GUIDE.md** (expand existing CONTRIBUTING.md)
 
 - Development setup with uv
 - Workflow usage
 - ADR creation process
 - Commit conventions
 
-3. **docs/guides/DEPLOYMENT_GUIDE.md** (expand existing DEPLOYMENT.md)
+1. **docs/guides/DEPLOYMENT_GUIDE.md** (expand existing DEPLOYMENT.md)
 
 - Production deployment
 - Configuration management

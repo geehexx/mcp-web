@@ -58,9 +58,9 @@ Create an ADR for:
 
 7. **Commit:** Use conventional commit format:
 
-   ```
+   ```text
    docs(adr): add ADR-NNNN for [decision topic]
-   ```
+   ```text
 
 ## ADR Template Reference
 

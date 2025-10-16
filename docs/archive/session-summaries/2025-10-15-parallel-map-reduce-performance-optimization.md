@@ -159,19 +159,19 @@ Changes:
 
 ### Process Insights
 
-4. **Research Before Implementation Pays Off**
+1. **Research Before Implementation Pays Off**
    - Spent time reviewing 2025 industry patterns
    - Found proven async.gather pattern
    - Avoided reinventing the wheel
    - Implementation was straightforward with examples
 
-5. **Test Optimization Improves Developer Experience**
+2. **Test Optimization Improves Developer Experience**
    - Parametrized tests are faster and clearer
    - Proper use of `@pytest.mark.slow` enables targeted testing
    - Reduced test time from ~0.5s to 0.05s per test class
    - Better CI/CD experience
 
-6. **Documentation Hierarchy Matters**
+3. **Documentation Hierarchy Matters**
    - ADR: Technical decision record
    - Guide: User-facing how-to
    - Initiative: Project management and planning
@@ -243,12 +243,12 @@ Changes:
 
 ### Phase 2 Planning
 
-4. 🟢 **Medium:** Begin Phase 2 planning from initiative
+1. 🟢 **Medium:** Begin Phase 2 planning from initiative
    - Review: `docs/initiatives/active/performance-optimization-pipeline.md` Phase 2 section
    - Tasks: Batch API integration, adaptive chunking, chunk-level caching
    - Estimated: 2-3 sessions
 
-5. 🟢 **Medium:** Add rate limiting to parallel map phase
+2. 🟢 **Medium:** Add rate limiting to parallel map phase
    - File: `src/mcp_web/summarizer.py`
    - Add: Semaphore-based rate limiting for API calls
    - Prevent: Rate limit errors with high chunk counts
@@ -256,7 +256,7 @@ Changes:
 
 ### Technical Debt
 
-6. ⚪ **Low:** Fix pre-commit hook nodeenv issue
+1. ⚪ **Low:** Fix pre-commit hook nodeenv issue
    - File: `.pre-commit-config.yaml`
    - Issue: nodeenv.py IndexError on node version detection
    - Impact: Requiring `--no-verify` for commits

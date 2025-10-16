@@ -141,31 +141,31 @@ When a test requires complex logic to validate behavior:
 - **Solution:** Created comprehensive meta-analysis workflow
 - **Location:** `.windsurf/workflows/meta-analysis.md`
 
-2. **✅ No Testing Workflow for AI Agents**
+1. **✅ No Testing Workflow for AI Agents**
 
 - **Impact:** Agent didn't know when/how to test
 - **Solution:** Created test-before-commit workflow with decision trees
 - **Location:** `.windsurf/workflows/test-before-commit.md`
 
-3. **✅ Inconsistent Documentation**
+1. **✅ Inconsistent Documentation**
 
 - **Impact:** No standard for where/how to document
 - **Solution:** Created comprehensive documentation standards
 - **Location:** `docs/standards/DOCUMENTATION_STANDARDS.md`
 
-4. **✅ No Pre-commit Hooks**
+1. **✅ No Pre-commit Hooks**
 
 - **Impact:** Manual quality checks, inconsistent enforcement
 - **Solution:** Created `.pre-commit-config.yaml` with industry best practices
 - **Location:** `.pre-commit-config.yaml`
 
-5. **✅ No Commit Message Standard**
+1. **✅ No Commit Message Standard**
 
 - **Impact:** Inconsistent git history
 - **Solution:** Created comprehensive commit style guide + pre-commit enforcement
 - **Location:** `docs/standards/COMMIT_STYLE_GUIDE.md`
 
-6. **✅ No Summary Standards**
+1. **✅ No Summary Standards**
 
 - **Impact:** Inconsistent session documentation
 - **Solution:** Created detailed summary standards
@@ -179,19 +179,19 @@ When a test requires complex logic to validate behavior:
 - **Missing:** Project-specific conventions
 - **Recommendation:** Create when patterns emerge (not premature)
 
-2. **Dependency Management Guide**
+1. **Dependency Management Guide**
 
 - **Current:** Using `uv` but no formal guide
 - **Missing:** How to add/update/remove deps, virtual env management
 - **Recommendation:** Document after more experience with uv
 
-3. **Mypy Type Errors**
+1. **Mypy Type Errors**
 
 - **Current:** 95 type errors (mostly in mcp_server.py)
 - **Impact:** Low (doesn't block functionality)
 - **Recommendation:** Fix incrementally, not all at once
 
-4. **Async Test Failures**
+1. **Async Test Failures**
 
 - **Current:** 4 tests timeout in ConsumptionLimits/RateLimiter
 - **Impact:** Medium (test infrastructure issue, not production bug)
@@ -205,7 +205,7 @@ When a test requires complex logic to validate behavior:
 - llama-index packages have updates
 - **Rationale:** No breaking issues, updates can wait for batch update cycle
 
-2. **Additional pre-commit hooks**
+1. **Additional pre-commit hooks**
 
 - Could add coverage checking
 - Could add test running (currently commented out)
@@ -372,17 +372,17 @@ task lint:markdown
 - Issue: Timeout/async context manager problems
 - Initiative exists: `docs/initiatives/active/fix-security-unit-tests.md`
 
-2. **Install Pre-Commit Hooks**
+1. **Install Pre-Commit Hooks**
 
  ```bash
  task install:pre-commit
- ```
+```
 
 - Test with a dummy commit
 - Verify all hooks work
 - Update documentation if issues found
 
-3. **Create Python Style Guide**
+1. **Create Python Style Guide**
 
 - Use established patterns from codebase
 - Document project-specific conventions
@@ -396,14 +396,14 @@ task lint:markdown
 - Add type stubs or `# type: ignore` comments strategically
 - Goal: <50 errors, then can enable mypy pre-commit hook
 
-2. **Dependency Update Cycle**
+1. **Dependency Update Cycle**
 
 - Review outdated packages
 - Test updates in isolation
 - Update in batch with testing
 - Document any breaking changes
 
-3. **Create Missing ADRs**
+1. **Create Missing ADRs**
 
 - ADR-0002: Trafilatura for extraction
 - ADR-0003: Hierarchical chunking strategy
@@ -418,14 +418,14 @@ task lint:markdown
 - Implement: Intelligent test selection
 - Enable: Fast tests in pre-commit when feasible
 
-2. **CI/CD Pipeline Optimization**
+1. **CI/CD Pipeline Optimization**
 
 - Current: 10+ minutes
 - Goal: <5 minutes with caching
 - Parallel job execution
 - Smarter test selection
 
-3. **Documentation Site**
+1. **Documentation Site**
 
 - Consider: MkDocs or Sphinx
 - Generate: API documentation automatically
@@ -522,19 +522,19 @@ task lint:markdown
 - Run tests after EVERY code change
 - Use test-before-commit workflow
 
-2. **Research Upfront**
+1. **Research Upfront**
 
 - Web search for best practices before implementing
 - Document findings for future reference
 - Cite sources in documentation
 
-3. **Document Decisions**
+1. **Document Decisions**
 
 - When making architectural choices, create ADR
 - When establishing patterns, create standards
 - When solving problems, document solution
 
-4. **Use Workflows**
+1. **Use Workflows**
 
 - Don't reinvent processes each session
 - Follow established workflows
@@ -548,13 +548,13 @@ task lint:markdown
 - Consider checkpoints every 90 minutes
 - Agent performance may degrade over long sessions
 
-2. **Clear Requirements**
+1. **Clear Requirements**
 
 - Comprehensive task lists work well
 - "Be comprehensive" encourages thorough work
 - Prioritization helps with scope management
 
-3. **Tool Access**
+1. **Tool Access**
 
 - Web search is invaluable for research
 - Agent makes good use of external references

@@ -12,7 +12,7 @@ globs: ["docs/**/*.md", "*.md"]
 
 Follow the established directory structure:
 
-```
+```text
 docs/
 ├── CONSTITUTION.md                 # Project principles
 ├── DOCUMENTATION_STRUCTURE.md      # This structure (meta)
@@ -28,7 +28,7 @@ docs/
 ├── architecture/                   # System design docs
 ├── reference/                      # Quick reference
 └── archive/                        # Historical documents
-```
+```text
 
 ## 3.2 Document Types
 
@@ -55,29 +55,29 @@ docs/
 
   ```markdown
   # Initiative: [Name]
-  
+
   **Status:** Active | Completed | On Hold
   **Start Date:** YYYY-MM-DD
   **Target Completion:** YYYY-MM-DD
-  
+
   ## Objective
   [What we're trying to achieve]
-  
+
   ## Success Criteria
   - [ ] Criterion 1
   - [ ] Criterion 2
-  
+
   ## Tasks
   - [ ] Task 1
   - [ ] Task 2
-  
+
   ## Related ADRs
   - ADR-0001: Decision title
-  
+
   ## Updates
   ### YYYY-MM-DD
   Progress update...
-  ```
+  ```text
 
 ### Guides
 
@@ -116,7 +116,7 @@ docs/
 
   ```markdown
   We use [uv](https://docs.astral.sh/uv/) as our package manager.
-  ```
+  ```text
 
 - **Prefer official documentation:**
   - Python: https://docs.python.org/3/
@@ -146,7 +146,7 @@ task install
 # Run tests
 task test:parallel
 \```
-```
+```text
 
 ## 3.4 Update Triggers
 
@@ -176,7 +176,7 @@ task test:parallel
    > **⚠️ ARCHIVED:** This document was archived on YYYY-MM-DD.
    > Reason: [superseded by / no longer relevant / initiative completed]
    > See [replacement.md] for current information.
-   ```
+   ```text
 
 2. Move to `docs/archive/`
 3. Update any referring documents
@@ -198,7 +198,7 @@ task test:parallel
   description: Brief description without apostrophes
   globs: ["**/*.py"]  # Optional, for glob trigger
   ---
-  ```
+  ```text
 
 - **Content:** Clear, actionable instructions
 - **Validation:** After changes, verify Windsurf IDE loads artifact correctly
@@ -214,7 +214,7 @@ task test:parallel
   description: Brief workflow description
   auto_execution_mode: 3  # Checkpoints at key steps
   ---
-  ```
+  ```text
 
 - **Content:** Numbered steps with clear instructions
 - **Invocation:** `/workflow-name` in Cascade
@@ -240,7 +240,7 @@ task docs:fix
 
 # Clean double-spaces and artifacts
 task docs:clean
-```
+```text
 
 ### Cross-References
 
@@ -267,7 +267,7 @@ docs(adr): add ADR-0011 for caching strategy
 docs(guides): update testing guide with parallel examples
 docs(api): document new summarize_with_query endpoint
 docs: fix typos in README and CONTRIBUTING
-```
+```text
 
 ### PR Requirements
 

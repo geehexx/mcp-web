@@ -51,7 +51,7 @@ Build a monolithic MCP tool `summarize_urls` that:
 
 ### High-Level Pipeline
 
-```
+```text
 URLs → Fetch → Extract → Chunk → Summarize → Reduce → Markdown Output
  ↓ ↓ ↓ ↓
  [Cache] [Cache] [Cache] [Cache]
@@ -59,7 +59,7 @@ URLs → Fetch → Extract → Chunk → Summarize → Reduce → Markdown Outpu
 
 ### Modules
 
-```
+```text
 mcp-web/
 ├── src/
 │ └── mcp_web/
@@ -282,10 +282,10 @@ async def reduce_summaries(
 class CacheManager:
  async def get(self, key: str) -> Optional[Any]:
  """Retrieve cached value if valid."""
- 
+
  async def set(self, key: str, value: Any, ttl: int = 7*24*3600):
  """Store value with TTL."""
- 
+
  async def prune(self):
  """Remove expired entries."""
 ```
@@ -316,10 +316,10 @@ class CacheManager:
 class MetricsCollector:
  def record_fetch(self, url: str, duration: float, method: str):
  """Log fetch metrics."""
- 
+
  def record_error(self, module: str, error: Exception):
  """Log error for diagnostics."""
- 
+
  def export_metrics(self) -> Dict[str, Any]:
  """Export metrics for analysis."""
 ```
@@ -350,20 +350,20 @@ class Config:
  fetch_timeout: int = 30
  use_playwright_fallback: bool = True
  max_concurrent_fetches: int = 5
- 
+
  # Extraction
  favor_recall: bool = True
  extract_links: bool = True
- 
+
  # Chunking
  chunk_size: int = 512
  chunk_overlap: int = 50
- 
+
  # Summarization
  llm_model: str = "gpt-4"
  llm_api_key: Optional[str] = None
  max_context_tokens: int = 32000
- 
+
  # Caching
  cache_enabled: bool = True
  cache_ttl: int = 7 * 24 * 3600
@@ -420,7 +420,7 @@ graph TD
 
 ### Multi-URL + Recursive Links
 
-```
+```text
 For each URL:
  1. Fetch & Extract (parallel)
  2. Score outbound links (if follow_links=True)
@@ -611,31 +611,31 @@ cache:
 
 1. **Trafilatura Documentation**
 
-- URL: https://trafilatura.readthedocs.io/en/latest/usage-python.html
-- Validated: `favor_recall` parameter, `include_*` options
-- Key Finding: `favor_recall=True` maximizes content extraction at minor precision cost
-- Applied: DD-002 decision
+    - URL: https://trafilatura.readthedocs.io/en/latest/usage-python.html
+    - Validated: `favor_recall` parameter, `include_*` options
+    - Key Finding: `favor_recall=True` maximizes content extraction at minor precision cost
+    - Applied: DD-002 decision
 
 2. **Pinecone Chunking Strategies**
 
-- URL: https://www.pinecone.io/learn/chunking-strategies/
-- Validated: Hierarchical and semantic chunking approaches
-- Key Finding: 512-token chunks are optimal for most use cases
-- Applied: DD-003, DD-004 decisions
+    - URL: https://www.pinecone.io/learn/chunking-strategies/
+    - Validated: Hierarchical and semantic chunking approaches
+    - Key Finding: 512-token chunks are optimal for most use cases
+    - Applied: DD-003, DD-004 decisions
 
 3. **MCP Python SDK**
 
-- URL: https://github.com/modelcontextprotocol/python-sdk
-- Validated: Tool registration with `@mcp.tool()` decorator
-- Key Finding: Streaming support via async iterators
-- Applied: mcp_server.py implementation
+    - URL: https://github.com/modelcontextprotocol/python-sdk
+    - Validated: Tool registration with `@mcp.tool()` decorator
+    - Key Finding: Streaming support via async iterators
+    - Applied: mcp_server.py implementation
 
 4. **LangChain Map-Reduce Summarization**
 
-- URL: https://python.langchain.com/docs/how_to/summarize_map_reduce/
-- Validated: Map-reduce pattern for long documents
-- Key Finding: Parallel chunk summarization → sequential reduction
-- Applied: DD-006 decision, summarizer.py implementation
+    - URL: https://python.langchain.com/docs/how_to/summarize_map_reduce/
+    - Validated: Map-reduce pattern for long documents
+    - Key Finding: Parallel chunk summarization → sequential reduction
+    - Applied: DD-006 decision, summarizer.py implementation
 
 ### Key Insights
 

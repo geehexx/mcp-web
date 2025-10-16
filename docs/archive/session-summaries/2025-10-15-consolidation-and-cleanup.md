@@ -71,7 +71,7 @@ Systematically consolidated Windsurf workflows, created missing ADRs for archite
 
 **Workflow dependency analysis:**
 
-```
+```text
 /work (Central Orchestrator) ✅ Referenced
  ├─→ /plan ✅ Referenced from /work
  ├─→ /implement ✅ Referenced from /work
@@ -97,7 +97,7 @@ Systematically consolidated Windsurf workflows, created missing ADRs for archite
 
 ## Directory Structure After Consolidation
 
-```
+```text
 mcp-web/
 ├── .windsurf/
 │ └── workflows/

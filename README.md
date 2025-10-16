@@ -1,6 +1,6 @@
 # mcp-web
 
-**MCP Server for Intelligent Web Summarization**
+## MCP Server for Intelligent Web Summarization
 
 A powerful Model Context Protocol (MCP) server that provides intelligent URL summarization with content extraction, smart chunking, and LLM-based summarization.
 
@@ -37,7 +37,7 @@ task dev:setup
 # Or manual installation
 pip install -e ".[dev]"
 playwright install chromium
-```
+```bash
 
 ### Configuration
 
@@ -162,7 +162,7 @@ Remove expired cache entries.
 
 ### Pipeline Flow
 
-```
+```text
 URLs → Fetch (httpx/Playwright) → Extract (trafilatura) →
 Chunk (hierarchical/semantic) → Summarize (LLM map-reduce) →
 Markdown Output (streaming)
@@ -183,7 +183,7 @@ See [docs/architecture/ARCHITECTURE.md](docs/architecture/ARCHITECTURE.md) for f
 
 ## Project Structure
 
-```
+```text
 mcp-web/
 ├── src/mcp_web/
 │ ├── mcp_server.py # MCP tool entry point & orchestration
@@ -308,19 +308,19 @@ See [docs/architecture/ARCHITECTURE.md#configuration-strategy](docs/architecture
 
 ### Common Issues
 
-**"No module named 'playwright'"**
+### "No module named 'playwright'"
 
 - Run `pip install playwright && playwright install chromium`
 
-**"OPENAI_API_KEY not set"**
+### "OPENAI_API_KEY not set"
 
 - Export your API key: `export OPENAI_API_KEY="sk-..."`
 
-**"Cache permission denied"**
+### "Cache permission denied"
 
 - Check `~/.cache/mcp-web` permissions or set custom `CACHE_DIR`
 
-**"Extraction returned empty content"**
+### "Extraction returned empty content"
 
 - Site might be JS-heavy; fetcher will auto-fallback to Playwright
 - Some sites block scrapers; check `robots.txt`

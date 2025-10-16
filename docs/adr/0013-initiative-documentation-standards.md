@@ -47,7 +47,7 @@ We will establish **comprehensive initiative documentation standards** following
 
 ### Initiative Structure
 
-```
+```text
 docs/initiatives/
 ├── README.md # Index and guidelines
 ├── template.md # Template for new initiatives
@@ -148,7 +148,7 @@ Based on GitHub Issues and Jira Epic best practices:
 
 Initiatives use descriptive kebab-case names:
 
-```
+```text
 YYYY-QN-brief-description.md
 or
 descriptive-name.md

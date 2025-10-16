@@ -97,7 +97,7 @@
 
 ## Commits
 
-```
+```text
 888dfcf chore(docs): archive fix-security-unit-tests initiative
 bfa251e feat(workflows): add mandatory session end protocol enforcement
 583c17c fix(security): implement async context manager protocol and enhance injection patterns
@@ -167,7 +167,7 @@ bfa251e feat(workflows): add mandatory session end protocol enforcement
 - Command: `date -u +"%Y-%m-%dT%H:%M:%SZ" > .windsurf/.last-meta-analysis`
 - Tracks meta-analysis execution
 
-2. 🔴 **Critical:** Commit session summary and timestamp
+1. 🔴 **Critical:** Commit session summary and timestamp
 
 - This summary file
 - Timestamp file
@@ -175,13 +175,13 @@ bfa251e feat(workflows): add mandatory session end protocol enforcement
 
 ### Next Session
 
-3. 🟡 **High:** Continue `docs/initiatives/active/2024-q4-quality-foundation.md` Phase 2
+1. 🟡 **High:** Continue `docs/initiatives/active/2024-q4-quality-foundation.md` Phase 2
 
 - Tasks: Install markdownlint-cli2, configure Vale
 - Files: `.markdownlint.json`, `.vale.ini`
 - Estimated: 1-2 hours
 
-4. 🟢 **Medium:** Test improved session end protocol
+1. 🟢 **Medium:** Test improved session end protocol
 
 - Scenario: Complete another piece of work, verify protocol runs automatically
 - Expected: Agent detects completed initiatives, runs meta-analysis without prompting
@@ -224,13 +224,13 @@ bfa251e feat(workflows): add mandatory session end protocol enforcement
 - Added to agent directives Section 1.8
 - Prevents completion without meta-analysis and archival
 
-2. ✅ **MCP Tool Usage Guidance**
+1. ✅ **MCP Tool Usage Guidance**
 
 - Added to agent directives Section 1.6
 - Explicit tool selection for `.windsurf/` directory
 - Fallback strategy documented
 
-3. ✅ **Initiative Archival Visibility**
+1. ✅ **Initiative Archival Visibility**
 
 - Added to template
 - Added to README

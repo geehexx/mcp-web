@@ -43,7 +43,7 @@ We will adopt a hierarchical, lifecycle-managed documentation structure based on
 
 ### Directory Structure
 
-```
+```text
 docs/
 ├── standards/ # Documentation standards and style guides
 │ ├── DOCUMENTATION_STANDARDS.md
@@ -82,20 +82,20 @@ docs/
 - Immutable once accepted
 - Clear lifecycle: Proposed → Accepted → Implemented
 
-2. **Initiatives**
+1. **Initiatives**
 
 - Track multi-session projects
 - Clear success criteria
 - Active vs completed separation
 - Regular updates with timestamps
 
-3. **Session Summaries**
+1. **Session Summaries**
 
 - Location: `docs/archive/session-summaries/`
 - Naming: `YYYY-MM-DD-descriptive-name.md`
 - Standard structure (objectives, accomplishments, commits, next steps)
 
-4. **Standards/Guides**
+1. **Standards/Guides**
 
 - Location: `docs/standards/` or `docs/guides/`
 - SCREAMING_SNAKE_CASE naming
@@ -235,7 +235,7 @@ docs/
 
 ✅ Created directory structure:
 
-```
+```text
 docs/
 ├── standards/
 ├── adr/

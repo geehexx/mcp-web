@@ -40,7 +40,7 @@ Create an initiative when:
 
 ## Initiative Lifecycle
 
-```
+```text
 Proposed → Active → Complete → (Archived if superseded)
 ```
 
@@ -74,7 +74,7 @@ Proposed → Active → Complete → (Archived if superseded)
 
 ## Directory Structure
 
-```
+```text
 docs/initiatives/
 ├── README.md # This file
 ├── template.md # Template for new initiatives
@@ -133,7 +133,7 @@ Use descriptive kebab-case names:
 
 ### Pattern 1: Quarterly Initiatives
 
-```
+```text
 YYYY-QN-brief-description.md
 ```
 
@@ -144,7 +144,7 @@ Examples:
 
 ### Pattern 2: Descriptive Names
 
-```
+```text
 descriptive-name.md
 ```
 
@@ -188,12 +188,12 @@ Add to the "Updates" section at the bottom:
 - Create proper git commit
 - This runs automatically during session end protocol
 
-5. Manual archival (if needed):
+1. Manual archival (if needed):
 
- ```bash
- git mv docs/initiatives/active/name.md docs/initiatives/completed/name.md
- git commit -m "docs(initiative): complete [initiative name]"
- ```
+```bash
+git mv docs/initiatives/active/name.md docs/initiatives/completed/name.md
+git commit -m "docs(initiative): complete [initiative name]"
+```
 
 **Note:** Step 4 (automatic archival) is preferred and happens as part of the session end protocol.
 

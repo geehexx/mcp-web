@@ -51,7 +51,7 @@
 
 ### System Context
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                         MCP Client                              │
 │                  (Claude Desktop, etc.)                         │
@@ -355,7 +355,7 @@ CacheSettings(
 
 ### Typical Request Flow
 
-```
+```text
 1. MCP Client Request
    ↓
 2. Tool Handler (summarize_urls)

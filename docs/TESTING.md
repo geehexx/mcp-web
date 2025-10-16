@@ -32,17 +32,17 @@ The mcp-web project implements a comprehensive multi-layered testing strategy fo
 
 ### Test Pyramid
 
-```
+```text
  Live Tests (Slow, Few)
  ┌────────────────────────┐
  │ Network + API required │
  └────────────────────────┘
- 
+
  Integration Tests (Medium)
  ┌──────────────────────────────┐
  │ Multi-component testing │
  └──────────────────────────────┘
- 
+
  Unit Tests (Fast, Many)
  ┌────────────────────────────────────┐
  │ Isolated component testing │
@@ -112,22 +112,22 @@ def test_token_counting():
 
 1. **LLM01: Prompt Injection**
 
-- Direct instruction override detection
-- Indirect injection via external content
-- Role confusion attempts
-- Data exfiltration patterns
+   - Direct instruction override detection
+   - Indirect injection via external content
+   - Role confusion attempts
+   - Data exfiltration patterns
 
 2. **LLM05: Improper Output Handling**
 
-- System prompt leakage prevention
-- API key exposure prevention
-- Output sanitization
+   - System prompt leakage prevention
+   - API key exposure prevention
+   - Output sanitization
 
 3. **LLM10: Unbounded Consumption**
 
-- Token limit enforcement
-- Rate limiting
-- Concurrent request limits
+   - Token limit enforcement
+   - Rate limiting
+   - Concurrent request limits
 
 **Additional Security:**
 
@@ -178,7 +178,7 @@ def test_prompt_injection_detection():
 async def test_simple_article_extraction():
  """Test extraction matches golden expectations."""
  extracted = await extractor.extract(SIMPLE_ARTICLE_HTML)
- 
+
  # Verify expected keywords
  for keyword in EXPECTED["keywords"]:
  assert keyword in extracted.content
@@ -364,28 +364,28 @@ All golden test data is in: `tests/fixtures/golden_data.py`
 
 1. **SIMPLE_ARTICLE_HTML**
 
-- Content: Async/await tutorial
-- Tests: Title extraction, keyword presence, code blocks, links
+   - Content: Async/await tutorial
+   - Tests: Title extraction, keyword presence, code blocks, links
 
 2. **TECHNICAL_DOC_HTML**
 
-- Content: API documentation
-- Tests: Endpoint extraction, JSON examples, structure preservation
+   - Content: API documentation
+   - Tests: Endpoint extraction, JSON examples, structure preservation
 
 3. **NEWS_ARTICLE_HTML**
 
-- Content: Quantum computing breakthrough
-- Tests: Quote preservation, metadata extraction, citations
+   - Content: Quantum computing breakthrough
+   - Tests: Quote preservation, metadata extraction, citations
 
 4. **BLOG_POST_HTML**
 
-- Content: Python best practices
-- Tests: Multiple sections, link extraction
+   - Content: Python best practices
+   - Tests: Multiple sections, link extraction
 
 5. **PROMPT_INJECTION_SAMPLES**
 
-- Content: Malicious injection attempts
-- Tests: Detection and mitigation
+   - Content: Malicious injection attempts
+   - Tests: Detection and mitigation
 
 ### Expected Results
 
@@ -484,28 +484,28 @@ Track performance over time and identify bottlenecks.
 
 1. **Token Counting**
 
-- Speed for various text sizes
-- Truncation performance
+   - Speed for various text sizes
+   - Truncation performance
 
 2. **Chunking**
 
-- Hierarchical vs semantic vs fixed
-- Scalability with document size
+   - Hierarchical vs semantic vs fixed
+   - Scalability with document size
 
 3. **Cache Operations**
 
-- Read/write throughput
-- Concurrent operation performance
+   - Read/write throughput
+   - Concurrent operation performance
 
 4. **Memory Usage**
 
-- Peak memory for large documents
-- Cache memory overhead
+   - Peak memory for large documents
+   - Cache memory overhead
 
 5. **Concurrency**
 
-- Parallel vs sequential speedup
-- Async operation efficiency
+   - Parallel vs sequential speedup
+   - Async operation efficiency
 
 ### Running Benchmarks
 
@@ -538,27 +538,27 @@ pytest -m benchmark --benchmark-compare
 
 1. **Ruff** - Fast Python linter
 
-- Replaces flake8, isort, pyupgrade
-- Configuration in `pyproject.toml`
+   - Replaces flake8, isort, pyupgrade
+   - Configuration in `pyproject.toml`
 
 2. **MyPy** - Static type checker
 
-- Enforces type hints
-- Configuration in `pyproject.toml`
+   - Enforces type hints
+   - Configuration in `pyproject.toml`
 
 3. **Bandit** - Security vulnerability scanner
 
-- Checks for common security issues
-- Configuration in `.bandit`
+   - Checks for common security issues
+   - Configuration in `.bandit`
 
 4. **Semgrep** - Pattern-based code scanner
 
-- Custom rules for LLM security
-- Configuration in `.semgrep.yml`
+   - Custom rules for LLM security
+   - Configuration in `.semgrep.yml`
 
 5. **Safety** - Dependency vulnerability scanner
 
-- Checks for known CVEs in dependencies
+   - Checks for known CVEs in dependencies
 
 ### Custom Semgrep Rules
 
@@ -674,29 +674,29 @@ jobs:
  runs-on: ubuntu-latest
  steps:
  - uses: actions/checkout@v3
- 
+
  - name: Set up Python
  uses: actions/setup-python@v4
  with:
  python-version: '3.10'
- 
+
  - name: Install dependencies
  run: |
  pip install -e ".[dev]"
  playwright install chromium
- 
+
  - name: Run linting
  run: ruff check src/ tests/
- 
+
  - name: Run type checking
  run: mypy src/
- 
+
  - name: Run security scan
  run: bandit -r src/ -c .bandit
- 
+
  - name: Run unit tests
  run: pytest -m "unit or security or golden" --cov=mcp_web
- 
+
  - name: Upload coverage
  uses: codecov/codecov-action@v3
 ```
@@ -740,17 +740,17 @@ echo "All checks passed!"
 ```python
 class TestFeatureName:
  """Test suite for specific feature."""
- 
+
  @pytest.fixture
  def setup_data(self):
  """Fixture for test data."""
  return {"key": "value"}
- 
+
  @pytest.mark.unit
  def test_happy_path(self, setup_data):
  """Test normal operation."""
  # Test code
- 
+
  @pytest.mark.unit
  def test_error_handling(self):
  """Test error conditions."""

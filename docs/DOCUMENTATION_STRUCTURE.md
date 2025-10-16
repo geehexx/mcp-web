@@ -9,7 +9,7 @@ This document defines the organization and lifecycle of all documentation in the
 
 ## Directory Structure
 
-```
+```text
 docs/
 ├── README.md # Index and navigation
 ├── DOCUMENTATION_STRUCTURE.md # This file
@@ -333,11 +333,11 @@ task docs:serve
  > **⚠️ ARCHIVED:** This document was archived on YYYY-MM-DD.
  > Reason: [superseded by / no longer relevant / initiative completed]
  > See [replacement.md] for current information.
- ```
+```
 
-2. **Move to `docs/archive/`**
-3. **Update referring documents**
-4. **Add entry to archive README**
+1. **Move to `docs/archive/`**
+2. **Update referring documents**
+3. **Add entry to archive README**
 
 ---
 

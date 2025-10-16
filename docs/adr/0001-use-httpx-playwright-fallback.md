@@ -37,21 +37,21 @@ We will use **httpx** as the primary fetch method with **Playwright** as a fallb
 
 1. **Primary attempt:** Use `httpx.AsyncClient` to fetch HTML
 
-- Fast HTTP/2 client with connection pooling
-- Minimal overhead (~50-100ms per request)
-- Async-native design
+    - Fast HTTP/2 client with connection pooling
+    - Minimal overhead (~50-100ms per request)
+    - Async-native design
 
 2. **Fallback trigger:** If httpx fails OR content appears incomplete
 
-- HTTP error status (4xx, 5xx)
-- Empty or minimal body (<100 bytes)
-- Detection of JS-rendered markers (`<div id="root"></div>` with no content)
+    - HTTP error status (4xx, 5xx)
+    - Empty or minimal body (<100 bytes)
+    - Detection of JS-rendered markers (`<div id="root"></div>` with no content)
 
 3. **Fallback method:** Launch Playwright headless browser
 
-- Execute JavaScript to render page
-- Wait for network idle or specific selectors
-- Extract final rendered HTML
+    - Execute JavaScript to render page
+    - Wait for network idle or specific selectors
+    - Extract final rendered HTML
 
 ## Alternatives Considered
 

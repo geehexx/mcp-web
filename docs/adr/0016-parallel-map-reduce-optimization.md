@@ -68,7 +68,7 @@ async def _summarize_map_reduce(
     sources: list[str] | None = None,
 ) -> AsyncIterator[str]:
     """Map-reduce with parallel map phase."""
-    
+
     async def summarize_single_chunk(i: int, chunk: Chunk) -> str:
         """Summarize a single chunk."""
         map_prompt = self._build_map_prompt(chunk.text, query)
@@ -77,11 +77,11 @@ async def _summarize_map_reduce(
     # PARALLEL EXECUTION with asyncio.gather
     tasks = [summarize_single_chunk(i, chunk) for i, chunk in enumerate(chunks)]
     chunk_summaries = await asyncio.gather(*tasks)
-    
+
     # Reduce phase (sequential, fast)
     combined_summaries = "\n\n".join(f"Section {i+1}:\n{s}" for i, s in enumerate(chunk_summaries))
     reduce_prompt = self._build_reduce_prompt(combined_summaries, query, sources)
-    
+
     async for chunk in self._call_llm(reduce_prompt):
         yield chunk
 ```
@@ -96,25 +96,25 @@ async def _summarize_map_reduce_streaming(
     sources: list[str] | None = None,
 ) -> AsyncIterator[str]:
     """Map-reduce with streaming progress updates."""
-    
+
     yield f"Processing {len(chunks)} sections...\n\n"
-    
+
     async def summarize_single_chunk(i: int, chunk: Chunk) -> tuple[int, str]:
         map_prompt = self._build_map_prompt(chunk.text, query)
         summary = await self._call_llm_non_streaming(map_prompt)
         return (i, summary)
-    
-    tasks = [asyncio.create_task(summarize_single_chunk(i, chunk)) 
+
+    tasks = [asyncio.create_task(summarize_single_chunk(i, chunk))
              for i, chunk in enumerate(chunks)]
-    
+
     chunk_summaries: list[str | None] = [None] * len(chunks)
-    
+
     # Stream results as they complete
     for task in asyncio.as_completed(tasks):
         idx, summary = await task
         chunk_summaries[idx] = summary
         yield f"✓ Section {idx + 1}/{len(chunks)} complete\n"
-    
+
     # Reduce phase
     yield "\nSynthesizing final summary...\n\n"
     # ... (same as parallel variant)
@@ -145,7 +145,7 @@ async def _summarize_map_reduce_streaming(
 | 30k tokens    | 10     | ~35s       | ~4-5s    | 7-8x    |
 | 100k tokens   | 30     | ~100s      | ~8-10s   | 10x+    |
 
-_Assumptions: 3s average per LLM call, ~1s reduce phase_
+**Assumptions:** 3s average per LLM call, ~1s reduce phase
 
 ---
 

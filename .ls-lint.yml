@@ -1,0 +1,72 @@
+{
+  ".ls-lint.yml": {
+    "ignore": [
+      ".git/",
+      "__pycache__/",
+      "*.pyc",
+      ".pytest_cache/",
+      ".mypy_cache/",
+      "node_modules/",
+      "dist/",
+      "build/",
+      ".env",
+      ".env.*"
+    ],
+    "rules": [
+      {
+        "name": "adrs-must-be-numbered",
+        "pattern": "docs/adr/\\d{4}-.*\\.md",
+        "message": "ADRs must be numbered (0001-title.md format)"
+      },
+      {
+        "name": "no-files-in-docs-root",
+        "pattern": "docs/*",
+        "exclude": [
+          "docs/README.md",
+          "docs/CONSTITUTION.md",
+          "docs/DOCUMENTATION_STRUCTURE.md"
+        ],
+        "message": "No files allowed in docs/ root except README.md, CONSTITUTION.md, and DOCUMENTATION_STRUCTURE.md"
+      },
+      {
+        "name": "initiatives-must-be-in-subdirs",
+        "pattern": "docs/initiatives/*",
+        "exclude": [
+          "docs/initiatives/README.md",
+          "docs/initiatives/template.md",
+          "docs/initiatives/active/*",
+          "docs/initiatives/completed/*",
+          "docs/initiatives/archived/*"
+        ],
+        "message": "Initiative files must be in active/, completed/, or archived/ subdirectories"
+      },
+      {
+        "name": "session-summaries-must-be-dated",
+        "pattern": "docs/archive/session-summaries/\\d{4}-\\d{2}-\\d{2}-.*\\.md",
+        "message": "Session summaries must be dated (YYYY-MM-DD-description.md)"
+      },
+      {
+        "name": "no-files-in-root-except-specified",
+        "pattern": "*",
+        "exclude": [
+          "README.md",
+          "PROJECT_SUMMARY.md",
+          "LICENSE",
+          "pyproject.toml",
+          "uv.lock",
+          "Taskfile.yml",
+          ".gitignore",
+          ".bandit",
+          ".vale.ini",
+          ".markdownlint.json",
+          ".pre-commit-config.yaml",
+          ".semgrep.yml",
+          ".test_durations",
+          "pytest.ini",
+          "results.json"
+        ],
+        "message": "No files allowed in project root except specified configuration and documentation files"
+      }
+    ]
+  }
+}

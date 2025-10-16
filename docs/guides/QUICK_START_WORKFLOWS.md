@@ -8,7 +8,7 @@
 
 ### Starting Any Work
 
-```
+```text
 You: /work
 ```
 
@@ -38,7 +38,7 @@ You: /work
 
 **Example:**
 
-```
+```text
 You: /work
 
 Agent: Detected initiative "Fix Security Tests" (3/10 complete)
@@ -62,7 +62,7 @@ Agent: Detected initiative "Fix Security Tests" (3/10 complete)
 
 **Example:**
 
-```
+```text
 You: /plan add user authentication
 
 Agent: Researching best practices...
@@ -89,28 +89,28 @@ Agent: Researching best practices...
 
 ### Continue Previous Work
 
-```
+```text
 You: /work
 Agent: [scans files, finds initiative, continues]
 ```
 
 ### Start New Feature
 
-```
+```text
 You: /work add API rate limiting
 Agent: [detects planning needed, calls /plan, then /implement]
 ```
 
 ### Fix Bugs
 
-```
+```text
 You: /work
 Agent: [runs tests, finds failures, starts fixing]
 ```
 
 ### Just Commit Changes
 
-```
+```text
 You: /commit
 Agent: [reviews diff, guides commit message]
 ```
@@ -222,7 +222,7 @@ What works? What needs tuning?
 
 **Just start:**
 
-```
+```text
 /work
 ```
 

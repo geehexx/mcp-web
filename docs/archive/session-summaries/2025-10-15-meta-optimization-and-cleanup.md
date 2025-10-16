@@ -36,7 +36,7 @@
 
 ## Commits
 
-```
+```text
 7 commits total today:
 
 b7ee70b docs(consolidation): consolidate workflows and create ADRs 0002-0003

@@ -38,38 +38,38 @@ This project follows a code of conduct to ensure a welcoming and inclusive envir
 
 1. **Fork and clone the repository**
 
-```bash
-git clone https://github.com/YOUR_USERNAME/mcp-web.git
-cd mcp-web
-```
+    ```bash
+    git clone https://github.com/YOUR_USERNAME/mcp-web.git
+    cd mcp-web
+    ```
 
 2. **Create a virtual environment**
 
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
+    ```bash
+    python -m venv venv
+    source venv/bin/activate  # On Windows: venv\Scripts\activate
+    ```
 
 3. **Install development dependencies**
 
-```bash
-pip install -e ".[dev]"
-playwright install chromium
-```
+    ```bash
+    pip install -e ".[dev]"
+    playwright install chromium
+    ```
 
 4. **Set up environment variables**
 
-```bash
-export OPENAI_API_KEY="sk-..."
-export MCP_WEB_CACHE_DIR="/tmp/mcp-web-cache"
-export MCP_WEB_METRICS_LOG_LEVEL="DEBUG"
-```
+    ```bash
+    export OPENAI_API_KEY="sk-..."
+    export MCP_WEB_CACHE_DIR="/tmp/mcp-web-cache"
+    export MCP_WEB_METRICS_LOG_LEVEL="DEBUG"
+    ```
 
 5. **Run tests to verify setup**
 
-```bash
-pytest -v
-```
+    ```bash
+    pytest -v
+    ```
 
 ---
 
@@ -98,30 +98,44 @@ Branch naming conventions:
 
 ### 3. Test Your Changes
 
-```bash
-# Run all tests
-pytest
+1. Run all tests
 
-# Run specific test categories
-pytest -m unit
-pytest -m integration
+   ```bash
+   pytest
+   ```
 
-# Run with coverage
-pytest --cov=mcp_web --cov-report=html
-```
+2. Run specific test categories
+
+   ```bash
+   pytest -m unit
+   pytest -m integration
+   ```
+
+3. Run with coverage
+
+   ```bash
+   pytest --cov=mcp_web --cov-report=html
+   ```
 
 ### 4. Lint and Format
 
-```bash
-# Check code style
-ruff check src/ tests/
+1. Check code style
 
-# Format code
-ruff format src/ tests/
+   ```bash
+   ruff check src/ tests/
+   ```
 
-# Type checking
-mypy src/
-```
+2. Format code
+
+   ```bash
+   ruff format src/ tests/
+   ```
+
+3. Type checking
+
+   ```bash
+   mypy src/
+   ```
 
 ### 5. Commit Your Changes
 
@@ -173,21 +187,21 @@ CONSTANT_VALUE = 42
 # Classes and functions with docstrings
 class MyClass:
     """Class docstring with example.
-    
+
     Example:
         >>> obj = MyClass()
         >>> obj.method()
     """
-    
+
     def method(self, arg: str) -> bool:
         """Method docstring.
-        
+
         Args:
             arg: Description
-            
+
         Returns:
             Description
-            
+
         Raises:
             Exception: When error occurs
         """
@@ -267,17 +281,17 @@ from module_name import function_to_test
 
 class TestFunctionName:
     """Tests for function_name."""
-    
+
     @pytest.fixture
     def sample_data(self):
         """Fixture for test data."""
         return {"key": "value"}
-    
+
     def test_happy_path(self, sample_data):
         """Test normal operation."""
         result = function_to_test(sample_data)
         assert result is not None
-    
+
     def test_edge_case(self):
         """Test edge case handling."""
         with pytest.raises(ValueError):

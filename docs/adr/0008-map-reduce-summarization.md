@@ -48,7 +48,7 @@ We will use a **map-reduce pattern** for document summarization:
 - Fastest path, best quality
 - No overhead from chunking/combining
 
-2. **Long documents (> 8k tokens):** Map-reduce approach
+1. **Long documents (> 8k tokens):** Map-reduce approach
 
 - **Map phase:** Summarize each chunk independently (parallel)
 - **Reduce phase:** Combine chunk summaries into final summary
@@ -56,7 +56,7 @@ We will use a **map-reduce pattern** for document summarization:
 
 ### Implementation Details
 
-```
+```text
 Document (15k tokens)
  ↓ chunk into 3 chunks (5k each)
  ↓
@@ -188,7 +188,7 @@ SummarizerSettings(
 
 _Map phase:_
 
-```
+```text
 Summarize the following section of a larger document.
 Focus on key points and maintain technical accuracy.
 [If query provided: "Pay special attention to: {query}"]
@@ -199,7 +199,7 @@ Section:
 
 _Reduce phase:_
 
-```
+```text
 Combine the following chunk summaries into a cohesive final summary.
 Eliminate redundancy while preserving unique information from each chunk.
 

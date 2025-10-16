@@ -384,7 +384,7 @@ blocked = {
 
 **Template Structure**:
 
-```
+```text
 SYSTEM_INSTRUCTIONS:
 <System-level task description>
 

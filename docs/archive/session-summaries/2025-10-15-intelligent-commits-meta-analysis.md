@@ -54,7 +54,7 @@
 
 ### Commit 1: Consolidation (b7ee70b)
 
-```
+```text
 docs(consolidation): consolidate workflows and create ADRs 0002-0003
 
 - Removed test-before-commit.md (integrated into /implement workflow)
@@ -75,7 +75,7 @@ docs(consolidation): consolidate workflows and create ADRs 0002-0003
 
 ### Commit 2: Initiative Plan (4cd54f1)
 
-```
+```text
 docs(initiative): create plan for converting DD-002 to DD-010 to ADRs
 
 - Detailed implementation strategy with intelligent commit plan
@@ -92,7 +92,7 @@ docs(initiative): create plan for converting DD-002 to DD-010 to ADRs
 
 ### Commit 3: Work Status Tracking (f2900a5)
 
-```
+```text
 docs(meta): add current work status tracking
 
 Temporary file to track session progress and ensure visibility
@@ -107,7 +107,7 @@ of work state across context windows.
 
 ### Commit 4: ADR-0004 (3bc16ea)
 
-```
+```text
 docs(adr): add ADR-0004 trafilatura content extraction
 
 Converts DD-002 from DECISIONS.md to proper ADR format.
@@ -126,7 +126,7 @@ Converts DD-002 from DECISIONS.md to proper ADR format.
 
 ### Commit 5: ADR-0005 and ADR-0006 (3648619)
 
-```
+```text
 docs(adr): add ADR-0005 and ADR-0006 chunking strategy
 
 ADR-0005: Hierarchical and semantic chunking
@@ -193,7 +193,7 @@ ADR-0006: Chunk size and overlap parameters
 
 **Good example:**
 
-```
+```text
 docs(adr): add ADR-0004 trafilatura content extraction
 
 Converts DD-002 from DECISIONS.md to proper ADR format.
@@ -205,7 +205,7 @@ Converts DD-002 from DECISIONS.md to proper ADR format.
 
 **Bad example:**
 
-```
+```text
 add adr
 ```
 

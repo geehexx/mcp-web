@@ -626,7 +626,7 @@ python -m mcp_web.cli test-summarize https://example.com
 
 ### Example Issue Report
 
-```markdown
+```text
 **Error:** LLM timeout
 
 **Configuration:**
@@ -639,7 +639,7 @@ python -m mcp_web.cli test-summarize https://example.com
 
 ERROR llm_timeout model=llama3.2:3b url=https://example.com
 
-```
+```text
 
 **Environment:**
 - Python: 3.11.5
