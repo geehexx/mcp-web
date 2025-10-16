@@ -373,7 +373,23 @@ The project has grown rapidly but needs stronger quality foundations:
 
 ---
 
-**Last Updated:** 2025-10-15
+### 2025-10-16 (Update 5) - Phase 2 Validation & Hardening
+
+**Completed:**
+
+- ✓ Removed ad-hoc markdown automation scripts (`scripts/fix_markdown_fences.py`, `scripts/fix_windsurf_fences.py`, `scripts/normalize_markdown_lists.py`) to prevent inconsistent fence language tags in `.windsurf/`
+- ✓ Resolved the remaining markdownlint findings (`MD046`, `MD036`, `MD029`, `MD040`, `MD001`) — current status: **0 open violations across 59 files**
+- ✓ Updated `.pre-commit-config.yaml` to point at `.markdownlint-cli2.jsonc` and exclude vendor directories, ensuring pre-commit checks ignore `node_modules/`
+- ✓ Added `node_modules/` to `.gitignore` and removed the previously committed vendor tree
+
+**Next Steps:**
+
+- Monitor CI markdown lint job to confirm clean runs after configuration changes
+- Resume Phase 3 work (additional query-aware and Playwright tests) now that documentation linting is stable
+
+---
+
+**Last Updated:** 2025-10-16
 **Status:** Active - On Track
 
 ---
