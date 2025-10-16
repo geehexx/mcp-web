@@ -89,7 +89,7 @@ repos:
       - id: ls-lint
         name: "📁 files · Validate naming conventions (ls-lint)"
         entry: npx @ls-lint/ls-lint
-        language: node
+        language: system
         pass_filenames: false
         always_run: false
         files: \.(md|py|yml|yaml|json|toml)$
