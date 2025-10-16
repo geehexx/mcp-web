@@ -17,9 +17,13 @@ class TestWebSummarizationPipeline:
     """Integration tests for the full pipeline."""
 
     @pytest.fixture
-    def pipeline(self, test_config):
+    async def pipeline(self, test_config):
         """Create pipeline instance."""
-        return WebSummarizationPipeline(test_config)
+        pipeline = WebSummarizationPipeline(test_config)
+        try:
+            yield pipeline
+        finally:
+            await pipeline.close()
 
     @pytest.mark.integration
     @pytest.mark.asyncio
@@ -92,17 +96,20 @@ class TestWebSummarizationPipeline:
         urls = ["https://example.com"]
 
         try:
-            output_parts = []
-            async for chunk in pipeline.summarize_urls(urls):
-                output_parts.append(chunk)
+            summary_parts = []
+            try:
+                async for chunk in pipeline.summarize_urls(urls):
+                    summary_parts.append(chunk)
+            finally:
+                await pipeline.summarizer.close()
 
-            output = "".join(output_parts)
+            summary = "".join(summary_parts)
 
             # Verify we got some output
-            assert len(output) > 0
+            assert len(summary) > 0
 
             # Check for expected sections
-            assert "Fetching" in output or "Summary" in output
+            assert "Fetching" in summary or "Summary" in summary
 
         except Exception as e:
             if "OPENAI_API_KEY" in str(e) or "API" in str(e):
@@ -181,8 +188,11 @@ class TestWebSummarizationPipeline:
         urls = ["not-a-valid-url"]
 
         output_parts = []
-        async for chunk in pipeline.summarize_urls(urls):
-            output_parts.append(chunk)
+        try:
+            async for chunk in pipeline.summarize_urls(urls):
+                output_parts.append(chunk)
+        finally:
+            await pipeline.summarizer.close()
 
         output = "".join(output_parts)
 

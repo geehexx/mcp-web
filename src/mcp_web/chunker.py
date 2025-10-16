@@ -112,6 +112,9 @@ class TextChunker:
         else:  # fixed
             chunks = self._chunk_fixed(text, metadata, effective_chunk_size)
 
+        # Remove empty/zero-token chunks that may appear from structural splits
+        chunks = [chunk for chunk in chunks if chunk.tokens > 0 and chunk.text.strip()]
+
         duration_ms = (time.perf_counter() - start_time) * 1000
 
         # Record metrics

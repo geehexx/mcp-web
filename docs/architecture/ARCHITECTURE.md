@@ -270,8 +270,8 @@ ChunkerSettings(
 
 ```python
 SummarizerSettings(
-    provider="openai",                    # or "ollama", "lmstudio"
-    model="gpt-4o-mini",                  # Model name
+    provider="ollama",                    # default local provider (OpenAI optional)
+    model="llama3.2:3b",                  # Default model
     temperature=0.3,                      # Low for consistency
     max_tokens=2048,                      # Max output tokens
     adaptive_max_tokens=False,            # Opt-in adaptive sizing
@@ -410,7 +410,7 @@ All env vars prefixed with `MCP_WEB_<COMPONENT>_<SETTING>`:
 ```bash
 MCP_WEB_FETCHER_TIMEOUT=30
 MCP_WEB_CHUNKER_CHUNK_SIZE=512
-MCP_WEB_SUMMARIZER_MODEL=gpt-4o-mini
+MCP_WEB_SUMMARIZER_MODEL=llama3.2:3b
 MCP_WEB_CACHE_TTL=604800
 ```
 
@@ -545,8 +545,8 @@ task dev:setup  # or pip install -e ".[dev]"
       "command": "python",
       "args": ["-m", "mcp_web.mcp_server"],
       "env": {
-        "OPENAI_API_KEY": "sk-...",
-        "MCP_WEB_SUMMARIZER_MODEL": "gpt-4o-mini"
+        "MCP_WEB_SUMMARIZER_PROVIDER": "ollama",
+        "MCP_WEB_SUMMARIZER_MODEL": "llama3.2:3b"
       }
     }
   }

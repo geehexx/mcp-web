@@ -451,7 +451,7 @@ export MCP_WEB_CACHE_TTL=86400  # 1 day
 
 **User Response:**
 
-- "I cannot provide that information for security reasons."
+- "Access denied for security reasons."
 
 **User Action:**
 

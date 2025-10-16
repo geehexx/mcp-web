@@ -407,22 +407,22 @@ class Summarizer:
                     # Validate accumulated output periodically (every 10 chunks)
                     if len(accumulated_output) % 10 == 0:
                         full_output = "".join(accumulated_output)
-                        if not self.output_validator.validate(full_output):
-                            _get_logger().error(
-                                "output_validation_failed_streaming", output_length=len(full_output)
-                            )
-                            # Stop streaming if validation fails
-                            break
+                        sanitized = self.output_validator.filter_response(full_output)
+                        if sanitized != full_output:
+                            accumulated_output = [sanitized]
 
-                    yield content
+                    yield self.output_validator.filter_response(content)
 
             # Final validation
             full_output = "".join(accumulated_output)
-            if not self.output_validator.validate(full_output):
-                _get_logger().error(
-                    "output_validation_failed_final", output_length=len(full_output)
+            sanitized_output = self.output_validator.filter_response(full_output)
+            if sanitized_output != full_output:
+                _get_logger().info(
+                    "output_sanitized",
+                    before_length=len(full_output),
+                    after_length=len(sanitized_output),
                 )
-                raise ValueError("Output validation failed: potentially unsafe content detected")
+                accumulated_output = [sanitized_output]
 
             duration_ms = (time.perf_counter() - start_time) * 1000
 
@@ -493,7 +493,7 @@ class Summarizer:
                 success=True,
             )
 
-            return content
+            return self.output_validator.filter_response(content)
 
         except Exception as e:
             duration_ms = (time.perf_counter() - start_time) * 1000

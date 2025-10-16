@@ -105,8 +105,8 @@ class SummarizerSettings(BaseSettings):
     """Summarizer configuration.
 
     Supports multiple LLM providers:
-    - OpenAI (default): api.openai.com
-    - Ollama: localhost:11434
+    - Ollama (default): localhost:11434
+    - OpenAI: api.openai.com
     - LM Studio: localhost:1234
     - LocalAI: localhost:8080
     - Custom: any OpenAI-compatible API
@@ -114,9 +114,9 @@ class SummarizerSettings(BaseSettings):
 
     # Provider configuration
     provider: Literal["openai", "ollama", "lmstudio", "localai", "custom"] = Field(
-        default="openai", description="LLM provider type"
+        default="ollama", description="LLM provider type"
     )
-    model: str = Field(default="gpt-4o-mini", description="LLM model to use")
+    model: str = Field(default="llama3.2:3b", description="LLM model to use")
 
     # Generation parameters
     temperature: float = Field(
@@ -278,7 +278,7 @@ def load_config(
     Example:
         >>> config = load_config()
         >>> config.summarizer.model
-        'gpt-4o-mini'
+        'llama3.2:3b'
     """
     # TODO: Add YAML file loading support in future
     # For now, load from environment variables

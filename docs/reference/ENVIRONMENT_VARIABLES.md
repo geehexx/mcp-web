@@ -19,18 +19,19 @@ mcp-web uses environment variables for configuration. All variables are prefixed
 
 ## Quick Start
 
-### Minimal Setup (Cloud LLM)
-
-```bash
-export OPENAI_API_KEY="sk-..."
-export MCP_WEB_SUMMARIZER_MODEL="gpt-4o-mini"
-```
-
-### Minimal Setup (Local LLM)
+### Minimal Setup (Default Local LLM)
 
 ```bash
 export MCP_WEB_SUMMARIZER_PROVIDER="ollama"
 export MCP_WEB_SUMMARIZER_MODEL="llama3.2:3b"
+```
+
+### Minimal Setup (Cloud LLM)
+
+```bash
+export OPENAI_API_KEY="sk-..."
+export MCP_WEB_SUMMARIZER_PROVIDER="openai"
+export MCP_WEB_SUMMARIZER_MODEL="gpt-4o-mini"
 ```
 
 ---
@@ -320,7 +321,7 @@ export MCP_WEB_CHUNKER_DENSE_SENTENCE_THRESHOLD=30
 ### MCP_WEB_SUMMARIZER_PROVIDER
 
 **Type:** Enum (`openai`, `ollama`, `lmstudio`, `localai`, `custom`)
-**Default:** `"openai"`
+**Default:** `"ollama"`
 **Description:** LLM provider type
 
 ```bash
@@ -330,7 +331,7 @@ export MCP_WEB_SUMMARIZER_PROVIDER=ollama
 ### MCP_WEB_SUMMARIZER_MODEL
 
 **Type:** String
-**Default:** `"gpt-4o-mini"`
+**Default:** `"llama3.2:3b"`
 **Description:** LLM model to use
 
 **Examples:**

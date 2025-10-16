@@ -62,7 +62,7 @@ result = await summarize_urls(
 > - Use semaphores to limit concurrent operations
 > - Prefer `gather()` for simple parallel execution
 >
-> _Summary generated with gpt-4o-mini | Extraction: trafilatura | Chunking: adaptive (512 tokens)_
+> _Summary generated with llama3.2:3b via Ollama | Extraction: trafilatura | Chunking: adaptive (512 tokens)_
 
 **Why this matters:** Instead of reading 15,000+ words of documentation, you get focused, actionable answers in seconds.
 
@@ -92,15 +92,7 @@ playwright install chromium
 
 ### Configuration
 
-#### Cloud LLM (OpenAI)
-
-```bash
-export OPENAI_API_KEY="sk-..."
-export MCP_WEB_SUMMARIZER_PROVIDER=openai
-export MCP_WEB_SUMMARIZER_MODEL=gpt-4o-mini
-```
-
-#### Local LLM (Ollama - Recommended)
+#### Default Local LLM (Ollama)
 
 ```bash
 # Install Ollama: https://ollama.com
@@ -116,6 +108,16 @@ task llm:ollama:start # Start Ollama server
 ```
 
 See [docs/LOCAL_LLM_GUIDE.md](docs/LOCAL_LLM_GUIDE.md) for complete local LLM setup.
+
+#### Cloud LLM (OpenAI)
+
+```bash
+export OPENAI_API_KEY="sk-..."
+export MCP_WEB_SUMMARIZER_PROVIDER=openai
+export MCP_WEB_SUMMARIZER_MODEL=gpt-4o-mini
+```
+
+Set these only if you need hosted OpenAI quality/latency characteristics.
 
 #### Other Settings
 
@@ -334,7 +336,7 @@ See [docs/architecture/ARCHITECTURE.md#configuration-strategy](docs/architecture
 | `FETCHER_MAX_CONCURRENT` | 5 | Max parallel fetches |
 | `CHUNKER_CHUNK_SIZE` | 512 | Target tokens per chunk |
 | `CHUNKER_OVERLAP` | 50 | Overlap between chunks (tokens) |
-| `SUMMARIZER_MODEL` | gpt-4o-mini | LLM model to use |
+| `SUMMARIZER_MODEL` | llama3.2:3b | LLM model to use |
 | `SUMMARIZER_TEMPERATURE` | 0.3 | LLM temperature |
 | `CACHE_TTL` | 604800 | Cache TTL (7 days) |
 | `CACHE_MAX_SIZE` | 1GB | Maximum cache size |
@@ -351,7 +353,7 @@ See [docs/architecture/ARCHITECTURE.md#configuration-strategy](docs/architecture
 
 1. Enable caching for repeated queries
 2. Adjust `chunk_size` based on content type
-3. Use `gpt-4o-mini` for cost-effective summaries
+3. Use `llama3.2:3b` for cost-effective summaries (default)
 4. Limit `max_depth` for link following
 5. Prune cache periodically
 

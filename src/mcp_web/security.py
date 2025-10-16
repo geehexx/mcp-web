@@ -240,11 +240,47 @@ class OutputValidator:
         Returns:
             Filtered response or safe error message
         """
-        if not self.validate(response):
-            logger.error("unsafe_output_filtered")
-            return "I cannot provide that information for security reasons."
+        if not response:
+            return response
 
-        return response
+        sanitized = sanitize_output(response)
+
+        if not self.validate(sanitized):
+            logger.error("unsafe_output_filtered")
+            return "Access denied for security reasons."
+
+        return sanitized
+
+
+def sanitize_output(text: str) -> str:
+    """Sanitize LLM output to remove unsafe markup and obfuscation.
+
+    Args:
+        text: Raw LLM output
+
+    Returns:
+        Sanitized, plain-text safe output
+    """
+    if not text:
+        return ""
+
+    # Normalize HTML entities
+    from html import unescape
+
+    text = unescape(text)
+
+    # Strip script/style tags and their contents
+    text = re.sub(
+        r"<\s*(script|style)[^>]*>.*?<\s*/\s*\1>", "", text, flags=re.IGNORECASE | re.DOTALL
+    )
+
+    # Remove remaining HTML tags
+    text = re.sub(r"<[^>]+>", "", text)
+
+    # Collapse consecutive whitespace/newlines
+    text = re.sub(r"\s+", " ", text).strip()
+
+    return text
 
 
 class RateLimiter:

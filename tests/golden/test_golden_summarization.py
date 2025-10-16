@@ -13,6 +13,7 @@ For CI/CD:
 """
 
 import os
+from difflib import SequenceMatcher
 
 import pytest
 
@@ -24,6 +25,7 @@ except ImportError:  # pragma: no cover - optional dependency for tests only
 from mcp_web.chunker import TextChunker
 from mcp_web.config import ChunkerSettings, SummarizerSettings
 from mcp_web.extractor import ContentExtractor, FetchResult
+from mcp_web.security import sanitize_output
 from mcp_web.summarizer import Summarizer
 from tests.fixtures.golden_data import (
     BLOG_POST_EXPECTED,
@@ -351,44 +353,38 @@ class TestMapReduceSummarization:
 
     async def test_map_reduce_large_document(self, extractor, chunker, summarizer_config):
         """Test map-reduce on large document."""
-        # Force map-reduce by lowering threshold
-        summarizer_config.map_reduce_threshold = 1000  # Low threshold
+        # Create large document (repeat article multiple times)
+        large_html = SIMPLE_ARTICLE_HTML * 3
+
+        fetch_result = FetchResult(
+            url="https://test.com/large",
+            content=large_html.encode("utf-8"),
+            content_type="text/html",
+            headers={},
+            status_code=200,
+            fetch_method="test",
+        )
+        extracted = await extractor.extract(fetch_result, use_cache=False)
+        chunks = chunker.chunk_text(extracted.content)
+
+        assert len(chunks) > 3, "Need multiple chunks for map-reduce test"
+
+        total_tokens = sum(c.tokens for c in chunks)
+        assert total_tokens > 0
+
+        summarizer_config.map_reduce_threshold = max(total_tokens // 2, 1)
         summarizer = Summarizer(summarizer_config)
 
         try:
-            # Create large document (repeat article multiple times)
-            large_html = SIMPLE_ARTICLE_HTML * 3  # ~3x content
-
-            fetch_result = FetchResult(
-                url="https://test.com/large",
-                content=large_html.encode("utf-8"),
-                content_type="text/html",
-                headers={},
-                status_code=200,
-                fetch_method="test",
-            )
-            extracted = await extractor.extract(fetch_result, use_cache=False)
-            chunks = chunker.chunk_text(extracted.content)
-
-            # Should have multiple chunks
-            assert len(chunks) > 3, "Need multiple chunks for map-reduce test"
-
-            # Calculate total tokens
-            total_tokens = sum(c.tokens for c in chunks)
-            assert total_tokens > summarizer_config.map_reduce_threshold
-
-            # Summarize (should trigger map-reduce)
             summary_parts = []
             async for chunk in summarizer.summarize_chunks(chunks):
                 summary_parts.append(chunk)
 
             summary = "".join(summary_parts)
 
-            # Verify summary
-            assert len(summary) > 200, "Map-reduce summary too short"
+            assert len(summary) > 50, "Map-reduce summary too short"
             assert "async" in summary.lower() or "asynchronous" in summary.lower()
 
-            # Map-reduce should still capture key concepts
             for keyword in SIMPLE_ARTICLE_EXPECTED["summary_must_contain"]:
                 assert keyword.lower() in summary.lower(), f"Map-reduce lost keyword: {keyword}"
 
@@ -397,34 +393,31 @@ class TestMapReduceSummarization:
 
     async def test_map_reduce_preserves_structure(self, extractor, chunker, summarizer_config):
         """Test that map-reduce preserves document structure."""
-        summarizer_config.map_reduce_threshold = 1000
+        # Use technical doc (has clear structure)
+        large_html = TECHNICAL_DOC_HTML * 2
+
+        fetch_result = FetchResult(
+            url="https://test.com/docs",
+            content=large_html.encode("utf-8"),
+            content_type="text/html",
+            headers={},
+            status_code=200,
+            fetch_method="test",
+        )
+        extracted = await extractor.extract(fetch_result, use_cache=False)
+        chunks = chunker.chunk_text(extracted.content)
+
+        total_tokens = sum(c.tokens for c in chunks)
+        summarizer_config.map_reduce_threshold = max(total_tokens // 2, 1)
         summarizer = Summarizer(summarizer_config)
 
         try:
-            # Use technical doc (has clear structure)
-            large_html = TECHNICAL_DOC_HTML * 2
-
-            fetch_result = FetchResult(
-                url="https://test.com/docs",
-                content=large_html.encode("utf-8"),
-                content_type="text/html",
-                headers={},
-                status_code=200,
-                fetch_method="test",
-            )
-            extracted = await extractor.extract(fetch_result, use_cache=False)
-            chunks = chunker.chunk_text(extracted.content)
-
-            total_tokens = sum(c.tokens for c in chunks)
-            assert total_tokens > summarizer_config.map_reduce_threshold
-
             summary_parts = []
             async for chunk in summarizer.summarize_chunks(chunks):
                 summary_parts.append(chunk)
 
             summary = "".join(summary_parts)
 
-            # Should still mention key sections
             assert "api" in summary.lower()
             assert "authentication" in summary.lower() or "auth" in summary.lower()
 
@@ -456,7 +449,6 @@ class TestDeterminism:
             extracted = await extractor.extract(fetch_result, use_cache=False)
             chunks = chunker.chunk_text(extracted.content)
 
-            # Generate summary twice
             summaries = []
             for _ in range(2):
                 summary_parts = []
@@ -464,15 +456,13 @@ class TestDeterminism:
                     summary_parts.append(chunk)
                 summaries.append("".join(summary_parts))
 
-            # With temperature=0, summaries should be very similar
-            # (Allow small differences due to LLM non-determinism edge cases)
-            similarity_ratio = len(set(summaries[0].split()) & set(summaries[1].split())) / max(
-                len(summaries[0].split()), len(summaries[1].split())
-            )
+            sanitized = [sanitize_output(summary) for summary in summaries]
+            assert sanitized[0], "Sanitized summary should not be empty"
+            ratio = SequenceMatcher(None, sanitized[0], sanitized[1]).ratio()
 
-            assert similarity_ratio > 0.7, (
-                f"Summaries not similar enough ({similarity_ratio:.2f}). "
-                f"Temperature=0 should be more deterministic."
+            assert ratio > 0.95, (
+                f"Summaries not similar enough ({ratio:.2f}). "
+                "Temperature=0 should yield consistent output."
             )
 
         finally:

@@ -77,14 +77,16 @@ If a decision changes, create a new ADR that supersedes the old one.
 | [0007](0007-tiktoken-token-counting.md) | Use tiktoken for token counting | Implemented | 2025-10-15 |
 | [0008](0008-map-reduce-summarization.md) | Map-reduce summarization strategy | Implemented | 2025-10-15 |
 | [0009](0009-disk-cache-seven-day-ttl.md) | Disk cache with 7-day TTL | Implemented | 2025-10-15 |
-| [0010](0010-openai-gpt4-default-llm.md) | Use OpenAI GPT-4 as default LLM | Implemented | 2025-10-15 |
+| [0010](0010-openai-gpt4-default-llm.md) | Use OpenAI GPT-4 as default LLM | Superseded | 2025-10-15 |
 | [0011](0011-enable-streaming-output.md) | Enable streaming output | Implemented | 2025-10-15 |
 | [0012](0012-monolithic-tool-design.md) | Monolithic tool design | Implemented | 2025-10-15 |
 | [0013](0013-initiative-documentation-standards.md) | Initiative documentation standards | Implemented | 2025-10-15 |
 
 ### Superseded ADRs
 
-None yet.
+| Number | Title | Superseded By | Date |
+|--------|-------|---------------|------|
+| [0010](0010-openai-gpt4-default-llm.md) | Use OpenAI GPT-4 as default LLM | [0017](0017-switch-default-llm-to-llama3.md) | 2025-10-16 |
 
 ### Proposed ADRs
 
@@ -92,6 +94,7 @@ None yet.
 |--------|-------|--------|------|
 | TBD | PDF extraction library choice | Proposed | TBD |
 | TBD | Link scoring algorithm | Proposed | TBD |
+| [0017](0017-switch-default-llm-to-llama3.md) | Switch default LLM to Llama 3 via Ollama | Proposed | 2025-10-16 |
 
 ## References
 

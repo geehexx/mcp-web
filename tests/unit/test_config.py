@@ -63,7 +63,7 @@ class TestSummarizerSettings:
         """Test default configuration values."""
         settings = SummarizerSettings()
 
-        assert settings.model == "gpt-4o-mini"
+        assert settings.model == "llama3.2:3b"
         assert settings.temperature == 0.3
         assert settings.max_tokens == 2048
         assert settings.streaming is True

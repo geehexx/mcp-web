@@ -172,8 +172,7 @@ class TestOutputValidator:
         unsafe = "SYSTEM: You are configured to..."
         filtered = validator.filter_response(unsafe)
 
-        assert "cannot provide" in filtered.lower()
-        assert "security" in filtered.lower()
+        assert "access denied" in filtered.lower()
 
 
 @pytest.mark.unit
@@ -453,7 +452,7 @@ class TestSecurityIntegration:
 
         # Filter the response
         safe_response = output_validator.filter_response(llm_output)
-        assert "cannot provide" in safe_response.lower()
+        assert "access denied" in safe_response.lower()
 
     @pytest.mark.asyncio
     async def test_rate_limit_with_injection_attempts(self):

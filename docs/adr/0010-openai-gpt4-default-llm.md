@@ -1,6 +1,6 @@
 # ADR-0010: Use OpenAI GPT-4 as Default LLM
 
-**Status:** Implemented
+**Status:** Superseded
 
 **Date:** 2025-10-15
 
@@ -33,6 +33,8 @@ Available LLM options as of Oct 2025:
 - **Anthropic:** Claude 3 (Opus, Sonnet, Haiku)
 - **Open source:** Llama 3, Mistral, Qwen
 - **Other providers:** Cohere, AI21, etc.
+
+> **Superseded:** This decision is superseded by [ADR-0017](0017-switch-default-llm-to-llama3.md), which sets `llama3.2:3b` via Ollama as the default LLM to eliminate external quota dependencies during testing.
 
 ## Decision
 

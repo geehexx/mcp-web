@@ -19,8 +19,8 @@ mcp-web now supports multiple LLM providers, including local models for:
 
 | Provider | URL | Default Port | Notes |
 |----------|-----|--------------|-------|
-| **OpenAI** | api.openai.com | 443 | Cloud-based (default) |
-| **Ollama** | localhost | 11434 | Local, easy setup |
+| **Ollama** | localhost | 11434 | Local, easy setup (default) |
+| **OpenAI** | api.openai.com | 443 | Cloud-based |
 | **LM Studio** | localhost | 1234 | Local, GUI-based |
 | **LocalAI** | localhost | 8080 | Local, OpenAI-compatible |
 | **Custom** | configurable | any | Any OpenAI-compatible API |
@@ -29,7 +29,7 @@ mcp-web now supports multiple LLM providers, including local models for:
 
 ## Quick Start
 
-### Using Ollama (Recommended)
+### Using Ollama (Default)
 
 Ollama is the easiest local option with excellent model selection.
 
@@ -112,7 +112,7 @@ ollama serve
 
 # Pull models
 ollama pull llama3.2:3b # Fast, 3B params
-ollama pull llama3.2:8b # Better, 8B params 
+ollama pull llama3.2:8b # Better, 8B params
 ollama pull mistral:7b # Alternative
 ollama pull phi3:mini # Microsoft's small model
 ```

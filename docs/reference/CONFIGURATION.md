@@ -13,13 +13,13 @@ This guide provides practical configuration examples for common use cases. For a
 
 ## Quick Start
 
-### 1. Cloud LLM (OpenAI)
+### 1. Default Local LLM (Ollama)
 
 **Setup:**
 
 ```bash
-export OPENAI_API_KEY="sk-..."
-export MCP_WEB_SUMMARIZER_MODEL="gpt-4o-mini"
+export MCP_WEB_SUMMARIZER_PROVIDER="ollama"
+export MCP_WEB_SUMMARIZER_MODEL="llama3.2:3b"
 ```
 
 **MCP Client Config** (`claude_desktop_config.json`):
@@ -31,15 +31,15 @@ export MCP_WEB_SUMMARIZER_MODEL="gpt-4o-mini"
       "command": "python",
       "args": ["-m", "mcp_web.mcp_server"],
       "env": {
-        "OPENAI_API_KEY": "sk-...",
-        "MCP_WEB_SUMMARIZER_MODEL": "gpt-4o-mini"
+        "MCP_WEB_SUMMARIZER_PROVIDER": "ollama",
+        "MCP_WEB_SUMMARIZER_MODEL": "llama3.2:3b"
       }
     }
   }
 }
 ```
 
-### 2. Local LLM (Ollama)
+### 2. Cloud LLM (OpenAI)
 
 **Prerequisites:**
 
@@ -57,8 +57,9 @@ ollama pull llama3.2:3b
 **Setup:**
 
 ```bash
-export MCP_WEB_SUMMARIZER_PROVIDER="ollama"
-export MCP_WEB_SUMMARIZER_MODEL="llama3.2:3b"
+export OPENAI_API_KEY="sk-..."
+export MCP_WEB_SUMMARIZER_PROVIDER="openai"
+export MCP_WEB_SUMMARIZER_MODEL="gpt-4o-mini"
 ```
 
 **MCP Client Config:**
@@ -70,8 +71,9 @@ export MCP_WEB_SUMMARIZER_MODEL="llama3.2:3b"
       "command": "python",
       "args": ["-m", "mcp_web.mcp_server"],
       "env": {
-        "MCP_WEB_SUMMARIZER_PROVIDER": "ollama",
-        "MCP_WEB_SUMMARIZER_MODEL": "llama3.2:3b"
+        "OPENAI_API_KEY": "sk-...",
+        "MCP_WEB_SUMMARIZER_PROVIDER": "openai",
+        "MCP_WEB_SUMMARIZER_MODEL": "gpt-4o-mini"
       }
     }
   }
