@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "fileName": ".windsurf/workflows/consolidate-summaries.md",
+    "lineNumber": 479,
+    "ruleNames": [
+      "MD036",
+      "no-emphasis-as-heading"
+    ],
+    "ruleDescription": "Emphasis used instead of a heading",
+    "ruleInformation": "https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md036.md",
+    "errorDetail": null,
+    "errorContext": "Run through validation checkli...",
+    "errorRange": null,
+    "fixInfo": null
+  }
+]
