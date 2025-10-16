@@ -84,10 +84,17 @@ When making any implementation decision, prioritize the following principles in 
    - Identifies workflow/rule improvements
    - This is NOT optional
 
-4. **Verify exit criteria:**
-   - All changes committed (including auto-fixes)
+4. **Update living documentation:** Check if PROJECT_SUMMARY or CHANGELOG need updates
+   - Update PROJECT_SUMMARY.md if: major features completed, milestones reached, ADRs created, initiative status changed
+   - Update CHANGELOG.md if: preparing release, breaking changes, new user-facing features
+   - See `/meta-analysis` workflow Stage 6 for detailed triggers
+   - Skip if: routine bug fixes, internal refactoring, work-in-progress
+
+5. **Verify exit criteria:**
+   - All changes committed (including auto-fixes and documentation updates)
    - Tests passing (if code changes made)
    - Session summary created in `docs/archive/session-summaries/`
+   - Living documentation current (PROJECT_SUMMARY, CHANGELOG checked)
 
 **CRITICAL VIOLATIONS:**
 
@@ -112,47 +119,17 @@ Do not request approval for:
 - Routine test additions
 - Documentation updates
 
-## 1.10 Operational Efficiency Patterns
+## 1.10 Operational Efficiency Principles
 
-**Batch Operations (CRITICAL):**
+**Core Efficiency Principles:**
 
-✅ **ALWAYS use batch reads** when loading multiple files:
+1. **Batch Operations:** Always batch file reads when loading 3+ files (3-10x faster than sequential)
+2. **Absolute Paths:** MCP tools (`mcp0_*`) require absolute paths; standard tools accept relative paths
+3. **Context Loading Strategy:** Batch read essential context at session start, related files before implementation
+4. **Performance First:** Optimize for minimal tool calls and network round-trips
 
-```python
-# Good: Single tool call for multiple files
-mcp0_read_multiple_files([
-    "/home/gxx/projects/mcp-web/file1.md",
-    "/home/gxx/projects/mcp-web/file2.md",
-    "/home/gxx/projects/mcp-web/file3.md"
-])
-# Result: 3x faster, single network round-trip
-```
+**For detailed implementation examples and patterns, see:**
 
-❌ **NEVER use sequential reads** for multiple files:
-
-```python
-# Bad: Three separate tool calls
-read_file("/home/gxx/projects/mcp-web/file1.md")
-read_file("/home/gxx/projects/mcp-web/file2.md")
-read_file("/home/gxx/projects/mcp-web/file3.md")
-# Result: 3x slower, three network round-trips
-```
-
-**Context Loading Strategy:**
-
-1. **Start of session:** Batch read essential context (PROJECT_SUMMARY.md, active initiatives, recent session summaries)
-2. **Before implementation:** Batch read all related source files, tests, and documentation
-3. **Before planning:** Batch read architecture docs, ADRs, and completed initiatives
-
-**Absolute Path Requirement:**
-
-- MCP tools (`mcp0_*`) REQUIRE absolute paths
-- Standard tools (`read_file`, `edit`, `write_to_file`) accept relative paths
-- Workflows and documentation must show absolute path examples
-- Use project root: `/home/gxx/projects/mcp-web/`
-
-**Performance Impact:**
-
-- Batch reads: **3-10x faster** than sequential
-- Absolute paths: **100% success rate** vs potential failures with relative paths
-- Session context loading: **<5 seconds** with batch vs **15-30 seconds** sequential
+- `/work` workflow: Batch operation examples and context loading patterns
+- Section 1.6 File Operations: MCP vs standard tool selection
+- Section 1.7 Git Operations: MCP git tool patterns

@@ -197,29 +197,6 @@ git commit -m "docs(initiative): complete [initiative name]"
 
 **Note:** Step 4 (automatic archival) is preferred and happens as part of the session end protocol.
 
-## Active Initiatives
-
-### High Priority
-
-| Initiative | Owner | Started | Target | Progress |
-|------------|-------|---------|--------|----------|
-| [Quality Foundation](active/2025-q4-quality-foundation.md) | Core Team | 2025-10-15 | 2025-11-15 | Phase 2 |
-
-### Medium Priority
-
-_No medium priority initiatives at this time._
-
-## Recently Completed
-
-| Initiative | Owner | Completed | Duration |
-|------------|-------|-----------|----------|
-| [Fix Security Unit Tests](completed/fix-security-unit-tests.md) | AI Agent | 2025-10-15 | ~1.5 hours |
-| [Convert Decisions to ADRs](completed/convert-decisions-to-adrs.md) | AI Agent | 2025-10-15 | 1.5 hours |
-
-## Archived Initiatives
-
-None yet.
-
 ## Best Practices
 
 ### DO
@@ -304,5 +281,5 @@ When creating or updating initiatives:
 
 ---
 
-**Last Updated:** 2025-10-15
+**Last Updated:** 2025-10-16
 **Maintained By:** Core Team
