@@ -17,16 +17,16 @@ auto_execution_mode: 2
 
 Create a plan when:
 
-- ✅ **New feature** (not documented)
-- ✅ **Complex refactoring** (affects multiple modules)
-- ✅ **Architecture change** (needs ADR)
-- ✅ **Multi-session work** (>4 hours estimated)
-- ✅ **Cross-cutting concerns** (security, performance, etc.)
-- ✅ **Unclear requirements** (needs research)
+- ✅ New feature (not documented)
+- ✅ Complex refactoring (affects multiple modules)
+- ✅ Architecture change (needs ADR)
+- ✅ Multi-session work (>4 hours estimated)
+- ✅ Cross-cutting concerns (security, performance)
+- ✅ Unclear requirements (needs research)
 
 Do NOT plan for:
 
-- ❌ Simple bug fixes (1-2 files, <1 hour)
+- ❌ Simple bug fixes (<1 hour, 1-2 files)
 - ❌ Documentation updates
 - ❌ Routine dependency updates
 - ❌ Following existing patterns
@@ -50,385 +50,149 @@ Do NOT plan for:
 
 **User Request:** "Add user authentication"
 
-**Clarifications Needed:**
-1. Authentication method? (OAuth, JWT, API keys, or multiple?)
-2. User storage? (Database, external provider, or both?)
+**Clarifications:**
+1. Authentication method? (OAuth, JWT, API keys?)
+2. User storage? (Database, external provider?)
 3. Scope? (API only, or also MCP server?)
 
 **Assumptions** (pending confirmation):
-- API key authentication (simplest for API use case)
-- In-memory storage for now (future: database)
-- Scope: API only (MCP later)
-```text
+- API key authentication (simplest)
+- In-memory storage initially
+- API only (MCP later)
+```
 
 ### 1.2 Define Success Criteria
 
-**SMART criteria:**
-
-- **Specific:** Exactly what will be delivered?
-- **Measurable:** How to verify completion?
-- **Achievable:** Realistic given constraints?
-- **Relevant:** Aligns with project goals?
-- **Time-bound:** Estimated effort?
-
-**Example:**
+**SMART format:**
 
 ```markdown
 ## Success Criteria
 
-- [ ] API accepts API key in Authorization header
-- [ ] Invalid keys return 401 Unauthorized
-- [ ] Valid keys allow access to endpoints
-- [ ] API key management CLI commands
-- [ ] 95%+ test coverage for auth module
-- [ ] Documentation updated (API.md, README.md)
-- [ ] Security review passed (bandit, semgrep)
+- [ ] [Specific deliverable]
+- [ ] [Measurable outcome]
+- [ ] [Quality gate]
+- [ ] [Documentation requirement]
 
-**Verification:** `task test:security` passes all auth tests
-**Estimated Effort:** 6-8 hours (2 sessions)
-```text
+**Verification:** [How to confirm completion]
+**Estimated Effort:** [N-M hours]
+```
 
 ---
 
 ## Stage 2: Research & Discovery
 
-### 2.1 Search for Existing Patterns
+**Call `/research` workflow:**
 
-**Check project first:**
+- Searches internal patterns (codebase, ADRs, rules)
+- Performs web research for current best practices (MANDATORY)
+- Evaluates dependencies and libraries
+- Assesses security and performance
+- Compares alternatives
+- Provides recommendation with sources
 
-1. **Similar implementations**
+**Output:** Research summary with recommended approach
 
-   ```bash
-   grep_search("authentication\\|auth\\|api.?key", "src/", recursive=true)
-   ```text
-
-2. **Related ADRs**
-
-   ```bash
-   list_dir("docs/adr/")
-   # Read any security-related ADRs
-   ```text
-
-3. **Security guidelines**
-
-   ```bash
-   read_file(".windsurf/rules/04_security.md")
-   ```text
-
-### 2.2 External Research
-
-**ALWAYS use web search for best practices:**
-
-**Critical:** Use the `search_web` tool to find current best practices, not just examples.
-
-```python
-# Example web searches
-search_web("Python API key authentication best practices 2025")
-search_web("FastAPI JWT authentication security OWASP 2025")
-search_web("API security patterns microservices 2025")
-```text
-
-**Why web search is essential:**
-
-- Technology evolves rapidly (2025 best practices differ from 2023)
-- Security vulnerabilities discovered regularly
-- New libraries and patterns emerge
-- Official documentation updates
-- Community consensus shifts
-
-**Search strategy:**
-
-1. **Broad context** - General best practices for the domain
-2. **Specific technology** - Framework/library-specific patterns
-3. **Security focus** - OWASP, CVE, security advisories
-4. **Recent updates** - Include year (2025) in queries
-5. **Production examples** - Real-world implementations
-
-**Document findings:**
-
-```markdown
-## Research Findings
-
-**Best Practices (2025):**
-1. Use Bearer token format: `Authorization: Bearer <token>`
-2. Hash API keys before storage (argon2 or bcrypt)
-3. Rate limit authentication attempts (prevent brute force)
-4. Support key rotation and revocation
-5. Log authentication failures (security monitoring)
-
-**Libraries:**
-- `python-multipart` for form data
-- `passlib` for hashing
-- `python-jose` for JWT (if expanding later)
-
-**References:**
-- [OWASP API Security Top 10 (2023)](https://owasp.org/API-Security/)
-- [FastAPI Security Documentation](https://fastapi.tiangolo.com/tutorial/security/)
-- [Additional sources from web search]
-
-**Note:** Always cite actual URLs from search results, not placeholder examples
-```text
-
-### 2.3 Architecture Assessment
-
-**Consider system impact:**
-
-1. **Breaking changes?**
-   - Existing API calls need updating?
-   - Backward compatibility needed?
-
-2. **New dependencies?**
-   - Add to pyproject.toml
-   - License compatible?
-   - Actively maintained?
-
-3. **Performance impact?**
-   - Authentication overhead per request?
-   - Caching strategy needed?
-
-4. **Security implications?**
-   - Needs security review?
-   - Requires ADR?
+**See:** `.windsurf/workflows/research.md`
 
 ---
 
-## Stage 3: Decomposition & Task Planning
+## Stage 3: Generate Implementation Plan
 
-### 3.1 Break Down into Phases
+**Call `/generate-plan` workflow:**
 
-**Use hierarchical decomposition:**
+- Decomposes work into phases
+- Breaks phases into concrete tasks (<4h each)
+- Creates task dependency graph
+- Identifies risks with mitigations
+- Defines out-of-scope items
+- Generates initiative document
+- Creates ADR if architectural decision
 
-```markdown
-## Implementation Phases
+**Output:** 
+- Initiative file in `docs/initiatives/active/`
+- Plan summary for approval
 
-### Phase 1: Core Authentication (4 hours)
-**Goal:** Basic API key validation
-
-Tasks:
-1. Create `src/mcp_web/auth.py` module
-   - APIKey model (Pydantic)
-   - Hash generation function
-   - Validation function
-2. Add FastAPI dependency injection
-3. Unit tests (test_auth.py)
-4. Integration with one endpoint (test)
-
-**Exit Criteria:** One protected endpoint works with API key
-
-### Phase 2: Key Management (2 hours)
-**Goal:** CLI tools for API key operations
-
-Tasks:
-1. Add `mcp_web.cli` auth commands
-   - `generate-key` - Create new API key
-   - `list-keys` - Show active keys
-   - `revoke-key` - Disable key
-2. In-memory key storage (dict)
-3. CLI tests
-
-**Exit Criteria:** Can create, list, revoke keys via CLI
-
-### Phase 3: Apply to All Endpoints (1 hour)
-**Goal:** Protect all API endpoints
-
-Tasks:
-1. Apply dependency to all routes
-2. Update API documentation
-3. Add auth tests for each endpoint
-
-**Exit Criteria:** All endpoints require authentication
-
-### Phase 4: Documentation & Review (1 hour)
-**Goal:** Production-ready
-
-Tasks:
-1. Update docs/API.md with auth examples
-2. Update README.md setup instructions
-3. Security review (bandit, semgrep)
-4. Create ADR-XXXX-api-key-authentication.md
-
-**Exit Criteria:** Documentation complete, security passed
-```text
-
-### 3.2 Identify Dependencies
-
-**Task dependency graph:**
-
-```markdown
-## Dependencies
-
-```text
-
-Phase 1 (Core Auth) → Phase 2 (Key Mgmt)
-                   ↘
-                    → Phase 3 (Apply All)
-                                         ↘
-                                          → Phase 4 (Docs)
-
-```text
-
-**Blockers:**
-- None (can start immediately)
-
-**Assumptions:**
-- Using FastAPI (already in project)
-- Python 3.10+ (already required)
-```text
-
-### 3.3 Risk Assessment
-
-**Identify potential issues:**
-
-```markdown
-## Risks & Mitigation
-
-| Risk | Probability | Impact | Mitigation |
-|------|-------------|--------|------------|
-| Breaking existing API clients | High | High | Add `/v2/` versioned endpoints |
-| Performance degradation | Low | Medium | Benchmark before/after, cache validated keys |
-| Security vulnerability | Medium | Critical | Follow OWASP guidelines, security review |
-| Scope creep (OAuth, etc.) | Medium | Medium | Document explicitly out of scope |
-
-**Out of Scope:**
-- OAuth/OIDC integration (future: ADR needed)
-- User management UI (API only)
-- Database storage (Phase 2: separate initiative)
-```text
+**See:** `.windsurf/workflows/generate-plan.md`
 
 ---
 
-## Stage 4: Initiative Creation
+## Stage 4: Present and Validate
 
-### 4.1 Generate Initiative Document
-
-**Create structured initiative:**
-
-```markdown
-# Initiative: API Key Authentication
-
-**Status:** Active
-**Created:** 2025-10-15
-**Target Completion:** 2025-10-22
-**Owner:** @agent
-**Priority:** High
-
-## Objective
-
-Implement secure API key authentication for all MCP web service endpoints.
-
-## Success Criteria
-
-- [ ] Core authentication module (src/mcp_web/auth.py)
-- [ ] CLI key management tools
-- [ ] All endpoints protected
-- [ ] 95%+ test coverage
-- [ ] Documentation updated
-- [ ] Security review passed
-- [ ] ADR created
-
-## Phases
-
-[Copy Phase 1-4 from above]
-
-## Research Summary
-
-[Copy key findings from Stage 2]
-
-## ADRs
-
-- [ ] ADR-XXXX: API Key Authentication Strategy
-
-## Related Documentation
-
-- docs/API.md (needs update)
-- docs/adr/ (new ADR)
-- .windsurf/rules/04_security.md (reference)
-
-## Updates
-
-### 2025-10-15
-Initiative created. Ready to begin Phase 1.
-```text
-
-**Save to:** `docs/initiatives/active/YYYY-MM-DD-descriptive-name.md`
-
-### 4.2 Create ADR (if needed)
-
-**If architectural decision:**
-
-```bash
-# Invoke ADR workflow
-/new-adr
-```text
-
----
-
-## Stage 5: Plan Validation
-
-### 5.1 Review Checklist
-
-Before proceeding, verify:
-
-- [ ] Requirements clearly defined
-- [ ] Success criteria measurable
-- [ ] Research completed and documented
-- [ ] Tasks broken down (each <4 hours)
-- [ ] Dependencies identified
-- [ ] Risks assessed with mitigations
-- [ ] Initiative document created
-- [ ] ADR created (if architectural)
-
-### 5.2 Present to User
+### 4.1 Present to User
 
 **Summary format:**
 
 ```markdown
-## 📋 Plan Complete: API Key Authentication
+## 📋 Plan Complete: [Title]
 
-**Estimated Effort:** 8 hours (2-3 sessions)
-**Phases:** 4 (Core → Management → Apply → Docs)
-**Risks:** 3 identified, mitigation strategies defined
+**Estimated Effort:** [N hours] ([M sessions])
+**Phases:** [Count] ([Names])
+**Complexity:** [High/Medium/Low]
 
 ### Key Decisions
 
-1. **API Keys only** (not OAuth) - simplicity for API use case
-2. **In-memory storage** initially - future: database migration
-3. **Versioned endpoints** (/v2/) - backward compatibility
+1. **[Decision 1]:** [What] — [Why]
+2. **[Decision 2]:** [What] — [Why]
+
+### Implementation Phases
+
+**Phase 1 ([N]h):** [Brief description]
+**Phase 2 ([N]h):** [Brief description]
+
+### Risks Identified
+
+- [Risk 1] - [Mitigation]
+- [Risk 2] - [Mitigation]
 
 ### Next Steps
 
 1. Review this plan
 2. Approve or request changes
-3. I'll begin Phase 1 implementation
+3. Begin Phase 1 implementation
 
 **Ready to proceed?**
-```text
+```
+
+### 4.2 Handle Feedback
+
+**If user requests changes:**
+
+- Update initiative document
+- Revise plan sections
+- Re-present for approval
+
+**If approved:**
+
+- Proceed to Stage 5
 
 ---
 
-## Stage 6: Handoff to Implementation
+## Stage 5: Handoff to Implementation
 
-### 6.1 Prepare Context Package
+### 5.1 Load Full Context
 
-**For `/implement` workflow:**
+**Call `/load-context` with scope="initiative":**
 
-```markdown
-## Context Package
+- Loads initiative file
+- Loads related source files
+- Loads test files
+- Loads related ADRs
 
-**Initiative:** docs/initiatives/active/2025-10-15-api-key-auth.md
-**Phase:** 1 (Core Authentication)
-**Tasks:** [List Phase 1 tasks]
-**References:** [List key research links]
-**Constraints:** [List out-of-scope items]
+**See:** `.windsurf/workflows/load-context.md`
 
-**Start with:** Task 1 (Create auth.py module)
-```text
+### 5.2 Begin Implementation
 
-### 6.2 Invoke Implementation
+**Call `/implement` workflow:**
 
-```markdown
-/implement --initiative=docs/initiatives/active/2025-10-15-api-key-auth.md --phase=1
-```text
+```bash
+/implement --initiative=[filepath] --phase=1
+```
+
+**Workflow chain:**
+
+```
+/plan → /research → /generate-plan → /implement → /validate → /commit
+```
 
 ---
 
@@ -437,19 +201,16 @@ Before proceeding, verify:
 ### Good Plan Indicators
 
 ✅ **Comprehensive:**
-
-- All requirements captured
+- Requirements captured
 - Research documented with sources
 - Risks identified
 
 ✅ **Actionable:**
-
-- Tasks are concrete (not vague)
+- Tasks concrete, not vague
 - Each task <4 hours
 - Clear acceptance criteria
 
 ✅ **Realistic:**
-
 - Effort estimates reasonable
 - Dependencies identified
 - Risks have mitigations
@@ -457,21 +218,18 @@ Before proceeding, verify:
 ### Poor Plan Indicators
 
 ❌ **Vague:**
-
 - "Implement authentication" (what kind?)
-- "Make it secure" (how?)
 - No specific tasks
+- Missing details
 
 ❌ **Unrealistic:**
-
-- "Complete in 1 hour" for complex feature
+- Complex feature in 1 hour
 - Ignoring dependencies
 - No risk assessment
 
 ❌ **Incomplete:**
-
 - No research
-- Missing acceptance criteria
+- Missing criteria
 - No documentation plan
 
 ---
@@ -486,12 +244,7 @@ Before proceeding, verify:
 ### ❌ Don't: Skip Research
 
 **Bad:** "I assume we should use X"
-**Good:** "I researched X vs Y, X is better because..."
-
-### ❌ Don't: Ignore Existing Patterns
-
-**Bad:** Reinvent authentication
-**Good:** Follow existing security patterns
+**Good:** "I researched X vs Y, X is better because [sources]"
 
 ### ❌ Don't: Create Plans for Simple Tasks
 
@@ -500,59 +253,43 @@ Before proceeding, verify:
 
 ---
 
-## Templates
-
-### Initiative Template
-
-See: `docs/initiatives/template.md` (if exists) or create inline
-
-### ADR Template
-
-See: `docs/adr/template.md`
-
----
-
 ## Success Metrics
 
 **Good planning results in:**
 
-- ✅ Clear execution path (no ambiguity)
-- ✅ Faster implementation (no research mid-work)
+- ✅ Clear execution path
+- ✅ Faster implementation (no mid-work research)
 - ✅ Fewer mistakes (risks identified)
-- ✅ Better code quality (patterns researched)
-- ✅ Complete delivery (nothing forgotten)
+- ✅ Better quality (patterns researched)
+- ✅ Complete delivery
 
 **Poor planning results in:**
 
-- ❌ Mid-work pivots ("Oh, we need X too")
-- ❌ Technical debt ("We'll fix this later")
-- ❌ Incomplete features ("Good enough for now")
-- ❌ Security issues ("Didn't think of that")
+- ❌ Mid-work pivots
+- ❌ Technical debt
+- ❌ Incomplete features
+- ❌ Security issues
+
+---
+
+## Integration
+
+### Called By
+- `/work` - When planning needed
+- User - Direct invocation
+
+### Calls
+- `/research` - Best practices and pattern discovery (Stage 2)
+- `/generate-plan` - Structure creation and task breakdown (Stage 3)
+- `/load-context` - Full context loading (Stage 5)
+- `/implement` - Begin execution (Stage 5)
 
 ---
 
 ## References
 
-### Planning Methodologies
-
-- [Agile User Stories and Acceptance Criteria](https://www.atlassian.com/agile/project-management/user-stories)
-- [Work Breakdown Structure (WBS)](https://www.pmi.org/learning/library/applying-work-breakdown-structure-project-lifecycle-6979)
-- [SMART Goals Framework](https://www.mindtools.com/pages/article/smart-goals.htm)
-
-### AI Agent Planning
-
-- [Agentic AI Workflows (2025)](https://devcom.com/tech-blog/ai-agentic-workflows/) - Planning and decomposition
-- [AI Agent Architecture Best Practices (2025)](https://skywork.ai/blog/claude-agent-sdk-best-practices-ai-agents-2025/) - Orchestrator patterns
-- [Enterprise AI Workflows (2025)](https://www.ampcome.com/post/ai-agents-enterprise-workflows-2025-guide) - Strategic assessment phases
-
-### Project-Specific
-
-- `docs/DOCUMENTATION_STRUCTURE.md` - Where to put artifacts
-- `docs/adr/README.md` - ADR process
-- `.windsurf/workflows/new-adr.md` - ADR creation workflow
-- `.windsurf/workflows/work.md` - Integration with work orchestration
-
----
-
-**Last Updated:** October 15, 2025
-**Version:** 1.0
+- `.windsurf/workflows/research.md` - Research subprocess
+- `.windsurf/workflows/generate-plan.md` - Plan generation subprocess
+- `.windsurf/workflows/implement.md` - Implementation workflow
+- `docs/DOCUMENTATION_STRUCTURE.md` - Initiative file format
+- `docs/initiatives/template.md` - Initiative template
