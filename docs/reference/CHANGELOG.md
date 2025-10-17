@@ -36,6 +36,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Session summary standardization
 - Windsurf workflow system integration (ADR-0002)
 - Documentation structure standards (ADR-0003)
+- Meta-analysis workflow overhaul with LLM-agnostic template, validation checklist, and length constraints
+- Session End Protocol updates enforcing PROJECT_SUMMARY / CHANGELOG maintenance triggers
 
 ### Changed
 
