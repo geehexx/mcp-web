@@ -217,6 +217,280 @@ Progress update...
 
 ---
 
+## YAML Frontmatter Schema
+
+**Purpose:** Structured metadata for AI-optimized documentation discovery and indexing.
+
+**Applies to:** All documentation files (workflows, rules, ADRs, guides, initiatives)
+
+### Standard Schema
+
+**Required fields:**
+
+```yaml
+---
+# Core metadata (all documents)
+title: "Document Title"
+type: "guide|adr|initiative|workflow|rule|api|architecture|reference"
+status: "draft|active|completed|deprecated|superseded"
+
+# Discovery metadata
+description: "One-sentence description for quick context"
+tags: ["tag1", "tag2", "tag3"]
+---
+```
+
+**Optional fields:**
+
+```yaml
+---
+# Relationships
+related:
+  - "/docs/path/to/related-doc.md"
+  - "/docs/adr/0012-decision.md"
+
+# Workflow-specific
+auto_execution_mode: 3  # Windsurf workflow execution mode
+
+# Context hints
+audience: "developer|ai-agent|both"
+token_budget: "low|medium|high"
+complexity: "simple|moderate|complex"
+
+# Timestamps (ONLY on creation, never updated)
+created: "2025-10-15"
+
+# ADR-specific
+supersedes: "0012-old-decision.md"
+superseded_by: "0015-new-decision.md"
+decision_date: "2025-10-15"
+
+# Initiative-specific
+priority: "low|medium|high|critical"
+owner: "@username"
+start_date: "2025-10-15"
+target_date: "2025-11-15"
+estimated_hours: 20
+---
+```
+
+### Field Definitions
+
+| Field | Type | Required | Values | Description |
+|-------|------|----------|--------|-------------|
+| `title` | string | Yes | Any | Human-readable title |
+| `type` | string | Yes | guide\|adr\|initiative\|workflow\|rule\|api\|architecture\|reference | Document type |
+| `status` | string | Yes | draft\|active\|completed\|deprecated\|superseded | Current status |
+| `description` | string | Yes | Any | One-sentence summary |
+| `tags` | array | Yes | Any | Keywords for search |
+| `related` | array | No | Paths | Related documents |
+| `audience` | string | No | developer\|ai-agent\|both | Target audience |
+| `token_budget` | string | No | low\|medium\|high | Context loading hint |
+| `complexity` | string | No | simple\|moderate\|complex | Difficulty level |
+| `created` | string | No | YYYY-MM-DD | Creation date (never update) |
+| `priority` | string | No | low\|medium\|high\|critical | Initiative priority |
+| `owner` | string | No | @username | Responsible person |
+
+### Examples by Document Type
+
+**Workflow:**
+
+```yaml
+---
+title: "Bump Version Workflow"
+type: "workflow"
+status: "active"
+description: "Auto-bump version based on conventional commits"
+tags: ["versioning", "automation", "git"]
+related:
+  - "/docs/reference/CHANGELOG.md"
+  - "/.windsurf/workflows/commit.md"
+audience: "ai-agent"
+token_budget: "medium"
+complexity: "moderate"
+auto_execution_mode: 3
+created: "2025-10-18"
+---
+```
+
+**ADR:**
+
+```yaml
+---
+title: "Use Structured LLM Prompts"
+type: "adr"
+status: "accepted"
+description: "Adopt structured prompt format for all LLM interactions"
+tags: ["llm", "prompts", "security"]
+related:
+  - "/docs/adr/0002-adopt-windsurf-workflow-system.md"
+  - "/docs/architecture/SECURITY_ARCHITECTURE.md"
+audience: "both"
+token_budget: "high"
+complexity: "complex"
+created: "2025-09-20"
+decision_date: "2025-09-25"
+---
+```
+
+**Initiative:**
+
+```yaml
+---
+title: "Windsurf Workflows v2 Optimization"
+type: "initiative"
+status: "active"
+description: "Optimize workflows for 30-50% token reduction"
+tags: ["optimization", "workflows", "efficiency"]
+priority: "high"
+owner: "@ai-agent"
+start_date: "2025-10-17"
+target_date: "2025-11-15"
+estimated_hours: 35
+related:
+  - "/docs/adr/0002-adopt-windsurf-workflow-system.md"
+audience: "ai-agent"
+token_budget: "high"
+complexity: "complex"
+created: "2025-10-17"
+---
+```
+
+**Guide:**
+
+```yaml
+---
+title: "Testing Guide"
+type: "guide"
+status: "active"
+description: "Comprehensive guide to testing practices and tools"
+tags: ["testing", "pytest", "tdd"]
+related:
+  - "/.windsurf/rules/01_testing_and_tooling.md"
+  - "/.windsurf/workflows/run-tests.md"
+audience: "developer"
+token_budget: "high"
+complexity: "moderate"
+created: "2025-09-15"
+---
+```
+
+**Rule:**
+
+```yaml
+---
+title: "Testing and Tooling Standards"
+type: "rule"
+status: "active"
+description: "Testing principles, tool selection, and TDD workflow"
+tags: ["testing", "pytest", "tdd", "standards"]
+related:
+  - "/.windsurf/workflows/run-tests.md"
+  - "/docs/guides/TESTING_GUIDE.md"
+audience: "ai-agent"
+token_budget: "medium"
+complexity: "moderate"
+created: "2025-09-10"
+---
+```
+
+### Validation
+
+**Frontmatter validation script:**
+
+```bash
+# Validate all documentation frontmatter
+task docs:validate-frontmatter
+
+# Check for required fields
+# Verify valid values for enums
+# Report missing frontmatter
+```
+
+**Required checks:**
+
+- All required fields present
+- Valid enum values (type, status, audience, etc.)
+- Valid date format (YYYY-MM-DD)
+- Related paths exist
+- No duplicate tags
+
+### Migration Strategy
+
+**Phase 1: Add to new documents** (immediate)
+
+- All new workflows, rules, ADRs, initiatives must include frontmatter
+
+**Phase 2: Backfill existing documents** (Initiative Phase 5)
+
+- Add frontmatter to all existing workflows (9 files)
+- Add frontmatter to all existing rules (5 files)
+- Add frontmatter to all existing ADRs (17 files)
+- Add frontmatter to all guides and reference docs
+
+**Phase 3: Validation enforcement** (Initiative Phase 6)
+
+- Add pre-commit hook to validate frontmatter
+- CI check for valid frontmatter
+- Reject commits with invalid or missing frontmatter
+
+### AI Agent Usage
+
+**Discovery pattern:**
+
+```markdown
+AI Agent: "I need to find documentation about testing"
+→ Search frontmatter: tags contains "testing"
+→ Results:
+  - Testing Guide (type: guide, complexity: moderate)
+  - Testing Rules (type: rule, token_budget: medium)
+  - Run Tests Workflow (type: workflow, complexity: simple)
+→ Load by priority: Rules first (principles), then Guide (how-to), then Workflow (commands)
+```
+
+**Token budget optimization:**
+
+```markdown
+AI Agent: Limited context window
+→ Filter by token_budget: "low" or "medium"
+→ Load essential context only
+→ Defer "high" token_budget docs until needed
+```
+
+**Relationship traversal:**
+
+```markdown
+AI Agent: Reading ADR-0013 (Testing Strategy)
+→ Check frontmatter.related
+→ Find: testing-guide.md, run-tests.md
+→ Load related docs for complete context
+```
+
+### Benefits
+
+**For AI Agents:**
+
+- Structured search by type, tags, complexity
+- Token budget hints for context optimization
+- Relationship traversal for complete context
+- Quick relevance assessment via description
+
+**For Developers:**
+
+- Consistent metadata across all docs
+- Easy filtering and discovery
+- Clear document relationships
+- Status and priority visibility
+
+**For Automation:**
+
+- Validation and linting
+- Auto-generation of doc indexes
+- Dependency graph generation
+- Stale document detection
+
+---
+
 ## Documentation Maintenance
 
 ### Update Triggers
