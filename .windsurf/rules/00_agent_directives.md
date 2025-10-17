@@ -34,7 +34,7 @@ When making any implementation decision, prioritize the following principles in 
 - **Testing:** pytest with pytest-xdist for parallelization
 - **Linting:** ruff (replaces black, isort, flake8), mypy
 - **Security:** bandit, semgrep, safety
-- **Documentation:** markdownlint-cli2, Vale
+- **Documentation:** markdownlint-cli2
 
 ## 1.5 Research and References
 

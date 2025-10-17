@@ -87,7 +87,7 @@ export MCP_WEB_SUMMARIZER_TEMPERATURE=0.3  # Valid range: 0.0-2.0
 
 - `url`: The URL that failed
 - `error`: Error description
-- `method`: httpx or playwright
+- `method`: httpx or Playwright
 
 **Solution:**
 

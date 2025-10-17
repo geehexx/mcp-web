@@ -26,8 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Query-aware summarization tests (11 scenarios)
 - Playwright fallback tests (18 test cases)
 - robots.txt handling tests (25 test cases)
-- Documentation linting infrastructure (markdownlint, Vale)
-- Custom Vale styles for project-specific terminology
+- Documentation linting infrastructure (markdownlint)
 - Pre-commit hooks for documentation quality
 - GitHub Actions workflow for CI documentation checks
 - Comprehensive ADR framework (16 architecture decisions)

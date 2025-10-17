@@ -598,8 +598,7 @@ export MCP_WEB_FETCHER_TIMEOUT=60
 | **mypy** | Static type checking |
 | **bandit** | Security scanning |
 | **semgrep** | Security pattern detection |
-| **markdownlint** | Markdown linting |
-| **Vale** | Prose quality checking |
+| **markdownlint** | Documentation linting |
 
 ### Infrastructure
 

@@ -29,7 +29,7 @@ Define measurable outcomes. Each criterion should be a checkbox that can be obje
 **Examples:**
 
 - [ ] Test coverage reaches ≥90% across all modules
-- [ ] All documentation passes markdownlint and Vale
+- [ ] All documentation passes markdownlint checks
 - [ ] Zero P0/P1 security vulnerabilities in security scan
 - [ ] Performance benchmarks improve by ≥20%
 

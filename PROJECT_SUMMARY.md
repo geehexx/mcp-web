@@ -45,7 +45,7 @@
 **Completed:**
 
 - ✅ Documentation structure and constitution (ADRs, initiatives, guides)
-- ✅ Documentation linting (markdownlint, Vale) with CI enforcement
+- ✅ Documentation linting (markdownlint) with CI enforcement
 - ✅ Comprehensive test suites (query-aware, Playwright fallback, robots.txt)
 - ✅ CLI testing endpoints (`test-summarize`, `test-robots`)
 - ✅ 67% mypy error reduction (96 → 32 errors)
@@ -127,7 +127,7 @@
 - ruff (linting/formatting)
 - mypy (type checking)
 - bandit + semgrep (security)
-- markdownlint + Vale (documentation)
+- markdownlint (documentation)
 - uv (package management)
 - Taskfile (task runner)
 
@@ -212,7 +212,7 @@
 - 🎯 Implemented parallel map-reduce optimization (1.17x speedup)
 - 🎯 Added adaptive chunking with telemetry
 - 🎯 Optimized LLM prompts (45-60% reduction)
-- 🎯 Deployed documentation quality infrastructure (markdownlint, Vale)
+- 🎯 Deployed documentation quality infrastructure (markdownlint)
 - 🎯 Removed ad-hoc markdown automation scripts and verified documentation linting is clean (0 markdownlint errors)
 
 **Statistics:**

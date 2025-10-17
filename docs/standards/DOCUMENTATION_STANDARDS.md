@@ -536,7 +536,6 @@ Configuration: `.markdownlint.json`
 ### Tools
 
 - **markdownlint:** [Rules Reference](https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md)
-- **Vale:** [Prose Linter](https://vale.sh/)
 - **Diátaxis:** [Documentation System](https://diataxis.fr/)
 
 ### AI-Specific

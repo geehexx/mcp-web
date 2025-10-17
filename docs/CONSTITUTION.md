@@ -1,4 +1,4 @@
-# MCP-Web Project Constitution
+# mcp-web Project Constitution
 
 **Version:** 1.0.0
 **Effective Date:** 2025-10-15
@@ -64,7 +64,7 @@ This document establishes the principles, standards, and processes that govern t
 **All documentation follows the same quality standards as code:**
 
 - Must pass markdown linting (markdownlint)
-- Must pass prose linting (Vale)
+- Must pass documentation linting (markdownlint)
 - Must be free of double-spaces and LLM artifacts
 - Must be reviewed and approved
 
@@ -524,8 +524,7 @@ References: #123, ADR-0005
 - [Ruff - Python Linter](https://docs.astral.sh/ruff/)
 - [MyPy - Type Checker](https://mypy.readthedocs.io/)
 - [pytest - Testing Framework](https://docs.pytest.org/)
-- [markdownlint - Markdown Linter](https://github.com/DavidAnson/markdownlint)
-- [Vale - Prose Linter](https://vale.sh/)
+- [markdownlint - Documentation Linter](https://github.com/DavidAnson/markdownlint)
 
 ### Project Documents
 

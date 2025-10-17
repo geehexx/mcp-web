@@ -57,7 +57,6 @@
           "Taskfile.yml",
           ".gitignore",
           ".bandit",
-          ".vale.ini",
           ".markdownlint.json",
           ".pre-commit-config.yaml",
           ".semgrep.yml",

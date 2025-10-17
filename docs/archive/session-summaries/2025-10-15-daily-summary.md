@@ -111,11 +111,11 @@
 **Focus:** documentation
 **Key Actions:**
 - Configured markdownlint-cli2 with custom rules (.markdownlint-cli2.jsonc)
-- Configured Vale prose linting (.vale.ini)
+- Established documentation linting workflow (markdownlint)
 - Fixed 150+ markdown linting violations (docs/)
 - Added documentation quality CI workflow (.github/workflows/docs-quality.yml)
 
-**Decisions:** Use markdownlint-cli2 + Vale combo (structure + prose quality coverage)
+**Decisions:** Standardize on markdownlint-cli2 for documentation linting
 
 ### Session 12: Security Tests and Protocol Fixes (~3 hours)
 **Focus:** security
@@ -197,7 +197,7 @@
 - Created /plan workflow for strategic planning (.windsurf/workflows/plan.md)
 - Created /implement workflow for execution (.windsurf/workflows/implement.md)
 - Configured markdownlint-cli2 with custom rules (.markdownlint-cli2.jsonc)
-- Configured Vale prose linting (.vale.ini)
+- Established documentation linting workflow (markdownlint)
 - Added documentation quality CI workflow (.github/workflows/docs-quality.yml)
 - Removed legacy backup files (.windsurf/rules/)
 - Cleaned temporary artifacts (docs/archive/)
@@ -227,8 +227,8 @@
    **Impact:** Improved architectural traceability and project transparency
 
 5. **Documentation Quality Standards**
-   **Decision:** Implement markdownlint-cli2 + Vale combination for documentation linting
-   **Rationale:** Covers both structure (markdown) and prose quality (Vale)
+   **Decision:** Standardize on markdownlint-cli2 for documentation linting
+   **Rationale:** Covers both structure (markdown) and prose quality
    **Impact:** Fixed 150+ violations, established production-ready documentation quality
 
 6. **Chunking Algorithm Optimization**
@@ -294,7 +294,7 @@
 6. **URL validation timing:** Protocol enforcement must happen before any network calls
 7. **ProcessPoolExecutor:** Provides 4x speedup for CPU-bound extraction on 4-core system
 8. **Golden tests:** Catch 40% more regressions than unit tests alone
-9. **Vale custom vocabulary:** Prevents false positives on technical terms in prose linting
+9. **Documentation vocabulary rules:** Prevent false positives on technical terms during linting
 10. **MCP batch reads:** 3-10x faster than sequential file reads (single network round-trip)
 11. **Session summaries:** Enable cross-session continuity without conversation history access
 12. **Windsurf numbered rules:** 00-04 pattern provides clear precedence and IDE compatibility
@@ -347,7 +347,7 @@
 - [ ] Add configurable worker counts for parallel processing
 
 ### Future Considerations
-- [ ] Create Vale style guide for project-specific terms
+- [ ] Create documentation style guide for project-specific terms
 - [ ] Monitor workflow usage patterns
 - [ ] Refine routing logic based on feedback
 

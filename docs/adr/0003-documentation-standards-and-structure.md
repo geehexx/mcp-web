@@ -106,7 +106,7 @@ docs/
 **Automated Enforcement:**
 
 - Markdown linting (markdownlint-cli2)
-- Prose linting (Vale + Microsoft Writing Style Guide)
+- Documentation linting (markdownlint + Microsoft Writing Style Guide)
 - Pre-commit hooks
 - CI/CD validation
 
@@ -216,7 +216,7 @@ docs/
 ### Negative
 
 ⚠️ **Initial migration effort:** Moving existing docs to new structure
-⚠️ **Tool setup:** Need to install markdownlint, Vale
+⚠️ **Tool setup:** Need to install markdownlint-cli2
 ⚠️ **Learning curve:** Team must learn new structure and standards
 ⚠️ **Maintenance overhead:** More files to maintain than flat structure
 ⚠️ **CI integration:** Need to add documentation checks to pipeline
@@ -319,7 +319,7 @@ docs/
 ### Tools
 
 - [markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2) - Markdown linting
-- [Vale](https://vale.sh/) - Prose linting
+- [markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2) - Documentation linting
 - Pre-commit framework
 
 ---

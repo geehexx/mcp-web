@@ -101,7 +101,7 @@ docs/
 
 ### Prose Quality
 
-- **Linting:** Use Vale with Microsoft/Google style guides
+- **Linting:** Use markdownlint-cli2 with project style guide
 - **Command:** `task docs:lint:prose`
 - **Style:**
   - Active voice

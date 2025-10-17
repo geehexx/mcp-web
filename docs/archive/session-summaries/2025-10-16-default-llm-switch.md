@@ -33,9 +33,4 @@
 
 ## Next Steps
 1. 🔴 **Push upstream:** Publish `ecd9ef4` via `git push origin main` to share the new defaults with collaborators.
-2. 🟡 **Docs terminology cleanup:** Address `mcpweb.TechnicalTerms` warnings reported by `task docs:lint` (e.g., replace `mcp-web` with `MCP-Web`) in:
-   - `docs/guides/LOCAL_LLM_GUIDE.md`
-   - `docs/reference/ENVIRONMENT_VARIABLES.md`
-   - `docs/reference/ERROR_CODES.md`
-   - Command: `vale docs/...` or rerun `task docs:lint` after edits.
-3. 🟢 **Golden variability review:** Evaluate remaining golden test strictness now that deterministic stubs are in place (`tests/golden/test_golden_summarization.py`). Consider documenting expected pass rates or tightening assertions.
+2. 🟡 **Docs terminology cleanup:** Address `mcpweb.TechnicalTerms` warnings reported by `task docs:lint`

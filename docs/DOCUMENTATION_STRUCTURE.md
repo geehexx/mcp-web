@@ -234,8 +234,7 @@ Progress update...
 
 **All documentation must:**
 
-- Pass markdown linting (markdownlint)
-- Pass prose linting (Vale with project style)
+- Pass markdown linting (markdownlint-cli2)
 - Have no double-spaces or LLM artifacts
 - Include last updated date
 - Link to related documentation
@@ -264,17 +263,11 @@ Progress update...
 
 ### Linting Tools
 
-**Markdown Structure:**
+**Documentation Linting:**
 
 - Tool: `markdownlint-cli2`
 - Config: `.markdownlint.json`
 - Rules: MD001-MD048 (standard rules)
-
-**Prose Quality:**
-
-- Tool: `Vale`
-- Config: `.vale.ini`
-- Styles: Microsoft, Google, custom mcp-web style
 
 **Python Docstrings:**
 
@@ -290,9 +283,6 @@ task docs:lint
 
 # Lint markdown structure
 task docs:lint:markdown
-
-# Lint prose quality
-task docs:lint:prose
 
 # Fix auto-fixable issues
 task docs:fix
@@ -354,7 +344,7 @@ task docs:serve
 ### Phase 2: Tooling (Week 1)
 
 - [ ] Install markdownlint-cli2
-- [ ] Install Vale
+- [ ] Install markdownlint-cli2
 - [ ] Create linting configs
 - [ ] Add Task commands
 - [ ] Add pre-commit hooks
@@ -420,7 +410,7 @@ Follow [Microsoft Writing Style Guide](https://learn.microsoft.com/en-us/style-g
 ### Tools
 
 - [markdownlint](https://github.com/DavidAnson/markdownlint)
-- [Vale](https://vale.sh/)
+- [markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2)
 - [MkDocs](https://www.mkdocs.org/) (potential future use)
 
 ---

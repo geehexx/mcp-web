@@ -134,7 +134,7 @@ Based on previous session decisions:
 1. **ADR-0015: Pre-commit Hooks** (from comprehensive-overhaul)
 
 - Context: Need automated quality enforcement
-- Decision: Use pre-commit framework with ruff, vale, markdownlint
+- Decision: Use pre-commit framework with ruff and markdownlint
 - Rationale: Catch issues before commit, consistent formatting
 
 1. **ADR-0016: Windsurf Rules Structure** (from comprehensive-overhaul)
@@ -146,7 +146,7 @@ Based on previous session decisions:
 1. **ADR-0017: Documentation Linting** (from quality foundation)
 
 - Context: Documentation quality inconsistent
-- Decision: markdownlint-cli2 + Vale with Microsoft style
+- Decision: Standardize on markdownlint-cli2 with Microsoft style guidance
 - Rationale: Automated quality, AI-friendly docs
 
 ### Guides to Create

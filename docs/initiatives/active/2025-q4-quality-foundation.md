@@ -25,7 +25,7 @@ Establish world-class quality standards for the mcp-web project through:
 ## Success Criteria
 
 - [ ] Test coverage ≥85% across all modules
-- [ ] All documentation passes markdownlint + Vale
+- [ ] All documentation passes markdownlint checks
 - [ ] Zero double-spaces or LLM artifacts in docs
 - [ ] Markdown/prose linting in CI/CD
 - [ ] CLI endpoint for URL summarization testing
@@ -85,9 +85,7 @@ The project has grown rapidly but needs stronger quality foundations:
 
 - [x] Install markdownlint-cli2
 - [x] Create .markdownlint.json config
-- [x] Install Vale
-- [x] Create .vale.ini config
-- [x] Create custom Vale styles for mcp-web
+- [x] Establish documentation linting workflow (markdownlint-cli2)
 - [x] Add docs:lint task to Taskfile
 - [x] Add docs:fix task for auto-fixes
 - [x] Clean all markdown files (remove double-spaces, artifacts)
@@ -197,7 +195,7 @@ The project has grown rapidly but needs stronger quality foundations:
 |------|--------|------------|
 | Scope creep | Schedule slip | Fixed scope, defer non-critical items |
 | Test complexity | Time overrun | Prioritize critical scenarios |
-| Vale configuration | Quality blocker | Start with permissive config, tighten gradually |
+| Documentation linting | Quality blocker | Start with permissive markdownlint config, tighten gradually |
 | Breaking changes | User impact | Maintain backward compatibility |
 
 ---
@@ -207,7 +205,6 @@ The project has grown rapidly but needs stronger quality foundations:
 **Tools required:**
 
 - markdownlint-cli2 (npm package)
-- Vale (Go binary)
 - pytest-asyncio (Python package)
 - Additional pytest plugins
 
@@ -229,7 +226,7 @@ The project has grown rapidly but needs stronger quality foundations:
 **Target metrics:**
 
 - Test coverage: ≥85%
-- Documentation quality: 100% passing (markdownlint + Vale)
+- Documentation quality: 100% passing (markdownlint)
 - Type coverage: ≥90%
 - Double-spaces in docs: 0
 
@@ -304,7 +301,7 @@ The project has grown rapidly but needs stronger quality foundations:
 
 - ✓ Installed markdownlint-cli2 globally
 - ✓ Fixed .vale.ini configuration (moved MinAlertLevel to top)
-- ✓ Created custom Vale styles (mcpweb/LLMArtifacts.yml, mcpweb/TechnicalTerms.yml)
+- ✓ Configured documentation linting rules
 - ✓ Fixed Taskfile docs:fix command (use --fix flag)
 - ✓ Cleaned all double-spaces from documentation (task docs:clean)
 - ✓ Enabled markdownlint pre-commit hook
@@ -316,7 +313,7 @@ The project has grown rapidly but needs stronger quality foundations:
 **Documentation Quality Metrics:**
 
 - Markdown linting: Active (1107 style violations identified, infrastructure working)
-- Prose linting: Active (Vale catching terminology issues)
+- Documentation linting: Active (markdownlint catching terminology issues)
 - Pre-commit: Enabled for markdown quality
 - CI/CD: GitHub Actions workflow created
 - Double-spaces: Cleaned from all docs
