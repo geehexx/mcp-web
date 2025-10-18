@@ -61,15 +61,16 @@ Some text
 
 **Example violation:**
 
-```text
+````markdown
+```
 code here
 ```
 
-# Should be:
-
+Should be:
 ```bash
 code here
 ```
+````
 
 **Affected files:**
 
