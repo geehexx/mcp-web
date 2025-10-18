@@ -1,0 +1,58 @@
+# Session Summary: {{ title }}
+
+**Date:** {{ date }}
+**Duration:** {{ duration }}
+**Session Type:** {{ session_type }}
+**Initiative:** {{ initiative }}
+
+---
+
+## Objectives
+
+{{ objectives }}
+
+## Accomplishments
+
+{% for accomplishment in accomplishments -%}
+- **{{ accomplishment.action }}**: {{ accomplishment.description }}{% if accomplishment.files %} ({{ accomplishment.files }}){% endif %}
+{% endfor -%}
+
+## Key Decisions
+
+{% for decision in decisions -%}
+- **{{ decision.topic }}**: {{ decision.decision }} - {{ decision.rationale }}
+{% endfor -%}
+
+## Technical Learnings
+
+{% for learning in learnings -%}
+- **{{ learning.category }}**: {{ learning.insight }}
+{% endfor -%}
+
+## Unresolved Issues
+
+{% for issue in issues -%}
+- **{{ issue.area }}**: {{ issue.problem }} - {{ issue.reason }}
+{% endfor -%}
+
+## Next Steps
+
+{% for step in next_steps -%}
+- [ ] {{ step }}
+{% endfor -%}
+
+## Metrics
+
+- **Files modified:** {{ metrics.files_modified }}
+- **Commits:** {{ metrics.commits }}
+- **Tests:** {{ metrics.tests_passing }}/{{ metrics.tests_total }} passing
+{% if metrics.adrs_created -%}
+- **ADRs created:** {{ metrics.adrs_created }}
+{% endif -%}
+{% if metrics.duration_minutes -%}
+- **Duration:** {{ metrics.duration_minutes }} minutes
+{% endif -%}
+
+---
+
+**Generated:** {{ date }}

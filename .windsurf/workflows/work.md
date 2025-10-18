@@ -168,7 +168,7 @@ update_plan({
 
 **Check if Session End Protocol should be triggered:**
 
-### 4.1 Detect Completion Triggers
+### 5.1 Detect Completion Triggers
 
 ```bash
 # Check if any initiative was marked complete during this work
@@ -186,7 +186,7 @@ git status --short
 
 **If triggered, execute FULL protocol:**
 
-### 4.2 Commit All Changes
+### 5.2 Commit All Changes
 
 ```bash
 # Commit working changes
@@ -198,7 +198,7 @@ git add <auto-fix files>
 git commit -m "style(scope): apply [tool] auto-fixes"
 ```
 
-### 4.3 Archive Completed Initiatives
+### 5.3 Archive Completed Initiatives
 
 ```bash
 # For each completed initiative found
@@ -207,7 +207,7 @@ git commit -m "style(scope): apply [tool] auto-fixes"
 
 **MUST call workflow - do not skip!**
 
-### 4.4 Execute Meta-Analysis
+### 5.4 Execute Meta-Analysis
 
 ```bash
 /meta-analysis
@@ -219,7 +219,7 @@ git commit -m "style(scope): apply [tool] auto-fixes"
 - Workflow improvement recommendations
 - Cross-session continuity documentation
 
-### 4.5 Exit Criteria Checklist
+### 5.5 Exit Criteria Checklist
 
 ```markdown
 - [ ] All changes committed (git status clean)
@@ -233,7 +233,7 @@ git commit -m "style(scope): apply [tool] auto-fixes"
 
 ---
 
-## Stage 5: Continue Working (If Protocol Not Triggered)
+## Stage 6: Continue Working (If Protocol Not Triggered)
 
 **If Session End Protocol was NOT triggered:**
 

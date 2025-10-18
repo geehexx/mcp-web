@@ -114,15 +114,10 @@ tasks:
     cmds:
       - "{{.UV}} run python -m mcp_web.cli test-summarize {{.URL}} {{if .QUERY}}--query \"{{.QUERY}}\"{{end}} {{if .OUTPUT}}-o {{.OUTPUT}}{{end}} --verbose"
 
-  test:robots:
-    desc: Test robots.txt handling (URL=url)
+  test:fetch:robots:
+    desc: Test URL with robots.txt handling
     cmds:
       - "{{.UV}} run python -m mcp_web.cli test-robots {{.URL}} {{if .IGNORE}}--ignore{{end}}"
-
-  test:fast:
-    desc: Run fast tests only (unit + security) - parallel by default, no LLM required
-    cmds:
-      - "{{.UV}} run pytest -n {{.PARALLEL_WORKERS}} -m '(unit or security) and not benchmark' -v"
 
   test:fast:parallel:
     desc: Run fast tests in parallel
@@ -158,7 +153,10 @@ tasks:
   # Code quality tasks
   lint:
     desc: Run all linting checks
-    deps: [lint:ruff, lint:format, lint:mypy]
+    deps:
+      - lint:ruff
+      - lint:format
+      - lint:mypy
 
   lint:ruff:
     desc: Run ruff linter
@@ -177,7 +175,9 @@ tasks:
 
   lint:all:
     desc: Run all linting and quality checks
-    deps: [lint, docs:lint]
+    deps:
+      - lint
+      - docs:lint
 
   # Code formatting tasks
   format:
@@ -189,7 +189,10 @@ tasks:
   # Security tasks
   security:
     desc: Run all security checks
-    deps: [security:bandit, security:semgrep, security:safety]
+    deps:
+      - security:bandit
+      - security:semgrep
+      - security:safety
 
   security:bandit:
     desc: Run Bandit security scanner
@@ -209,7 +212,9 @@ tasks:
   # Quality analysis
   analyze:
     desc: Run complete static analysis
-    deps: [lint, security]
+    deps:
+      - lint
+      - security
 
   analyze:complexity:
     desc: Analyze code complexity (requires radon)
@@ -344,7 +349,9 @@ tasks:
   # Pre-commit tasks
   pre-commit:
     desc: Run pre-commit checks
-    deps: [lint, test:fast]
+    deps:
+      - lint
+      - test:fast
 
   pre-commit:all:
     desc: Run pre-commit on all files
@@ -484,6 +491,22 @@ tasks:
     desc: Verify golden tests with detailed output
     cmds:
       - "{{.UV}} run pytest -m golden -vv --tb=long"
+
+  # Scaffolding tasks (automation)
+  scaffold:initiative:
+    desc: Create new initiative from template (interactive)
+    cmds:
+      - "{{.UV}} run python scripts/scaffold.py --type initiative --mode interactive"
+
+  scaffold:adr:
+    desc: Create new ADR from template (interactive)
+    cmds:
+      - "{{.UV}} run python scripts/scaffold.py --type adr --mode interactive"
+
+  scaffold:summary:
+    desc: Create new session summary from template (interactive)
+    cmds:
+      - "{{.UV}} run python scripts/scaffold.py --type summary --mode interactive"
 
   # Information tasks
   info:

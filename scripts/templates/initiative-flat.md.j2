@@ -1,0 +1,92 @@
+# Initiative: {{ title }}
+
+**Status:** {{ status }}
+**Created:** {{ created }}
+**Owner:** {{ owner }}
+**Priority:** {{ priority }}
+**Estimated Duration:** {{ estimated_duration }}
+{% if target_completion -%}
+**Target Completion:** {{ target_completion }}
+{% endif -%}
+
+---
+
+## Objective
+
+{{ objective }}
+
+## Success Criteria
+
+{% for criterion in success_criteria -%}
+- [ ] {{ criterion }}
+{% endfor -%}
+
+## Motivation
+
+**Problem:** {{ problem }}
+
+**Impact:** {{ impact }}
+
+**Value:** {{ value }}
+
+## Scope
+
+### In Scope
+
+{% for item in in_scope -%}
+- {{ item }}
+{% endfor -%}
+
+### Out of Scope
+
+{% for item in out_of_scope -%}
+- {{ item }}
+{% endfor -%}
+
+## Tasks
+
+{% for phase in phases -%}
+### {{ phase.name }}
+
+{% for task in phase.tasks -%}
+- [ ] {{ task }}
+{% endfor -%}
+
+{% endfor -%}
+
+## Dependencies
+
+{% for dep in dependencies -%}
+- {{ dep }}
+{% endfor -%}
+
+## Risks and Mitigation
+
+| Risk | Impact | Likelihood | Mitigation |
+|------|--------|------------|------------|
+{% for risk in risks -%}
+| {{ risk.description }} | {{ risk.impact }} | {{ risk.likelihood }} | {{ risk.mitigation }} |
+{% endfor -%}
+
+## Timeline
+
+{% for timeline_item in timeline -%}
+- **{{ timeline_item.period }}:** {{ timeline_item.description }}
+{% endfor -%}
+
+## Related Documentation
+
+{% for doc in related_docs -%}
+- [{{ doc.title }}]({{ doc.path }})
+{% endfor -%}
+
+## Updates
+
+### {{ created }} (Creation)
+
+Initiative created. Ready for work.
+
+---
+
+**Last Updated:** {{ created }}
+**Status:** {{ status }}

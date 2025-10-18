@@ -1,0 +1,82 @@
+# ADR-{{ "%04d"|format(number) }}: {{ title }}
+
+**Status:** {{ status }}
+
+**Date:** {{ date }}
+
+**Deciders:** {{ deciders }}
+
+**Tags:** {{ tags|join(', ') }}
+
+---
+
+## Context
+
+{{ context }}
+
+## Decision
+
+{{ decision }}
+
+## Alternatives Considered
+
+{% for alt in alternatives -%}
+### {{ alt.name }}
+
+**Description:** {{ alt.description }}
+
+**Pros:**
+
+{% for pro in alt.pros -%}
+- {{ pro }}
+{% endfor -%}
+
+**Cons:**
+
+{% for con in alt.cons -%}
+- {{ con }}
+{% endfor -%}
+
+**Reason for rejection:** {{ alt.rejection_reason }}
+
+{% endfor -%}
+
+## Consequences
+
+### Positive Consequences
+
+{% for consequence in positive_consequences -%}
+- {{ consequence }}
+{% endfor -%}
+
+### Negative Consequences
+
+{% for consequence in negative_consequences -%}
+- {{ consequence }}
+{% endfor -%}
+
+{% if neutral_consequences -%}
+### Neutral Consequences
+
+{% for consequence in neutral_consequences -%}
+- {{ consequence }}
+{% endfor -%}
+{% endif -%}
+
+## Implementation
+
+{{ implementation }}
+
+## References
+
+{% for ref in references -%}
+- {{ ref }}
+{% endfor -%}
+
+---
+
+## Changelog
+
+| Date | Change | Author |
+|------|--------|--------|
+| {{ date }} | Initial proposal and acceptance | {{ author }} |
