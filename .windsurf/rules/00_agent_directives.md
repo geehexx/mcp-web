@@ -50,6 +50,8 @@ When making any implementation decision, prioritize the following principles in 
 
 ## 1.6 File Operations
 
+### 1.6.1 Tool Selection
+
 - **Protected directories (.windsurf/):** ALWAYS use MCP filesystem tools (`mcp0_*`) for files in `.windsurf/` directory
   - `mcp0_read_text_file` for reading
   - `mcp0_write_file` for creating/overwriting
@@ -58,6 +60,79 @@ When making any implementation decision, prioritize the following principles in 
 - **Regular files:** Standard `read_file`, `edit`, `write_to_file` tools
 - **Fallback strategy:** If standard tools fail on protected files, immediately retry with `mcp0_*` tools
 - **CRITICAL: MCP tools require ABSOLUTE paths** - Always use `/home/gxx/projects/mcp-web/...` format, never relative paths like `docs/...`
+
+### 1.6.2 Initiative Structure Decision Tree
+
+**Use scaffolding system when creating new initiatives:** `task scaffold:initiative`
+
+#### Decision: Flat File vs Folder Structure
+
+```text
+Does initiative meet ANY of these criteria?
+├─ Word count > 1000?
+├─ Multiple phases (2+)?
+├─ Needs research artifacts?
+├─ Complex enough for sub-documents?
+│
+├── YES → Use FOLDER structure
+│   ├─ Create: docs/initiatives/active/YYYY-MM-DD-name/
+│   ├─ Files: initiative.md, phases/, artifacts/
+│   └─ Use: task scaffold:initiative --folder
+│
+└── NO → Use FLAT file
+    ├─ Create: docs/initiatives/active/YYYY-MM-DD-name.md
+    └─ Use: task scaffold:initiative --flat
+```
+
+**Examples:**
+
+| Initiative | Structure | Reason |
+|------------|-----------|--------|
+| "Add robots.txt support" | Flat | Simple, 1 phase, <500 words |
+| "Performance Optimization Pipeline" | Folder | Multiple phases, research needed |
+| "Workflow Architecture V3" | Folder | Complex, multiple ADRs, artifacts |
+| "Fix typo in README" | None | Too trivial for initiative |
+
+**NEVER create both** - this violates ADR-0013.
+
+### 1.6.3 Artifact Management
+
+**Artifacts belong in initiative folders:**
+
+```text
+docs/initiatives/active/YYYY-MM-DD-name/
+├── initiative.md          # Main document
+├── phases/
+│   ├── phase-1-*.md
+│   └── phase-2-*.md
+└── artifacts/             # Supporting documents
+    ├── research-summary.md  # Research findings
+    ├── analysis.md          # Problem analysis
+    ├── implementation-plan.md
+    └── PROPOSAL-*.md        # Decision proposals
+```
+
+**Artifact Types:**
+
+1. **Research summaries:** `research-summary.md` - External research with sources
+2. **Analysis documents:** `analysis.md` - Root cause analysis, problem decomposition
+3. **Implementation plans:** `implementation-plan.md` - Detailed execution steps
+4. **Proposals:** `PROPOSAL-*.md` - Design proposals needing decision
+5. **Technical designs:** `technical-design.md` - Detailed technical specifications
+
+**When to create artifacts:**
+
+- Research phase produces findings → `artifacts/research-summary.md`
+- Complex problem needs analysis → `artifacts/analysis.md`
+- Multiple implementation options → `artifacts/PROPOSAL-*.md`
+- Detailed specs needed → `artifacts/technical-design.md`
+
+**Artifact Lifecycle:**
+
+1. **Created:** During initiative work (research, analysis, planning)
+2. **Referenced:** From `initiative.md` with relative links
+3. **Archived:** Moved with initiative to `docs/initiatives/completed/`
+4. **Never standalone:** Always part of initiative folder
 
 ## 1.7 Git Operations
 
@@ -186,11 +261,48 @@ When making any implementation decision, prioritize the following principles in 
 - Subtask: `3.1. /implement - Load context files` (2-space indent)
 - Sub-subtask: `3.1.1. /implement - Read initiative file` (4-space indent)
 
+**Deliverable-Focused Principle:**
+
+Tasks should describe WHAT will be delivered, not HOW it will be done:
+
+- ✅ **Good:** `3.2. /implement - Update Section 1.11 (Task System)` (deliverable: updated section)
+- ❌ **Bad:** `3.2. /implement - Read file and edit and save` (describes process, not outcome)
+- ✅ **Good:** `2. /plan - Create architecture decision record` (deliverable: ADR document)
+- ❌ **Bad:** `2. /plan - Open editor and type ADR` (describes keystrokes)
+
+**Focus on outcomes** (files modified, features working, tests passing) **not actions** (reading, writing, calling).
+
+**Definition of Done for Tasks:**
+
+Each task MUST have clear completion criteria:
+
+| Task Type | Definition of Done |
+|-----------|--------------------|
+| Documentation update | File modified, linted, committed |
+| Feature implementation | Code written, tests passing, committed |
+| Bug fix | Root cause identified, fix applied, regression test added, committed |
+| Research | Summary documented with sources, recommendations made |
+| Validation | All checks passed (lint, test, security), issues resolved |
+| Workflow creation | File created, examples included, cross-references updated |
+
+**Verify Before Planning Checkpoint:**
+
+Before creating task plan for complex work (>5 tasks or >1 hour), verify:
+
+1. **Context loaded?** Have you read all necessary files?
+2. **Requirements clear?** Do you know what success looks like?
+3. **Approach decided?** Have you chosen implementation strategy?
+4. **Blockers identified?** Are there dependencies or unknowns?
+
+If NO to any → pause, gather information, THEN create plan.
+
 **Transparency Requirements:**
 
 - Print workflow entry announcement: `🔄 **Entering Stage X: [Name]**`
 - Print task creation confirmation: `✓ Task plan created with N items`
 - Print task updates: `📋 **Task Update:** "X. /workflow - Task" → status`
+- Print major milestones: `ℹ️ **[Event]:** [Details]`
+- Print workflow exit: `✅ **Completed [Workflow]:** [Summary]`
 
 #### Task Attribution Rule (CRITICAL)
 
@@ -277,26 +389,60 @@ update_plan({
 })
 ```
 
-### 1.11.3 Task Hierarchy
+### 1.11.3 Task Hierarchy and Numbering
 
-**When parent task branches, add subtasks:**
+**Hierarchical numbering follows WBS (Work Breakdown Structure) standard:**
+
+**Numbering Scheme:**
+
+- **Level 0 (Top-level):** `1, 2, 3, 4, 5` - No indent
+- **Level 1 (Subtasks):** `3.1, 3.2, 3.3` - 2-space indent (child of task 3)
+- **Level 2 (Sub-subtasks):** `3.1.1, 3.1.2` - 4-space indent (child of task 3.1)
+- **Level 3 (Rare):** `3.1.2.1` - 6-space indent (child of 3.1.2)
+
+**Parent-Child Numbering Logic:**
+
+When child workflow called at parent task N:
+
+1. Child tasks numbered: `N.1, N.2, N.3, ...`
+2. Inserted after parent task N
+3. Use 2-space indent per level
+4. After child completes, parent continues from N+1
+
+**Complete Example:**
 
 ```typescript
 plan: [
-  { step: "Execute implementation workflow", status: "in_progress" },
-  { step: "  1.1 Load context files", status: "in_progress" },     // Subtask (2-space indent)
-  { step: "  1.2 Design test cases", status: "pending" },
-  { step: "  1.3 Write tests", status: "pending" },
-  { step: "  1.4 Implement feature", status: "pending" },
-  { step: "Session end protocol", status: "pending" }
+  { step: "1. /detect-context - Analyze project state", status: "completed" },
+  { step: "2. /work - Route to appropriate workflow", status: "completed" },
+  { step: "3. /work - Execute routed workflow", status: "in_progress" },
+  { step: "  3.1. /implement - Load context files", status: "completed" },     // Level 1
+  { step: "    3.1.1. /implement - Read initiative file", status: "completed" }, // Level 2 (rare)
+  { step: "    3.1.2. /implement - Read source files", status: "completed" },
+  { step: "  3.2. /implement - Design test cases", status: "in_progress" },
+  { step: "  3.3. /implement - Write tests", status: "pending" },
+  { step: "  3.4. /implement - Implement feature", status: "pending" },
+  { step: "4. /work - Session end protocol", status: "pending" }  // Parent continues
 ]
 ```
 
-**Numbering:**
+**MUST include in every task:**
 
-- Top-level: `1, 2, 3`
-- Subtasks: `1.1, 1.2, 1.3` (2-space indent)
-- Sub-subtasks: `1.1.1, 1.1.2` (4-space indent, rare)
+1. **Number with period:** `3.` not `3` or `(3)`
+2. **Workflow prefix:** `/ implement` shows which workflow executes
+3. **Dash separator:** ` - ` between workflow and description
+4. **Deliverable description:** What will be done, not how
+
+**Quick Reference:**
+
+| Format Element | Example | Required? |
+|----------------|---------|----------|
+| Hierarchical number | `3.2.1` | ✅ Yes |
+| Period after number | `.` | ✅ Yes |
+| Workflow prefix | `/implement` | ✅ Yes |
+| Dash separator | ` - ` | ✅ Yes |
+| Deliverable description | `Update Section 1.11` | ✅ Yes |
+| Indent (subtasks) | 2 spaces per level | ✅ Yes |
 
 ### 1.11.4 Session End Protocol Integration
 

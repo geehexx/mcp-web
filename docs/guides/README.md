@@ -63,6 +63,32 @@ Reference guides are **documentation-only** resources that provide quick command
 
 ---
 
+### Workflow Development Guide
+
+**File:** [`WORKFLOW_DEVELOPMENT_GUIDE.md`](WORKFLOW_DEVELOPMENT_GUIDE.md)
+
+**Content:**
+
+- Workflow anatomy and structure
+- Task system integration (hierarchical numbering)
+- Transparency requirements (announcements, updates)
+- Context loading patterns
+- Quality gates and validation
+- Workflow patterns (orchestrator, specialized, context handler)
+- Anti-patterns and testing checklist
+
+**Use When:**
+
+- Creating new workflows
+- Understanding task numbering conventions
+- Implementing transparency requirements
+- Integrating version bump or ADR triggers
+- Troubleshooting workflow issues
+
+**Related:** All workflows in `.windsurf/workflows/`, ADR-0002, ADR-0018
+
+---
+
 ## Adding New Guides
 
 **When to create a reference guide:**

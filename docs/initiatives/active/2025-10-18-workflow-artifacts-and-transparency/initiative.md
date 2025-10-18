@@ -66,9 +66,9 @@ Fix systemic issues with workflow task numbering, transparency, and artifact man
 - [x] Add version bump integration to `/commit`
 - [x] Add ADR triggers to `/plan` and `/implement`
 
-### Phase 3: Rules & Documentation (1 hour)
+### Phase 3: Rules & Documentation (1 hour) ✅ COMPLETE
 
-- [ ] Update Section 1.11 (Task System Usage)
+- [x] Update Section 1.11 (Task System Usage)
   - Add mandatory numbering requirement
   - Add workflow prefix requirement
   - Add transparency requirements
@@ -76,10 +76,10 @@ Fix systemic issues with workflow task numbering, transparency, and artifact man
   - **NEW:** Add "deliverable-focused" principle (focus on WHAT, not HOW)
   - **NEW:** Add "Definition of Done" requirement for tasks
   - **NEW:** Add "verify before planning" checkpoint
-- [ ] Update Section 1.6 (File Operations)
+- [x] Update Section 1.6 (File Operations)
   - Add artifact management rules
   - Add structure decision tree
-- [ ] Create Workflow Development Guide
+- [x] Create Workflow Development Guide
 
 ### Phase 4: Remaining Workflows (2-3 hours)
 
