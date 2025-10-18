@@ -62,7 +62,7 @@ Some text
 **Example violation:**
 
 ````markdown
-```
+```text
 code here
 ```
 
