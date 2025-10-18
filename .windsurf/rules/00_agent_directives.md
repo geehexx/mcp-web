@@ -17,7 +17,8 @@ When making any implementation decision, prioritize the following principles in 
 2. **Robustness & Testability:** Code must be deterministic where possible, with comprehensive test coverage (≥90%). All features require tests before implementation.
 3. **Performance & Scalability:** Design for concurrent operations with proper rate limiting. Tests should leverage parallelization (pytest-xdist) for IO-bound workloads.
 4. **Developer Experience:** Project structure, tooling (uv), and documentation must optimize for clarity and maintainability.
-5. **Agent Autonomy:** Execute workflows from start to finish. Present changes at checkpoints rather than requesting confirmation on minor steps.
+5. **Task Transparency:** All non-trivial work (3+ steps or >5 min) must use the task system (`update_plan` tool) to provide visible progress tracking. Task list is the living source of truth.
+6. **Agent Autonomy:** Execute workflows from start to finish. Present changes at checkpoints rather than requesting confirmation on minor steps.
 
 ## 1.3 Operational Mandate
 
@@ -153,3 +154,145 @@ When making any implementation decision, prioritize the following principles in 
 - `/work` workflow: Batch operation examples and context loading patterns
 - Section 1.6 File Operations: MCP vs standard tool selection
 - Section 1.7 Git Operations: MCP git tool patterns
+
+## 1.11 Task System Usage
+
+**PURPOSE:** Provide transparent progress tracking for all non-trivial work via Windsurf's Planning Mode (Todo Lists).
+
+**TOOL:** `update_plan` - Creates/updates in-conversation task list
+
+**WHEN REQUIRED:**
+
+- Any work requiring 3+ distinct steps
+- Work expected to take >5 minutes
+- All `/work` or orchestrator workflow invocations
+- Any multi-phase implementation
+
+**MAY SKIP WHEN:**
+
+- Single-step request (e.g., "format this file")
+- Quick question/answer in Chat mode
+- User explicitly requests no planning overhead
+
+### 1.11.1 Task Creation
+
+**At workflow start, create initial plan:**
+
+```typescript
+update_plan({
+  explanation: "Brief description of what we're doing",
+  plan: [
+    { step: "Specific, measurable task 1", status: "in_progress" },
+    { step: "Specific, measurable task 2", status: "pending" },
+    { step: "Specific, measurable task 3", status: "pending" }
+  ]
+})
+```
+
+**CRITICAL RULES:**
+
+1. **One active task:** At most ONE step can be `in_progress` at a time
+2. **Specific tasks:** Each step must have clear completion criteria
+3. **Reasonable scope:** Tasks should be 15-60 min each (decompose if larger)
+4. **Sequential order:** List tasks in execution order
+
+### 1.11.2 Task Updates
+
+**MUST update when:**
+
+1. **Task completed:** Mark `completed`, advance next to `in_progress`
+2. **New tasks discovered:** Insert before dependent tasks
+3. **Workflow routing:** Add routed workflow tasks as subtasks
+4. **Blocked state:** Add unblocking task
+5. **User requests change:** Adjust plan accordingly
+
+**Update example:**
+
+```typescript
+update_plan({
+  explanation: "Research complete, moving to implementation",
+  plan: [
+    { step: "Research approach", status: "completed" },
+    { step: "Implement changes", status: "in_progress" },  // Advanced
+    { step: "Run tests", status: "pending" },
+    { step: "Commit", status: "pending" }
+  ]
+})
+```
+
+### 1.11.3 Task Hierarchy
+
+**When parent task branches, add subtasks:**
+
+```typescript
+plan: [
+  { step: "Execute implementation workflow", status: "in_progress" },
+  { step: "  1.1 Load context files", status: "in_progress" },     // Subtask (2-space indent)
+  { step: "  1.2 Design test cases", status: "pending" },
+  { step: "  1.3 Write tests", status: "pending" },
+  { step: "  1.4 Implement feature", status: "pending" },
+  { step: "Session end protocol", status: "pending" }
+]
+```
+
+**Numbering:**
+
+- Top-level: `1, 2, 3`
+- Subtasks: `1.1, 1.2, 1.3` (2-space indent)
+- Sub-subtasks: `1.1.1, 1.1.2` (4-space indent, rare)
+
+### 1.11.4 Session End Protocol Integration
+
+**Session End Protocol (1.8) MUST be tracked as tasks:**
+
+```typescript
+update_plan({
+  explanation: "Work complete. Executing session end protocol.",
+  plan: [
+    // ... completed work tasks ...
+    { step: "Session End Protocol", status: "in_progress" },
+    { step: "  1. Commit all changes", status: "in_progress" },
+    { step: "  2. Archive completed initiatives", status: "pending" },
+    { step: "  3. Run /meta-analysis", status: "pending" },
+    { step: "  4. Update living docs (if needed)", status: "pending" },
+    { step: "  5. Verify exit criteria", status: "pending" }
+  ]
+})
+```
+
+**Update as each protocol step completes.**
+
+### 1.11.5 Anti-Patterns
+
+**❌ DON'T:**
+
+- Create vague tasks ("Do Phase 2", "Fix everything")
+- Skip initial plan for non-trivial work
+- Forget to update status after completing tasks
+- Have multiple `in_progress` tasks simultaneously
+- Use task system for trivial single-step requests
+
+**✅ DO:**
+
+- Create specific, measurable tasks
+- Update immediately after each major step
+- Keep one task active at a time
+- Decompose large tasks into subtasks
+- Track session end protocol as tasks
+
+### 1.11.6 Enforcement
+
+**Per user directive (2025-10-18):**
+
+> "Failure to enforce or maintain the task system is a protocol violation."
+
+**This is NON-NEGOTIABLE.** Task system usage is mandatory for workflow transparency.
+
+**Validation checkpoints:**
+
+- All orchestrator workflows (`/work`, `/plan`, `/implement`) create initial plan
+- Task list visible in conversation after each major step
+- Session end protocol tracked as tasks 100% of time
+- Routed workflows add their own subtasks
+
+**For complete specification, see:** `docs/architecture/TASK_SYSTEM_INTEGRATION.md`

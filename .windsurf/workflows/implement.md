@@ -31,7 +31,30 @@ category: Orchestrator
 
 ---
 
-## Stage 1: Setup & Context Loading
+## Stage 1: Create Implementation Task Plan
+
+**MANDATORY:** Create task list before implementation.
+
+```typescript
+update_plan({
+  explanation: "Starting implementation workflow",
+  plan: [
+    { step: "Load context files", status: "in_progress" },
+    { step: "Design test cases (TDD)", status: "pending" },
+    { step: "Write failing tests", status: "pending" },
+    { step: "Implement feature code", status: "pending" },
+    { step: "Verify tests pass", status: "pending" },
+    { step: "Run validation checks", status: "pending" },
+    { step: "Commit changes", status: "pending" }
+  ]
+})
+```
+
+**Adjust plan based on work scope** (e.g., remove test steps for documentation-only changes).
+
+---
+
+## Stage 2: Setup & Context Loading
 
 ### 1.1 Load Initiative Context
 

@@ -18,7 +18,26 @@ category: Orchestrator
 
 ---
 
-## Stage 1: Detect Project Context
+## Stage 1: Create Initial Task Plan
+
+**MANDATORY:** Create task list before any other actions.
+
+```typescript
+update_plan({
+  explanation: "Initiating /work orchestration",
+  plan: [
+    { step: "Detect project context", status: "in_progress" },
+    { step: "Route to appropriate workflow", status: "pending" },
+    { step: "Execute routed workflow", status: "pending" },
+    { step: "Detect work completion", status: "pending" },
+    { step: "Session end protocol (if triggered)", status: "pending" }
+  ]
+})
+```
+
+---
+
+## Stage 2: Detect Project Context
 
 **Call `/detect-context` workflow:**
 
@@ -29,9 +48,22 @@ category: Orchestrator
 
 **Returns:** Detection results with routing recommendation
 
+**Update task:**
+
+```typescript
+update_plan({
+  explanation: "Context detection complete. Routing decision ready.",
+  plan: [
+    { step: "Detect project context", status: "completed" },
+    { step: "Route to appropriate workflow", status: "in_progress" },
+    // ... rest ...
+  ]
+})
+```
+
 ---
 
-## Stage 2: Route to Appropriate Workflow
+## Stage 3: Route to Appropriate Workflow
 
 ### High Confidence (Auto-Route)
 
@@ -79,7 +111,30 @@ List available options:
 
 ---
 
-## Stage 3: Execute Workflow
+**After routing decision, update task plan with routed workflow steps:**
+
+```typescript
+// Example: Routing to /implement
+update_plan({
+  explanation: "Routing to /implement workflow. Adding implementation subtasks.",
+  plan: [
+    { step: "Detect project context", status: "completed" },
+    { step: "Route to appropriate workflow", status: "completed" },
+    { step: "Execute routed workflow", status: "in_progress" },
+    { step: "  Load context", status: "in_progress" },      // Routed workflow subtasks
+    { step: "  Design approach", status: "pending" },
+    { step: "  Implement changes", status: "pending" },
+    { step: "  Run tests", status: "pending" },
+    { step: "  Validate and commit", status: "pending" },
+    { step: "Detect work completion", status: "pending" },
+    { step: "Session end protocol (if triggered)", status: "pending" }
+  ]
+})
+```
+
+---
+
+## Stage 4: Execute Workflow
 
 ### Load Context Before Execution
 
@@ -91,6 +146,8 @@ List available options:
 - See: `.windsurf/workflows/load-context.md`
 
 ### Execute Routed Workflow
+
+**As routed workflow progresses, update subtask status:**
 
 **Workflow chain examples:**
 
@@ -107,7 +164,7 @@ List available options:
 
 ---
 
-## Stage 4: Detect Work Completion and Execute Session End Protocol
+## Stage 5: Detect Work Completion and Execute Session End Protocol
 
 **Check if Session End Protocol should be triggered:**
 
