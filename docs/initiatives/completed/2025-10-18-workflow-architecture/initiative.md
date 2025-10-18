@@ -1,8 +1,9 @@
 ---
 title: Workflow Architecture Refactor
-status: Completed
+status: Archived
 created: 2025-10-18
 completed: 2025-10-18
+archived: 2025-10-18
 priority: Medium
 estimated_effort: 8-12 hours
 actual_effort: 6 hours
@@ -11,9 +12,13 @@ structure: folder-based
 artifacts: [workflow-audit.md]
 ---
 
+> **⚠️ ARCHIVED:** This initiative was completed on 2025-10-18.
+> See [ADR-0018: Workflow Architecture V3](../../adr/0018-workflow-architecture-v3.md) for implemented decisions.
+> Task system integration completed with rules and workflow updates.
+
 # Initiative: Workflow Architecture Refactor
 
-**Status:** ✅ Completed
+**Status:** ✅ Completed (Archived)
 **Created:** 2025-10-18
 **Completed:** 2025-10-18
 **Target Completion:** 2025-10-25
