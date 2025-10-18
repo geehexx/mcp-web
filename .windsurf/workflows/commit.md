@@ -5,58 +5,226 @@ auto_execution_mode: 3
 
 # Git Commit Workflow
 
-Use this workflow for staging and committing changes with proper validation.
+**Purpose:** Stage and commit changes with proper validation and conventional commit format.
+
+**Invocation:** `/commit` (called by `/work`, `/implement`, or directly)
+
+**Philosophy:** Every commit should pass quality gates and have clear, conventional messages.
+
+---
 
 ## Process
 
-1. **Capture baseline:** Run `mcp2_git_status` to see current working tree state.
+### 1. Check for Auto-Fix Changes
 
-2. **Check for auto-fix changes:** If lint/format commands were run (e.g., `task docs:fix`, `task format`), check for unstaged changes:
-   - Run `mcp2_git_diff_unstaged` to see auto-fix modifications
-   - If auto-fixes present, stage and commit them separately BEFORE main work
-   - Use commit message format: `style(scope): apply [tool] auto-fixes`
-   - This prevents mixing auto-fixes with feature/fix commits
-
-3. **Review unstaged changes:** Run `mcp2_git_diff_unstaged` with appropriate context to understand all modifications.
-
-4. **Verify ownership:** Ensure every change belongs to the current task. If unrelated work is present, resolve before continuing.
-
-5. **Stage intended changes:** Use `mcp2_git_add` with explicit file paths to stage desired changes.
-
-6. **Confirm staged snapshot:** Run `mcp2_git_diff_staged` to verify only intended changes are staged.
-
-7. **Commit with message:** Use `mcp2_git_commit` with a descriptive conventional commit message.
-   - Format: `type(scope): description`
-   - Types: `feat`, `fix`, `docs`, `test`, `refactor`, `security`, `chore`
-   - Example: `feat(cli): add test-robots command for robots.txt verification`
-
-8. **Optional: Review history:** Run `mcp2_git_log` to see recent commits if needed for context.
-
-## Validation Checklist
-
-Before committing:
-
-- [ ] All tests pass (`task test:fast`)
-- [ ] Linting passes (`task lint`)
-- [ ] Documentation updated
-- [ ] No unrelated changes in diff
-- [ ] Commit message follows conventional format
-
-## Examples
+**If formatters/linters were run:**
 
 ```bash
-# Feature commit
-feat(summarizer): implement query-aware chunk selection
+# Check for unstaged changes from auto-fixes
+git status --short
+
+# Review auto-fix changes
+git diff
+```
+
+**If auto-fixes present:**
+
+- Stage and commit separately BEFORE main work
+- Use: `style(scope): apply [tool] auto-fixes`
+- Prevents mixing auto-fixes with feature/fix commits
+
+### 2. Run Validation
+
+**Call `/validate` workflow:**
+
+- Runs all quality checks (linting, tests, security)
+- Auto-fixes issues where possible
+- Reports blockers
+
+**If validation fails:**
+
+- Fix blocking issues
+- Re-run `/validate`
+- Continue only when passed
+
+**See:** `.windsurf/workflows/validate.md`
+
+### 3. Review Changes
+
+**Examine all modifications:**
+
+```bash
+# See all changed files
+git status --short
+
+# Review unstaged changes
+git diff
+
+# Review staged changes (if any)
+git diff --staged
+```
+
+**Verify ownership:**
+
+- Every change belongs to current task
+- No unrelated work included
+- No debug code or TODOs left behind
+
+### 4. Stage Changes
+
+**Stage intended files:**
+
+```bash
+# Stage specific files
+git add path/to/file1.py path/to/file2.py
+
+# Or stage all (if reviewed)
+git add -A
+```
+
+**Confirm staged snapshot:**
+
+```bash
+# Review what will be committed
+git diff --staged
+```
+
+### 5. Commit with Conventional Message
+
+**Format:** `type(scope): description`
+
+**Types:**
+
+- `feat` - New feature
+- `fix` - Bug fix
+- `docs` - Documentation only
+- `test` - Test additions/changes
+- `refactor` - Code restructuring (no behavior change)
+- `security` - Security improvements
+- `perf` - Performance improvements
+- `chore` - Maintenance (deps, config)
+- `style` - Formatting, whitespace (auto-fixes)
+
+**Examples:**
+
+```bash
+# Feature
+git commit -m "feat(cli): add test-robots command for robots.txt verification"
 
 # Bug fix
-fix(fetcher): handle Playwright timeout errors gracefully
+git commit -m "fix(fetcher): handle Playwright timeout errors gracefully"
 
 # Documentation
-docs(adr): add ADR-0011 for caching strategy
+git commit -m "docs(adr): add ADR-0011 for caching strategy"
 
 # Testing
-test(integration): add robots.txt handling test scenarios
+git commit -m "test(integration): add robots.txt handling scenarios"
 
-# Security improvement
-security(extractor): strip HTML comments to prevent injection
+# Security
+git commit -m "security(extractor): strip HTML comments to prevent injection"
+
+# Performance
+git commit -m "perf(summarizer): implement parallel chunk processing (1.17x speedup)"
 ```
+
+**Multi-paragraph commits:**
+
+```bash
+git commit -m "feat(auth): implement API key authentication
+
+- Add auth module with key validation
+- Integrate with FastAPI dependency injection
+- Include CLI key management tools
+- 95% test coverage
+
+Refs: docs/initiatives/active/2025-10-15-api-key-auth.md"
+```
+
+### 6. Verify Commit
+
+**Check commit was created:**
+
+```bash
+# See recent commits
+git log --oneline -3
+
+# See last commit details
+git show HEAD
+```
+
+---
+
+## Integration
+
+### Called By
+
+- `/work` - After completing work
+- `/implement` - After implementation complete
+- User - Direct invocation
+
+### Calls
+
+- `/validate` - Pre-commit quality gates (Stage 2)
+
+---
+
+## Anti-Patterns
+
+### ❌ Don't: Skip Validation
+
+**Bad:**
+
+```bash
+git commit --no-verify -m "quick fix"
+# Bypasses pre-commit hooks and validation
+```
+
+**Good:**
+
+```bash
+/commit
+# Runs full validation, ensures quality
+```
+
+### ❌ Don't: Mix Unrelated Changes
+
+**Bad:**
+
+```bash
+git commit -m "feat(cli): add command and fix typo and update deps"
+# Multiple unrelated changes in one commit
+```
+
+**Good:**
+
+```bash
+git commit -m "fix(docs): correct typo in README"
+git commit -m "chore(deps): update pytest to 8.0.0"
+git commit -m "feat(cli): add test-robots command"
+# Separate commits for separate concerns
+```
+
+### ❌ Don't: Use Vague Messages
+
+**Bad:**
+
+```bash
+git commit -m "update code"
+git commit -m "fix bug"
+git commit -m "changes"
+```
+
+**Good:**
+
+```bash
+git commit -m "fix(fetcher): handle network timeout in async requests"
+git commit -m "refactor(cache): extract key generation to separate function"
+```
+
+---
+
+## References
+
+- [Conventional Commits](https://www.conventionalcommits.org/)
+- `.windsurf/workflows/validate.md` - Quality gate workflow
+- `.windsurf/rules/00_agent_directives.md` - Section 1.7 (Git Operations)

@@ -434,15 +434,28 @@ created: "2025-10-17"  # Only on creation, never updated
 
 **Actual Time:** ~3 hours
 
-### Phase 3: Token Optimization (4-6 hours)
+### Phase 3: Token Optimization (4-6 hours) 🔄 IN PROGRESS
+
+**Note:** Phase 3 partially overlaps with new initiative: `2025-10-18-workflow-architecture-refactor.md` - Deeper architectural restructuring to eliminate semantic overlap and tool reference issues.
 
 **Tasks:**
+
+- [x] **Fix tool reference issues** (1h) ✅
+  - Rewrote `/commit` to use standard git commands (removed `mcp2_git_*` references)
+  - Integrated `/commit` with `/validate` workflow (eliminated validation duplication)
+  - **Result:** `/commit` now 623 words with proper git command examples
+
+- [x] **Consolidate test workflows** (1h) ✅
+  - Reduced `/run-tests` to quick reference (removed duplication with `/validate`)
+  - Clarified purpose: `/run-tests` = reference, `/validate` = quality gate
+  - Added cross-references between workflows
+  - **Result:** `/run-tests` now 508 words (focused quick reference)
 
 - [ ] **Remove unnecessary dates** (1h)
   - Find all "October 2025", "2025-10-XX" references
   - Remove from workflow/rule content
   - Keep only in frontmatter `created` field
-  - Verify: `grep -r "October 2025" .windsurf/docs/`
+  - Verify: `grep -r "October 2025" .windsurf/`
 
 - [ ] **Abstract tool references** (1h)
   - Replace "uv" → "package manager"

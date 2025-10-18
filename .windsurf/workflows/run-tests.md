@@ -5,158 +5,177 @@ auto_execution_mode: 2
 
 # Run Tests Workflow
 
-Comprehensive testing workflow with various options for different scenarios.
+**Purpose:** Quick reference for test execution commands and options.
+
+**Note:** For pre-commit validation (linting + tests + security), use `/validate` instead.
+
+---
 
 ## Quick Commands
 
-> **Note:** When invoking pytest directly, always run it through `uv run`.
-> Example:
-> `uv run pytest -q tests/unit`
+**Most Common:**
 
 ```bash
-# Fast tests (unit + security + golden) in parallel
-task test:fast:parallel
+# Fast iteration (unit + security + golden, parallel)
+task test:fast
 
-# All tests except live (parallel)
-task test:parallel
-
-# With coverage (parallel)
-task test:coverage:parallel
-
-# Full CI simulation
-task ci:parallel
-```
-
-## Detailed Process
-
-1. **Choose test scope:**
-   - **Fast iteration:** `task test:fast` - Unit, security, golden only
-   - **Integration:** `task test:integration` - Multi-component tests
-   - **Full suite:** `task test` - All except live tests
-   - **Including live:** `task test:all` - Everything (needs API keys)
-
-2. **Enable parallelization (recommended for IO-bound):**
-   - Add `:parallel` suffix: `task test:fast:parallel`
-   - Override workers: `PYTEST_XDIST_AUTO_NUM_WORKERS=16 task test:parallel`
-   - Distribution strategy: `pytest -n auto --dist worksteal tests/`
-
-3. **Run with coverage:**
-   - **Standard:** `task test:coverage`
-   - **Parallel:** `task test:coverage:parallel`
-   - **Enforced minimum:** `task test:coverage:min` (90% required)
-
-4. **Specific test types:**
-   - **Unit:** `task test:unit` or `task test:unit:parallel`
-   - **Security:** `task test:security`
-   - **Golden:** `task test:golden`
-   - **Benchmarks:** `task test:bench`
-
-5. **Manual testing:**
-   - **URL summarization:** `task test:manual URL=https://example.com QUERY="topic"`
-   - **robots.txt:** `task test:robots URL=https://example.com`
-
-## Parallelization Best Practices
-
-**Reference:** [pytest-xdist](https://pytest-xdist.readthedocs.io/) (October 2025)
-
-### CPU-bound tests (pure Python logic)
-
-```bash
-# Use auto (number of CPU cores)
-pytest -n auto tests/unit/
-```
-
-### IO-bound tests (external APIs, network)
-
-```bash
-# Use more workers than CPU cores
-PYTEST_XDIST_AUTO_NUM_WORKERS=16 pytest -n auto tests/integration/
-```
-
-### Distribution strategies
-
-- `--dist load` (default): Any available worker
-- `--dist loadscope`: Group by module/class (better fixture reuse)
-- `--dist worksteal`: Reassign from slow to fast workers
-
-## Coverage Analysis
-
-```bash
-# Generate HTML report
+# All tests with coverage
 task test:coverage
 
-# Open report
+# Full CI simulation
+task ci
+```
+
+**Always run pytest through uv:** `uv run pytest [options]`
+
+---
+
+## Test Scopes
+
+| Command | What It Runs | Use When |
+|---------|--------------|----------|
+| `task test:fast` | Unit + security + golden | Fast iteration during development |
+| `task test:integration` | Integration tests only | Testing multi-component interactions |
+| `task test` | All except live tests | Pre-commit validation |
+| `task test:all` | Everything including live | Full validation (needs API keys) |
+| `task test:unit` | Unit tests only | Isolated component testing |
+| `task test:security` | Security tests only | Validating security patterns |
+| `task test:golden` | Golden file tests only | Output regression testing |
+
+---
+
+## Parallelization
+
+**Enable with `:parallel` suffix:**
+
+```bash
+task test:fast:parallel        # Fast tests in parallel
+task test:parallel             # All tests in parallel
+task test:coverage:parallel    # Coverage with parallelization
+```
+
+**Override worker count:**
+
+```bash
+# Default: auto (uses CPU cores)
+task test:fast
+
+# Custom worker count (good for IO-bound tests)
+PYTEST_XDIST_AUTO_NUM_WORKERS=16 task test:integration
+```
+
+**Reference:** [pytest-xdist docs](https://pytest-xdist.readthedocs.io/)
+
+---
+
+## Coverage
+
+```bash
+# Generate coverage report
+task test:coverage
+
+# Enforce minimum (90% required)
+task test:coverage:min
+
+# Open HTML report
 open htmlcov/index.html
 
-# Check specific module
-pytest --cov=src/mcp_web/fetcher tests/unit/test_fetcher.py
+# Coverage for specific module
+uv run pytest --cov=src/mcp_web/fetcher tests/unit/test_fetcher.py
 ```
 
-## Debugging Failed Tests
+---
+
+## Debugging
 
 ```bash
-# Run with detailed output
-pytest -vv --tb=long tests/path/to/test_file.py::test_function
+# Verbose output
+uv run pytest -vv --tb=long tests/path/to/test_file.py::test_function
 
-# Run single test
-pytest tests/path/to/test_file.py::TestClass::test_method
+# Single test
+uv run pytest tests/path/to/test_file.py::TestClass::test_method
 
 # Show print statements
-pytest -s tests/path/to/test_file.py
+uv run pytest -s tests/path/to/test_file.py
 
 # Drop into debugger on failure
-pytest --pdb tests/path/to/test_file.py
+uv run pytest --pdb tests/path/to/test_file.py
 ```
 
-## CI Simulation
-
-```bash
-# Full CI pipeline locally
-task ci
-
-# Fast CI (parallel, no coverage)
-task ci:fast
-
-# Parallel CI with coverage
-task ci:parallel
-```
+---
 
 ## Test Markers
 
-Filter tests by marker:
+**Filter by marker:**
 
 ```bash
 # Only unit tests
-pytest -m unit
+uv run pytest -m unit
 
 # Only security tests
-pytest -m security
+uv run pytest -m security
 
 # Exclude live tests (default)
-pytest -m "not live"
+uv run pytest -m "not live"
 
 # Multiple markers
-pytest -m "unit or integration"
+uv run pytest -m "unit or integration"
 ```
 
-## Performance Tips
+---
 
-1. **Use parallelization for IO-bound tests** (external APIs)
-2. **Mock external dependencies** in unit tests
-3. **Use fixtures efficiently** (scope to session/module where possible)
-4. **Run fast tests during development** (`task test:fast:parallel`)
-5. **Run full suite before commit** (`task ci`)
+## Manual Testing
+
+```bash
+# Test URL summarization
+task test:manual URL=https://example.com QUERY="topic"
+
+# Test robots.txt handling
+task test:robots URL=https://example.com
+```
+
+---
 
 ## Environment Variables
 
 ```bash
-# Increase parallel workers for IO-bound
+# Parallel worker count
 export PYTEST_XDIST_AUTO_NUM_WORKERS=16
 
-# Configure LLM provider for tests
+# LLM provider for tests
 export MCP_WEB_SUMMARIZER_PROVIDER=ollama
 export MCP_WEB_SUMMARIZER_MODEL=llama3.2:3b
-
-# Skip slow tests
-pytest -m "not slow"
 ```
+
+---
+
+## Performance Tips
+
+1. **Use `:parallel` for IO-bound tests** (network, external APIs)
+2. **Mock external dependencies** in unit tests for speed
+3. **Run `task test:fast` during development** (quick feedback)
+4. **Run `task ci` before committing** (full validation)
+
+---
+
+## Integration
+
+### Called By
+
+- `/implement` - After implementation phase
+- User - Direct invocation for testing
+
+### Related Workflows
+
+- `/validate` - Full quality gate (linting + tests + security)
+- `/implement` - Implementation workflow (includes testing)
+
+---
+
+## References
+
+- [pytest documentation](https://docs.pytest.org/)
+- [pytest-xdist documentation](https://pytest-xdist.readthedocs.io/)
+- Project: `Taskfile.yml` - Task definitions
+- Project: `pyproject.toml` - pytest configuration
+- `.windsurf/workflows/validate.md` - Pre-commit validation workflow
