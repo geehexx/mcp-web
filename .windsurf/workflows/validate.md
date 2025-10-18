@@ -1,11 +1,11 @@
 ---
 created: "2025-10-17"
-updated: "2025-10-18"
-description: Run linting, tests, security checks
+updated: "2025-10-19"
+description: Run linting, tests, security checks, cross-reference validation
 auto_execution_mode: 3
 category: Validation
-complexity: 60
-tokens: 1884
+complexity: 62
+tokens: 1920
 dependencies: []
 status: active
 ---
@@ -185,9 +185,31 @@ task test:coverage
 
 ---
 
-## Stage 4: Security Checks
+## Stage 4: Documentation Validation
 
-### 4.1 Bandit (Python Security Linter)
+### 4.1 Cross-Reference Validation
+
+**Check workflow and documentation links:**
+
+```bash
+task docs:validate:links
+# Validates:
+# - Workflow internal cross-references (.windsurf/workflows/*.md)
+# - ADR references (ADR-NNNN in .windsurf/ and docs/)
+# - Ensures all referenced files exist
+```
+
+**If fails:**
+
+- Fix broken workflow links
+- Create missing ADR files
+- Update references to use correct paths
+
+---
+
+## Stage 5: Security Checks
+
+### 5.1 Bandit (Python Security Linter)
 
 **Scan for security issues:**
 
@@ -210,7 +232,7 @@ task security:bandit
 - Fix security vulnerabilities
 - Suppress false positives with `# nosec` and comment
 
-### 4.2 Semgrep (Semantic Security Analysis)
+### 5.2 Semgrep (Semantic Security Analysis)
 
 **Advanced security patterns:**
 
@@ -232,7 +254,7 @@ task security:semgrep
 - Medium/Low: Review and decide
 - False positives: Add to ignore list
 
-### 4.3 Dependency Audit
+### 5.3 Dependency Audit
 
 **Check for known vulnerabilities:**
 
@@ -249,9 +271,9 @@ task security:deps
 
 ---
 
-## Stage 5: Results Summary
+## Stage 6: Results Summary
 
-### 5.1 Aggregate Results
+### 6.1 Aggregate Results
 
 **Collect all check results:**
 
@@ -278,7 +300,7 @@ Status: ❌ FAILED
 Blocker: Integration tests must pass before commit
 ```
 
-### 5.2 Exit Code Logic
+### 6.2 Exit Code Logic
 
 **Determine overall status:**
 
@@ -308,9 +330,9 @@ else:
 
 ---
 
-## Stage 6: Remediation Guidance
+## Stage 7: Remediation Guidance
 
-### 6.1 Fix Auto-Fixable Issues
+### 7.1 Fix Auto-Fixable Issues
 
 **If auto-fixes available:**
 
@@ -325,7 +347,7 @@ task docs:fix
 /validate
 ```
 
-### 6.2 Manual Fix Guidance
+### 7.2 Manual Fix Guidance
 
 **For test failures:**
 

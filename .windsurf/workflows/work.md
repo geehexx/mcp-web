@@ -41,10 +41,10 @@ update_plan({
   explanation: "🔄 Initiating /work orchestration",
   plan: [
     { step: "1. /detect-context - Analyze project state", status: "in_progress" },
-    { step: "2. /work - Route to appropriate workflow", status: "pending" },
-    { step: "3. /work - Execute routed workflow", status: "pending" },
+    { step: "2. /work-routing - Determine workflow route", status: "pending" },
+    { step: "3. /<routed-workflow> - Execute primary tasks", status: "pending" },
     { step: "4. /work - Detect work completion", status: "pending" },
-    { step: "5. /work - Session end protocol (if triggered)", status: "pending" }
+    { step: "5. /work-session-protocol - Execute session end protocol", status: "pending" }
   ]
 })
 ```
@@ -66,10 +66,10 @@ update_plan({
   explanation: "✅ Context detection complete. Routing decision ready.",
   plan: [
     { step: "1. /detect-context - Analyze project state", status: "completed" },
-    { step: "2. /work - Route to appropriate workflow", status: "in_progress" },
-    { step: "3. /work - Execute routed workflow", status: "pending" },
+    { step: "2. /work-routing - Determine workflow route", status: "in_progress" },
+    { step: "3. /<routed-workflow> - Execute primary tasks", status: "pending" },
     { step: "4. /work - Detect work completion", status: "pending" },
-    { step: "5. /work - Session end protocol (if triggered)", status: "pending" }
+    { step: "5. /work-session-protocol - Execute session end protocol", status: "pending" }
   ]
 })
 ```
@@ -103,16 +103,16 @@ update_plan({
   explanation: "🔀 Routing to /implement workflow. Adding subtasks.",
   plan: [
     { step: "1. /detect-context - Analyze project state", status: "completed" },
-    { step: "2. /work - Route to appropriate workflow", status: "completed" },
-    { step: "3. /work - Execute routed workflow", status: "in_progress" },
-    { step: "  3.1. /implement - Load context files", status: "in_progress" },
+    { step: "2. /work-routing - Determine workflow route", status: "completed" },
+    { step: "3. /implement - Execute implementation workflow", status: "in_progress" },
+    { step: "  3.1. /load-context - Load initiative files", status: "in_progress" },
     { step: "  3.2. /implement - Design test cases", status: "pending" },
     { step: "  3.3. /implement - Write failing tests", status: "pending" },
     { step: "  3.4. /implement - Implement feature code", status: "pending" },
-    { step: "  3.5. /implement - Run tests and validate", status: "pending" },
-    { step: "  3.6. /implement - Commit changes", status: "pending" },
+    { step: "  3.5. /validate - Run tests and validate", status: "pending" },
+    { step: "  3.6. /commit - Commit changes", status: "pending" },
     { step: "4. /work - Detect work completion", status: "pending" },
-    { step: "5. /work - Session end protocol (if triggered)", status: "pending" }
+    { step: "5. /work-session-protocol - Execute session end protocol", status: "pending" }
   ]
 })
 ```

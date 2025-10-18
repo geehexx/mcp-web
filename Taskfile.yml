@@ -238,12 +238,13 @@ tasks:
       - echo "Documentation server not yet configured"
 
   docs:lint:
-    desc: Lint all documentation (markdown + prose + file naming)
+    desc: Lint all documentation (markdown + prose + file naming + cross-refs)
     cmds:
       - task: docs:lint:markdown
       - task: docs:lint:prose
       - task: docs:lint:names
       - task: docs:validate:agents
+      - task: docs:validate:links
 
   docs:lint:markdown:
     desc: Lint markdown structure
@@ -310,6 +311,62 @@ tasks:
           exit 1
         fi
         echo "✓ AGENTS.md validation passed"
+
+  docs:validate:links:
+    desc: Validate workflow and documentation cross-references
+    cmds:
+      - |
+        echo "Validating workflow cross-references..."
+        broken_workflow_links=0
+        # Check workflow internal links
+        for file in .windsurf/workflows/*.md; do
+          if [ -f "$file" ]; then
+            while IFS= read -r link; do
+              # Skip external links
+              if [[ "$link" =~ ^https?:// ]]; then
+                continue
+              fi
+              # Skip anchor-only links
+              if [[ "$link" =~ ^# ]]; then
+                continue
+              fi
+              # Check relative workflow links
+              if [[ "$link" =~ ^\.\/ ]]; then
+                target="${link#./}"
+                if [ ! -f ".windsurf/workflows/$target" ]; then
+                  echo "  ✗ Broken link in $file: $link"
+                  broken_workflow_links=$((broken_workflow_links + 1))
+                fi
+              fi
+            done < <(grep -oP '\[.*?\]\(\K[^)]+' "$file" 2>/dev/null || true)
+          fi
+        done
+
+        echo "Validating ADR references..."
+        broken_adr_refs=0
+        # Check ADR references in workflows and rules (skip placeholders like ADR-00XX)
+        while IFS= read -r adr_num; do
+          # Skip placeholder references (00XX pattern or XX pattern)
+          if [[ "$adr_num" =~ ^00?X+$ ]]; then
+            continue
+          fi
+          # Only check 4-digit ADR numbers (0001-9999)
+          if [[ ${#adr_num} -ne 4 ]]; then
+            continue
+          fi
+          # Find matching ADR file
+          if ! ls docs/adr/${adr_num}-*.md 1>/dev/null 2>&1; then
+            echo "  ✗ Referenced ADR not found: ADR-$adr_num"
+            broken_adr_refs=$((broken_adr_refs + 1))
+          fi
+        done < <(grep -rh "ADR-[0-9]" .windsurf/ docs/ 2>/dev/null | grep -oP 'ADR-\K[0-9X]+' | sort -u || true)
+
+        total_broken=$((broken_workflow_links + broken_adr_refs))
+        if [ $total_broken -gt 0 ]; then
+          echo "ERROR: Found $total_broken broken reference(s)"
+          exit 1
+        fi
+        echo "✓ Cross-reference validation passed"
 
   docs:fix:
     desc: Auto-fix markdown issues
@@ -507,6 +564,24 @@ tasks:
     desc: Create new session summary from template (interactive)
     cmds:
       - "{{.UV}} run python scripts/scaffold.py --type summary --mode interactive"
+
+  archive:initiative:
+    desc: Archive initiative from active to completed (NAME required)
+    cmds:
+      - '[ -n "{{.NAME}}" ] || (echo "NAME is required" && exit 1)'
+      - '{{.UV}} run python scripts/file_ops.py archive-initiative {{.NAME}}{{if .COMPLETED_ON}} --completed-on {{.COMPLETED_ON}}{{end}}{{if .DRY_RUN}} --dry-run{{end}}'
+
+  move:file:
+    desc: Move file and update references (SRC and DST required)
+    cmds:
+      - '[ -n "{{.SRC}}" ] || (echo "SRC is required" && exit 1)'
+      - '[ -n "{{.DST}}" ] || (echo "DST is required" && exit 1)'
+      - '{{.UV}} run python scripts/file_ops.py move-file {{.SRC}} {{.DST}}{{if .NO_UPDATE_REFS}} --no-update-refs{{end}}{{if .DRY_RUN}} --dry-run{{end}}'
+
+  update:index:
+    desc: Update documentation index (defaults to docs/initiatives)
+    cmds:
+      - '{{.UV}} run python scripts/file_ops.py update-index {{default "docs/initiatives" .DIR}}{{if .DRY_RUN}} --dry-run{{end}}'
 
   # Information tasks
   info:

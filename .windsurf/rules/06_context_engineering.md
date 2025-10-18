@@ -231,7 +231,7 @@ type(scope): description
 |------|----------|---------|
 | `feat` | New feature | `feat(auth): add API key rotation` |
 | `fix` | Bug fix | `fix(cache): handle missing files gracefully` |
-| `docs` | Documentation | `docs(adr): create ADR-0021 for caching` |
+| `docs` | Documentation | `docs(adr): create ADR-00XX for caching` |
 | `test` | Test changes | `test(security): add XSS injection tests` |
 | `refactor` | Code refactor | `refactor(chunker): extract method` |
 | `security` | Security fix | `security(llm): add input sanitization` |

@@ -125,17 +125,19 @@ Based on previous session decisions:
 - Decision: Use uv for all package operations
 - Rationale: Performance, reproducibility, better dependency resolution
 
-1. **ADR-0014: pytest-xdist Parallelization** (from comprehensive-overhaul)
+1. **Decision: pytest-xdist Parallelization** (from comprehensive-overhaul) - _Not created as ADR (documented in testing rules instead)_
 
 - Context: Tests were slow (225s sequential)
 - Decision: Use pytest-xdist with IO-optimized worker count (16)
 - Rationale: 7.5x speedup for IO-bound tests
+- Note: Originally planned as formal ADR but documented in `.windsurf/rules/01_testing_and_tooling.md` instead
 
-1. **ADR-0015: Pre-commit Hooks** (from comprehensive-overhaul)
+1. **Decision: Pre-commit Hooks** (from comprehensive-overhaul) - _Not created as ADR (documented in testing rules instead)_
 
 - Context: Need automated quality enforcement
 - Decision: Use pre-commit framework with ruff and markdownlint
 - Rationale: Catch issues before commit, consistent formatting
+- Note: Originally planned as formal ADR but documented in testing rules instead
 
 1. **ADR-0016: Windsurf Rules Structure** (from comprehensive-overhaul)
 
