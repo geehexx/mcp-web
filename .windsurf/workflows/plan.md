@@ -155,9 +155,83 @@ update_plan({
 
 ---
 
-## Stage 4: Present and Validate
+## Stage 4: Create ADR (If Needed)
 
-### 4.1 Present to User
+### 4.1 Assess ADR Requirement
+
+**Check if architectural decision is needed:**
+
+```markdown
+**ADR Assessment:**
+
+Does this plan involve:
+- [ ] New dependency or technology choice?
+- [ ] Major algorithm or data structure change?
+- [ ] Security-related decision?
+- [ ] Performance-critical implementation?
+- [ ] API design decision?
+- [ ] Change to core architecture pattern?
+
+If ANY checked → ADR required
+```
+
+**Decision criteria:**
+
+| Pattern | ADR Required? | Example |
+|---------|---------------|----------|
+| New technology/library | ✅ Yes | Adding Redis for caching |
+| Architecture pattern | ✅ Yes | Switching to event-driven |
+| Security design | ✅ Yes | Authentication strategy |
+| Performance strategy | ✅ Yes | Parallel processing approach |
+| API contract | ✅ Yes | REST vs GraphQL |
+| Implementation detail | ❌ No | Variable naming convention |
+| Bug fix | ❌ No | Fixing edge case |
+| Refactoring | ❌ Maybe | Only if changes pattern |
+
+### 4.2 Create ADR (If Required)
+
+**If ADR needed:**
+
+```markdown
+🏗️ **Architecture decision detected** - calling `/new-adr` workflow
+```
+
+**Call `/new-adr` workflow:**
+
+- Identifies decision topic
+- Researches alternatives with sources
+- Drafts ADR with all sections
+- Presents for user review
+- Updates documentation and index
+- Commits ADR
+
+**See:** `.windsurf/workflows/new-adr.md`
+
+**Report result:**
+
+```markdown
+✅ ADR created: ADR-00XX - [Decision Title]
+📄 Location: docs/adr/00XX-decision-title.md
+```
+
+**If no ADR needed:**
+
+```markdown
+ℹ️ No ADR required (implementation detail)
+```
+
+**Link ADR to initiative:**
+
+```markdown
+# Update initiative file with ADR reference
+**Related ADRs:** [ADR-00XX: Decision Title](../../adr/00XX-decision-title.md)
+```
+
+---
+
+## Stage 5: Present and Validate
+
+### 5.1 Present to User
 
 **Summary format:**
 
@@ -192,7 +266,7 @@ update_plan({
 **Ready to proceed?**
 ```
 
-### 4.2 Handle Feedback
+### 5.2 Handle Feedback
 
 **If user requests changes:**
 
@@ -202,13 +276,13 @@ update_plan({
 
 **If approved:**
 
-- Proceed to Stage 5
+- Proceed to Stage 6
 
 ---
 
-## Stage 5: Handoff to Implementation
+## Stage 6: Handoff to Implementation
 
-### 5.1 Load Full Context
+### 6.1 Load Full Context
 
 **Call `/load-context` with scope="initiative":**
 
@@ -219,7 +293,7 @@ update_plan({
 
 **See:** `.windsurf/workflows/load-context.md`
 
-### 5.2 Begin Implementation
+### 6.2 Begin Implementation
 
 **Call `/implement` workflow:**
 
@@ -328,8 +402,9 @@ update_plan({
 
 - `/research` - Best practices and pattern discovery (Stage 2)
 - `/generate-plan` - Structure creation and task breakdown (Stage 3)
-- `/load-context` - Full context loading (Stage 5)
-- `/implement` - Begin execution (Stage 5)
+- `/new-adr` - Create architecture decision record (Stage 4, conditional)
+- `/load-context` - Full context loading (Stage 6)
+- `/implement` - Begin execution (Stage 6)
 
 ---
 

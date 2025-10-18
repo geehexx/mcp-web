@@ -157,6 +157,51 @@ git log --oneline -3
 git show HEAD
 ```
 
+### 7. Check Version Bump (Conditional)
+
+**After successful commit, determine if version bump is needed:**
+
+```bash
+# Get the commit message
+commit_msg=$(git log -1 --pretty=%B HEAD)
+
+# Check if it's a version-bumping type
+if echo "$commit_msg" | grep -qE '^(feat|fix)\(' || \
+   echo "$commit_msg" | grep -q 'BREAKING CHANGE'; then
+    echo "📦 Version bump needed for this commit"
+else
+    echo "ℹ️ No version bump needed (docs/test/chore/style/refactor)"
+fi
+```
+
+**If version bump needed:**
+
+```markdown
+📦 **Version bump required** - calling `/bump-version` workflow
+```
+
+**Call `/bump-version` workflow:**
+
+- Analyzes conventional commit types since last version
+- Determines semantic version bump (major/minor/patch)
+- Updates `pyproject.toml` version field
+- Creates version commit and git tag
+- Returns new version number
+
+**See:** `.windsurf/workflows/bump-version.md`
+
+**Report result:**
+
+```markdown
+✅ Version bumped: v0.2.0 → v0.3.0 (minor)
+```
+
+**If no bump needed:**
+
+```markdown
+ℹ️ No version bump needed (commit type: docs/test/chore)
+```
+
 ---
 
 ## Integration
@@ -170,6 +215,7 @@ git show HEAD
 ### Calls
 
 - `/validate` - Pre-commit quality gates (Stage 2)
+- `/bump-version` - Semantic version bump (Stage 7, conditional)
 
 ---
 

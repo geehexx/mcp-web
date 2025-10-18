@@ -120,13 +120,78 @@ git status
 
 # Run relevant tests (establish baseline)
 task test:fast
-```text
+```
 
 ---
 
-## Stage 2: Test-First Implementation
+## Stage 2.5: Check ADR Requirement (Conditional)
 
-### 2.1 Write Test FIRST
+### 2.5.1 Assess Implementation Approach
+
+**Before writing code, check if architectural decision is being made:**
+
+```markdown
+**ADR Quick Check:**
+
+Am I about to:
+- [ ] Add a new dependency or library?
+- [ ] Choose between design patterns?
+- [ ] Make a security-sensitive decision?
+- [ ] Implement performance-critical logic?
+- [ ] Define a new API contract?
+- [ ] Change core architecture?
+
+If ANY checked → Pause and assess ADR need
+```
+
+**Decision criteria:**
+
+| Scenario | ADR Required? | Action |
+|----------|---------------|--------|
+| Adding new library (httpx, redis, etc.) | ✅ Yes | Call `/new-adr` |
+| Choosing auth strategy (JWT vs API key) | ✅ Yes | Call `/new-adr` |
+| Algorithm choice (merge-sort vs quick-sort) | ❌ No | Document in code |
+| Variable naming convention | ❌ No | Follow style guide |
+| Framework pattern (map-reduce vs streaming) | ✅ Yes | Call `/new-adr` |
+| Bug fix implementation | ❌ No | Just fix it |
+
+### 2.5.2 Create ADR (If Required)
+
+**If ADR needed:**
+
+```markdown
+🏗️ **Architectural decision detected during implementation** - calling `/new-adr` workflow
+```
+
+**Call `/new-adr` workflow:**
+
+- Document decision before implementing
+- Research alternatives with sources
+- Get user approval on approach
+- Link ADR to implementation
+
+**See:** `.windsurf/workflows/new-adr.md`
+
+**Report result:**
+
+```markdown
+✅ ADR created: ADR-00XX - [Decision Title]
+📄 Proceeding with approved approach
+```
+
+**If no ADR needed:**
+
+```markdown
+ℹ️ No ADR required - proceeding with implementation
+```
+
+**IMPORTANT:** Create ADR BEFORE implementing, not after. Decisions should be documented before they're coded.
+
+---
+
+## Stage 3: Test-First Implementation
+
+### 3.1 Write Test FIRST
 
 **Before any production code:**
 
@@ -137,19 +202,20 @@ task test:fast
        """Test for feature X."""
        result = new_feature()
        assert result == expected
-   ```text
+   ```
 
 2. **Run test (verify it fails)**
 
    ```bash
    uv run pytest tests/path/to/test.py::test_new_feature -xvs
-   ```text
+   ```
 
 3. **Confirm failure reason**
+
    - Not implemented yet? ✓ Good
    - Wrong failure reason? Fix test first
 
-### 2.2 Implement Minimum Code
+### 3.2 Implement Minimum Code
 
 **Write simplest code to pass test:**
 
@@ -170,7 +236,7 @@ def new_feature():
 - Optimize prematurely
 - Handle untested edge cases
 
-### 2.3 Verify Test Passes
+### 3.3 Verify Test Passes
 
 ```bash
 uv run pytest tests/path/to/test.py::test_new_feature -xvs
@@ -179,7 +245,7 @@ uv run pytest tests/path/to/test.py::test_new_feature -xvs
 **If fails:** Debug, fix, re-test (don't proceed)
 **If passes:** Continue to refactor
 
-### 2.4 Refactor (If Needed)
+### 3.4 Refactor (If Needed)
 
 **Now improve code quality:**
 
@@ -192,9 +258,9 @@ uv run pytest tests/path/to/test.py::test_new_feature -xvs
 
 ---
 
-## Stage 3: Expand Coverage
+## Stage 4: Expand Coverage
 
-### 3.1 Add Edge Case Tests
+### 4.1 Add Edge Case Tests
 
 **For each edge case:**
 
@@ -210,7 +276,7 @@ uv run pytest tests/path/to/test.py::test_new_feature -xvs
 - Boundary conditions
 - Error conditions
 
-### 3.2 Integration Tests (If Needed)
+### 4.2 Integration Tests (If Needed)
 
 **For cross-module features:**
 
@@ -223,9 +289,9 @@ def test_feature_with_module_b():
 
 ---
 
-## Stage 4: Documentation
+## Stage 5: Documentation
 
-### 4.1 Update API Documentation
+### 5.1 Update API Documentation
 
 **If public API changed:**
 
@@ -238,7 +304,7 @@ Add:
 - Error cases
 ```text
 
-### 4.2 Update README (If Needed)
+### 5.2 Update README (If Needed)
 
 **For user-facing features:**
 
@@ -251,7 +317,7 @@ Add:
 - Configuration options
 ```text
 
-### 4.3 Inline Documentation
+### 5.3 Inline Documentation
 
 **Ensure docstrings complete:**
 
@@ -278,9 +344,9 @@ def function(arg: type) -> return_type:
 
 ---
 
-## Stage 5: Quality Gates
+## Stage 6: Quality Gates
 
-### 5.1 Run All Tests
+### 6.1 Run All Tests
 
 ```bash
 # Fast tests (must pass)
@@ -296,7 +362,7 @@ task test
 - Zero regressions
 - New tests passing
 
-### 5.2 Linting
+### 6.2 Linting
 
 ```bash
 # Auto-fix what's possible
@@ -312,7 +378,7 @@ task lint
 - Address or suppress remaining
 - Follow project style
 
-### 5.3 Security Scan (If Relevant)
+### 6.3 Security Scan (If Relevant)
 
 ```bash
 # For security-sensitive code
@@ -325,9 +391,9 @@ task security:semgrep
 
 ---
 
-## Stage 6: Commit Strategy
+## Stage 7: Commit Strategy
 
-### 6.1 Atomic Commits
+### 7.1 Atomic Commits
 
 **One logical change per commit:**
 
@@ -352,7 +418,7 @@ git add .
 git commit -m "wip"
 ```text
 
-### 6.2 Use `/commit` Workflow
+### 7.2 Use `/commit` Workflow
 
 **For guided commits:**
 
@@ -369,9 +435,9 @@ git commit -m "wip"
 
 ---
 
-## Stage 7: Progress Tracking
+## Stage 8: Progress Tracking
 
-### 7.1 Update Initiative
+### 8.1 Update Initiative
 
 **Mark completed tasks:**
 
@@ -385,7 +451,7 @@ git commit -m "wip"
 - [ ] CLI key management
 ```text
 
-### 7.2 Document Decisions
+### 8.2 Document Decisions
 
 **If architectural choice made:**
 
@@ -565,9 +631,9 @@ $ git commit
 
 ### Calls
 
+- `/new-adr` - If architectural decision during implementation (Stage 2.5, conditional)
 - `/test-before-commit` - After each change
-- `/commit` - When ready to commit
-- `/new-adr` - If architectural decision needed
+- `/commit` - When ready to commit (Stage 7)
 
 ---
 

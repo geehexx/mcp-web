@@ -58,13 +58,13 @@ Fix systemic issues with workflow task numbering, transparency, and artifact man
 - [x] Create proper folder structure for this initiative
 - [x] Move PROPOSAL to artifacts
 
-### Phase 2: Core Workflow Updates (2 hours) - IN PROGRESS
+### Phase 2: Core Workflow Updates (2 hours) ✅ COMPLETE
 
-- [ ] Update `/work` workflow with numbering and transparency
-- [ ] Update `/implement` workflow with numbering and transparency
-- [ ] Update `/plan` workflow with numbering and transparency
-- [ ] Add version bump integration to `/commit`
-- [ ] Add ADR triggers to `/plan` and `/implement`
+- [x] Update `/work` workflow with numbering and transparency
+- [x] Update `/implement` workflow with numbering and transparency
+- [x] Update `/plan` workflow with numbering and transparency
+- [x] Add version bump integration to `/commit`
+- [x] Add ADR triggers to `/plan` and `/implement`
 
 ### Phase 3: Rules & Documentation (1 hour)
 
