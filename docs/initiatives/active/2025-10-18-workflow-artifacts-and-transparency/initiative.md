@@ -73,6 +73,9 @@ Fix systemic issues with workflow task numbering, transparency, and artifact man
   - Add workflow prefix requirement
   - Add transparency requirements
   - Add hierarchical numbering guide
+  - **NEW:** Add "deliverable-focused" principle (focus on WHAT, not HOW)
+  - **NEW:** Add "Definition of Done" requirement for tasks
+  - **NEW:** Add "verify before planning" checkpoint
 - [ ] Update Section 1.6 (File Operations)
   - Add artifact management rules
   - Add structure decision tree
@@ -149,7 +152,28 @@ Fix systemic issues with workflow task numbering, transparency, and artifact man
 
 **Next:** Phase 2 - Update core 3 workflows
 
+### 2025-10-18 (Session: Quality Foundation Completion)
+
+**Discovered 3 Additional Task System Issues:**
+
+1. **Deliverable-Focused Principle Missing**
+   - Tasks describe methods ("Fix 32 errors") instead of deliverables ("Complete Phase 5")
+   - Violates WBS best practice: "Focus on deliverables, not methods"
+   - Severity: Medium - Affects clarity when actual work differs from plan
+
+2. **No Definition of Done**
+   - Tasks lack explicit completion criteria
+   - WBS best practice: Each task should have "Definition of Done"
+   - Severity: Medium - Important for quality gates
+
+3. **Task Plan Before Verification**
+   - Created plan to fix errors before verifying they existed
+   - Should verify current state before creating implementation tasks
+   - Severity: Low - Minor efficiency issue
+
+**Action:** Added to Phase 3 rule updates
+
 ---
 
 **Last Updated:** 2025-10-18
-**Status:** Active (Phase 1 Complete)
+**Status:** Active (Phase 1 Complete, 3 new issues discovered)
