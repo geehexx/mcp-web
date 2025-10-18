@@ -32,9 +32,61 @@ This project follows a code of conduct to ensure a welcoming and inclusive envir
 
 - Python 3.10 or higher
 - Git
-- OpenAI API key (for testing LLM features)
+- Docker Desktop (optional, for dev containers)
+- OpenAI API key or local LLM (for testing LLM features)
 
 ### Setup Development Environment
+
+#### Option 1: Development Containers (Recommended)
+
+The fastest and most consistent way to set up your development environment:
+
+1. **Install Prerequisites:**
+   - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+   - [VS Code](https://code.visualstudio.com/)
+   - [Dev Containers Extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+
+2. **Fork and clone the repository**
+
+    ```bash
+    git clone https://github.com/YOUR_USERNAME/mcp-web.git
+    cd mcp-web
+    ```
+
+3. **Open in VS Code and reopen in container**
+
+    ```bash
+    code .
+    # Press F1 → "Dev Containers: Reopen in Container"
+    # Or click "Reopen in Container" when prompted
+    ```
+
+4. **Wait for automatic setup** (~2-5 minutes first time)
+   - Container builds with Python 3.10, uv, and all tools
+   - Dependencies install automatically
+   - Playwright browsers download
+   - Pre-commit hooks configure
+   - VS Code extensions install
+
+5. **Verify setup**
+
+    ```bash
+    task test:fast  # Run fast tests
+    task lint       # Check code quality
+    ```
+
+**Benefits:**
+
+- ✅ Identical environment for all developers
+- ✅ No local Python/dependency conflicts
+- ✅ Automatic tool installation and configuration
+- ✅ Works on Windows, macOS, and Linux consistently
+
+See [README.md - Development Containers](README.md#development-containers) for more details.
+
+#### Option 2: Manual Setup
+
+If you prefer local development without Docker:
 
 1. **Fork and clone the repository**
 
@@ -43,32 +95,61 @@ This project follows a code of conduct to ensure a welcoming and inclusive envir
     cd mcp-web
     ```
 
-2. **Create a virtual environment**
+2. **Install uv (modern Python package manager)**
 
     ```bash
-    python -m venv venv
-    source venv/bin/activate  # On Windows: venv\Scripts\activate
+    # macOS/Linux
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+
+    # Windows
+    powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
     ```
 
-3. **Install development dependencies**
+3. **Install Taskfile (optional but recommended)**
 
     ```bash
-    pip install -e ".[dev]"
-    playwright install chromium
+    # macOS
+    brew install go-task/tap/go-task
+
+    # Linux
+    snap install task --classic
+
+    # Or see: https://taskfile.dev/installation/
     ```
 
-4. **Set up environment variables**
+4. **Setup development environment**
 
     ```bash
+    # With Taskfile (recommended)
+    task dev:setup
+
+    # Or manually with uv
+    uv sync --all-extras
+    uv run playwright install chromium
+    uv run pre-commit install
+    ```
+
+5. **Set up environment variables**
+
+    ```bash
+    # For local LLM (Ollama)
+    export MCP_WEB_SUMMARIZER_PROVIDER=ollama
+    export MCP_WEB_SUMMARIZER_MODEL=llama3.2:3b
+
+    # Or for OpenAI
     export OPENAI_API_KEY="sk-..."
+    export MCP_WEB_SUMMARIZER_PROVIDER=openai
+
+    # Optional settings
     export MCP_WEB_CACHE_DIR="/tmp/mcp-web-cache"
     export MCP_WEB_METRICS_LOG_LEVEL="DEBUG"
     ```
 
-5. **Run tests to verify setup**
+6. **Run tests to verify setup**
 
     ```bash
-    pytest -v
+    task test:fast  # With Taskfile
+    # Or: uv run pytest -v
     ```
 
 ---

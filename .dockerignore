@@ -1,0 +1,90 @@
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+.venv/
+venv/
+ENV/
+env/
+
+# Testing
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.hypothesis/
+.test_durations
+*.cover
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Caching
+.mypy_cache/
+.ruff_cache/
+.cache/
+*.cache
+
+# Documentation build artifacts
+docs/_build/
+docs/.doctrees/
+site/
+
+# Benchmarks
+.benchmarks/
+
+# Logs
+*.log
+logs/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# OS specific
+Thumbs.db
+.DS_Store
+
+# Temporary files
+*.tmp
+*.temp
+tmp/
+temp/
+
+# Lock files (we want to copy these)
+!uv.lock
+!package-lock.json
+
+# Node modules (if any)
+node_modules/
+
+# CI/CD artifacts
+.github/
+
+# Archive and historical data
+docs/archive/
+
+# Windsurf session data (not needed in container)
+.windsurf/
+
+# Local cache directories
+.cache/
+.local/

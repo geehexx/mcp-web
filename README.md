@@ -70,12 +70,43 @@ result = await summarize_urls(
 
 ## Quick Start
 
-### Installation
+### Option 1: Development Containers (Recommended)
+
+The easiest way to get started is using VS Code Dev Containers with Docker:
+
+```bash
+# Prerequisites: Docker and VS Code with Dev Containers extension
+# 1. Clone the repository
+git clone https://github.com/geehexx/mcp-web.git
+cd mcp-web
+
+# 2. Open in VS Code
+code .
+
+# 3. When prompted, click "Reopen in Container"
+# Or: Press F1 → "Dev Containers: Reopen in Container"
+```
+
+**What you get:**
+
+- ✅ Python 3.10, uv, and all dependencies pre-installed
+- ✅ Playwright browsers ready to use
+- ✅ Pre-commit hooks configured
+- ✅ VS Code extensions (Python, Ruff, Mypy, Task) installed
+- ✅ Consistent environment across all developers
+
+The container automatically runs setup on first launch. See [Development Containers](#development-containers) for details.
+
+### Option 2: Manual Installation
 
 ```bash
 # Clone the repository
 git clone https://github.com/geehexx/mcp-web.git
 cd mcp-web
+
+# Install uv (modern Python package manager)
+# macOS/Linux: curl -LsSf https://astral.sh/uv/install.sh | sh
+# Windows: powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
 
 # Install Taskfile (recommended)
 # macOS: brew install go-task/tap/go-task
@@ -85,10 +116,10 @@ cd mcp-web
 # Setup complete environment (recommended)
 task dev:setup
 
-# Or manual installation
-pip install -e ".[dev]"
-playwright install chromium
-```bash
+# Or manual installation with uv
+uv sync --all-extras
+uv run playwright install chromium
+```
 
 ### Configuration
 
@@ -253,6 +284,132 @@ mcp-web/
 ├── examples/ # Example usage scripts
 └── pyproject.toml # Dependencies & project metadata
 ```
+
+## Development Containers
+
+This project includes a complete VS Code Development Container configuration for consistent, reproducible development environments.
+
+### Quick Start with Dev Containers
+
+1. **Install Prerequisites:**
+   - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+   - [VS Code](https://code.visualstudio.com/)
+   - [Dev Containers Extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+
+2. **Open in Container:**
+
+   ```bash
+   git clone https://github.com/geehexx/mcp-web.git
+   cd mcp-web
+   code .
+   # Press F1 → "Dev Containers: Reopen in Container"
+   ```
+
+3. **Wait for Setup:**
+   - Container builds (~2-5 minutes first time)
+   - Dependencies install automatically via `post-create.sh`
+   - Playwright browsers download
+   - Pre-commit hooks configure
+
+4. **Start Developing:**
+
+   ```bash
+   task test:fast    # Run tests
+   task lint         # Check code quality
+   task --list       # See all commands
+   ```
+
+### What's Included
+
+**Base Environment:**
+
+- Debian 12 base image
+- Python 3.10 (via uv)
+- Node.js (for documentation tooling)
+- Git, curl, build-essential
+
+**Python Tools:**
+
+- uv (fast package manager)
+- pytest with xdist (parallel testing)
+- ruff (linting & formatting)
+- mypy (type checking)
+- bandit, semgrep (security)
+
+**VS Code Integration:**
+
+- Python extension with Pylance
+- Ruff extension (format on save)
+- Mypy type checker
+- Task runner integration
+- Markdown linting
+- Git integration (GitLens)
+- Docker extension
+
+**Playwright:**
+
+- Chromium browser pre-installed
+- All system dependencies configured
+- Ready for integration tests
+
+### Configuration Files
+
+- `.devcontainer/Dockerfile` - Container image definition
+- `.devcontainer/devcontainer.json` - VS Code settings and extensions
+- `.devcontainer/post-create.sh` - Automated setup script
+
+### Customization
+
+**Add VS Code Extensions:**
+
+Edit `.devcontainer/devcontainer.json`:
+
+```json
+"extensions": [
+  "ms-python.python",
+  "your-extension-id"
+]
+```
+
+**Modify Python Version:**
+
+Edit `.devcontainer/devcontainer.json`:
+
+```json
+"args": {
+  "PYTHON_VERSION": "3.11"
+}
+```
+
+**Add System Dependencies:**
+
+Edit `.devcontainer/Dockerfile`:
+
+```dockerfile
+RUN apt-get update && apt-get install -y \
+    your-package-here
+```
+
+### Troubleshooting
+
+**Container Won't Build:**
+
+- Check Docker is running: `docker ps`
+- Clear Docker cache: `docker system prune -a`
+- Rebuild without cache: F1 → "Dev Containers: Rebuild Container"
+
+**Extensions Not Working:**
+
+- Reload window: F1 → "Developer: Reload Window"
+- Reinstall extensions: F1 → "Dev Containers: Rebuild Container"
+
+**Performance Issues:**
+
+- Allocate more resources in Docker Desktop settings
+- Use WSL 2 backend on Windows
+- Enable BuildKit: `export DOCKER_BUILDKIT=1`
+
+See [VS Code Dev Containers docs](https://code.visualstudio.com/docs/devcontainers/containers) for more details.
 
 ## Development
 
