@@ -68,12 +68,26 @@ When making any implementation decision, prioritize the following principles in 
 
 ## 1.8 Session End Protocol
 
-**MANDATORY:** Before ending any work session or presenting final summary:
+**TRIGGERS:** This protocol MUST be executed when ANY of the following occur:
 
-1. **Check for auto-fix changes:**
+1. **User says session is ending** ("that's all for now", "let's wrap up", etc.)
+2. **Initiative marked "Completed" or "✅"** in status field
+3. **All planned work for current request is done** (no more tasks to execute)
+4. **User explicitly requests summary** of completed work
+
+**NOT triggered by:**
+
+- Mid-work progress updates
+- Answering questions
+- Quick fixes or patches
+- Ongoing implementation (unless initiative complete)
+
+**MANDATORY STEPS:**
+
+1. **Commit all changes first:**
    - Run `git status` to check for unstaged changes
-   - If auto-fixes present (from lint/format commands), commit them separately
-   - Use: `style(scope): apply [tool] auto-fixes`
+   - Commit working changes with proper message
+   - If auto-fixes present, commit separately: `style(scope): apply [tool] auto-fixes`
 
 2. **Archive completed initiatives:** Check `docs/initiatives/active/` for status "Completed" or "✅"
    - If found, MUST call `/archive-initiative` workflow for each
@@ -98,26 +112,32 @@ When making any implementation decision, prioritize the following principles in 
 
 **CRITICAL VIOLATIONS:**
 
-- ❌ Never present final summary without running meta-analysis first
-- ❌ Never commit work and skip meta-analysis
-- ❌ Never leave unstaged auto-fix changes uncommitted
-- ❌ The session end protocol is NOT optional, even at logical checkpoints
+- ❌ Never present "work complete" summary without running full protocol
+- ❌ Never mark initiative as complete without archiving it
+- ❌ Never leave unstaged changes when presenting completion summary
+- ❌ The session end protocol is NOT optional when initiative completes
 
-## 1.9 Checkpoint Strategy
+## 1.9 Progress Communication Strategy
 
-Present work for review at logical milestones:
+**During active work (NOT at session end):**
 
-- After completing a major feature
-- Before architectural changes
-- After fixing critical bugs
-- When tests pass and documentation is updated
+- Provide brief progress updates every 5-10 minutes of work
+- No approval needed for routine changes (formatting, type hints, docs)
+- Continue working autonomously unless blocked or uncertain
 
-Do not request approval for:
+**When to pause and ask for direction:**
 
-- Formatting changes
-- Adding type hints
-- Routine test additions
-- Documentation updates
+- Before major architectural changes (new patterns, breaking changes)
+- When multiple valid approaches exist (user preference needed)
+- If blocked by missing requirements or unclear specifications
+- After discovering unexpected complexity (scope change needed)
+
+**DO NOT confuse progress updates with session end:**
+
+- ❌ DON'T present "completion summary" mid-session
+- ❌ DON'T ask "shall I continue?" unless blocked
+- ✅ DO keep working until initiative/request is complete OR user signals session end
+- ✅ DO run Session End Protocol (1.8) when work is actually complete
 
 ## 1.10 Operational Efficiency Principles
 

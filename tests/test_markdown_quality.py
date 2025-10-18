@@ -49,29 +49,43 @@ def test_markdown_files_exist():
 def test_markdownlint_passes():
     """Verify all markdown files pass markdownlint validation.
 
-    This is the primary quality gate for markdown structure.
-    Uses markdownlint-cli for validation.
+    Uses markdownlint-cli2 with project config for consistency.
+    Respects .markdownlintignore and .markdownlint-cli2.jsonc configuration.
     """
     result = subprocess.run(
         [
             "npx",
-            "markdownlint-cli",
+            "markdownlint-cli2",
+            "--config",
+            ".markdownlint-cli2.jsonc",
             "**/*.md",
-            "!docs/archive/**",
-            "!node_modules/**",
-            "!.venv/**",
         ],
         capture_output=True,
         text=True,
         cwd=Path("."),
     )
 
-    assert result.returncode == 0, (
-        f"Markdownlint validation failed with {result.returncode} errors.\n"
-        f"Errors:\n{result.stdout}\n{result.stderr}\n\n"
-        f"To fix auto-fixable issues, run: task docs:fix\n"
-        f"Or manually: npx markdownlint-cli2 --fix '**/*.md'"
-    )
+    if result.returncode != 0:
+        # Parse error output from markdownlint-cli2
+        error_lines = result.stdout.strip().split("\n")
+        summary_line = next((line for line in error_lines if "Summary:" in line), "")
+
+        # Get first 20 error lines for debugging
+        error_details = "\n".join(
+            [
+                line
+                for line in error_lines
+                if line.strip() and "Finding:" not in line and "Linting:" not in line
+            ][:20]
+        )
+
+        pytest.fail(
+            f"Markdownlint validation failed.\n"
+            f"{summary_line}\n\n"
+            f"Sample errors:\n{error_details}\n\n"
+            f"To fix auto-fixable issues, run: task docs:fix\n"
+            f"Or manually: npx markdownlint-cli2 --fix '**/*.md'"
+        )
 
 
 @pytest.mark.unit
@@ -214,30 +228,36 @@ def test_links_are_valid_format():
 
 @pytest.mark.unit
 @pytest.mark.slow
-def test_markdownlint_cli2_passes():
-    """Verify all markdown files pass markdownlint-cli2 validation.
+def test_markdownlint_config_consistency():
+    """Verify markdownlint configuration files are consistent and valid.
 
-    This uses the same tool as pre-commit hooks and Taskfile.
-    Should match the configuration in .markdownlint-cli2.jsonc
+    Checks that .markdownlint-cli2.jsonc is valid JSON and has required settings.
     """
-    result = subprocess.run(
-        ["npx", "markdownlint-cli2", "**/*.md"],
-        capture_output=True,
-        text=True,
-        cwd=Path("."),
-    )
+    import json
+    from pathlib import Path
 
-    if result.returncode != 0:
-        # Extract summary line
-        output_lines = result.stdout.split("\n")
-        summary = next((line for line in output_lines if "Summary:" in line), "")
+    config_path = Path(".markdownlint-cli2.jsonc")
+    assert config_path.exists(), "Missing .markdownlint-cli2.jsonc config file"
 
-        pytest.fail(
-            f"Markdownlint-cli2 validation failed.\n"
-            f"{summary}\n\n"
-            f"Full output:\n{result.stdout}\n\n"
-            f"To fix auto-fixable issues: task docs:fix"
-        )
+    # Read and validate JSON (strip comments for validation)
+    content = config_path.read_text()
+    # Remove line comments (simple approach)
+    lines = [line.split("//")[0] for line in content.split("\n")]
+    clean_json = "\n".join(lines)
+
+    try:
+        config = json.loads(clean_json)
+    except json.JSONDecodeError as e:
+        pytest.fail(f"Invalid JSON in .markdownlint-cli2.jsonc: {e}")
+
+    # Verify required config sections
+    assert "config" in config, "Missing 'config' section in markdownlint config"
+    assert "ignores" in config, "Missing 'ignores' section in markdownlint config"
+
+    # Verify ignores include key directories
+    ignores = config["ignores"]
+    assert any("archive" in ignore for ignore in ignores), "Should ignore docs/archive"
+    assert any("pytest_cache" in ignore for ignore in ignores), "Should ignore .pytest_cache"
 
 
 @pytest.mark.unit

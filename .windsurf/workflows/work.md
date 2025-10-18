@@ -107,39 +107,84 @@ List available options:
 
 ---
 
-## Stage 4: Session End Protocol (MANDATORY)
+## Stage 4: Detect Work Completion and Execute Session End Protocol
 
-**Before presenting final summary, verify exit criteria:**
+**Check if Session End Protocol should be triggered:**
 
-### 4.1 Check Completed Initiatives
+### 4.1 Detect Completion Triggers
 
 ```bash
-# Find initiatives marked complete
+# Check if any initiative was marked complete during this work
 grep -l "Status.*Completed\|Status.*✅" docs/initiatives/active/*.md
+
+# Check git status for uncommitted changes
+git status --short
 ```
 
-**If found:** MUST call `/archive-initiative` for each (do not skip)
+**Trigger Session End Protocol if ANY of:**
 
-### 4.2 Execute Meta-Analysis
+1. Initiative marked "Completed" or "✅" (found in grep above)
+2. All planned tasks for routed workflow are done
+3. User explicitly signals session end
 
-**MUST call `/meta-analysis` workflow:**
+**If triggered, execute FULL protocol:**
 
-- Creates session summary for cross-session continuity
-- Identifies workflow/rule improvements
-- Documents decisions and learnings
-- **NOT OPTIONAL** - This is a mandatory quality gate
+### 4.2 Commit All Changes
 
-### 4.3 Exit Criteria Checklist
+```bash
+# Commit working changes
+git add <modified files>
+git commit -m "<appropriate conventional commit message>"
+
+# Commit any auto-fixes separately
+git add <auto-fix files>
+git commit -m "style(scope): apply [tool] auto-fixes"
+```
+
+### 4.3 Archive Completed Initiatives
+
+```bash
+# For each completed initiative found
+/archive-initiative <initiative-name>
+```
+
+**MUST call workflow - do not skip!**
+
+### 4.4 Execute Meta-Analysis
+
+```bash
+/meta-analysis
+```
+
+**This creates:**
+
+- Session summary in `docs/archive/session-summaries/`
+- Workflow improvement recommendations
+- Cross-session continuity documentation
+
+### 4.5 Exit Criteria Checklist
 
 ```markdown
 - [ ] All changes committed (git status clean)
 - [ ] All tests passing (if code changes made)
 - [ ] Completed initiatives archived
 - [ ] Meta-analysis executed
-- [ ] Session summary created in docs/archive/session-summaries/
+- [ ] Session summary created
 ```
 
 **ONLY present final summary after all criteria met.**
+
+---
+
+## Stage 5: Continue Working (If Protocol Not Triggered)
+
+**If Session End Protocol was NOT triggered:**
+
+- Provide brief progress update
+- Continue with next task/phase
+- Do NOT present "completion summary"
+- Do NOT ask "shall I continue?" unless blocked
+- Keep working until actual completion or user signals end
 
 ---
 

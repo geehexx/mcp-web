@@ -289,8 +289,6 @@ uv add [package-name]
 - OWASP [relevant guide]
 - RFC [relevant spec]
 
-```
-
 ---
 
 ## Quality Checks
@@ -342,17 +340,19 @@ uv add [package-name]
 ## Integration
 
 ### Called By
+
 - `/plan` - During Stage 2 (Research & Discovery)
 - User - Standalone research tasks
 
 ### Output
+
 - Research summary (markdown format)
 - Recommendation with rationale
 - Source citations
 
 ---
 
-## References
+## External References
 
 - OWASP Top 10: https://owasp.org/
 - Python Package Index (PyPI): https://pypi.org/

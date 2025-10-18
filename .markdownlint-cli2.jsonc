@@ -2,12 +2,12 @@
   "customRules": [
     "./.markdownlint/custom-rules.cjs"
   ],
-  "outputFormatters": [
-    ["markdownlint-cli2-formatter-json", "/tmp/mcp-web-markdownlint.json"]
-  ],
   "ignores": [
     "docs/archive/**",
-    "**/.pytest_cache/**"
+    "**/.pytest_cache/**",
+    "node_modules/**",
+    ".venv/**",
+    "**/*.lock"
   ],
   "config": {
     "default": true,
