@@ -37,20 +37,20 @@
 
 **Update These:**
 
-4. /commit - Add version bump integration
-5. /validate - Add numbering
-6. /new-adr - Add numbering
-7. /archive-initiative - Add numbering
-8. /bump-version - Add numbering
-9. /consolidate-summaries - Add numbering
-10. /detect-context - Add numbering
-11. /extract-session - Add numbering
-12. /generate-plan - Add numbering
-13. /load-context - Add numbering
-14. /meta-analysis - Add numbering
-15. /research - Add numbering
-16. /summarize-session - Add numbering
-17. /update-docs - Add numbering
+1. /commit - Add version bump integration
+2. /validate - Add numbering
+3. /new-adr - Add numbering
+4. /archive-initiative - Add numbering
+5. /bump-version - Add numbering
+6. /consolidate-summaries - Add numbering
+7. /detect-context - Add numbering
+8. /extract-session - Add numbering
+9. /generate-plan - Add numbering
+10. /load-context - Add numbering
+11. /meta-analysis - Add numbering
+12. /research - Add numbering
+13. /summarize-session - Add numbering
+14. /update-docs - Add numbering
 
 ### Phase 4: Rules & Documentation Updates
 

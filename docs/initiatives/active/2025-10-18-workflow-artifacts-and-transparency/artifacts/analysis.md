@@ -466,22 +466,22 @@ update_plan({ ... })
 
 ### Phase 2: Missing Integrations (This Session)
 
-5. ✅ Add version bump to /commit
-6. ✅ Add ADR triggers to /plan and /implement
-7. ✅ Fix all section numbering
+1. ✅ Add version bump to /commit
+2. ✅ Add ADR triggers to /plan and /implement
+3. ✅ Fix all section numbering
 
 ### Phase 3: Documentation (This Session)
 
-8. ✅ Update all affected rules
-9. ✅ Create comprehensive guide
-10. ✅ Document conventions
+1. ✅ Update all affected rules
+2. ✅ Create comprehensive guide
+3. ✅ Document conventions
 
 ### Phase 4: Prevention (Future Session)
 
-11. ⏭️ Create pre-commit validation
-12. ⏭️ Create workflow template
-13. ⏭️ Add workflow linting
-14. ⏭️ Testing framework
+1. ⏭️ Create pre-commit validation
+2. ⏭️ Create workflow template
+3. ⏭️ Add workflow linting
+4. ⏭️ Testing framework
 
 ---
 
