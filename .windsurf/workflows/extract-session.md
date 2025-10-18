@@ -43,6 +43,7 @@ git log --since="$LAST_RUN" --format="%s" | grep -oE "\([^)]+\)" | sort | uniq -
 ```
 
 **Focus areas:**
+
 - `feat:` → Implementation
 - `fix:` → Bug fixing
 - `docs:` → Documentation
@@ -75,7 +76,7 @@ git log --since="$LAST_RUN" --format="%h|%s|%b" | while IFS='|' read hash subjec
   TYPE=$(echo "$subject" | grep -oE "^[a-z]+")
   SCOPE=$(echo "$subject" | grep -oE "\([^)]+\)" | tr -d '()')
   DESC=$(echo "$subject" | sed 's/^[a-z]*([^)]*): //')
-  
+
   echo "- **$TYPE**: $DESC ($SCOPE)"
 done
 ```
@@ -97,6 +98,7 @@ git log --since="$LAST_RUN" --name-only --diff-filter=A | grep "docs/adr/"
 ```
 
 **Decision pattern:**
+
 - What was decided
 - Why (rationale)
 - What alternatives were considered
@@ -119,6 +121,7 @@ git log --since="$LAST_RUN" --format="%B" | grep -iE "discovered|learned|found t
 ```
 
 **Learning pattern:**
+
 - Technology/pattern name
 - Specific insight
 - Measurement (if applicable)
@@ -141,6 +144,7 @@ grep -r "pytest.mark" tests/ | cut -d: -f2 | sort | uniq -c | sort -rn
 ```
 
 **Examples:**
+
 - Batch file operations used → 3x faster
 - Test-first approach → Caught N regressions
 - Git hooks → Prevented N issues
@@ -158,6 +162,7 @@ git log --since="$LAST_RUN" --format="%s" | grep -iE "style.*auto-fix"
 ```
 
 **Pattern:**
+
 - What didn't work
 - Why it failed
 - Better alternative
@@ -216,6 +221,7 @@ grep -l "Status.*Completed" docs/initiatives/active/*.md 2>/dev/null
 ```
 
 **Flag violations:**
+
 - Uncommitted changes at session end
 - Meta-analysis timestamp missing/stale
 - Session summary in wrong location
@@ -291,9 +297,11 @@ protocol_compliance:
 ## Integration
 
 ### Called By
+
 - `/meta-analysis` - Primary caller
 
 ### Calls
+
 - Git commands - History analysis
 - File system scans - Context gathering
 

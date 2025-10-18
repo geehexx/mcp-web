@@ -65,11 +65,13 @@ auto_execution_mode: 3
 ### 2. Write Objectives
 
 **From extraction data:**
+
 - What was the triggering context?
 - What were the success criteria?
 - Was this a continuation or new work?
 
 **Format:**
+
 ```markdown
 ## Objectives
 
@@ -245,6 +247,7 @@ None identified. Session followed standard practices.
 Before finalizing:
 
 ### Format Compliance
+
 - [ ] Exact template structure followed
 - [ ] YAML frontmatter correct
 - [ ] All accomplishments use action verbs
@@ -255,6 +258,7 @@ Before finalizing:
 - [ ] No vague language
 
 ### Content Completeness
+
 - [ ] Objectives clearly stated
 - [ ] All commits listed
 - [ ] All files modified accounted for
@@ -266,6 +270,7 @@ Before finalizing:
 - [ ] Protocol compliance verified
 
 ### LLM-Agnostic Quality
+
 - [ ] Another LLM could produce similar output
 - [ ] All facts verifiable from git/files
 - [ ] Sections constrained to specified lengths
@@ -300,13 +305,16 @@ docs/archive/session-summaries/2025-10-18-workflow-optimization.md
 ## Integration
 
 ### Called By
+
 - `/meta-analysis` - Primary caller
 
 ### Input
+
 - Extraction data from `/extract-session`
 - Session metadata
 
 ### Output
+
 - Formatted session summary file
 - Filename for git commit
 

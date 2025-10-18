@@ -18,6 +18,7 @@ auto_execution_mode: 3
 ### Identify What to Research
 
 **From requirement:**
+
 - Technology/framework specifics
 - Security considerations
 - Performance implications
@@ -25,6 +26,7 @@ auto_execution_mode: 3
 - Similar implementations
 
 **Example:**
+
 ```markdown
 **Research Needed:**
 - API key authentication best practices
@@ -82,30 +84,35 @@ mcp0_read_text_file("/home/gxx/projects/mcp-web/.windsurf/rules/01_testing_and_t
 **Search queries to run:**
 
 1. **Broad best practices**
+
    ```
    search_web("[Technology] best practices 2025")
    Example: "Python API authentication best practices 2025"
    ```
 
 2. **Framework-specific**
+
    ```
    search_web("[Framework] [Feature] guide 2025")
    Example: "FastAPI security authentication guide 2025"
    ```
 
 3. **Security focus**
+
    ```
    search_web("OWASP [Feature] security 2025")
    Example: "OWASP API security authentication 2025"
    ```
 
 4. **Real-world examples**
+
    ```
    search_web("[Technology] production examples [Feature]")
    Example: "Python JWT production examples authentication"
    ```
 
 5. **Recent updates**
+
    ```
    search_web("[Library] security vulnerabilities CVE 2024 2025")
    Example: "bcrypt security vulnerabilities CVE 2024 2025"
@@ -137,6 +144,7 @@ mcp0_read_text_file("/home/gxx/projects/mcp-web/.windsurf/rules/01_testing_and_t
 | OAuth2 | Industry standard | Heavy implementation | Public APIs, 3rd party |
 
 **Decision criteria:**
+
 - Project requirements
 - Complexity vs benefit
 - Security needs
@@ -160,6 +168,7 @@ mcp0_read_text_file("/home/gxx/projects/mcp-web/.windsurf/rules/01_testing_and_t
 ```
 
 **Check with:**
+
 ```bash
 # PyPI package info
 pip show [package-name]
@@ -171,6 +180,7 @@ search_web("[package-name] security advisories CVE")
 ### 4.2 Performance Considerations
 
 **Measure or estimate:**
+
 - Latency impact (ms per request)
 - Memory footprint
 - CPU usage
@@ -181,6 +191,7 @@ search_web("[package-name] security advisories CVE")
 **For security-sensitive features:**
 
 **Checklist:**
+
 - [ ] OWASP guidelines reviewed
 - [ ] Known vulnerabilities checked
 - [ ] Input validation planned
@@ -248,12 +259,15 @@ uv add [package-name]
 ## Implementation Considerations
 
 **Breaking Changes:**
+
 - [Change 1] — Mitigation: [approach]
 
 **Performance Impact:**
+
 - [Impact area] — Benchmark: [expected result]
 
 **Security Requirements:**
+
 - [Requirement 1] — Implementation: [how to satisfy]
 
 ---
@@ -261,16 +275,20 @@ uv add [package-name]
 ## References
 
 **External:**
+
 - [URL 1] - [Description]
 - [URL 2] - [Description]
 
 **Internal:**
+
 - [filepath 1] - [Description]
 - [ADR-XXXX] - [Related decision]
 
 **Standards:**
+
 - OWASP [relevant guide]
 - RFC [relevant spec]
+
 ```
 
 ---

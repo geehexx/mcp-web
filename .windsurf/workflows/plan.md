@@ -108,7 +108,8 @@ Do NOT plan for:
 - Generates initiative document
 - Creates ADR if architectural decision
 
-**Output:** 
+**Output:**
+
 - Initiative file in `docs/initiatives/active/`
 - Plan summary for approval
 
@@ -201,16 +202,19 @@ Do NOT plan for:
 ### Good Plan Indicators
 
 ✅ **Comprehensive:**
+
 - Requirements captured
 - Research documented with sources
 - Risks identified
 
 ✅ **Actionable:**
+
 - Tasks concrete, not vague
 - Each task <4 hours
 - Clear acceptance criteria
 
 ✅ **Realistic:**
+
 - Effort estimates reasonable
 - Dependencies identified
 - Risks have mitigations
@@ -218,16 +222,19 @@ Do NOT plan for:
 ### Poor Plan Indicators
 
 ❌ **Vague:**
+
 - "Implement authentication" (what kind?)
 - No specific tasks
 - Missing details
 
 ❌ **Unrealistic:**
+
 - Complex feature in 1 hour
 - Ignoring dependencies
 - No risk assessment
 
 ❌ **Incomplete:**
+
 - No research
 - Missing criteria
 - No documentation plan
@@ -275,10 +282,12 @@ Do NOT plan for:
 ## Integration
 
 ### Called By
+
 - `/work` - When planning needed
 - User - Direct invocation
 
 ### Calls
+
 - `/research` - Best practices and pattern discovery (Stage 2)
 - `/generate-plan` - Structure creation and task breakdown (Stage 3)
 - `/load-context` - Full context loading (Stage 5)

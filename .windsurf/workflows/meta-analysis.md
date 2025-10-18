@@ -69,6 +69,7 @@ date -u +"%Y-%m-%dT%H:%M:%SZ" > .windsurf/.last-meta-analysis
 ### 4.1 PROJECT_SUMMARY.md Update Triggers
 
 **Update if:**
+
 - ✅ New major feature completed
 - ✅ Significant milestone reached
 - ✅ Architecture changes made
@@ -78,6 +79,7 @@ date -u +"%Y-%m-%dT%H:%M:%SZ" > .windsurf/.last-meta-analysis
 - ✅ New dependencies added
 
 **Skip if:**
+
 - ❌ Routine bug fixes
 - ❌ Minor documentation updates
 - ❌ Internal refactoring
@@ -86,6 +88,7 @@ date -u +"%Y-%m-%dT%H:%M:%SZ" > .windsurf/.last-meta-analysis
 ### 4.2 CHANGELOG.md Update Triggers
 
 **Update if:**
+
 - ✅ Preparing for release
 - ✅ Breaking changes made
 - ✅ New features added (user-facing)
@@ -93,6 +96,7 @@ date -u +"%Y-%m-%dT%H:%M:%SZ" > .windsurf/.last-meta-analysis
 - ✅ Dependencies updated (major versions)
 
 **Skip if:**
+
 - ❌ Internal work (no release)
 - ❌ Documentation-only changes
 - ❌ Work-in-progress features
@@ -161,10 +165,12 @@ git commit -m "docs(session): add YYYY-MM-DD [focus] session summary
 ## Integration
 
 ### Called By
+
 - `/work` - MANDATORY at session end
 - User - Direct invocation
 
 ### Calls
+
 - `/extract-session` - Extract structured session data (Stage 2)
 - `/summarize-session` - Generate formatted summary (Stage 3)
 - `/update-docs` - Update living documentation if needed (Stage 4)

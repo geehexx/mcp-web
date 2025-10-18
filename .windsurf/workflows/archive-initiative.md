@@ -42,11 +42,25 @@ Use this workflow to properly archive a completed initiative.
 
 ## Phase 4: Version Control
 
-1. **Review changes:** Use `mcp2_git_diff_unstaged` to inspect all modifications.
+1. **Review changes:** Review all modifications:
 
-2. **Stage archival:** Use `mcp2_git_add` to stage the moved/updated files.
+   ```bash
+   git diff
+   ```
 
-3. **Review staged:** Use `mcp2_git_diff_staged` to confirm accuracy.
+2. **Stage archival:** Stage the moved/updated files:
+
+   ```bash
+   git add docs/initiatives/completed/[initiative-name].md
+   git add docs/initiatives/README.md  # If updated
+   git add [other-updated-files]
+   ```
+
+3. **Review staged:** Confirm accuracy of staged changes:
+
+   ```bash
+   git diff --staged
+   ```
 
 4. **Commit:** Use descriptive message:
 

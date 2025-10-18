@@ -150,6 +150,7 @@ GOOD: "Detected initiative X (60% complete). Continuing..."
 ### ❌ Don't: Skip Session End Protocol
 
 **CRITICAL FAILURE** if:
+
 - Presenting final summary without running `/meta-analysis`
 - Leaving completed initiatives in active/ directory
 - Uncommitted changes at session end
@@ -163,11 +164,13 @@ If 80%+ confident on routing, auto-route. User can redirect if wrong.
 ## Success Metrics
 
 ✅ **Good Performance:**
+
 - Context detection + routing: <30 seconds
 - Autonomous continuation: 70%+ of time
 - Session end protocol executed: 100% of time
 
 ❌ **Needs Improvement:**
+
 - Asking "what to work on" when context is clear
 - Skipping session end protocol
 - Requiring user direction for obvious continuations
@@ -177,6 +180,7 @@ If 80%+ confident on routing, auto-route. User can redirect if wrong.
 ## Integration
 
 ### Calls
+
 - `/detect-context` - Context analysis (Stage 1)
 - `/load-context` - Efficient context loading (Stage 3)
 - `/plan` - Planning workflow
@@ -187,6 +191,7 @@ If 80%+ confident on routing, auto-route. User can redirect if wrong.
 - `/meta-analysis` - **MANDATORY** session summary (Stage 4)
 
 ### Called By
+
 - User (direct invocation)
 - Other workflows (when orchestration needed)
 

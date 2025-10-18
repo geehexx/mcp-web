@@ -54,6 +54,7 @@ auto_execution_mode: 3
 **Break work into phases:**
 
 **Pattern:**
+
 - Phase 1: Core/foundation (minimal viable)
 - Phase 2: Enhancement (key features)
 - Phase 3: Integration (apply everywhere)
@@ -80,6 +81,7 @@ auto_execution_mode: 3
 ```
 
 **Task sizing:**
+
 - Each task: <4 hours
 - Each phase: <8 hours
 - Total: Avoid >20 hour plans (split initiative if needed)
@@ -138,6 +140,7 @@ Phase 1 (Foundation) → Phase 2 (Features)
 ```
 
 **Common risk categories:**
+
 - Technical (integration issues, bugs)
 - Security (vulnerabilities, exposure)
 - Performance (latency, memory)
@@ -255,6 +258,7 @@ Initiative created. Research complete. Ready for Phase 1.
 ### 5.2 Validate Initiative
 
 **Checklist:**
+
 - [ ] Objective clear and concise
 - [ ] Success criteria measurable
 - [ ] Tasks sized appropriately (<4h each)
@@ -278,6 +282,7 @@ Initiative created. Research complete. Ready for Phase 1.
 ```
 
 **ADR needed when:**
+
 - Significant architecture change
 - Technology choice with long-term impact
 - Security pattern adoption
@@ -341,7 +346,7 @@ Initiative created. Research complete. Ready for Phase 1.
 ### Next Steps
 
 1. ✅ Review this plan
-2. ✅ Approve or request changes  
+2. ✅ Approve or request changes
 3. ⏭️ Begin Phase 1 implementation
 
 **Ready to proceed?**
@@ -354,17 +359,20 @@ Initiative created. Research complete. Ready for Phase 1.
 ### Good Plan Characteristics
 
 ✅ **Actionable:**
+
 - Concrete tasks, not vague goals
 - Clear acceptance criteria
 - Realistic effort estimates
 
 ✅ **Complete:**
+
 - All phases covered
 - Dependencies identified
 - Risks with mitigations
 - Documentation plan included
 
 ✅ **Maintainable:**
+
 - Initiative file is single source of truth
 - Updates section for tracking progress
 - Related docs clearly listed
@@ -372,16 +380,19 @@ Initiative created. Research complete. Ready for Phase 1.
 ### Poor Plan Signs
 
 ❌ **Vague:**
+
 - "Implement feature" (too broad)
 - "Add security" (not specific)
 - No concrete tasks
 
 ❌ **Unrealistic:**
+
 - 20-hour task in single item
 - No risk assessment
 - Overly optimistic timeline
 
 ❌ **Incomplete:**
+
 - Missing documentation plan
 - No dependency analysis
 - Unclear success criteria
@@ -410,19 +421,23 @@ Initiative created. Research complete. Ready for Phase 1.
 ## Integration
 
 ### Called By
+
 - `/plan` - After research complete (Stage 3+)
 
 ### Input
+
 - Research summary with recommendations
 - User requirements
 - Success criteria
 
 ### Output
+
 - Initiative file in `docs/initiatives/active/`
 - ADR (if architectural decision)
 - Plan summary for user approval
 
 ### Calls
+
 - `/new-adr` - If architectural decision needed
 
 ---

@@ -9,11 +9,11 @@ tags: [workflows, architecture, optimization]
 
 # Initiative: Workflow Architecture Refactor
 
-**Status:** Active  
-**Created:** 2025-10-18  
-**Target Completion:** 2025-10-25  
-**Owner:** @agent  
-**Priority:** Medium  
+**Status:** Active
+**Created:** 2025-10-18
+**Target Completion:** 2025-10-25
+**Owner:** @agent
+**Priority:** Medium
 **Estimated Effort:** 8-12 hours
 
 ---
@@ -30,6 +30,7 @@ During Phase 2 of workflow optimization (v2), we identified deeper architectural
 **Source:** Feedback during windsurf-workflows-v2-optimization Phase 2 completion
 
 **Research Reference:** [Azure AI Agent Orchestration Patterns](https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/ai-agent-design-patterns) - Anti-patterns section highlights:
+
 - "Creating unnecessary coordination complexity"
 - "Adding agents that don't provide meaningful specialization"
 
@@ -54,6 +55,7 @@ Restructure workflows to eliminate semantic overlap, establish clear boundaries,
 - [ ] Documentation reflects new architecture
 
 **Verification:**
+
 - Grep for deprecated tool references: `grep -r "mcp2_" .windsurf/workflows/` returns empty
 - Manual review confirms no semantic overlap
 - Each workflow can explain "what makes it different from X"
@@ -87,27 +89,32 @@ Restructure workflows to eliminate semantic overlap, establish clear boundaries,
 ### Proposed Taxonomy
 
 **Category 1: Orchestrators** (High-level coordination)
+
 - `/work` - Master orchestrator
 - `/plan` - Planning orchestrator
 - `/implement` - Implementation orchestrator
 
 **Category 2: Specialized Operations** (Focused tasks)
+
 - `/validate` - Quality gate (atomic operation)
 - `/commit` - Git operations (atomic operation)
 - `/bump-version` - Versioning (atomic operation)
 - `/update-docs` - Documentation sync (atomic operation)
 
 **Category 3: Context Handlers** (Information gathering)
+
 - `/detect-context` - Project state analysis
 - `/load-context` - Batch context loading
 - `/extract-session` - Session data extraction
 
 **Category 4: Artifact Generators** (Content creation)
+
 - `/generate-plan` - Plan document generation
 - `/summarize-session` - Session summary generation
 - `/new-adr` - ADR creation
 
 **Category 5: Reference Guides** (Documentation, not workflows)
+
 - Move `/run-tests` to `docs/guides/testing-reference.md`
 - Keep only true workflows in `.windsurf/workflows/`
 
@@ -146,6 +153,7 @@ Restructure workflows to eliminate semantic overlap, establish clear boundaries,
 **Exit Criteria:** Architecture document with clear taxonomy and migration plan
 
 **Deliverables:**
+
 - `docs/adr/ADR-XXXX-workflow-architecture-v3.md`
 - Migration checklist in this initiative
 
@@ -172,6 +180,7 @@ Restructure workflows to eliminate semantic overlap, establish clear boundaries,
 **Exit Criteria:** Zero references to deprecated tools, all tool calls valid
 
 **Deliverables:**
+
 - Updated workflow files with correct tool references
 - Tool invocation standard documented
 
@@ -197,12 +206,14 @@ Restructure workflows to eliminate semantic overlap, establish clear boundaries,
    - Test complete workflow chains
    - Verify no broken references
 
-**Exit Criteria:** 
+**Exit Criteria:**
+
 - All workflows follow new taxonomy
 - No semantic overlap
 - All reference docs in proper location
 
 **Deliverables:**
+
 - Consolidated workflow files
 - Updated `docs/guides/` directory
 - Integration test results
@@ -226,6 +237,7 @@ Restructure workflows to eliminate semantic overlap, establish clear boundaries,
 **Exit Criteria:** Documentation complete, all workflows validated
 
 **Deliverables:**
+
 - Updated documentation
 - Workflow decision tree/diagram
 - Validation report
@@ -235,10 +247,12 @@ Restructure workflows to eliminate semantic overlap, establish clear boundaries,
 ## Dependencies
 
 **Prerequisites:**
+
 - windsurf-workflows-v2-optimization Phase 1 ✅ (Complete)
 - windsurf-workflows-v2-optimization Phase 2 ✅ (Complete)
 
 **Blockers:**
+
 - None (can start immediately)
 
 ---
@@ -253,6 +267,7 @@ Restructure workflows to eliminate semantic overlap, establish clear boundaries,
 | Missing edge cases in tool references | Medium | Medium | Comprehensive grep + manual review + testing |
 
 **Out of Scope:**
+
 - New workflow features (focus on restructuring only)
 - Performance optimization (separate initiative)
 - AI model improvements (separate concern)
@@ -279,6 +294,7 @@ Restructure workflows to eliminate semantic overlap, establish clear boundaries,
 ## Updates
 
 ### 2025-10-18 (Creation)
+
 Initiative created based on feedback during Phase 2 of workflow optimization. Identified need for deeper architectural refactor beyond simple decomposition.
 
 **Trigger:** User feedback: "There's very heavy overlap and redundancy between workflows... we might want to re-think at a higher level the purpose of the workflows"
@@ -290,16 +306,19 @@ Initiative created based on feedback during Phase 2 of workflow optimization. Id
 ## Success Metrics
 
 **Quantitative:**
+
 - Deprecated tool references: 0 (currently: ~10)
 - Workflow semantic overlap: 0 (currently: 3 pairs identified)
 - Reference docs in workflows/: 0 (move to docs/guides/)
 
 **Qualitative:**
+
 - Each workflow can articulate unique value in 1 sentence
 - Clear decision tree for "which workflow to call when"
 - Consistent tool invocation patterns across all workflows
 
 **Time:**
+
 - Estimated: 8-12 hours across 2-3 sessions
 - Target completion: 1 week from start
 
@@ -308,12 +327,14 @@ Initiative created based on feedback during Phase 2 of workflow optimization. Id
 ## Future Considerations
 
 **Post-refactor opportunities:**
+
 - Workflow versioning system
 - Automated workflow testing framework
 - Workflow performance profiling
 - AI-generated workflow suggestions based on context
 
 **Dependencies on this initiative:**
+
 - Token optimization (Phase 3) should wait for architecture stabilization
 - Any new workflow creation should follow new taxonomy
 - Documentation updates should reflect new structure
