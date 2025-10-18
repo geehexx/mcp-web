@@ -58,8 +58,8 @@ ls:
     .dir: kebab-case
 
   docs/initiatives/active:
-    .md: regex:(\d{4}-\d{2}-\d{2}|\d{4}-q[1-4])-[a-z0-9-]+|PROPOSAL-.*  # Flat files + proposals
-    .dir: regex:(\d{4}-\d{2}-\d{2}|\d{4}-q[1-4])-[a-z0-9-]+|.*  # Folders + any subdir
+    .md: regex:\d{4}-\d{2}-\d{2}-[a-z0-9-]+|PROPOSAL-.*  # Date format only: YYYY-MM-DD-name.md
+    .dir: regex:\d{4}-\d{2}-\d{2}-[a-z0-9-]+|.*  # Date format only: YYYY-MM-DD-name/
 
   # Inside initiative folders - be permissive
   docs/initiatives/active/**:
@@ -67,8 +67,8 @@ ls:
     .dir: regex:.*
 
   docs/initiatives/completed:
-    .md: regex:(\d{4}-\d{2}-\d{2}|\d{4}-q[1-4])-[a-z0-9-]+  # Flat files
-    .dir: regex:(\d{4}-\d{2}-\d{2}|\d{4}-q[1-4])-[a-z0-9-]+|.*  # Folders + any subdir
+    .md: regex:\d{4}-\d{2}-\d{2}-[a-z0-9-]+  # Date format only: YYYY-MM-DD-name.md
+    .dir: regex:\d{4}-\d{2}-\d{2}-[a-z0-9-]+|.*  # Date format only: YYYY-MM-DD-name/
 
   # Inside completed initiative folders - be permissive
   docs/initiatives/completed/**:

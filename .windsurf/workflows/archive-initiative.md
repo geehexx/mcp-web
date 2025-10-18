@@ -83,7 +83,7 @@ Use this workflow to properly archive a completed initiative.
 # Status: All success criteria met
 
 # Move to completed
-mv docs/initiatives/active/2024-q4-quality-foundation.md \
+mv docs/initiatives/active/2025-10-15-quality-foundation/ \
    docs/initiatives/completed/
 
 # Update references

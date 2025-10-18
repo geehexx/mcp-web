@@ -129,14 +129,14 @@ docs/initiatives/
 
 ### Step 1: Copy the Appropriate Template
 
-**For small initiatives (flat file):**
+**IMPORTANT:** Always use `YYYY-MM-DD` date format (not quarterly format like `2025-q4`). Use the initiative creation date.
 
+**For small initiatives (flat file):**
 ```bash
 cp docs/initiatives/template.md docs/initiatives/active/YYYY-MM-DD-your-initiative.md
 ```
 
-**For large initiatives (folder-based):**
-
+**For large initiatives (folder-based - RECOMMENDED):**
 ```bash
 # Create folder
 mkdir -p docs/initiatives/active/YYYY-MM-DD-your-initiative/{phases,artifacts}
@@ -147,6 +147,11 @@ cp docs/initiatives/template/initiative.md docs/initiatives/active/YYYY-MM-DD-yo
 # Optionally copy phase template
 cp docs/initiatives/template/phases/phase-example.md docs/initiatives/active/YYYY-MM-DD-your-initiative/phases/phase-1-name.md
 ```
+
+**Examples:**
+- `2025-10-15-quality-foundation/`
+- `2025-10-18-new-feature.md`
+- `2025-10-20-documentation-infrastructure.md`
 
 ### Step 2: Fill in Required Sections
 

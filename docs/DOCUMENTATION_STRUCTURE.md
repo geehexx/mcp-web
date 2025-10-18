@@ -28,21 +28,32 @@ docs/
 ├── initiatives/                   # Strategic projects and roadmap
 │   ├── README.md
 │   ├── template.md                # Legacy flat-file template
-│   ├── template/                  # Folder-based template (new)
+│   ├── template/                  # Folder-based template (recommended)
 │   │   ├── initiative.md
 │   │   ├── phases/
 │   │   │   └── phase-example.md
 │   │   └── artifacts/
 │   │       └── README.md
 │   ├── active/                    # Current initiatives (Q4 2025)
-│   │   ├── 2025-q4-quality-foundation.md  # Flat file (small initiative)
-│   │   ├── 2025-q4-performance-optimization-pipeline.md
-│   │   ├── 2025-q4-windsurf-workflows-v2-optimization.md
-│   │   └── 2025-10-18-workflow-architecture/  # Folder-based (large initiative)
+│   │   ├── 2025-10-15-quality-foundation/  # Folder-based (large, multi-phase)
+│   │   │   ├── initiative.md
+│   │   │   └── phases/
+│   │   │       ├── phase-1-documentation-structure.md
+│   │   │       ├── phase-2-documentation-linting.md
+│   │   │       └── ... (6 phases total)
+│   │   ├── 2025-10-15-performance-optimization-pipeline/  # Folder-based
+│   │   │   ├── initiative.md
+│   │   │   ├── phases/
+│   │   │   └── artifacts/
+│   │   │       └── research-summary.md
+│   │   ├── 2025-10-17-windsurf-workflows-v2-optimization/  # Folder-based
+│   │   │   ├── initiative.md
+│   │   │   └── phases/
+│   │   └── 2025-10-18-workflow-architecture/  # Folder-based
 │   │       ├── initiative.md
 │   │       ├── phases/
 │   │       └── artifacts/
-│   │           └── workflow-audit.md  # Research artifact
+│   │           └── workflow-audit.md
 │   └── completed/                 # Finished initiatives
 │       ├── 2025-10-16-convert-decisions-to-adrs.md
 │       ├── 2025-10-16-fix-security-unit-tests.md
