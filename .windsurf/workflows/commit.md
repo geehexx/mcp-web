@@ -1,6 +1,6 @@
 ---
 created: "2025-10-17"
-updated: "2025-10-18"
+updated: "2025-10-19"
 description: Git commit workflow with validation and review
 auto_execution_mode: 3
 category: Validation
@@ -45,7 +45,9 @@ git diff
 - Use: `style(scope): apply [tool] auto-fixes`
 - Prevents mixing auto-fixes with feature/fix commits
 
-### 2. Run Validation
+### 2. Run Validation (MANDATORY)
+
+**⚠️ CRITICAL: This step CANNOT be skipped. Normative core enforcement.**
 
 **Call `/validate` workflow:**
 
@@ -55,9 +57,13 @@ git diff
 
 **If validation fails:**
 
-- Fix blocking issues
+- **STOP**: Do not proceed to commit
+- Fix all blocking issues
 - Re-run `/validate`
-- Continue only when passed
+- Continue ONLY when validation passes
+
+**Architectural Guarantee:**
+This implements the ACF (Agent Constitution Framework) principle of "think then verify then act" - validation (VERIFY) must precede high-stakes operation (TOOL_CALL: git commit).
 
 **See:** `.windsurf/workflows/validate.md`
 
@@ -230,11 +236,14 @@ fi
 
 ### ❌ Don't: Skip Validation
 
+**CRITICAL VIOLATION:** Skipping validation breaks the Normative Core guarantee.
+
 **Bad:**
 
 ```bash
 git commit --no-verify -m "quick fix"
 # Bypasses pre-commit hooks and validation
+# VIOLATES: ACF normative verification requirement
 ```
 
 **Good:**
@@ -242,7 +251,11 @@ git commit --no-verify -m "quick fix"
 ```bash
 /commit
 # Runs full validation, ensures quality
+# ENFORCES: Normative core "verify before act" principle
 ```
+
+**Why this matters:**
+The Agent Constitution Framework requires that probabilistic reasoning (GENERATE) be validated (VERIFY) before high-stakes external actions (TOOL_CALL). Skipping validation removes this architectural safety guarantee.
 
 ### ❌ Don't: Mix Unrelated Changes
 

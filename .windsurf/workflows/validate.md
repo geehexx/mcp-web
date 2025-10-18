@@ -1,7 +1,7 @@
 ---
 created: "2025-10-17"
 updated: "2025-10-19"
-description: Run linting, tests, security checks, cross-reference validation
+description: Run linting, tests, security checks, cross-reference validation, normative core enforcement
 auto_execution_mode: 3
 category: Validation
 complexity: 62
@@ -208,6 +208,27 @@ task docs:validate:links
 ---
 
 ## Stage 5: Security Checks
+
+**Validate against security rules:** `.windsurf/rules/04_security.md`
+
+### 5.0 Security Rules Checklist
+
+**Manual review for security-sensitive code:**
+
+- [ ] OWASP LLM Top 10 compliance (if LLM interactions)
+- [ ] Input validation on all external inputs
+- [ ] Output sanitization before display
+- [ ] No hardcoded credentials or API keys
+- [ ] Secrets loaded from environment variables
+- [ ] SQL injection prevention (parameterized queries)
+- [ ] Path traversal protection (validate file paths)
+- [ ] Command injection prevention (avoid shell=True)
+- [ ] Rate limiting on API endpoints
+- [ ] Defense-in-depth approach
+
+**See:** `.windsurf/rules/04_security.md` for complete security guidelines
+
+**Automated checks below validate subset of these rules:**
 
 ### 5.1 Bandit (Python Security Linter)
 

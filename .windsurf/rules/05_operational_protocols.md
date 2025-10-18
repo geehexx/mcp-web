@@ -1,10 +1,10 @@
 ---
 created: "2025-10-18"
-updated: "2025-10-18"
+updated: "2025-10-19"
 trigger: session_management
-description: Session end protocol, progress communication, and operational efficiency principles
+description: Session end protocol, normative core enforcement, progress communication, and operational efficiency
 category: operations
-tokens: 1100
+tokens: 1400
 applyTo:
   - all
   - session_management
@@ -133,16 +133,69 @@ Continuing with [next task]...
 
 ---
 
-## 3. Operational Efficiency Principles
+## 3. Normative Core Enforcement
 
-### 3.1 Core Efficiency Principles
+### 3.1 Agent Constitution Framework (ACF) Compliance
+
+**Principle:** "Think then Verify then Act" - All high-stakes operations must be validated.
+
+**Architecture:**
+Our system implements the five-core ACF model:
+
+1. **Cognitive Core** (The Mind): Task planning, code generation, reasoning
+2. **Memory Core** (The Context): Context loading, summarization, filtering
+3. **Execution Core** (The World): File operations, git commands, tool calls
+4. **Normative Core** (The Rules): Validation, security checks, quality gates
+5. **Metacognitive Core** (The Self): Meta-analysis, progress evaluation
+
+**Normative Validation Pattern:**
+
+```text
+Cognitive (GENERATE) → Normative (VERIFY) → Execution (TOOL_CALL)
+
+Example:
+Task Planning → Validate Quality → Commit Code
+Code Generation → Run Tests → Deploy
+Architecture Decision → Review ADR → Implement
+```
+
+### 3.2 Mandatory Validation Checkpoints
+
+**High-stakes operations requiring validation:**
+
+| Operation | Validation Required | Enforced By |
+|-----------|--------------------|--------------|
+| Committing code | `/validate` workflow | `/commit` workflow Stage 2 |
+| Archiving initiative | Completion verification | `/archive-initiative` workflow |
+| Creating ADR | Architectural review | `/new-adr` workflow |
+| Deploying changes | Full test suite | Deployment workflow |
+| Releasing version | All quality gates | Release workflow |
+
+**Enforcement mechanism:**
+
+- Validation is MANDATORY, not optional
+- Workflows architecturally enforce validation before high-stakes actions
+- Bypassing validation is documented as critical violation
+- Pre-commit hooks provide additional enforcement
+
+**See:**
+
+- `/commit` workflow Stage 2 (mandatory validation)
+- `/validate` workflow (comprehensive validation)
+- `04_security.md` (security validation integration)
+
+---
+
+## 4. Operational Efficiency Principles
+
+### 4.1 Core Efficiency Principles
 
 1. **Batch Operations:** Always batch file reads when loading 3+ files (3-10x faster than sequential)
 2. **Absolute Paths:** MCP tools (`mcp0_*`) require absolute paths; standard tools accept relative paths
 3. **Context Loading Strategy:** Batch read essential context at session start, related files before implementation
 4. **Performance First:** Optimize for minimal tool calls and network round-trips
 
-### 3.2 Detailed Implementation
+### 4.2 Detailed Implementation
 
 **For detailed implementation examples and patterns, see:**
 
@@ -152,7 +205,7 @@ Continuing with [next task]...
 - Section 1.6 File Operations - MCP vs standard tool selection
 - Section 1.7 Git Operations - MCP git tool patterns
 
-### 3.3 Performance Targets
+### 4.3 Performance Targets
 
 | Operation | Target Time | Notes |
 |-----------|-------------|-------|
@@ -164,7 +217,7 @@ Continuing with [next task]...
 
 ---
 
-## 4. Task System Usage
+## 5. Task System Usage
 
 **See:** [00_agent_directives.md](./00_agent_directives.md) Section 1.11 for complete task system documentation.
 

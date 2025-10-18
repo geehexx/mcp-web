@@ -1,6 +1,6 @@
 ---
 created: "2025-10-15"
-updated: "2025-10-18"
+updated: "2025-10-19"
 trigger: model_decision
 description: Apply when dealing with security-sensitive code including API calls, user input, LLM interactions, file operations, or authentication
 globs: ["**/*.py", "**/*.ini", "**/*.yml", "**/*.yaml"]
@@ -399,3 +399,25 @@ For any code that:
 - ✅ **Accesses files** → Prevent path traversal
 - ✅ **Executes queries** → Use parameterized statements
 - ✅ **Handles errors** → Never expose stack traces to users
+
+---
+
+## Validation Integration
+
+These security rules are enforced during the validation workflow:
+
+**Automated validation:** `/validate` workflow Stage 5 (Security Checks)
+- Bandit: Scans for common security issues
+- Semgrep: Pattern-based security analysis (OWASP LLM checks)
+- Safety: Dependency vulnerability scanning
+
+**Manual validation:** Security Rules Checklist (Stage 5.0)
+- OWASP LLM Top 10 compliance review
+- Input/output validation verification
+- Credential and secrets audit
+- Defense-in-depth verification
+
+**See:** `.windsurf/workflows/validate.md` Stage 5 for complete validation process
+
+**Normative Core Principle:**
+Security validation (VERIFY) must occur before committing code (TOOL_CALL). This implements the Agent Constitution Framework's "think then verify then act" pattern, ensuring security is architecturally enforced, not just recommended.
