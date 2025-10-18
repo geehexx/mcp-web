@@ -1,0 +1,417 @@
+# Initiative: Workflow Automation Enhancement
+
+**Status:** Proposed
+**Created:** 2025-10-18
+**Owner:** @ai-agent
+**Priority:** High
+**Estimated Duration:** 4-5 weeks (20-25 hours)
+**Target Completion:** 2025-11-22
+
+---
+
+## Objective
+
+Reduce AI agent token expenditure by 30-50% through automation of repetitive, low-intelligence workflow tasks such as template scaffolding,
+file operations, frontmatter management, and structured data extraction. Create reusable Python scripts and Taskfile commands that both AI
+agents and human developers can invoke.
+
+## Success Criteria
+
+- [ ] Template scaffolding system implemented for initiatives, ADRs, and session summaries
+- [ ] File operation helper scripts created (archive, move, update indices)
+- [ ] Frontmatter validation and generation tooling in place
+- [ ] Session summary consolidation automated (JSON extraction + merging)
+- [ ] Taskfile commands integrated for all automation scripts
+- [ ] Documentation created for both AI and human usage
+- [ ] Token reduction measured: 30-50% decrease in workflow overhead
+- [ ] All scripts have comprehensive tests (≥90% coverage)
+
+## Motivation
+
+**Problem:**
+
+Current workflows require AI agents to:
+
+- Manually construct complex file structures (initiatives with phases/artifacts, ADRs with standard sections)
+- Perform repetitive file operations (move files, update READMEs, create directories)
+- Generate YAML frontmatter with correct schema for every document
+- Extract and consolidate session summaries using LLM-heavy token-intensive processes
+- Execute standardized git operations repeatedly
+
+This wastes tokens on tasks that require minimal intelligence and maximal precision.
+
+**Impact:**
+
+- **Token waste:** Estimated 2,000-5,000 tokens per workflow invocation on template generation
+- **Error-prone:** Manual file operations and frontmatter generation prone to typos, missing fields
+- **Slow:** AI generates templates line-by-line instead of instant scaffolding
+- **Inconsistent:** Templates vary between invocations despite documented standards
+
+**Value:**
+
+- **30-50% token reduction:** Offload mechanical tasks to scripts
+- **100% consistency:** Templates always match standards
+- **10x faster:** Instant scaffolding vs line-by-line generation
+- **Developer-friendly:** Scripts usable by humans, not just AI
+- **Scalable:** Easy to add new template types
+
+## Scope
+
+### In Scope
+
+#### Phase 1: Template Scaffolding System
+
+- Python-based template engine using Jinja2
+- Templates for: initiatives, ADRs, session summaries, workflows, rules
+- Support for folder-based initiatives (per PROPOSAL-folder-based-structure.md)
+- Interactive prompts for required fields
+- Taskfile integration (`task scaffold:initiative`, etc.)
+
+#### Phase 2: File Operation Helpers
+
+- Archive initiative script (move + update references + add archived notice)
+- Move file with reference update script
+- Update index/README automation
+- Directory creation with structure validation
+
+#### Phase 3: Frontmatter Management
+
+- Frontmatter validator (check required fields, enum values, dates)
+- Frontmatter generator from templates
+- Frontmatter updater (merge new fields into existing)
+- Pre-commit hook integration
+
+#### Phase 4: Session Summary Automation
+
+- YAML extraction script (converts summary markdown → structured YAML)
+- Summary consolidation script (merges multiple YAML extractions)
+- Template-based summary generation from YAML
+- Validation against session summary schema
+
+#### Phase 5: Documentation & Integration
+
+- User guide for each script (`docs/guides/AUTOMATION_TOOLS.md`)
+- Update workflows to use new scripts (replace manual steps)
+- Create `/scaffold` workflow for quick template generation
+- Integration tests for all scripts
+
+### Out of Scope
+
+- Complex AI decision-making (remains in agent workflows)
+- Code generation or refactoring automation
+- External API integrations
+- Full cookiecutter adoption (keeping it simple with custom scripts)
+- GUI or web interface (CLI only)
+- Cross-repository tooling
+
+## Research Summary
+
+### Key Findings
+
+**Template Scaffolding Tools:**
+
+- **Cookiecutter:** Python-based, Jinja2 templates, industry standard for project scaffolding
+- **Plop:** JavaScript micro-generator, excellent for component-based generation
+- **Hygen:** Fast, customizable, language-agnostic
+- **Custom Jinja2:** Simpler for our use case, zero external dependencies beyond Jinja2
+
+**Decision:** Use **custom Python scripts with Jinja2** for:
+
+- Full control over template logic
+- Easy integration with existing Python tooling
+- No learning curve for cookiecutter's specific patterns
+- Simpler for single-repo use case
+
+**Best Practices (from research):**
+
+- Store templates in `scripts/templates/` directory
+- Use YAML for template configuration (matches frontmatter)
+- Provide both interactive and non-interactive modes (for CI/human use)
+- Validate generated files immediately after scaffolding
+- Support dry-run mode for testing
+
+### Technology Stack
+
+**Core Tools:**
+
+- **Jinja2** (already installed): Template rendering
+- **pyyaml** (already installed): Frontmatter parsing
+- **python-frontmatter** (new): Markdown frontmatter manipulation
+- **click** (already via uv): CLI argument parsing
+- **Taskfile**: Command orchestration
+
+**No additional heavy dependencies required.**
+
+### YAML vs JSON for Data Extraction (October 2025 Research)
+
+**Finding:** YAML is **30% more token-efficient** than JSON for LLM-generated structured output.
+
+**Evidence:**
+
+- Microsoft Data Science team research (Oct 2025): YAML required 260 tokens vs 370 for JSON (30% reduction)
+- LLaMA tokenizer analysis: 98 tokens for YAML vs 149 for JSON (34% reduction)
+- Better human readability with no special characters overhead
+
+**Decision:** Use YAML for session summary extraction (Phase 4)
+
+- **Benefits:** 30% token savings, better readability, pyyaml already installed
+- **Application:** Session summary consolidation workflow
+- **Sources:**
+  - https://mattrickard.com/a-token-efficient-language-for-llms
+  - https://medium.com/data-science-at-microsoft/token-efficiency-with-structured-output-from-language-models-be2e51d3d9d5
+
+### Token Cost Analysis
+
+**Current Token Costs (Estimated):**
+
+| Workflow Operation | Current Cost | With Automation | Savings |
+|--------------------|--------------|-----------------|---------|
+| Create initiative (flat file) | ~1,500 tokens | ~50 tokens (invoke script) | 97% |
+| Create initiative (folder-based) | ~3,000 tokens | ~100 tokens | 97% |
+| Create ADR | ~1,200 tokens | ~50 tokens | 96% |
+| Create session summary | ~2,500 tokens | ~100 tokens | 96% |
+| Archive initiative | ~800 tokens | ~30 tokens | 96% |
+| Consolidate summaries | ~5,000 tokens | ~350 tokens | 93% |
+| Generate frontmatter | ~300 tokens | ~10 tokens | 97% |
+| **Total per session** | **~14,000 tokens** | **~690 tokens** | **95%** |
+
+**Annual Savings (assuming 100 workflow invocations):**
+
+- **1.4M tokens → 69K tokens** (95% reduction in mechanical overhead)
+- More tokens available for actual problem-solving
+
+**Research Source:** Microsoft Data Science team (Oct 2025) demonstrated YAML uses 30% fewer tokens than JSON for structured LLM output
+
+## Tasks
+
+### Phase 1: Template Scaffolding System (6 hours)
+
+- [ ] Create `scripts/templates/` directory structure
+- [ ] Create template files:
+  - [ ] `initiative-flat.md.j2` (flat file initiative)
+  - [ ] `initiative-folder/` (folder-based structure with phases/artifacts)
+  - [ ] `adr.md.j2` (ADR template)
+  - [ ] `session-summary.md.j2` (session summary with frontmatter)
+  - [ ] `workflow.md.j2` (workflow with frontmatter)
+- [ ] Create `scripts/scaffold.py` (main scaffolding CLI)
+  - [ ] Interactive mode (prompts for fields)
+  - [ ] Non-interactive mode (accepts JSON/YAML config)
+  - [ ] Dry-run mode for testing
+  - [ ] Validation after generation
+- [ ] Add Taskfile commands:
+  - [ ] `task scaffold:initiative` (prompts: flat vs folder)
+  - [ ] `task scaffold:adr`
+  - [ ] `task scaffold:summary`
+  - [ ] `task scaffold:workflow`
+- [ ] Write tests for `scaffold.py` (unit + integration)
+
+**Exit Criteria:**
+
+- All templates render correctly with test data
+- CLI accepts both interactive and config file modes
+- Taskfile commands work end-to-end
+- Tests pass with ≥90% coverage
+
+### Phase 2: File Operation Helpers (4 hours)
+
+- [ ] Create `scripts/file_ops.py` module
+- [ ] Implement `archive_initiative()`:
+  - [ ] Add ARCHIVED notice to file
+  - [ ] Move to `docs/initiatives/completed/`
+  - [ ] Update cross-references in other files
+  - [ ] Update `docs/initiatives/README.md` index
+- [ ] Implement `move_file_with_refs()`:
+  - [ ] Move file to new location
+  - [ ] Find all references (grep search)
+  - [ ] Update relative paths in referring files
+  - [ ] Validate no broken links remain
+- [ ] Implement `update_index()`:
+  - [ ] Scan directory for new/moved files
+  - [ ] Generate alphabetical index
+  - [ ] Update README with new entries
+- [ ] Add Taskfile commands:
+  - [ ] `task archive:initiative <name>`
+  - [ ] `task move:file <src> <dst>`
+  - [ ] `task update:index <dir>`
+- [ ] Write tests for all file operations
+
+**Exit Criteria:**
+
+- All file operations handle edge cases (missing dirs, broken links)
+- Tests verify reference updates work correctly
+- Dry-run mode available for safety
+- Tests pass with ≥90% coverage
+
+### Phase 3: Frontmatter Management (3 hours)
+
+- [ ] Create `scripts/frontmatter.py` module
+- [ ] Implement `validate_frontmatter()`:
+  - [ ] Check required fields by document type
+  - [ ] Validate enum values (status, type, audience, etc.)
+  - [ ] Validate date formats (YYYY-MM-DD)
+  - [ ] Check related paths exist
+- [ ] Implement `generate_frontmatter()`:
+  - [ ] Accept document type + fields
+  - [ ] Generate YAML with correct schema
+  - [ ] Include validation before return
+- [ ] Implement `update_frontmatter()`:
+  - [ ] Preserve existing fields
+  - [ ] Merge new fields
+  - [ ] Sort fields by canonical order
+- [ ] Add Taskfile commands:
+  - [ ] `task validate:frontmatter` (all docs)
+  - [ ] `task validate:frontmatter:file <path>`
+  - [ ] `task generate:frontmatter <type>`
+- [ ] Integrate with pre-commit hook
+- [ ] Write tests for frontmatter operations
+
+**Exit Criteria:**
+
+- Validator catches all documented violations
+- Generator produces valid frontmatter for all types
+- Pre-commit hook blocks invalid frontmatter
+- Tests pass with ≥90% coverage
+
+### Phase 4: Session Summary Automation (5 hours)
+
+- [ ] Create `scripts/summarize.py` module
+- [ ] Implement `extract_to_yaml()`:
+  - [ ] Parse session summary markdown
+  - [ ] Extract using structured patterns (section headers)
+  - [ ] Output to YAML format (from consolidate-summaries.md)
+  - [ ] Validate against schema
+- [ ] Implement `consolidate_summaries()`:
+  - [ ] Load multiple YAML extractions
+  - [ ] Apply consolidation rules (from workflow)
+  - [ ] Merge accomplishments (deduplicate)
+  - [ ] Merge decisions (preserve distinct)
+  - [ ] Merge learnings (consolidate by category)
+  - [ ] Generate consolidated summary from template
+- [ ] Implement `validate_summary()`:
+  - [ ] Check required sections
+  - [ ] Validate length constraints
+  - [ ] Check frontmatter completeness
+- [ ] Add Taskfile commands:
+  - [ ] `task summary:extract <file> -o <yaml>`
+  - [ ] `task summary:consolidate <date>`
+  - [ ] `task summary:validate <file>`
+- [ ] Write tests for summary operations
+
+**Exit Criteria:**
+
+- Extraction produces valid YAML matching schema
+- YAML output is 25-30% more token-efficient than JSON
+- Consolidation applies all documented rules
+- Validation catches formatting violations
+- Tests pass with ≥90% coverage
+
+### Phase 5: Documentation & Integration (4 hours)
+
+- [ ] Create `docs/guides/AUTOMATION_TOOLS.md`:
+  - [ ] Overview of all scripts
+  - [ ] Usage examples (AI agent + human developer)
+  - [ ] Taskfile command reference
+  - [ ] Troubleshooting guide
+  - [ ] Extension guide (adding new templates)
+- [ ] Update workflows to use scripts:
+  - [ ] `/archive-initiative` → call `task archive:initiative`
+  - [ ] `/new-adr` → call `task scaffold:adr`
+  - [ ] `/generate-plan` → use initiative scaffolding
+  - [ ] `/consolidate-summaries` → call `task summary:consolidate`
+- [ ] Create `/scaffold` workflow:
+  - [ ] Quick access to template generation
+  - [ ] Agent-friendly prompts
+  - [ ] Error handling and validation
+- [ ] Update ADR-0013 with automation details
+- [ ] Update DOCUMENTATION_STRUCTURE.md with script references
+- [ ] Create integration tests:
+  - [ ] End-to-end workflow tests
+  - [ ] Verify script invocation from workflows
+  - [ ] Validate generated files pass linting
+- [ ] Update PROJECT_SUMMARY.md with new capabilities
+
+**Exit Criteria:**
+
+- All documentation complete and linted
+- Workflows successfully invoke scripts
+- Integration tests pass
+- Both AI and human can use tools effectively
+
+### Phase 6: Validation & Measurement (2 hours)
+
+- [ ] Run full workflow suite with new automation
+- [ ] Measure token reduction (compare before/after)
+- [ ] Profile script performance (ensure <1s for most ops)
+- [ ] Gather feedback on usability
+- [ ] Create ADR documenting automation architecture
+- [ ] Archive this initiative
+
+**Exit Criteria:**
+
+- Token reduction meets 30-50% target
+- All scripts perform <1s (except consolidation <5s)
+- Zero linting failures
+- All success criteria met
+
+## Dependencies
+
+**Internal:**
+
+- PROPOSAL-folder-based-structure.md must be resolved (flat vs folder)
+- ADR-0013 (Initiative Documentation Standards) - informs templates
+- docs/DOCUMENTATION_STRUCTURE.md - defines frontmatter schema
+- Existing uv/Taskfile infrastructure
+
+**External:**
+
+- None (all dependencies already installed or Python stdlib)
+
+**Blockers:**
+
+- None identified
+
+## Risks and Mitigation
+
+| Risk | Impact | Likelihood | Mitigation |
+|------|--------|------------|------------|
+| Scripts too complex for users | Medium | Low | Provide simple Taskfile commands, hide complexity |
+| Breaking existing workflows | High | Medium | Phased rollout, keep old manual methods working initially |
+| Template schema drift | Medium | Medium | Add frontmatter validation to CI, update templates in lockstep |
+| Performance issues (large files) | Low | Low | Profile scripts, optimize file operations, use streaming |
+| Insufficient test coverage | Medium | Low | Enforce ≥90% coverage, integration tests required |
+| Folder-based proposal rejected | High | Medium | Build templates for both flat and folder, make switchable |
+
+## Timeline
+
+- **Week 1 (6h):** Phase 1 - Template scaffolding system
+- **Week 2 (4h):** Phase 2 - File operation helpers
+- **Week 3 (3h):** Phase 3 - Frontmatter management
+- **Week 4 (5h):** Phase 4 - Session summary automation (YAML-based)
+- **Week 5 (4h):** Phase 5 - Documentation & integration
+- **Week 5 (2h):** Phase 6 - Validation & measurement
+
+**Total:** 24 hours across 5 weeks (calendar: ~6 weeks with normal pace)
+
+## Related Documentation
+
+- [ADR-0013: Initiative Documentation Standards](../adr/0013-initiative-documentation-standards.md)
+- [PROPOSAL: Folder-Based Initiative Structure](PROPOSAL-folder-based-structure.md)
+- [docs/DOCUMENTATION_STRUCTURE.md](../DOCUMENTATION_STRUCTURE.md)
+- [.windsurf/workflows/archive-initiative.md](../../.windsurf/workflows/archive-initiative.md)
+- [.windsurf/workflows/consolidate-summaries.md](../../.windsurf/workflows/consolidate-summaries.md)
+- [.windsurf/workflows/new-adr.md](../../.windsurf/workflows/new-adr.md)
+- [scripts/benchmark_pipeline.py](../../scripts/benchmark_pipeline.py) (existing automation example)
+
+## Updates
+
+### 2025-10-18 (Creation)
+
+- Initiative created after comprehensive research and workflow analysis
+- Identified 94% token reduction potential for mechanical tasks
+- Scoped to 24 hours across 6 phases
+- Ready for approval and Phase 1 implementation
+
+---
+
+**Last Updated:** 2025-10-18
+**Status:** Proposed
