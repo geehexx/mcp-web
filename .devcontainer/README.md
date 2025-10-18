@@ -53,6 +53,7 @@ Automated setup script that runs after container creation:
 ### Compatibility
 
 This devcontainer works with:
+
 - ✅ **VS Code** - Full support with all extensions
 - ✅ **Windsurf IDE** - Full support (compatible extension set)
 - ✅ **GitHub Codespaces** - Cloud development ready
@@ -124,6 +125,7 @@ Edit `.devcontainer/devcontainer.json`:
 - **Cursor/VSCodium**: Use Open VSX marketplace like Windsurf
 
 The current extension list includes only widely-available extensions that work across all platforms:
+
 - `ms-python.python` - Python language support
 - `charliermarsh.ruff` - Linting and formatting
 - `redhat.vscode-yaml` - YAML support
