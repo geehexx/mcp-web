@@ -1,5 +1,8 @@
 # Initiative: Quality Foundation & Testing Excellence
 
+> **⚠️ ARCHIVED:** This initiative was completed on 2025-10-18.
+> See [ADR-0020 (Markdown Quality)](../../adr/0020-comprehensive-markdown-quality-automation.md) for implemented quality standards and automation.
+
 **Status:** ✅ Completed
 **Created:** 2025-10-15
 **Owner:** Core Team
