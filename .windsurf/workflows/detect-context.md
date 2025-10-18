@@ -65,7 +65,7 @@ git diff --name-only
 
 ### 2.1 Search for Continuation Signals
 
-**Priority 1: Session Summary Signals**
+### Priority 1: Session Summary Signals
 
 ```bash
 # Read most recent summary
@@ -77,7 +77,7 @@ recent_summary=$(ls -t docs/archive/session-summaries/*.md | head -1)
 # - "Key Learnings" → context for decisions
 ```
 
-**Priority 2: Active Initiative Signals**
+### Priority 2: Active Initiative Signals
 
 ```python
 # Parse initiative files for:
@@ -92,7 +92,7 @@ for initiative in active_initiatives:
     next_steps = extract_section("Next Steps", initiative)
 ```
 
-**Priority 3: Git Signals**
+### Priority 3: Git Signals
 
 ```bash
 # Unstaged changes → incomplete work
@@ -105,7 +105,7 @@ git diff --staged --name-only
 git log --pretty=format:"%s" -5 | grep -E "^(feat|fix|test|docs):"
 ```
 
-**Priority 4: Test Signals**
+### Priority 4: Test Signals
 
 ```bash
 # Check for test failures
@@ -116,7 +116,7 @@ grep -r "pytest.mark.skip" tests/
 grep -r "@unittest.skip" tests/
 ```
 
-**Priority 5: Documentation TODOs**
+### Priority 5: Documentation Signals
 
 ```bash
 # Efficient grep for markers
