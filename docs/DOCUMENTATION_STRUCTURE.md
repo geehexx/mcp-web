@@ -179,6 +179,7 @@ Progress update...
 | **Location** | `docs/guides/` | `.windsurf/workflows/` |
 
 **Example:**
+
 - ❓ "What test commands can I run?" → **Read** `docs/guides/testing-reference.md`
 - ✅ "Run validation before commit" → **Call** `/validate` workflow
 
