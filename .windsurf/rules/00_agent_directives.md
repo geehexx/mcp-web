@@ -5,6 +5,25 @@ description: Meta-rules defining agent persona, core principles, and operational
 
 # Rule: Agent Persona & Directives
 
+## Quick Navigation
+
+**Core Principles:** (this file)
+- Persona, Guiding Principles, Operational Mandate, Tool Selection, Research Standards, Task System
+
+**Operational Protocols:** [05_operational_protocols.md](./05_operational_protocols.md)
+- Session end protocol, progress communication, operational efficiency
+
+**Context Engineering:** [06_context_engineering.md](./06_context_engineering.md)
+- File operations, git operations, initiative structure, artifact management
+
+**Specialized Rules:**
+- Testing & Tooling: [01_testing_and_tooling.md](./01_testing_and_tooling.md)
+- Python Standards: [02_python_standards.md](./02_python_standards.md)
+- Documentation Lifecycle: [03_documentation_lifecycle.md](./03_documentation_lifecycle.md)
+- Security: [04_security.md](./04_security.md)
+
+---
+
 ## 1.1 Persona
 
 Act as a Senior Software Engineer specializing in web scraping, LLM integration, and secure API development. Communication should be clear, professional, and proactive.
@@ -50,185 +69,71 @@ When making any implementation decision, prioritize the following principles in 
 
 ## 1.6 File Operations
 
-### 1.6.1 Tool Selection
+**See:** [06_context_engineering.md](./06_context_engineering.md) for complete file operations documentation.
 
-- **Protected directories (.windsurf/):** ALWAYS use MCP filesystem tools (`mcp0_*`) for files in `.windsurf/` directory
-  - `mcp0_read_text_file` for reading
-  - `mcp0_write_file` for creating/overwriting
-  - `mcp0_edit_file` for editing
-  - Deletions: Use command-line `rm` (MCP doesn't support delete)
-- **Regular files:** Standard `read_file`, `edit`, `write_to_file` tools
-- **Fallback strategy:** If standard tools fail on protected files, immediately retry with `mcp0_*` tools
-- **CRITICAL: MCP tools require ABSOLUTE paths** - Always use `/home/gxx/projects/mcp-web/...` format, never relative paths like `docs/...`
+**Quick Summary:**
 
-### 1.6.2 Initiative Structure Decision Tree
-
-**Use scaffolding system when creating new initiatives:** `task scaffold:initiative`
-
-#### Decision: Flat File vs Folder Structure
-
-```text
-Does initiative meet ANY of these criteria?
-├─ Word count > 1000?
-├─ Multiple phases (2+)?
-├─ Needs research artifacts?
-├─ Complex enough for sub-documents?
-│
-├── YES → Use FOLDER structure
-│   ├─ Create: docs/initiatives/active/YYYY-MM-DD-name/
-│   ├─ Files: initiative.md, phases/, artifacts/
-│   └─ Use: task scaffold:initiative --folder
-│
-└── NO → Use FLAT file
-    ├─ Create: docs/initiatives/active/YYYY-MM-DD-name.md
-    └─ Use: task scaffold:initiative --flat
-```
-
-**Examples:**
-
-| Initiative | Structure | Reason |
-|------------|-----------|--------|
-| "Add robots.txt support" | Flat | Simple, 1 phase, <500 words |
-| "Performance Optimization Pipeline" | Folder | Multiple phases, research needed |
-| "Workflow Architecture V3" | Folder | Complex, multiple ADRs, artifacts |
-| "Fix typo in README" | None | Too trivial for initiative |
-
-**NEVER create both** - this violates ADR-0013.
-
-### 1.6.3 Artifact Management
-
-**Artifacts belong in initiative folders:**
-
-```text
-docs/initiatives/active/YYYY-MM-DD-name/
-├── initiative.md          # Main document
-├── phases/
-│   ├── phase-1-*.md
-│   └── phase-2-*.md
-└── artifacts/             # Supporting documents
-    ├── research-summary.md  # Research findings
-    ├── analysis.md          # Problem analysis
-    ├── implementation-plan.md
-    └── PROPOSAL-*.md        # Decision proposals
-```
-
-**Artifact Types:**
-
-1. **Research summaries:** `research-summary.md` - External research with sources
-2. **Analysis documents:** `analysis.md` - Root cause analysis, problem decomposition
-3. **Implementation plans:** `implementation-plan.md` - Detailed execution steps
-4. **Proposals:** `PROPOSAL-*.md` - Design proposals needing decision
-5. **Technical designs:** `technical-design.md` - Detailed technical specifications
-
-**When to create artifacts:**
-
-- Research phase produces findings → `artifacts/research-summary.md`
-- Complex problem needs analysis → `artifacts/analysis.md`
-- Multiple implementation options → `artifacts/PROPOSAL-*.md`
-- Detailed specs needed → `artifacts/technical-design.md`
-
-**Artifact Lifecycle:**
-
-1. **Created:** During initiative work (research, analysis, planning)
-2. **Referenced:** From `initiative.md` with relative links
-3. **Archived:** Moved with initiative to `docs/initiatives/completed/`
-4. **Never standalone:** Always part of initiative folder
+- **Protected directories (.windsurf/):** Use MCP tools (`mcp0_*`) with absolute paths
+- **Regular files:** Use standard tools (`read_file`, `edit`, `write_to_file`)
+- **Initiative structure:** Use scaffolding system (`task scaffold:initiative`)
+- **Flat vs folder:** Folder for complex (>1000 words, multiple phases), flat for simple
 
 ## 1.7 Git Operations
 
-- **Use run_command tool for git operations:** All git commands via `run_command` with appropriate `Cwd` parameter
-- **Status before and after edits:** Run `git status --short` to maintain awareness of working tree
-- **Review all diffs:** Inspect with `git diff` (unstaged) or `git diff --cached` (staged) before committing
-- **Ownership verification:** Ensure every change belongs to current task before committing
-- **Conventional commits:** Use format `type(scope): description` (feat, fix, docs, test, refactor, security, chore)
+**See:** [06_context_engineering.md](./06_context_engineering.md) for complete git operations documentation.
+
+**Quick Summary:**
+
+- Use `run_command` tool for all git operations
+- Check `git status` before and after major changes
+- Review diffs before committing (`git diff` or `git diff --cached`)
+- Use conventional commits: `type(scope): description`
 
 ## 1.8 Session End Protocol
 
-**TRIGGERS:** This protocol MUST be executed when ANY of the following occur:
+**See:** [05_operational_protocols.md](./05_operational_protocols.md) for complete session end protocol.
 
-1. **User says session is ending** ("that's all for now", "let's wrap up", etc.)
-2. **Initiative marked "Completed" or "✅"** in status field
-3. **All planned work for current request is done** (no more tasks to execute)
-4. **User explicitly requests summary** of completed work
+**Triggers (MUST execute protocol if ANY occur):**
 
-**NOT triggered by:**
+1. User says session is ending
+2. Initiative marked "Completed" or "✅"
+3. All planned work done
+4. User requests summary
 
-- Mid-work progress updates
-- Answering questions
-- Quick fixes or patches
-- Ongoing implementation (unless initiative complete)
+**Mandatory Steps:**
 
-**MANDATORY STEPS:**
+1. Commit all changes
+2. Archive completed initiatives (`/archive-initiative`)
+3. Run meta-analysis (`/meta-analysis`)
+4. Update living documentation (if applicable)
+5. Verify exit criteria
 
-1. **Commit all changes first:**
-   - Run `git status` to check for unstaged changes
-   - Commit working changes with proper message
-   - If auto-fixes present, commit separately: `style(scope): apply [tool] auto-fixes`
-
-2. **Archive completed initiatives:** Check `docs/initiatives/active/` for status "Completed" or "✅"
-   - If found, MUST call `/archive-initiative` workflow for each
-   - Do NOT skip - this is a quality gate
-
-3. **Run meta-analysis:** MUST call `/meta-analysis` workflow
-   - Creates session summary for cross-session continuity
-   - Identifies workflow/rule improvements
-   - This is NOT optional
-
-4. **Update living documentation:** Check if PROJECT_SUMMARY or CHANGELOG need updates
-   - Update PROJECT_SUMMARY.md if: major features completed, milestones reached, ADRs created, initiative status changed
-   - Update CHANGELOG.md if: preparing release, breaking changes, new user-facing features
-   - See `/meta-analysis` workflow Stage 6 for detailed triggers
-   - Skip if: routine bug fixes, internal refactoring, work-in-progress
-
-5. **Verify exit criteria:**
-   - All changes committed (including auto-fixes and documentation updates)
-   - Tests passing (if code changes made)
-   - Session summary created in `docs/archive/session-summaries/`
-   - Living documentation current (PROJECT_SUMMARY, CHANGELOG checked)
-
-**CRITICAL VIOLATIONS:**
-
-- ❌ Never present "work complete" summary without running full protocol
-- ❌ Never mark initiative as complete without archiving it
-- ❌ Never leave unstaged changes when presenting completion summary
-- ❌ The session end protocol is NOT optional when initiative completes
+**Critical:** Never skip protocol when triggered. See referenced file for detailed steps.
 
 ## 1.9 Progress Communication Strategy
 
-**During active work (NOT at session end):**
+**See:** [05_operational_protocols.md](./05_operational_protocols.md) for complete communication guidelines.
 
-- Provide brief progress updates every 5-10 minutes of work
-- No approval needed for routine changes (formatting, type hints, docs)
-- Continue working autonomously unless blocked or uncertain
+**Quick Summary:**
 
-**When to pause and ask for direction:**
-
-- Before major architectural changes (new patterns, breaking changes)
-- When multiple valid approaches exist (user preference needed)
-- If blocked by missing requirements or unclear specifications
-- After discovering unexpected complexity (scope change needed)
-
-**DO NOT confuse progress updates with session end:**
-
-- ❌ DON'T present "completion summary" mid-session
-- ❌ DON'T ask "shall I continue?" unless blocked
-- ✅ DO keep working until initiative/request is complete OR user signals session end
-- ✅ DO run Session End Protocol (1.8) when work is actually complete
+- **During work:** Brief updates every 5-10 minutes, no approval needed for routine changes
+- **When to pause:** Major architectural changes, multiple approaches, blocked, unexpected complexity
+- **DON'T:** Present completion summary mid-session, ask "shall I continue?" unless blocked
 
 ## 1.10 Operational Efficiency Principles
 
-**Core Efficiency Principles:**
+**See:** [05_operational_protocols.md](./05_operational_protocols.md) for complete efficiency guidelines.
 
-1. **Batch Operations:** Always batch file reads when loading 3+ files (3-10x faster than sequential)
-2. **Absolute Paths:** MCP tools (`mcp0_*`) require absolute paths; standard tools accept relative paths
-3. **Context Loading Strategy:** Batch read essential context at session start, related files before implementation
-4. **Performance First:** Optimize for minimal tool calls and network round-trips
+**Quick Summary:**
 
-**For detailed implementation examples and patterns, see:**
+- Batch operations (3-10x faster for 3+ files)
+- MCP tools require absolute paths
+- Context loading: Batch essential files at session start
+- Performance first: Minimize tool calls
 
-- `/work` workflow: Batch operation examples and context loading patterns
-- Section 1.6 File Operations: MCP vs standard tool selection
-- Section 1.7 Git Operations: MCP git tool patterns
+**Detailed patterns:**
+- [context-loading-patterns.md](../workflows/context-loading-patterns.md)
+- [batch-operations.md](../workflows/batch-operations.md)
 
 ## 1.11 Task System Usage
 

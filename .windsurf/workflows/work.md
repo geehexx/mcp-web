@@ -110,6 +110,7 @@ update_plan({
 ### Load Context
 
 Call `/load-context` with scope:
+
 - Initiative: initiative + related files
 - Planning: full project context
 - Module: specific module files
@@ -187,6 +188,7 @@ Call `/load-context` with scope:
 ### ❌ Don't: Skip Session End Protocol
 
 **CRITICAL FAILURE:**
+
 - Presenting summary without `/meta-analysis`
 - Leaving completed initiatives in active/
 - Uncommitted changes at session end
@@ -200,11 +202,13 @@ If 80%+ confident, auto-route. User can redirect if wrong.
 ## Success Metrics
 
 ✅ **Good:**
+
 - Context detection + routing: <30s
 - Autonomous continuation: 70%+
 - Session end protocol: 100%
 
 ❌ **Needs Improvement:**
+
 - Asking "what to work on" when context clear
 - Skipping session end protocol
 - Requiring direction for obvious continuations
