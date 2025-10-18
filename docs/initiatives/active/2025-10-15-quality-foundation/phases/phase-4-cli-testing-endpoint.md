@@ -36,6 +36,7 @@ mcp-web test-summarize https://example.com [--query "search term"] [--output fil
 ```
 
 Features:
+
 - Fetch and summarize URLs
 - Optional query for focused summarization
 - Show streaming progress
@@ -49,6 +50,7 @@ mcp-web test-robots https://example.com
 ```
 
 Features:
+
 - Fetch and parse robots.txt
 - Check if URL is allowed
 - Display crawl-delay if specified

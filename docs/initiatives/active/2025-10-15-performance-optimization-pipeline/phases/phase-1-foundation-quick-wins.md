@@ -51,11 +51,13 @@ Establish profiling infrastructure and implement high-impact, low-risk optimizat
 ### Summarization Pipeline
 
 **Before optimizations:**
+
 - Average time: 8-12 seconds
 - Map phase: Sequential (bottleneck)
 - Prompt tokens: ~800-1000 per request
 
 **After Phase 1:**
+
 - Average time: 7-10 seconds (1.17x faster)
 - Map phase: Parallel with asyncio.gather
 - Prompt tokens: ~400-500 per request (50% reduction)
@@ -74,6 +76,7 @@ Parallel map (gather):     10.5s  (1.17x speedup)
 ## Quality Validation
 
 **Golden Test Results:**
+
 - 100% quality retention across all test cases
 - No degradation in summary coherence
 - No degradation in factual accuracy

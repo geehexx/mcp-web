@@ -81,6 +81,8 @@ If a decision changes, create a new ADR that supersedes the old one.
 | [0011](0011-enable-streaming-output.md) | Enable streaming output | Implemented | 2025-10-15 |
 | [0012](0012-monolithic-tool-design.md) | Monolithic tool design | Implemented | 2025-10-15 |
 | [0013](0013-initiative-documentation-standards.md) | Initiative documentation standards | Implemented | 2025-10-15 |
+| [0018](0018-workflow-architecture-v3.md) | Workflow architecture v3 - taxonomy and principles | Implemented | 2025-10-18 |
+| [0019](0019-initiative-folder-structure-and-naming.md) | Initiative folder structure and date-based naming | Implemented | 2025-10-18 |
 
 ### Superseded ADRs
 

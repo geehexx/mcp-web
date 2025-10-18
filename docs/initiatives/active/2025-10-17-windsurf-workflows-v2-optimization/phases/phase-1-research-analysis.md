@@ -19,6 +19,7 @@ Research AI documentation best practices and establish baseline metrics for opti
 **Source:** https://www.decodingai.com/p/context-engineering-2025s-1-skill
 
 **Key Findings:**
+
 - YAML 66% more efficient than JSON for LLM context
 - Prompt compression techniques can reduce tokens 40-60%
 - Lost-in-the-middle problem affects retrieval accuracy
@@ -30,6 +31,7 @@ Research AI documentation best practices and establish baseline metrics for opti
 **Source:** https://factory.ai/news/context-window-problem
 
 **Key Findings:**
+
 - Hierarchical memory patterns improve efficiency
 - Context prioritization strategies essential
 - Repository overviews enable better navigation
@@ -41,6 +43,7 @@ Research AI documentation best practices and establish baseline metrics for opti
 **Source:** https://github.com/semantic-release/semantic-release
 
 **Key Findings:**
+
 - Automated version management from commits
 - Conventional commit parsing
 - CHANGELOG generation
@@ -52,6 +55,7 @@ Research AI documentation best practices and establish baseline metrics for opti
 **Source:** https://martech.org/how-to-optimize-your-content-for-ai-search-and-agents/
 
 **Key Findings:**
+
 - YAML frontmatter for metadata
 - Semantic markup improves discoverability
 - Fast loading essential
@@ -63,12 +67,14 @@ Research AI documentation best practices and establish baseline metrics for opti
 ## Baseline Metrics Established
 
 **Token Analysis:**
+
 - Total: ~32,876 tokens across 19 files
 - Workflows: ~26,471 tokens (14 files)
 - Rules: ~6,405 tokens (5 files)
 - Average: ~1,730 tokens per file
 
 **Waste Identified:**
+
 - Repetitive dates: ~111 tokens (0.3%)
 - Verbose metadata: ~75 tokens (0.2%)
 - Tool name repetition: ~176 tokens (0.5%)
