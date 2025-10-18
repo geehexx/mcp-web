@@ -38,8 +38,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documentation structure standards (ADR-0003)
 - Meta-analysis workflow overhaul with LLM-agnostic template, validation checklist, and length constraints
 - Session End Protocol updates enforcing PROJECT_SUMMARY / CHANGELOG maintenance triggers
+- 9 new Windsurf workflows for improved AI agent orchestration:
+  - `/update-docs`: Intelligent PROJECT_SUMMARY and CHANGELOG updates
+  - `/bump-version`: Auto-version bumping from conventional commits
+  - `/validate`: Comprehensive quality gate (linting, tests, security)
+  - `/load-context`: Efficient batch context loading with MCP optimization
+  - `/detect-context`: Intelligent project state analysis
+  - `/extract-session`: Git history analysis and structured data extraction
+  - `/summarize-session`: LLM-agnostic session summary generation
+  - `/research`: Best practices discovery with mandatory web search
+  - `/generate-plan`: Structured plan generation with phases and risks
 
 ### Changed
+
+- Decomposed 3 major workflows into orchestrator pattern (52-83% size reduction per workflow):
+  - `/work`: Now calls focused sub-workflows for context detection and loading
+  - `/meta-analysis`: Orchestrator for extract-session and summarize-session
+  - `/plan`: Orchestrator for research and generate-plan
+- Consolidated `/commit` workflow to use standard git commands (removed deprecated mcp2_git_* references)
+- Consolidated `/run-tests` to focused quick reference (removed overlap with /validate)
 
 - Default chunking strategy now uses adaptive approach
 - LLM prompts optimized for reduced latency

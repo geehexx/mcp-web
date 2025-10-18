@@ -2,7 +2,7 @@
 
 **Version:** 0.1.0
 **Status:** Active Development
-**Last Updated:** 2025-10-17
+**Last Updated:** 2025-10-18
 **License:** MIT
 
 ---
@@ -83,6 +83,49 @@
 - Chunk-level caching and semantic deduplication
 - Concurrency tuning and rate limiting
 - Live performance validation
+
+#### 3. Windsurf Workflows V2 Optimization (20% Complete)
+
+**Status:** Phases 1-2 complete, Phase 3 in progress
+**Owner:** Core Team
+**Target:** 2025-10-25
+
+**Phase 1 Achievements (✅ Complete):**
+
+- 5 new sub-workflow primitives (update-docs, bump-version, validate, load-context, detect-context)
+- YAML frontmatter schema for all documentation types
+- Token baseline metrics established (32,876 tokens)
+- Versioning tool research (chose custom workflow over external tools)
+
+**Phase 2 Achievements (✅ Complete):**
+
+- Decomposed 3 major workflows into orchestrator pattern (work, meta-analysis, plan)
+- 4 new focused sub-workflows (extract-session, summarize-session, research, generate-plan)
+- Large workflows reduced 52-83% individually
+- 9 total new workflows created
+
+**Phase 3 In Progress:**
+
+- Tool reference fixes (mcp2_git_* → standard git commands)
+- Workflow consolidation (eliminated run-tests/validate overlap)
+- Related initiative created: Architecture Refactor (deeper restructuring needed)
+
+#### 4. Workflow Architecture Refactor (Planned)
+
+**Status:** Ready to start
+**Owner:** Core Team
+**Target:** 2025-10-25
+
+**Objective:** Eliminate semantic overlap and establish clear workflow taxonomy
+
+**Phases:**
+
+1. Analysis & Design (3-4h) - Audit workflows, design taxonomy, create ADR
+2. Tool Reference Fixes (2-3h) - Replace deprecated tools, standardize patterns
+3. Consolidation & Restructuring (3-4h) - Merge overlapping workflows, move reference docs
+4. Documentation & Validation (1-2h) - Update docs, create decision tree
+
+**Research Foundation:** Azure AI orchestration patterns (anti-patterns applied)
 
 ---
 
