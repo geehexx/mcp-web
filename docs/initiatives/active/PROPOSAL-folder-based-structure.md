@@ -17,7 +17,7 @@
 
 **Real-World Example:**
 
-```
+```text
 workflow-architecture-refactor (the initiative)
 ├── Created workflow-audit.md (the artifact)
 └── But audit was placed in initiatives/active/ and treated as initiative
@@ -85,7 +85,7 @@ docs/initiatives/
 
 **Decision Rule:**
 
-```
+```text
 IF initiative has:
    - Multiple phases (>1) OR
    - Supporting artifacts (research, analysis, diagrams) OR
@@ -112,14 +112,14 @@ ELSE use flat file
 
 **Folders:**
 
-```
+```bash
 YYYY-MM-DD-brief-name/    # Date-based
 YYYY-qN-brief-name/       # Quarter-based
 ```
 
 **Files:**
 
-```
+```bash
 initiative.md             # Main document (required in folders)
 phase-N-name.md          # Phase documents
 artifact-name.md         # Artifact documents
@@ -197,7 +197,7 @@ artifact-name.md         # Artifact documents
 
 ### Before (Flat Structure)
 
-```
+```text
 initiatives/active/
 ├── 2025-q4-quality-foundation.md     # 3,000 words, 5 phases
 ├── 2025-10-18-workflow-audit.md      # ❌ ARTIFACT, not initiative!
@@ -212,7 +212,7 @@ Problems:
 
 ### After (Hybrid Structure)
 
-```
+```text
 initiatives/active/
 ├── 2025-q4-quality-foundation/       # Folder (large, multi-phase)
 │   ├── initiative.md                 # 800 words (core plan)

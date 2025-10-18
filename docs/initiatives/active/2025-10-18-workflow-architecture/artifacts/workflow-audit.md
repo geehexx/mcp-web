@@ -169,7 +169,7 @@
 
 **When should I call which workflow?**
 
-```
+```text
 User request arrives
      |
      ├─> "Continue work" / no specific request
@@ -478,7 +478,7 @@ mv .windsurf/workflows/run-tests.md docs/guides/testing-reference.md
 
 ## Appendix A: Workflow Size Distribution
 
-```
+```text
 Small (< 500w):     3 workflows (archive-initiative, new-adr, run-tests)
 Medium (500-1000w): 6 workflows (commit, work, plan, meta-analysis, extract-session, research)
 Large (1000-1500w): 7 workflows (bump-version, validate, load-context, generate-plan, summarize-session, implement, detect-context)
@@ -493,7 +493,7 @@ X-Large (> 2000w):  2 workflows (consolidate-summaries, [none others])
 
 **Which workflows call which?**
 
-```
+```text
 /work
   ├─> /detect-context
   ├─> /load-context

@@ -64,7 +64,7 @@ Establish profiling infrastructure and implement high-impact, low-risk optimizat
 
 ### Speedup Analysis
 
-```
+```text
 Baseline (sequential):     12.3s
 Parallel map (gather):     10.5s  (1.17x speedup)
 + Prompt optimization:      8.9s  (1.38x speedup total)

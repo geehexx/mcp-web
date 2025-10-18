@@ -194,7 +194,7 @@ We adopt a **5-category workflow taxonomy** with clear boundaries and anti-patte
 
 **When to call which workflow:**
 
-```
+```text
 User request arrives
      |
      ├─> "Continue work" / no specific request
