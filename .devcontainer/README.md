@@ -7,12 +7,14 @@ This directory contains the configuration for VS Code Development Containers, pr
 ### `Dockerfile`
 
 Defines the container image based on Debian 12 with:
+
 - Python 3.10 (via uv package manager)
 - System dependencies for Playwright
 - Task runner for automation
 - Non-root `vscode` user for security
 
 **Key decisions:**
+
 - Base: `mcr.microsoft.com/devcontainers/base:debian-12` for flexibility
 - uv: Modern Python package manager (faster than pip)
 - Playwright deps: Pre-installed to avoid runtime issues
@@ -20,6 +22,7 @@ Defines the container image based on Debian 12 with:
 ### `devcontainer.json`
 
 VS Code configuration including:
+
 - Build arguments (Python version, base image)
 - Editor settings (Python, Ruff, Mypy)
 - Extensions (Python, Ruff, Mypy, Task, Git, Docker, etc.)
@@ -27,6 +30,7 @@ VS Code configuration including:
 - Post-create command hook
 
 **Key decisions:**
+
 - Python interpreter path: `/home/vscode/.local/share/uv/python`
 - Format on save with Ruff
 - pytest integration for testing
@@ -35,6 +39,7 @@ VS Code configuration including:
 ### `post-create.sh`
 
 Automated setup script that runs after container creation:
+
 1. Install project dependencies (`uv sync --all-extras`)
 2. Install Playwright browsers (`playwright install chromium`)
 3. Configure pre-commit hooks
@@ -45,14 +50,23 @@ Automated setup script that runs after container creation:
 
 ## Usage
 
+### Compatibility
+
+This devcontainer works with:
+- ✅ **VS Code** - Full support with all extensions
+- ✅ **Windsurf IDE** - Full support (compatible extension set)
+- ✅ **GitHub Codespaces** - Cloud development ready
+- ✅ **VS Code variants** - Cursor, VSCodium (with Open VSX marketplace)
+
 ### First Time Setup
 
 1. Install prerequisites:
    - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-   - [VS Code](https://code.visualstudio.com/)
-   - [Dev Containers Extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+   - [VS Code](https://code.visualstudio.com/) **or** [Windsurf IDE](https://windsurf.com/)
+   - [Dev Containers Extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) (VS Code only, Windsurf has built-in support)
 
 2. Open project in VS Code:
+
    ```bash
    code .
    ```
@@ -92,9 +106,9 @@ Edit `devcontainer.json`:
 
 Then rebuild: F1 → "Dev Containers: Rebuild Container"
 
-#### Add VS Code Extensions
+#### Add Extensions
 
-Edit `devcontainer.json`:
+Edit `.devcontainer/devcontainer.json`:
 
 ```json
 "extensions": [
@@ -103,7 +117,20 @@ Edit `devcontainer.json`:
 ]
 ```
 
-**Note:** Some IDEs (like Windsurf) may have restrictions on third-party extensions. For standard VS Code, all listed extensions are valid and recommended.
+**Extension Compatibility:**
+
+- **VS Code**: All extensions from Microsoft Marketplace work
+- **Windsurf**: Uses Open VSX marketplace - extension list has been curated for compatibility
+- **Cursor/VSCodium**: Use Open VSX marketplace like Windsurf
+
+The current extension list includes only widely-available extensions that work across all platforms:
+- `ms-python.python` - Python language support
+- `charliermarsh.ruff` - Linting and formatting
+- `redhat.vscode-yaml` - YAML support
+- `tamasfe.even-better-toml` - TOML support
+- `DavidAnson.vscode-markdownlint` - Markdown linting
+- `eamodio.gitlens` - Git integration
+- `ms-azuretools.vscode-docker` - Docker support
 
 #### Add System Dependencies
 
@@ -135,11 +162,14 @@ echo "Running custom setup..."
 **Symptom:** Error during "Building container" step
 
 **Solutions:**
+
 1. Check Docker is running: `docker ps`
 2. Clear Docker cache:
+
    ```bash
    docker system prune -a
    ```
+
 3. Rebuild without cache:
    - F1 → "Dev Containers: Rebuild Container"
    - Select "Rebuild Without Cache"
@@ -149,6 +179,7 @@ echo "Running custom setup..."
 **Symptom:** Python, Ruff, or other extensions not functioning
 
 **Solutions:**
+
 1. Reload window: F1 → "Developer: Reload Window"
 2. Reinstall extensions: F1 → "Dev Containers: Rebuild Container"
 3. Check extension compatibility with your IDE
@@ -158,11 +189,13 @@ echo "Running custom setup..."
 **Symptom:** Container operations are slow
 
 **Solutions:**
+
 1. Allocate more resources in Docker Desktop:
    - Settings → Resources → Increase CPU/Memory
 2. On Windows: Use WSL 2 backend
    - Docker Desktop → Settings → General → Use WSL 2 engine
 3. Enable BuildKit for faster builds:
+
    ```bash
    export DOCKER_BUILDKIT=1
    ```
@@ -172,11 +205,15 @@ echo "Running custom setup..."
 **Symptom:** Integration tests fail with browser not found
 
 **Solutions:**
+
 1. Reinstall browsers:
+
    ```bash
    uv run playwright install chromium
    ```
+
 2. Check post-create.sh ran successfully:
+
    ```bash
    cat ~/.devcontainer-setup.log
    ```
@@ -186,12 +223,16 @@ echo "Running custom setup..."
 **Symptom:** Can't write files or access directories
 
 **Solutions:**
+
 1. Ensure `remoteUser` is set to `vscode` in `devcontainer.json`
 2. Check file ownership in container:
+
    ```bash
    ls -la
    ```
+
 3. Fix ownership if needed:
+
    ```bash
    sudo chown -R vscode:vscode /workspaces/mcp-web
    ```
@@ -255,6 +296,7 @@ Ready for development
 ### Docker Layer Caching
 
 The Dockerfile is structured to maximize layer caching:
+
 1. System packages (changes rarely)
 2. uv installation (changes rarely)
 3. Python installation (changes with version bumps)
@@ -263,12 +305,14 @@ The Dockerfile is structured to maximize layer caching:
 ### Volume Mounts
 
 The container uses Docker volumes for:
+
 - `/home/vscode/.cache` - Persistent caching across rebuilds
 - `/workspaces/mcp-web` - Your project files
 
 ### uv Cache
 
 uv caching is enabled via `UV_CACHE_DIR`, significantly speeding up:
+
 - `uv sync` operations
 - Python package downloads
 - Dependency resolution
@@ -284,6 +328,7 @@ uv caching is enabled via `UV_CACHE_DIR`, significantly speeding up:
 ## Support
 
 If you encounter issues not covered here:
+
 1. Check [main README.md](../README.md#development-containers)
 2. Check [CONTRIBUTING.md](../CONTRIBUTING.md#getting-started)
 3. Open an issue on GitHub

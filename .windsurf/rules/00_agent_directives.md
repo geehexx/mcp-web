@@ -240,13 +240,36 @@ update_plan({
   explanation: "🔄 Starting /work orchestration",  // Announce what we're doing
   plan: [
     { step: "1. /detect-context - Analyze project state", status: "in_progress" },  // Executor!
-    { step: "2. /work - Route to appropriate workflow", status: "pending" },  // Orchestrator
-    { step: "3. /work - Execute routed workflow", status: "pending" }  // Orchestrator
+    { step: "2. /work-routing - Route to appropriate workflow", status: "pending" },  // Sub-workflow executor
+    { step: "3. /implement - Execute implementation workflow", status: "pending" },  // Executor
+    { step: "4. /work - Detect work completion", status: "pending" },  // Orchestrator
+    { step: "5. /work-session-protocol - Session end protocol", status: "pending" }  // Sub-workflow executor
   ]
 })
-// After call, print: "✓ Task plan created with 3 items"
-// Note: Step 1 uses /detect-context because that workflow executes the analysis.
+// After call, print: "✓ Task plan created with 5 items"
+// Note: Steps 1, 2, 3, 5 use executor workflow names. Only step 4 uses /work.
 ```
+
+**Common Workflow Attribution Mapping:**
+
+| Stage | ❌ WRONG Prefix | ✅ CORRECT Prefix | Reason |
+|-------|----------------|------------------|--------|
+| Context detection | `/work` | `/detect-context` | detect-context.md executes this |
+| Research | `/work` | `/research` | research.md executes this |
+| Routing decision | `/work` | `/work-routing` | work-routing.md sub-workflow |
+| Implementation | `/work` | `/implement` | implement.md executes this |
+| Load context | `/implement` | `/load-context` | load-context.md executes this |
+| Planning | `/work` | `/plan` | plan.md executes this |
+| Generate plan | `/plan` | `/generate-plan` | generate-plan.md executes this |
+| Validation | `/implement` | `/validate` | validate.md executes this |
+| Commit | `/implement` | `/commit` | commit.md executes this |
+| Session end protocol | `/work` | `/work-session-protocol` | work-session-protocol.md sub-workflow |
+| Archive initiative | `/work` or `/work-session-protocol` | `/archive-initiative` | archive-initiative.md executes this |
+| Meta-analysis | `/work` or `/work-session-protocol` | `/meta-analysis` | meta-analysis.md executes this |
+| Extract session | `/meta-analysis` | `/extract-session` | extract-session.md executes this |
+| Summarize session | `/meta-analysis` | `/summarize-session` | summarize-session.md executes this |
+
+**Key Principle:** Always use the name of the .md file that contains the workflow logic, NOT the name of the workflow that calls it.
 
 **When child workflow called (e.g., /implement as step 3):**
 

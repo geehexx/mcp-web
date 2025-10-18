@@ -86,13 +86,13 @@ ls:
   docs/initiatives/archived:
     .md: regex:\d{4}-\d{2}-\d{2}-[a-z0-9-]+
 
-  # Windsurf workflows - kebab-case
+  # Windsurf workflows - kebab-case (with exceptions for generated files)
   .windsurf/workflows:
-    .md: kebab-case  # work.md, detect-context.md, etc.
+    .md: kebab-case | regex:INDEX|DEPENDENCIES  # work.md, detect-context.md, INDEX.md (generated), DEPENDENCIES.md (generated)
 
-  # Windsurf rules - snake_case with leading numbers
+  # Windsurf rules - snake_case with leading numbers (with exception for generated INDEX)
   .windsurf/rules:
-    .md: regex:\d{2}_[a-z_]+  # 00_agent_directives.md, 01_testing_and_tooling.md
+    .md: regex:\d{2}_[a-z_]+|INDEX  # 00_agent_directives.md, 01_testing_and_tooling.md, INDEX.md (generated)
 
   # Source code - snake_case
   src:
