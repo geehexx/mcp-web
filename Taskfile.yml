@@ -238,6 +238,7 @@ tasks:
       - task: docs:lint:markdown
       - task: docs:lint:prose
       - task: docs:lint:names
+      - task: docs:validate:agents
 
   docs:lint:markdown:
     desc: Lint markdown structure
@@ -253,6 +254,57 @@ tasks:
     desc: Validate file naming conventions with ls-lint
     cmds:
       - npx @ls-lint/ls-lint
+
+  docs:validate:agents:
+    desc: Validate AGENTS.md structure and links
+    cmds:
+      - |
+        echo "Validating docs/AGENTS.md..."
+        # Check file exists
+        if [ ! -f docs/AGENTS.md ]; then
+          echo "ERROR: docs/AGENTS.md not found"
+          exit 1
+        fi
+        # Check required sections exist
+        required_sections=("Overview" "Agent Entry Template" "Agents in This Repository" "Adding or Updating Agents")
+        for section in "${required_sections[@]}"; do
+          if ! grep -q "## $section" docs/AGENTS.md; then
+            echo "ERROR: Missing required section: $section"
+            exit 1
+          fi
+        done
+        # Validate internal links (check files exist)
+        # Skip code blocks by removing content between ``` markers
+        echo "Checking internal links..."
+        broken_links=0
+        # Remove code blocks from file before extracting links
+        content=$(awk '/^```/{f=!f;next}!f' docs/AGENTS.md)
+        while IFS= read -r link; do
+          # Skip external links (http/https)
+          if [[ "$link" =~ ^https?:// ]]; then
+            continue
+          fi
+          # Skip anchor-only links
+          if [[ "$link" =~ ^# ]]; then
+            continue
+          fi
+          # Skip placeholder/template links
+          if [[ "$link" =~ ^(relative/path/to|path/to) ]]; then
+            continue
+          fi
+          # Remove anchor from link if present
+          file_path="${link%%#*}"
+          # Check relative to docs/ directory
+          if [ ! -f "docs/$file_path" ] && [ ! -f "$file_path" ]; then
+            echo "  ✗ Broken link: $link"
+            broken_links=$((broken_links + 1))
+          fi
+        done < <(echo "$content" | grep -oP '\[.*?\]\(\K[^)]+')
+        if [ $broken_links -gt 0 ]; then
+          echo "ERROR: Found $broken_links broken internal link(s)"
+          exit 1
+        fi
+        echo "✓ AGENTS.md validation passed"
 
   docs:fix:
     desc: Auto-fix markdown issues

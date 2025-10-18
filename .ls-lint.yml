@@ -15,7 +15,7 @@ ls:
 
   # Documentation root - UPPER_CASE only for allowed files
   docs:
-    .md: regex:README|CONSTITUTION|DOCUMENTATION_STRUCTURE  # Only these 3 files allowed in root
+    .md: regex:README|CONSTITUTION|DOCUMENTATION_STRUCTURE|AGENTS  # Core docs in root
     .dir: kebab-case  # Subdirectories use kebab-case
 
   # ADRs - numbered with kebab-case titles

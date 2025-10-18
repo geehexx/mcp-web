@@ -16,6 +16,7 @@ docs/
 ├── README.md                      # Index and navigation
 ├── DOCUMENTATION_STRUCTURE.md     # This file
 ├── CONSTITUTION.md                # Project principles and AI guidelines
+├── AGENTS.md                      # Agent catalog and machine-readable specs
 │
 ├── adr/                           # Architecture Decision Records
 │   ├── README.md
