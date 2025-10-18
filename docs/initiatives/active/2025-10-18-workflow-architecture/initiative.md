@@ -7,6 +7,8 @@ priority: Medium
 estimated_effort: 8-12 hours
 actual_effort: 6 hours
 tags: [workflows, architecture, optimization]
+structure: folder-based
+artifacts: [workflow-audit.md]
 ---
 
 # Initiative: Workflow Architecture Refactor
@@ -37,6 +39,10 @@ During Phase 2 of workflow optimization (v2), we identified deeper architectural
 
 - "Creating unnecessary coordination complexity"
 - "Adding agents that don't provide meaningful specialization"
+
+**Supporting Artifacts:**
+
+- [Comprehensive Workflow Audit](artifacts/workflow-audit.md) - Complete 18-workflow analysis with taxonomy validation
 
 ---
 

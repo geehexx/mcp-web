@@ -13,75 +13,102 @@ This document defines the organization and lifecycle of all documentation in the
 
 ```text
 docs/
-├── README.md # Index and navigation
-├── DOCUMENTATION_STRUCTURE.md # This file
-├── CONSTITUTION.md # Project principles and AI guidelines
+├── README.md                      # Index and navigation
+├── DOCUMENTATION_STRUCTURE.md     # This file
+├── CONSTITUTION.md                # Project principles and AI guidelines
 │
-├── adr/ # Architecture Decision Records
-│ ├── README.md
-│ ├── 0001-httpx-playwright-fallback.md
-│ ├── 0018-workflow-architecture-v3.md
-│ └── template.md
+├── adr/                           # Architecture Decision Records
+│   ├── README.md
+│   ├── 0001-use-httpx-playwright-fallback.md
+│   ├── 0002-adopt-windsurf-workflow-system.md
+│   ├── 0018-workflow-architecture-v3.md
+│   ├── ... (17 ADRs total)
+│   └── template.md
 │
-├── initiatives/ # Active initiatives and roadmap
-│ ├── README.md
-│ ├── active/ # Current initiatives
-│ │ └── 2025-10-18-workflow-architecture-refactor.md
-│ └── completed/ # Completed initiatives (archive)
-│ └── 2025-q3-local-llm-support.md
+├── initiatives/                   # Strategic projects and roadmap
+│   ├── README.md
+│   ├── template.md                # Legacy flat-file template
+│   ├── template/                  # Folder-based template (new)
+│   │   ├── initiative.md
+│   │   ├── phases/
+│   │   │   └── phase-example.md
+│   │   └── artifacts/
+│   │       └── README.md
+│   ├── active/                    # Current initiatives (Q4 2025)
+│   │   ├── 2025-q4-quality-foundation.md  # Flat file (small initiative)
+│   │   ├── 2025-q4-performance-optimization-pipeline.md
+│   │   ├── 2025-q4-windsurf-workflows-v2-optimization.md
+│   │   └── 2025-10-18-workflow-architecture/  # Folder-based (large initiative)
+│   │       ├── initiative.md
+│   │       ├── phases/
+│   │       └── artifacts/
+│   │           └── workflow-audit.md  # Research artifact
+│   └── completed/                 # Finished initiatives
+│       ├── 2025-10-16-convert-decisions-to-adrs.md
+│       ├── 2025-10-16-fix-security-unit-tests.md
+│       └── 2025-10-16-windsurf-workflow-rules-improvements.md
 │
-├── guides/ # Reference guides (NOT workflows)
-│ ├── README.md # Guides vs workflows distinction
-│ ├── testing-reference.md # Test command reference
-│ ├── LOCAL_LLM_GUIDE.md
-│ ├── TASKFILE_GUIDE.md
-│ └── CONTRIBUTING.md
+├── guides/                        # Reference guides (NOT workflows)
+│   ├── README.md
+│   ├── TESTING_REFERENCE.md       # Test command reference
+│   ├── TESTING_GUIDE.md           # Comprehensive testing practices
+│   ├── LOCAL_LLM_GUIDE.md         # Local LLM provider setup
+│   ├── TASKFILE_GUIDE.md          # Task automation reference
+│   ├── PERFORMANCE_GUIDE.md       # Performance optimization
+│   ├── DEPLOYMENT_GUIDE.md        # Deployment instructions
+│   ├── COMMIT_STYLE_GUIDE.md      # Conventional commits
+│   ├── DOCUMENTATION_STANDARDS.md # Documentation best practices
+│   ├── SUMMARY_STANDARDS.md       # Session summary standards
+│   ├── META_ANALYSIS_TRACKING.md  # Meta-analysis workflow
+│   └── QUICK_START_WORKFLOWS.md   # Quick start guide
 │
-├── api/ # API documentation
-│ ├── README.md
-│ ├── fetcher.md
-│ ├── extractor.md
-│ ├── chunker.md
-│ ├── summarizer.md
-│ └── security.md
+├── api/                           # API documentation
+│   └── API.md                     # Complete API reference
 │
-├── architecture/ # Architecture documentation
-│ ├── ARCHITECTURE.md # System architecture
-│ ├── SECURITY_ARCHITECTURE.md
-│ └── diagrams/
+├── architecture/                  # Architecture documentation
+│   ├── ARCHITECTURE.md            # System architecture
+│   ├── SECURITY_ARCHITECTURE.md   # Security patterns
+│   └── diagrams/                  # Architecture diagrams
 │
-├── reference/ # Reference documentation
-│ ├── ENVIRONMENT_VARIABLES.md
-│ ├── CONFIGURATION.md
-│ ├── ERROR_CODES.md
-│ └── CHANGELOG.md
+├── reference/                     # Configuration and lookup
+│   ├── ENVIRONMENT_VARIABLES.md
+│   ├── CONFIGURATION.md
+│   ├── ERROR_CODES.md
+│   └── CHANGELOG.md
 │
-└── archive/ # Historical documents
- ├── README.md
- ├── session-summaries/ # Session summaries (meta-analysis output)
- ├── IMPROVEMENTS_V1.md
- └── IMPROVEMENTS_V2.md
+└── archive/                       # Historical documents
+    ├── README.md
+    ├── DECISIONS.md               # Legacy decision log (superseded by ADRs)
+    ├── ARCHITECTURE_INITIAL_DESIGN.md  # Initial architecture (superseded)
+    └── session-summaries/         # Session summaries (meta-analysis output)
+        └── YYYY-MM-DD-*.md
 
-.windsurf/ # Windsurf AI configuration
-├── workflows/ # Executable workflows (18 workflows)
-│ ├── work.md # Orchestrator: Master workflow
-│ ├── plan.md # Orchestrator: Planning
-│ ├── implement.md # Orchestrator: Implementation
-│ ├── meta-analysis.md # Orchestrator: Session end
-│ ├── validate.md # Specialized Operation: Quality gate
-│ ├── commit.md # Specialized Operation: Git operations
-│ ├── detect-context.md # Context Handler: Project state analysis
-│ ├── load-context.md # Context Handler: Batch loading
-│ ├── generate-plan.md # Artifact Generator: Initiative docs
-│ ├── summarize-session.md # Artifact Generator: Session summaries
-│ └── ... # See ADR-0018 for complete taxonomy
+.windsurf/                         # Windsurf AI configuration
+├── workflows/                     # Executable workflows (17 workflows)
+│   ├── work.md                    # Orchestrator: Master workflow
+│   ├── plan.md                    # Orchestrator: Planning
+│   ├── implement.md               # Orchestrator: Implementation
+│   ├── meta-analysis.md           # Orchestrator: Session end
+│   ├── validate.md                # Specialized Operation: Quality gate
+│   ├── commit.md                  # Specialized Operation: Git operations
+│   ├── detect-context.md          # Context Handler: Project state analysis
+│   ├── load-context.md            # Context Handler: Batch loading
+│   ├── generate-plan.md           # Artifact Generator: Initiative docs
+│   ├── summarize-session.md       # Artifact Generator: Session summaries
+│   ├── archive-initiative.md      # Specialized Operation: Archive
+│   ├── bump-version.md            # Specialized Operation: Versioning
+│   ├── consolidate-summaries.md   # Artifact Generator: Consolidation
+│   ├── extract-session.md         # Context Handler: Session extraction
+│   ├── new-adr.md                 # Artifact Generator: ADR creation
+│   ├── research.md                # Context Handler: Research
+│   └── update-docs.md             # Specialized Operation: Doc updates
 │
-└── rules/ # Agent behavior rules (5 rules)
- ├── 00_agent_directives.md # Core principles
- ├── 01_testing_and_tooling.md # Testing standards
- ├── 02_python_standards.md # Code standards
- ├── 03_documentation.md # Documentation rules
- └── 04_security.md # Security patterns
+└── rules/                         # Agent behavior rules (5 rules)
+    ├── 00_agent_directives.md     # Core principles and persona
+    ├── 01_testing_and_tooling.md  # Testing standards
+    ├── 02_python_standards.md     # Code standards
+    ├── 03_documentation_lifecycle.md  # Documentation rules
+    └── 04_security.md             # Security patterns
 ```
 
 **Key Distinction:** Workflows (`.windsurf/workflows/`) are **executable**, Guides (`docs/guides/`) are **reference documentation**. See [ADR-0018](adr/0018-workflow-architecture-v3.md) for taxonomy.
@@ -180,7 +207,7 @@ Progress update...
 
 **Example:**
 
-- ❓ "What test commands can I run?" → **Read** `docs/guides/testing-reference.md`
+- ❓ "What test commands can I run?" → **Read** `docs/guides/TESTING_REFERENCE.md`
 - ✅ "Run validation before commit" → **Call** `/validate` workflow
 
 **Types:**
@@ -233,7 +260,7 @@ Progress update...
 
 5. **Reference Guides** - NOT workflows, moved to `docs/guides/`
    - Command reference documentation only
-   - Example: `docs/guides/testing-reference.md`
+   - Example: `docs/guides/TESTING_REFERENCE.md`
 
 **Workflow Frontmatter:**
 

@@ -1,70 +1,138 @@
-{
-  ".ls-lint.yml": {
-    "ignore": [
-      ".git/",
-      "__pycache__/",
-      "*.pyc",
-      ".pytest_cache/",
-      ".mypy_cache/",
-      "node_modules/",
-      "dist/",
-      "build/",
-      ".env",
-      ".env.*"
-    ],
-    "rules": [
-      {
-        "name": "adrs-must-be-numbered",
-        "pattern": "docs/adr/\\d{4}-.*\\.md",
-        "message": "ADRs must be numbered (0001-title.md format)"
-      },
-      {
-        "name": "no-files-in-docs-root",
-        "pattern": "docs/*",
-        "exclude": [
-          "docs/README.md",
-          "docs/CONSTITUTION.md",
-          "docs/DOCUMENTATION_STRUCTURE.md"
-        ],
-        "message": "No files allowed in docs/ root except README.md, CONSTITUTION.md, and DOCUMENTATION_STRUCTURE.md"
-      },
-      {
-        "name": "initiatives-must-be-in-subdirs",
-        "pattern": "docs/initiatives/*",
-        "exclude": [
-          "docs/initiatives/README.md",
-          "docs/initiatives/template.md",
-          "docs/initiatives/active/*",
-          "docs/initiatives/completed/*",
-          "docs/initiatives/archived/*"
-        ],
-        "message": "Initiative files must be in active/, completed/, or archived/ subdirectories"
-      },
-      {
-        "name": "session-summaries-must-be-dated",
-        "pattern": "docs/archive/session-summaries/\\d{4}-\\d{2}-\\d{2}-.*\\.md",
-        "message": "Session summaries must be dated (YYYY-MM-DD-description.md)"
-      },
-      {
-        "name": "no-files-in-root-except-specified",
-        "pattern": "*",
-        "exclude": [
-          "README.md",
-          "PROJECT_SUMMARY.md",
-          "LICENSE",
-          "pyproject.toml",
-          "uv.lock",
-          "Taskfile.yml",
-          ".gitignore",
-          ".bandit",
-          ".markdownlint.json",
-          ".pre-commit-config.yaml",
-          ".semgrep.yml",
-          ".test_durations",
-          "pytest.ini"
-        ],
-        "message": "No files allowed in project root except specified configuration and documentation files"
-      }
-    ]
-  }
-}
+ls:
+  # Global rules (apply to all files unless overridden)
+  .md: regex:.*  # Allow any markdown naming (overridden by specific directories)
+  .py: snake_case
+  .yml: kebab-case | PascalCase
+  .yaml: kebab-case | PascalCase
+  .json: kebab-case
+  .txt: kebab-case | regex:[A-Z_]+
+  .sh: kebab-case
+
+  # Root level - strict control
+  .:
+    .md: regex:[A-Z_]+|README|LICENSE|CONTRIBUTING  # README.md, PROJECT_SUMMARY.md, LICENSE, etc.
+    .dir: kebab-case  # Root directories should be kebab-case
+
+  # Documentation root - UPPER_CASE only for allowed files
+  docs:
+    .md: regex:README|CONSTITUTION|DOCUMENTATION_STRUCTURE  # Only these 3 files allowed in root
+    .dir: kebab-case  # Subdirectories use kebab-case
+
+  # ADRs - numbered with kebab-case titles
+  docs/adr:
+    .md: regex:\d{4}-[a-z0-9-]+|README|template  # 0001-my-decision.md, README.md, template.md
+    .dir: kebab-case
+
+  # API documentation - UPPER_CASE
+  docs/api:
+    .md: regex:[A-Z_]+|README
+    .dir: kebab-case
+
+  # Architecture documentation - UPPER_CASE
+  docs/architecture:
+    .md: regex:[A-Z_]+|README
+    .dir: kebab-case
+
+  # Archive - UPPER_CASE
+  docs/archive:
+    .md: regex:[A-Z_]+|README
+    .dir: kebab-case
+
+  # Session summaries - dated format
+  docs/archive/session-summaries:
+    .md: regex:\d{4}-\d{2}-\d{2}-[a-z0-9-]+  # 2025-10-18-workflow-refactor.md
+
+  # Reference documentation - UPPER_CASE
+  docs/reference:
+    .md: regex:[A-Z_]+|README
+    .dir: kebab-case
+
+  # Guides - UPPER_CASE
+  docs/guides:
+    .md: regex:[A-Z_]+|README
+    .dir: kebab-case
+
+  # Initiatives - kebab-case with dates
+  docs/initiatives:
+    .md: regex:README|template
+    .dir: kebab-case
+
+  docs/initiatives/active:
+    .md: regex:(\d{4}-\d{2}-\d{2}|\d{4}-q[1-4])-[a-z0-9-]+|PROPOSAL-.*  # Flat files + proposals
+    .dir: regex:(\d{4}-\d{2}-\d{2}|\d{4}-q[1-4])-[a-z0-9-]+|.*  # Folders + any subdir
+
+  # Inside initiative folders - be permissive
+  docs/initiatives/active/**:
+    .md: regex:.*
+    .dir: regex:.*
+
+  docs/initiatives/completed:
+    .md: regex:(\d{4}-\d{2}-\d{2}|\d{4}-q[1-4])-[a-z0-9-]+  # Flat files
+    .dir: regex:(\d{4}-\d{2}-\d{2}|\d{4}-q[1-4])-[a-z0-9-]+|.*  # Folders + any subdir
+
+  # Inside completed initiative folders - be permissive
+  docs/initiatives/completed/**:
+    .md: regex:.*
+    .dir: regex:.*
+
+  docs/initiatives/template:
+    .md: regex:.*
+    .dir: regex:.*
+
+  docs/initiatives/template/**:
+    .md: regex:.*
+    .dir: regex:.*
+
+  docs/initiatives/archived:
+    .md: regex:\d{4}-\d{2}-\d{2}-[a-z0-9-]+
+
+  # Windsurf workflows - kebab-case
+  .windsurf/workflows:
+    .md: kebab-case  # work.md, detect-context.md, etc.
+
+  # Windsurf rules - snake_case with leading numbers
+  .windsurf/rules:
+    .md: regex:\d{2}_[a-z_]+  # 00_agent_directives.md, 01_testing_and_tooling.md
+
+  # Source code - snake_case
+  src:
+    .py: snake_case
+    .dir: snake_case
+
+  # Tests - snake_case
+  tests:
+    .py: snake_case | regex:conftest
+    .dir: snake_case
+
+  # Examples - snake_case
+  examples:
+    .py: snake_case
+    .dir: snake_case
+
+  # Scripts - snake_case
+  scripts:
+    .py: snake_case
+    .dir: snake_case
+
+ignore:
+  - .git
+  - .github
+  - __pycache__
+  - "*.pyc"
+  - .pytest_cache
+  - .mypy_cache
+  - .ruff_cache
+  - node_modules
+  - dist
+  - build
+  - htmlcov
+  - .coverage
+  - "*.egg-info"
+  - .env
+  - ".env.*"
+  - .venv
+  - venv
+  - .benchmarks
+  - .windsurf/.last-meta-analysis
+  - uv.lock
+  - package-lock.json

@@ -606,8 +606,8 @@ Add to `.vscode/tasks.json`:
 ### Project
 
 - **Taskfile.yml:** `/Taskfile.yml` in project root
-- **Testing Guide:** `docs/TESTING.md`
-- **Local LLM Guide:** `docs/LOCAL_LLM_GUIDE.md`
+- **Testing Guide:** `docs/guides/TESTING_GUIDE.md`
+- **Local LLM Guide:** `docs/guides/LOCAL_LLM_GUIDE.md`
 
 ---
 

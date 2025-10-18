@@ -76,23 +76,76 @@ Proposed → Active → Complete → (Archived if superseded)
 
 ```text
 docs/initiatives/
-├── README.md # This file
-├── template.md # Template for new initiatives
-├── active/ # In progress
-│ ├── initiative-1.md
-│ └── initiative-2.md
-├── completed/ # Successfully finished
-│ └── initiative-3.md
-└── archived/ # Deprecated/superseded
- └── initiative-4.md
+├── README.md                       # This file
+├── template.md                     # Legacy flat-file template
+├── template/                       # Folder-based template (recommended for large initiatives)
+│   ├── initiative.md               # Main initiative document
+│   ├── phases/
+│   │   └── phase-example.md        # Phase-specific documentation
+│   └── artifacts/
+│       └── README.md               # Supporting artifacts (research, analysis, diagrams)
+│
+├── active/                         # In progress
+│   ├── simple-initiative.md        # Small initiative (flat file)
+│   └── 2025-10-18-complex/         # Large initiative (folder-based)
+│       ├── initiative.md           # Main doc
+│       ├── phases/
+│       │   ├── phase-1-planning.md
+│       │   └── phase-2-execution.md
+│       └── artifacts/
+│           └── research-audit.md   # Supporting research
+│
+├── completed/                      # Successfully finished
+│   └── initiative-3.md
+└── archived/                       # Deprecated/superseded
+    └── initiative-4.md
 ```
+
+**New in 2025-10-18:** Initiatives can now be **folder-based** to support:
+
+- Large multi-phase initiatives
+- Supporting artifacts (research, analysis, diagrams)
+- Better organization of related documents
+- Clear distinction between initiative plans and supporting materials
 
 ## Creating a New Initiative
 
-### Step 1: Copy the Template
+### Choosing Structure: Flat File vs Folder-Based
+
+**Use Flat File (`.md`) when:**
+
+- Initiative is small (<1000 words)
+- Single phase, straightforward execution
+- No supporting artifacts needed
+- Example: Bug fix initiatives, simple feature adds
+
+**Use Folder-Based structure when:**
+
+- Initiative is large (>1000 words) OR
+- Multiple distinct phases OR
+- Supporting artifacts (research, analysis, diagrams) OR
+- Complex coordination needed
+- Example: Architecture refactors, large feature development
+
+### Step 1: Copy the Appropriate Template
+
+**For small initiatives (flat file):**
 
 ```bash
-cp docs/initiatives/template.md docs/initiatives/active/your-initiative-name.md
+cp docs/initiatives/template.md docs/initiatives/active/YYYY-MM-DD-your-initiative.md
+```
+
+**For large initiatives (folder-based):**
+
+```bash
+# Create folder
+mkdir -p docs/initiatives/active/YYYY-MM-DD-your-initiative/{phases,artifacts}
+
+# Copy template
+cp docs/initiatives/template/initiative.md docs/initiatives/active/YYYY-MM-DD-your-initiative/initiative.md
+
+# Optionally copy phase template
+cp docs/initiatives/template/phases/phase-example.md docs/initiatives/active/YYYY-MM-DD-your-initiative/phases/phase-1-name.md
 ```
 
 ### Step 2: Fill in Required Sections

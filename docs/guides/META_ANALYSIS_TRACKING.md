@@ -24,7 +24,7 @@ Session: "Implement API Authentication"
 Implemented During Session:
 - src/mcp_web/auth.py (new feature)
 - tests/unit/test_auth.py (feature tests)
-- docs/API.md (feature documentation)
+- docs/api/API.md (feature documentation)
 
 Commits:
 - feat(auth): add API key validation
@@ -281,7 +281,7 @@ ADR → Implementation commits
 Files Changed:
 - src/mcp_web/auth.py (new, 250 lines)
 - tests/unit/test_auth.py (new, 180 lines)
-- docs/API.md (updated, +50 lines)
+- docs/api/API.md (updated, +50 lines)
 
 Commits:
 - feat(auth): implement API key validation (abc1234)

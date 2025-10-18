@@ -33,7 +33,7 @@ Reference guides are **documentation-only** resources that provide quick command
 
 **Example Decision:**
 
-- ❓ "What test commands can I run?" → **Read** `docs/guides/testing-reference.md`
+- ❓ "What test commands can I run?" → **Read** `docs/guides/TESTING_REFERENCE.md`
 - ✅ "Run validation before commit" → **Call** `/validate` workflow
 
 ---
@@ -42,7 +42,7 @@ Reference guides are **documentation-only** resources that provide quick command
 
 ### Testing Reference
 
-**File:** [`testing-reference.md`](testing-reference.md)
+**File:** [`TESTING_REFERENCE.md`](TESTING_REFERENCE.md)
 
 **Content:**
 
@@ -127,7 +127,7 @@ related_workflows: [list workflows that reference this]
 
 ```markdown
 **For detailed test commands and options, see:**
-[`docs/guides/testing-reference.md`](../../docs/guides/testing-reference.md)
+[`docs/guides/TESTING_REFERENCE.md`](../../docs/guides/TESTING_REFERENCE.md)
 ```
 
 **Guides do NOT call workflows** - They are passive documentation.
@@ -142,5 +142,5 @@ related_workflows: [list workflows that reference this]
 
 ---
 
-**Last Updated:** 2025-10-18  
+**Last Updated:** 2025-10-18
 **Related ADR:** [ADR-0018](../adr/0018-workflow-architecture-v3.md)

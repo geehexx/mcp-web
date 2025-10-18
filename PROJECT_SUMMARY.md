@@ -29,8 +29,8 @@
 |--------|---------|--------|--------|
 | **Test Coverage** | ~85% | ≥85% | ✅ Met |
 | **Type Coverage** | ~90% | ≥90% | ✅ Met |
-| **Documentation Quality** | Linting Active (0 errors) | 100% Pass | 🟡 In Progress |
-| **ADRs** | 16 decisions | N/A | ✅ Active |
+| **Documentation Quality** | ls-lint: 0 errors, markdownlint: minimal | 100% Pass | ✅ Met |
+| **ADRs** | 18 decisions | N/A | ✅ Active |
 | **Source Modules** | 13 Python files | N/A | ✅ Stable |
 | **Test Modules** | 26 test files | N/A | ✅ Comprehensive |
 
@@ -49,11 +49,13 @@
 - ✅ Comprehensive test suites (query-aware, Playwright fallback, robots.txt)
 - ✅ CLI testing endpoints (`test-summarize`, `test-robots`)
 - ✅ 67% mypy error reduction (96 → 32 errors)
+- ✅ **NEW:** ls-lint naming convention enforcement (2025-10-18)
+- ✅ **NEW:** Folder-based initiative structure for complex projects (2025-10-18)
+- ✅ **NEW:** Documentation reorganization (15+ files moved to proper locations)
 
 **In Progress:**
 
 - 🔄 Remaining type error fixes (32 errors across 4 modules)
-- 🔄 Documentation cleanup (removing LLM artifacts)
 
 **Next Steps:**
 
