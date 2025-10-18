@@ -24,13 +24,13 @@ category: Orchestrator
 
 **MANDATORY:** Create task list before any other actions.
 
-**Numbering Format:** Use `1. /work - Description` format with workflow prefix.
+**Numbering Format:** Attribute tasks to the workflow that EXECUTES them, not the caller.
 
 ```typescript
 update_plan({
   explanation: "🔄 Initiating /work orchestration",
   plan: [
-    { step: "1. /work - Detect project context", status: "in_progress" },
+    { step: "1. /detect-context - Analyze project state", status: "in_progress" },
     { step: "2. /work - Route to appropriate workflow", status: "pending" },
     { step: "3. /work - Execute routed workflow", status: "pending" },
     { step: "4. /work - Detect work completion", status: "pending" },
@@ -40,6 +40,8 @@ update_plan({
 ```
 
 ✓ Task plan created with 5 items
+
+**Note:** Step 1 uses `/detect-context` prefix because that workflow executes the analysis. Steps 2-5 use `/work` prefix because the orchestrator performs these coordination tasks itself.
 
 ---
 
@@ -54,13 +56,13 @@ update_plan({
 
 **Returns:** Detection results with routing recommendation
 
-📋 **Task Update:** "1. /work - Detect project context" → completed
+📋 **Task Update:** "1. /detect-context - Analyze project state" → completed
 
 ```typescript
 update_plan({
   explanation: "✅ Context detection complete. Routing decision ready.",
   plan: [
-    { step: "1. /work - Detect project context", status: "completed" },
+    { step: "1. /detect-context - Analyze project state", status: "completed" },
     { step: "2. /work - Route to appropriate workflow", status: "in_progress" },
     { step: "3. /work - Execute routed workflow", status: "pending" },
     { step: "4. /work - Detect work completion", status: "pending" },
@@ -170,7 +172,7 @@ What would you like to work on?
 update_plan({
   explanation: "🔀 Routing to /implement workflow. Adding implementation subtasks.",
   plan: [
-    { step: "1. /work - Detect project context", status: "completed" },
+    { step: "1. /detect-context - Analyze project state", status: "completed" },
     { step: "2. /work - Route to appropriate workflow", status: "completed" },
     { step: "3. /work - Execute routed workflow", status: "in_progress" },
     { step: "  3.1. /implement - Load context files", status: "in_progress" },      // Child workflow uses parent number

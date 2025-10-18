@@ -56,14 +56,16 @@ update_plan({
   explanation: "🔄 Starting /plan workflow",
   plan: [
     { step: "1. /plan - Define problem and requirements", status: "in_progress" },
-    { step: "2. /plan - Call /research workflow", status: "pending" },
-    { step: "3. /plan - Call /generate-plan workflow", status: "pending" },
+    { step: "2. /research - Research best practices and patterns", status: "pending" },
+    { step: "3. /generate-plan - Generate structured implementation plan", status: "pending" },
     { step: "4. /plan - Create initiative document", status: "pending" },
     { step: "5. /plan - Create ADR (if needed)", status: "pending" },
     { step: "6. /plan - Present plan to user", status: "pending" }
   ]
 })
 ```
+
+**Note:** Steps 2-3 use child workflow prefixes because those workflows execute the work. Steps 1, 4-6 use `/plan` prefix for orchestration tasks performed by this workflow.
 
 ✓ Task plan created
 
