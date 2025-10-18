@@ -153,19 +153,19 @@ def main() -> int:
     try:
         # Generate workflow index
         workflow_index = generate_workflow_index()
-        workflow_index_path = Path(".windsurf/workflows/INDEX.md")
+        workflow_index_path = Path(".windsurf/docs/workflow-index.md")
         workflow_index_path.write_text(workflow_index)
         print(f"  ✅ Generated {workflow_index_path}")
 
         # Generate rule index
         rule_index = generate_rule_index()
-        rule_index_path = Path(".windsurf/rules/INDEX.md")
+        rule_index_path = Path(".windsurf/docs/rules-index.md")
         rule_index_path.write_text(rule_index)
         print(f"  ✅ Generated {rule_index_path}")
 
         # Generate dependency graph
         dependency_graph = generate_dependency_graph()
-        dependency_graph_path = Path(".windsurf/workflows/DEPENDENCIES.md")
+        dependency_graph_path = Path(".windsurf/docs/workflow-dependencies.md")
         dependency_graph_path.write_text(dependency_graph)
         print(f"  ✅ Generated {dependency_graph_path}")
 
