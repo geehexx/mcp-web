@@ -33,21 +33,35 @@ category: Orchestrator
 
 ## Stage 1: Create Implementation Task Plan
 
+🔄 **Entering Stage 1: Create Implementation Task Plan**
+
 **MANDATORY:** Create task list before implementation.
 
+**Numbering Rules:**
+
+- If called by parent workflow (e.g., /work step 3), use parent number: `3.1. /implement - ...`
+- If called directly, use top-level numbering: `1. /implement - ...`
+- Always include workflow prefix and period after number
+
 ```typescript
+// Example: Called by /work as step 3
 update_plan({
-  explanation: "Starting implementation workflow",
+  explanation: "🔄 Starting /implement workflow",
   plan: [
-    { step: "Load context files", status: "in_progress" },
-    { step: "Design test cases (TDD)", status: "pending" },
-    { step: "Write failing tests", status: "pending" },
-    { step: "Implement feature code", status: "pending" },
-    { step: "Verify tests pass", status: "pending" },
-    { step: "Run validation checks", status: "pending" },
-    { step: "Commit changes", status: "pending" }
+    { step: "  3.1. /implement - Load context files", status: "in_progress" },
+    { step: "  3.2. /implement - Design test cases (TDD)", status: "pending" },
+    { step: "  3.3. /implement - Write failing tests", status: "pending" },
+    { step: "  3.4. /implement - Implement feature code", status: "pending" },
+    { step: "  3.5. /implement - Verify tests pass", status: "pending" },
+    { step: "  3.6. /implement - Run validation checks", status: "pending" },
+    { step: "  3.7. /implement - Commit changes", status: "pending" }
   ]
 })
+
+// OR if called directly (no parent):
+// { step: "1. /implement - Load context files", status: "in_progress" },
+// { step: "2. /implement - Design test cases", status: "pending" },
+// etc.
 ```
 
 **Adjust plan based on work scope** (e.g., remove test steps for documentation-only changes).

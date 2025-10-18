@@ -20,20 +20,26 @@ category: Orchestrator
 
 ## Stage 1: Create Initial Task Plan
 
+🔄 **Entering Stage 1: Create Initial Task Plan**
+
 **MANDATORY:** Create task list before any other actions.
+
+**Numbering Format:** Use `1. /work - Description` format with workflow prefix.
 
 ```typescript
 update_plan({
-  explanation: "Initiating /work orchestration",
+  explanation: "🔄 Initiating /work orchestration",
   plan: [
-    { step: "Detect project context", status: "in_progress" },
-    { step: "Route to appropriate workflow", status: "pending" },
-    { step: "Execute routed workflow", status: "pending" },
-    { step: "Detect work completion", status: "pending" },
-    { step: "Session end protocol (if triggered)", status: "pending" }
+    { step: "1. /work - Detect project context", status: "in_progress" },
+    { step: "2. /work - Route to appropriate workflow", status: "pending" },
+    { step: "3. /work - Execute routed workflow", status: "pending" },
+    { step: "4. /work - Detect work completion", status: "pending" },
+    { step: "5. /work - Session end protocol (if triggered)", status: "pending" }
   ]
 })
 ```
+
+✓ Task plan created with 5 items
 
 ---
 
@@ -48,15 +54,17 @@ update_plan({
 
 **Returns:** Detection results with routing recommendation
 
-**Update task:**
+📋 **Task Update:** "1. /work - Detect project context" → completed
 
 ```typescript
 update_plan({
-  explanation: "Context detection complete. Routing decision ready.",
+  explanation: "✅ Context detection complete. Routing decision ready.",
   plan: [
-    { step: "Detect project context", status: "completed" },
-    { step: "Route to appropriate workflow", status: "in_progress" },
-    // ... rest ...
+    { step: "1. /work - Detect project context", status: "completed" },
+    { step: "2. /work - Route to appropriate workflow", status: "in_progress" },
+    { step: "3. /work - Execute routed workflow", status: "pending" },
+    { step: "4. /work - Detect work completion", status: "pending" },
+    { step: "5. /work - Session end protocol (if triggered)", status: "pending" }
   ]
 })
 ```
@@ -113,24 +121,29 @@ List available options:
 
 **After routing decision, update task plan with routed workflow steps:**
 
+🔀 **Routing Decision:** Continuing with /implement workflow
+
 ```typescript
 // Example: Routing to /implement
 update_plan({
-  explanation: "Routing to /implement workflow. Adding implementation subtasks.",
+  explanation: "🔀 Routing to /implement workflow. Adding implementation subtasks.",
   plan: [
-    { step: "Detect project context", status: "completed" },
-    { step: "Route to appropriate workflow", status: "completed" },
-    { step: "Execute routed workflow", status: "in_progress" },
-    { step: "  Load context", status: "in_progress" },      // Routed workflow subtasks
-    { step: "  Design approach", status: "pending" },
-    { step: "  Implement changes", status: "pending" },
-    { step: "  Run tests", status: "pending" },
-    { step: "  Validate and commit", status: "pending" },
-    { step: "Detect work completion", status: "pending" },
-    { step: "Session end protocol (if triggered)", status: "pending" }
+    { step: "1. /work - Detect project context", status: "completed" },
+    { step: "2. /work - Route to appropriate workflow", status: "completed" },
+    { step: "3. /work - Execute routed workflow", status: "in_progress" },
+    { step: "  3.1. /implement - Load context files", status: "in_progress" },      // Child workflow uses parent number
+    { step: "  3.2. /implement - Design test cases", status: "pending" },
+    { step: "  3.3. /implement - Write failing tests", status: "pending" },
+    { step: "  3.4. /implement - Implement feature code", status: "pending" },
+    { step: "  3.5. /implement - Run tests and validate", status: "pending" },
+    { step: "  3.6. /implement - Commit changes", status: "pending" },
+    { step: "4. /work - Detect work completion", status: "pending" },
+    { step: "5. /work - Session end protocol (if triggered)", status: "pending" }
   ]
 })
 ```
+
+📋 **Task Update:** Added 6 /implement subtasks (3.1-3.6)
 
 ---
 

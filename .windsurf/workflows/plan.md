@@ -38,6 +38,37 @@ Do NOT plan for:
 
 ---
 
+## Stage 0: Create Planning Task Plan
+
+🔄 **Entering /plan workflow**
+
+**MANDATORY:** Create task list before planning.
+
+**Numbering Rules:**
+
+- If called by parent workflow (e.g., /work step 3), use parent number: `3.1. /plan - ...`
+- If called directly, use top-level numbering: `1. /plan - ...`
+- Always include workflow prefix and period after number
+
+```typescript
+// Example: Called directly
+update_plan({
+  explanation: "🔄 Starting /plan workflow",
+  plan: [
+    { step: "1. /plan - Define problem and requirements", status: "in_progress" },
+    { step: "2. /plan - Call /research workflow", status: "pending" },
+    { step: "3. /plan - Call /generate-plan workflow", status: "pending" },
+    { step: "4. /plan - Create initiative document", status: "pending" },
+    { step: "5. /plan - Create ADR (if needed)", status: "pending" },
+    { step: "6. /plan - Present plan to user", status: "pending" }
+  ]
+})
+```
+
+✓ Task plan created
+
+---
+
 ## Stage 1: Problem Definition
 
 ### 1.1 Capture Requirements

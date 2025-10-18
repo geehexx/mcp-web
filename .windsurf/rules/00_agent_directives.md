@@ -176,25 +176,67 @@ When making any implementation decision, prioritize the following principles in 
 
 ### 1.11.1 Task Creation
 
-**At workflow start, create initial plan:**
+**At workflow start, create initial plan with MANDATORY numbering format:**
+
+**REQUIRED FORMAT:** `<number>. /<workflow> - <description>`
+
+**Examples:**
+
+- Top-level: `1. /work - Detect project context`
+- Subtask: `3.1. /implement - Load context files` (2-space indent)
+- Sub-subtask: `3.1.1. /implement - Read initiative file` (4-space indent)
+
+**Transparency Requirements:**
+
+- Print workflow entry announcement: `🔄 **Entering Stage X: [Name]**`
+- Print task creation confirmation: `✓ Task plan created with N items`
+- Print task updates: `📋 **Task Update:** "X. /workflow - Task" → status`
 
 ```typescript
+// Top-level workflow (called directly)
 update_plan({
-  explanation: "Brief description of what we're doing",
+  explanation: "🔄 Starting /work orchestration",  // Announce what we're doing
   plan: [
-    { step: "Specific, measurable task 1", status: "in_progress" },
-    { step: "Specific, measurable task 2", status: "pending" },
-    { step: "Specific, measurable task 3", status: "pending" }
+    { step: "1. /work - Detect project context", status: "in_progress" },
+    { step: "2. /work - Route to workflow", status: "pending" },
+    { step: "3. /work - Execute workflow", status: "pending" }
   ]
 })
+// After call, print: "✓ Task plan created with 3 items"
+```
+
+**When child workflow called (e.g., /implement as step 3):**
+
+```typescript
+// Parent already has tasks 1, 2, 3, 4, 5
+// Child inserts as subtasks of parent's current task (3)
+update_plan({
+  explanation: "🔀 Routing to /implement workflow. Adding subtasks.",
+  plan: [
+    { step: "1. /work - Detect context", status: "completed" },
+    { step: "2. /work - Route to workflow", status: "completed" },
+    { step: "3. /work - Execute workflow", status: "in_progress" },
+    { step: "  3.1. /implement - Load context", status: "in_progress" },  // Child numbering!
+    { step: "  3.2. /implement - Write tests", status: "pending" },
+    { step: "  3.3. /implement - Implement code", status: "pending" },
+    { step: "4. /work - Session end protocol", status: "pending" }
+  ]
+})
+// After call, print: "📋 **Task Update:** Added 3 /implement subtasks (3.1-3.3)"
 ```
 
 **CRITICAL RULES:**
 
-1. **One active task:** At most ONE step can be `in_progress` at a time
-2. **Specific tasks:** Each step must have clear completion criteria
-3. **Reasonable scope:** Tasks should be 15-60 min each (decompose if larger)
-4. **Sequential order:** List tasks in execution order
+1. **Mandatory numbering:** EVERY task MUST have `<number>. /<workflow> - <description>` format
+2. **Workflow prefix:** ALWAYS include workflow name (e.g., `/work`, `/implement`, `/analyze`)
+3. **Period after number:** Required for readability (WBS standard)
+4. **Hierarchical numbering:** Parent 3 → children 3.1, 3.2; Parent 3.2 → children 3.2.1, 3.2.2
+5. **Indentation:** 2 spaces per hierarchy level (0, 2, 4, 6 spaces)
+6. **One active task:** At most ONE step can be `in_progress` at a time
+7. **Specific tasks:** Each step must have clear completion criteria
+8. **Reasonable scope:** Tasks should be 15-60 min each (decompose if larger)
+9. **Sequential order:** List tasks in execution order
+10. **Print announcements:** ALWAYS print workflow entry and task updates to user
 
 ### 1.11.2 Task Updates
 
