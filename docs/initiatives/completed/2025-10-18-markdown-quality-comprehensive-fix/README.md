@@ -1,7 +1,11 @@
 # Initiative: Comprehensive Markdown Quality Fix & Regression Prevention
 
+> **⚠️ ARCHIVED:** This initiative was completed on 2025-10-18.
+> See [ADR-0020](../../../adr/0020-markdown-quality-automation.md) for implemented decisions and [SUMMARY.md](./SUMMARY.md) for complete results.
+
 **Status:** Completed ✅
 **Created:** 2025-10-18
+**Completed:** 2025-10-18
 **Owner:** AI Agent
 **Priority:** High
 
