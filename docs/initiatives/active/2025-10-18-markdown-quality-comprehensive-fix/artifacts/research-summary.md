@@ -211,6 +211,8 @@ code here
 
 More text.
 
+```markdown
+More text after code.
 ```
 
 ---
@@ -256,7 +258,7 @@ More text.
 
 ### Multi-Layer Defense
 
-```
+```text
 Layer 1: IDE/Editor Integration
     ↓
 Layer 2: Pre-commit Hooks (Client-side)
@@ -436,34 +438,32 @@ def test_code_fences_have_language():
 npm install
 ```
 
-# Command output
+## Command output
 
 ```text
 Installing packages...
 Done.
 ```
 
-# Configuration
+## Configuration
 
 ```yaml
 key: value
 ```
 
-# Code samples
+## Code samples
 
 ```python
 def hello():
     print("Hello")
 ```
 
-# Directory trees
+## Directory trees
 
 ```text
 src/
 ├── index.js
 └── utils.js
-```
-
 ```
 
 ---
