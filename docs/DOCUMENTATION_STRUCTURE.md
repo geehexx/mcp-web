@@ -1,9 +1,11 @@
 # Documentation Structure
 
-**Version:** 1.0.0
-**Last Updated:** 2025-10-15
+**Version:** 1.1.0
+**Last Updated:** 2025-10-18
 
 This document defines the organization and lifecycle of all documentation in the mcp-web project.
+
+**Related:** [ADR-0018: Workflow Architecture V3](adr/0018-workflow-architecture-v3.md) - Workflow taxonomy and guides vs workflows distinction
 
 ---
 
@@ -18,20 +20,21 @@ docs/
 ├── adr/ # Architecture Decision Records
 │ ├── README.md
 │ ├── 0001-httpx-playwright-fallback.md
-│ ├── 0002-trafilatura-extraction.md
+│ ├── 0018-workflow-architecture-v3.md
 │ └── template.md
 │
 ├── initiatives/ # Active initiatives and roadmap
 │ ├── README.md
 │ ├── active/ # Current initiatives
-│ │ └── 2025-q4-security-hardening.md
+│ │ └── 2025-10-18-workflow-architecture-refactor.md
 │ └── completed/ # Completed initiatives (archive)
 │ └── 2025-q3-local-llm-support.md
 │
-├── guides/ # How-to guides
+├── guides/ # Reference guides (NOT workflows)
+│ ├── README.md # Guides vs workflows distinction
+│ ├── testing-reference.md # Test command reference
 │ ├── LOCAL_LLM_GUIDE.md
 │ ├── TASKFILE_GUIDE.md
-│ ├── TESTING_GUIDE.md
 │ └── CONTRIBUTING.md
 │
 ├── api/ # API documentation
@@ -55,9 +58,33 @@ docs/
 │
 └── archive/ # Historical documents
  ├── README.md
+ ├── session-summaries/ # Session summaries (meta-analysis output)
  ├── IMPROVEMENTS_V1.md
  └── IMPROVEMENTS_V2.md
+
+.windsurf/ # Windsurf AI configuration
+├── workflows/ # Executable workflows (18 workflows)
+│ ├── work.md # Orchestrator: Master workflow
+│ ├── plan.md # Orchestrator: Planning
+│ ├── implement.md # Orchestrator: Implementation
+│ ├── meta-analysis.md # Orchestrator: Session end
+│ ├── validate.md # Specialized Operation: Quality gate
+│ ├── commit.md # Specialized Operation: Git operations
+│ ├── detect-context.md # Context Handler: Project state analysis
+│ ├── load-context.md # Context Handler: Batch loading
+│ ├── generate-plan.md # Artifact Generator: Initiative docs
+│ ├── summarize-session.md # Artifact Generator: Session summaries
+│ └── ... # See ADR-0018 for complete taxonomy
+│
+└── rules/ # Agent behavior rules (5 rules)
+ ├── 00_agent_directives.md # Core principles
+ ├── 01_testing_and_tooling.md # Testing standards
+ ├── 02_python_standards.md # Code standards
+ ├── 03_documentation.md # Documentation rules
+ └── 04_security.md # Security patterns
 ```
+
+**Key Distinction:** Workflows (`.windsurf/workflows/`) are **executable**, Guides (`docs/guides/`) are **reference documentation**. See [ADR-0018](adr/0018-workflow-architecture-v3.md) for taxonomy.
 
 ---
 
@@ -136,26 +163,96 @@ Progress update...
 - Completed initiatives moved to `completed/` with completion date
 - On-hold initiatives documented with reason and review date
 
-### 3. Guides
+### 3. Reference Guides
 
-**Purpose:** Step-by-step instructions for specific tasks.
+**Purpose:** Quick reference documentation for commands, patterns, and tools. **NOT executable workflows.**
 
 **Location:** `docs/guides/`
 
+**Critical Distinction (ADR-0018):**
+
+| Aspect | Reference Guide | Workflow |
+|--------|----------------|----------|
+| **Purpose** | Documentation | Execution |
+| **Content** | Commands, examples | Orchestration logic |
+| **Invocation** | Read by humans/AI | Called by workflows |
+| **Location** | `docs/guides/` | `.windsurf/workflows/` |
+
+**Example:**
+- ❓ "What test commands can I run?" → **Read** `docs/guides/testing-reference.md`
+- ✅ "Run validation before commit" → **Call** `/validate` workflow
+
 **Types:**
 
-- User guides (installation, configuration, usage)
-- Developer guides (contributing, testing, debugging)
-- Operational guides (deployment, monitoring)
+- Command reference (git, pytest, docker)
+- Pattern catalogs (design patterns, code templates)
+- Tool usage examples (debugging, profiling)
+- Configuration reference (environment variables, settings)
 
 **Format:**
 
-- Clear headings
-- Code examples
+- YAML frontmatter with `category: Reference Documentation`
+- Clear command examples with syntax
+- Links to related executable workflows
 - Troubleshooting sections
-- Links to related docs
 
-### 4. API Documentation
+### 4. Workflows
+
+**Purpose:** Executable AI agent workflows for orchestration, operations, and content generation.
+
+**Location:** `.windsurf/workflows/`
+
+**Decision:** [ADR-0018: Workflow Architecture V3](adr/0018-workflow-architecture-v3.md)
+
+**5-Category Taxonomy:**
+
+1. **Orchestrators** (4 workflows) - High-level coordination
+   - `/work` - Master orchestrator (context detection + routing)
+   - `/plan` - Planning orchestrator (research → generate-plan → implement)
+   - `/implement` - Implementation orchestrator (test-first, incremental)
+   - `/meta-analysis` - Session end orchestrator (extract → summarize → update-docs)
+
+2. **Specialized Operations** (5 workflows) - Atomic focused tasks
+   - `/validate` - Quality gate (lint + test + security)
+   - `/commit` - Git operations + validation
+   - `/bump-version` - Semantic versioning from conventional commits
+   - `/update-docs` - Sync PROJECT_SUMMARY + CHANGELOG
+   - `/archive-initiative` - Archive completed initiatives
+
+3. **Context Handlers** (3 workflows) - Information gathering
+   - `/detect-context` - Project state analysis for routing
+   - `/load-context` - Batch context loading (3-10x faster)
+   - `/extract-session` - Extract structured session data
+
+4. **Artifact Generators** (4 workflows) - Content creation
+   - `/generate-plan` - Transform research → initiative document
+   - `/summarize-session` - Generate formatted session summary
+   - `/new-adr` - ADR creation with research
+   - `/consolidate-summaries` - Consolidate daily summaries
+
+5. **Reference Guides** - NOT workflows, moved to `docs/guides/`
+   - Command reference documentation only
+   - Example: `docs/guides/testing-reference.md`
+
+**Workflow Frontmatter:**
+
+```yaml
+---
+description: Brief workflow description
+auto_execution_mode: 2|3
+category: Orchestrator|Specialized Operation|Context Handler|Artifact Generator
+---
+```
+
+**Standard Tool Patterns:**
+
+- Batch file reads: `mcp0_read_multiple_files([paths])` for 3+ files
+- Git operations: `run_command("git [cmd]", cwd=root, blocking=true)`
+- Tests: `run_command("task test:*", cwd=root, blocking=true)`
+
+**See:** [ADR-0018](adr/0018-workflow-architecture-v3.md) for complete taxonomy, decision tree, and tool standards.
+
+### 5. API Documentation
 
 **Purpose:** Technical reference for modules and functions.
 

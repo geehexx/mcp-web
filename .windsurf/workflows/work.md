@@ -1,15 +1,20 @@
 ---
 description: Intelligent work orchestration and context detection
 auto_execution_mode: 3
+category: Orchestrator
 ---
 
 # Work Orchestration Workflow
 
 **Purpose:** Central orchestration workflow that intelligently detects project context and routes to appropriate specialized workflows.
 
+**Category:** Orchestrator (master workflow coordination)
+
 **Invocation:** `/work` (with optional context) or `/work` (autonomous detection)
 
 **Philosophy:** AI agent should understand where to pick up from by analyzing project state, not by requiring explicit direction.
+
+**Workflow Chain:** `/work` → `/detect-context` → [routed workflow] → `/meta-analysis` (at session end)
 
 ---
 

@@ -1,15 +1,20 @@
 ---
 description: Run linting, tests, security checks
 auto_execution_mode: 3
+category: Specialized Operation
 ---
 
 # Validate Workflow
 
-**Purpose:** Run comprehensive quality checks (linting, tests, security) before committing or merging code.
+**Purpose:** Pre-commit quality gate workflow. Runs comprehensive checks (linting, tests, security) before committing or merging code.
 
-**Invocation:** `/validate` (called by `/work`, `/implement`, or directly)
+**Category:** Specialized Operation (atomic quality gate)
+
+**Invocation:** `/validate` (called by `/work`, `/implement`, `/commit`, or directly)
 
 **Philosophy:** Catch issues early through automated validation gates.
+
+**For detailed test commands and options, see:** [`docs/guides/testing-reference.md`](../../docs/guides/testing-reference.md)
 
 ---
 

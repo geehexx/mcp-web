@@ -1,15 +1,20 @@
 ---
 description: Research-driven comprehensive project planning
 auto_execution_mode: 2
+category: Orchestrator
 ---
 
 # Planning Workflow
 
 **Purpose:** Create robust, well-researched plans for features, initiatives, or complex changes.
 
+**Category:** Orchestrator (planning coordination)
+
 **Invocation:** `/plan [optional: description]`
 
 **Philosophy:** Good plans prevent wasted work. Invest time upfront for better execution.
+
+**Workflow Chain:** `/plan` → `/research` → `/generate-plan` → `/implement`
 
 ---
 

@@ -1,15 +1,20 @@
 ---
 description: Focused implementation with test-first approach
 auto_execution_mode: 3
+category: Orchestrator
 ---
 
 # Implementation Workflow
 
 **Purpose:** Execute planned work with test-first discipline and incremental validation.
 
+**Category:** Orchestrator (implementation coordination)
+
 **Invocation:** `/implement [optional: context or initiative file]`
 
 **Philosophy:** Small steps, test immediately, commit frequently.
+
+**Workflow Chain:** `/implement` → [test-first loop] → `/validate` → `/commit`
 
 ---
 

@@ -1,13 +1,21 @@
 ---
-description: Run comprehensive test suite with options
-auto_execution_mode: 2
+title: Testing Reference Guide
+description: Quick reference for test execution commands and options
+category: Reference Documentation
+moved_from: .windsurf/workflows/run-tests.md
+moved_date: 2025-10-18
+related_adr: ADR-0018
 ---
 
-# Run Tests Workflow
+# Testing Reference Guide
 
-**Purpose:** Quick reference for test execution commands and options.
+> **📖 Reference Documentation**
+>
+> This is a **reference guide**, not an executable workflow.
+> For test execution commands, see below.
+> For pre-commit validation (lint + test + security), use the `/validate` workflow.
 
-**Note:** For pre-commit validation (linting + tests + security), use `/validate` instead.
+**Purpose:** Quick reference for test execution commands, markers, coverage, and debugging options.
 
 ---
 

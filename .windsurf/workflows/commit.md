@@ -1,15 +1,20 @@
 ---
 description: Git commit workflow with validation and review
 auto_execution_mode: 3
+category: Specialized Operation
 ---
 
 # Git Commit Workflow
 
 **Purpose:** Stage and commit changes with proper validation and conventional commit format.
 
+**Category:** Specialized Operation (git operations + validation orchestration)
+
 **Invocation:** `/commit` (called by `/work`, `/implement`, or directly)
 
 **Philosophy:** Every commit should pass quality gates and have clear, conventional messages.
+
+**Workflow Chain:** `/commit` → `/validate` → `/bump-version` (conditionally)
 
 ---
 
