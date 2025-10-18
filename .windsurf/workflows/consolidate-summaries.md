@@ -46,13 +46,15 @@ ls -1 docs/archive/session-summaries/YYYY-MM-DD-*.md | wc -l
 
 ### 1.2 Read and Categorize Content
 
-Batch read for efficiency:
+Use [Batch Reading Pattern](./context-loading-patterns.md#pattern-1-batch-reading) for efficiency:
 
 ```python
 mcp0_read_multiple_files([
     "/home/gxx/projects/mcp-web/docs/archive/session-summaries/YYYY-MM-DD-*.md",
 ])
 ```
+
+See [Batch Operations Guide](./batch-operations.md#pattern-2-chunked-processing) for optimal batch sizes (10-15 files).
 
 Extract from each: objectives, accomplishments, decisions, files modified, commits, learnings, unresolved issues, next steps
 
@@ -395,6 +397,8 @@ rm docs/archive/session-summaries/YYYY-MM-DD-*.md
 ```
 
 Ensure consolidated summary is complete and backed up in git first.
+
+See [Error Handling Pattern](./batch-operations.md#pattern-4-error-handling-in-batches) for safe file operations.
 
 ### 5.5 Update References
 

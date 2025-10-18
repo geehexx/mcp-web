@@ -64,76 +64,25 @@ update_plan({
 
 ## Stage 3: Route to Appropriate Workflow
 
-### High Confidence (80%+)
+**See:** [work-routing.md](./work-routing.md) for complete routing logic
 
-**AUTO-PROCEED - no user confirmation needed.**
+### Quick Reference
 
-| Detected Context | Route To | Action |
-|------------------|----------|--------|
-| Active initiative with unchecked tasks | `/implement` | Load initiative context, continue work |
-| Test failures (blocking) | Fix immediately | Highest priority |
-| Test failures (non-blocking) | `/implement` | Load test context, fix |
-| Planning markers | `/plan` | Create plan |
-| Completed initiative pending archive | `/archive-initiative` | Archive |
-| Clean state, no signals | Prompt user | Ask for direction |
+| Confidence | Action | Details |
+|------------|--------|---------|
+| **High (80%+)** | Auto-proceed | No user confirmation needed |
+| **Medium (30-79%)** | Auto-proceed with alternatives | State recommendation, mention alternatives |
+| **Low (<30%)** | Prompt user | Ask for direction |
 
-**Output:**
+**Common Routes:**
 
-```markdown
-## ✓ Context Detected (High Confidence: 85%)
+- Active initiative → `/implement`
+- Test failures → Fix immediately or `/implement`
+- Planning markers → `/plan`
+- Completed initiative → `/archive-initiative`
+- Clean slate → Prompt user
 
-**Detected:** [Brief description]
-
-**Auto-routing to:** [workflow name]
-
-**Rationale:** [1-2 sentences]
-
-Proceeding...
-```
-
-### Medium Confidence (30-79%)
-
-**AUTO-PROCEED with recommended - state alternatives but execute.**
-
-**Output:**
-
-```markdown
-## ✓ Context Detected (Medium Confidence: 65%)
-
-**Detected:** [N] possible work streams
-
-**Proceeding with recommended:** [Option 1]
-- [Brief rationale]
-
-**Alternative considered:** [Option 2] - [why not chosen]
-
-Auto-routing to [workflow]...
-```
-
-**Rationale:** AI has recommendation, user can redirect if wrong (faster than asking).
-
-### Low Confidence (<30%)
-
-**ONLY NOW prompt user.**
-
-```markdown
-## Project State Analysis (Low Confidence: 35%)
-
-**Detected signals:** [List what found]
-
-**Unable to determine clear next step.**
-
-What would you like to work on?
-
-1. **[Option 1]** - [brief description]
-2. **[Option 2]** - [brief description]
-3. **[Option 3]** - [brief description]
-4. **Something else**
-```
-
----
-
-**After routing decision, update plan with routed workflow steps:**
+**After routing, update plan with routed workflow steps:**
 
 ```typescript
 update_plan({
@@ -161,7 +110,6 @@ update_plan({
 ### Load Context
 
 Call `/load-context` with scope:
-
 - Initiative: initiative + related files
 - Planning: full project context
 - Module: specific module files
@@ -185,15 +133,9 @@ Call `/load-context` with scope:
 
 ## Stage 5: Detect Work Completion and Execute Session End Protocol
 
-### 5.1 Detect Completion Triggers
+**See:** [work-session-protocol.md](./work-session-protocol.md) for complete protocol
 
-```bash
-# Check if initiative marked complete
-grep -l "Status.*Completed\|Status.*✅" docs/initiatives/active/*.md
-
-# Check git status
-git status --short
-```
+### Quick Reference
 
 **Trigger Session End Protocol if ANY of:**
 
@@ -201,40 +143,15 @@ git status --short
 2. All planned tasks done
 3. User explicitly signals session end
 
-**If triggered, execute FULL protocol:**
+**Protocol Steps:**
 
-### 5.2 Commit All Changes
+1. Commit all changes (working + auto-fixes)
+2. Archive completed initiatives (`/archive-initiative`)
+3. Execute meta-analysis (`/meta-analysis`)
+4. Verify exit criteria (all committed, tests pass, docs updated)
+5. Present completion summary
 
-```bash
-git add <modified files>
-git commit -m "<conventional commit message>"
-
-# Commit auto-fixes separately
-git add <auto-fix files>
-git commit -m "style(scope): apply [tool] auto-fixes"
-```
-
-### 5.3 Archive Completed Initiatives
-
-```bash
-/archive-initiative <initiative-name>
-```
-
-**MUST call workflow - do not skip!**
-
-### 5.4 Execute Meta-Analysis
-
-```bash
-/meta-analysis
-```
-
-**Creates:**
-
-- Session summary in `docs/archive/session-summaries/`
-- Workflow improvement recommendations
-- Cross-session continuity documentation
-
-### 5.5 Exit Criteria
+**Exit Criteria:**
 
 ```markdown
 - [ ] All changes committed (git status clean)
@@ -270,7 +187,6 @@ git commit -m "style(scope): apply [tool] auto-fixes"
 ### ❌ Don't: Skip Session End Protocol
 
 **CRITICAL FAILURE:**
-
 - Presenting summary without `/meta-analysis`
 - Leaving completed initiatives in active/
 - Uncommitted changes at session end
@@ -284,13 +200,11 @@ If 80%+ confident, auto-route. User can redirect if wrong.
 ## Success Metrics
 
 ✅ **Good:**
-
 - Context detection + routing: <30s
 - Autonomous continuation: 70%+
 - Session end protocol: 100%
 
 ❌ **Needs Improvement:**
-
 - Asking "what to work on" when context clear
 - Skipping session end protocol
 - Requiring direction for obvious continuations
@@ -317,11 +231,23 @@ If 80%+ confident, auto-route. User can redirect if wrong.
 
 ---
 
-## References
+## Sub-Workflows
 
-- `.windsurf/workflows/detect-context.md`
-- `.windsurf/workflows/load-context.md`
-- `.windsurf/workflows/meta-analysis.md`
-- `.windsurf/rules/00_agent_directives.md` (Section 1.8)
+This workflow is decomposed into focused sub-workflows:
+
+- [work-routing.md](./work-routing.md) - Routing decision logic
+- [work-session-protocol.md](./work-session-protocol.md) - Session end protocol
 
 ---
+
+## References
+
+- [detect-context.md](./detect-context.md) - Context detection
+- [load-context.md](./load-context.md) - Context loading
+- [meta-analysis.md](./meta-analysis.md) - Session summary
+- [00_agent_directives.md](../rules/00_agent_directives.md) - Section 1.8
+
+---
+
+**Version:** 2.0.0 (Decomposed for modularity - Phase 4)
+**Last Updated:** 2025-10-18
