@@ -4,8 +4,9 @@
 **Priority:** High
 **Owner:** AI Agent Team
 **Created:** 2025-10-17
-**Target Completion:** 2025-11-15
-**Estimated Effort:** 29-41 hours
+**Updated:** 2025-10-18
+**Target Completion:** 2025-11-25
+**Estimated Effort:** 46-69 hours (expanded from 29-41)
 
 ---
 
@@ -68,22 +69,31 @@ Optimize Windsurf workflows and rules for maximum AI efficiency while maintainin
 
 ## Phases
 
-This initiative is organized into 7 phases:
+This initiative is organized into 9 phases (expanded from 7 based on gap analysis):
 
 1. [Phase 1: Research & Analysis](phases/phase-1-research-analysis.md) - ✅ Complete
 2. [Phase 2: Workflow Naming Improvements](phases/phase-2-workflow-naming.md) - ✅ Complete
-3. [Phase 3: Token Optimization](phases/phase-3-token-optimization.md) - ⏳ Pending
-4. [Phase 4: Workflow Decomposition](phases/phase-4-workflow-decomposition.md) - ⏳ Pending
-5. [Phase 5: YAML Frontmatter](phases/phase-5-yaml-frontmatter.md) - ⏳ Pending
-6. [Phase 6: Automation Workflows](phases/phase-6-automation-workflows.md) - ⏳ Pending
-7. [Phase 7: Documentation & Migration](phases/phase-7-documentation-migration.md) - ⏳ Pending
+3. [Phase 3: Token Optimization](phases/phase-3-token-optimization.md) - ⏳ Ready
+4. [Phase 4: Workflow Decomposition](phases/phase-4-workflow-decomposition.md) - ⏳ Planned
+5. [Phase 5: YAML Frontmatter](phases/phase-5-yaml-frontmatter.md) - ⏳ Planned
+6. [Phase 6: Automation Workflows](phases/phase-6-automation-workflows.md) - ⏳ Planned
+7. [Phase 7: Documentation & Migration](phases/phase-7-documentation-migration.md) - ⏳ Planned
+8. [Phase 8: Quality Automation](phases/phase-8-quality-automation.md) - 🆕 New (Gap #2-4)
+9. [Phase 9: Advanced Context Engineering](phases/phase-9-advanced-context-engineering.md) - 🆕 New (Gap #5, LOW priority)
 
 ---
 
 ## Supporting Materials
 
-- [Token Baseline Metrics](artifacts/token-baseline-metrics.md) - Current token usage analysis
-- [Versioning Tool Research](artifacts/versioning-tool-research.md) - Tool evaluation and recommendations
+### Research & Analysis
+
+- [Research Verification and Gap Analysis](artifacts/research-verification-and-gap-analysis.md) - Verified research claims, identified gaps
+- [Comprehensive Action Plan](artifacts/comprehensive-action-plan.md) - Detailed 15-item action plan across all phases
+
+### Original Research (Phase 1)
+
+- Token Baseline Metrics - Included in gap analysis
+- Versioning Tool Research - Included in Phase 6 planning
 
 ---
 
@@ -91,12 +101,14 @@ This initiative is organized into 7 phases:
 
 ### Quantitative
 
-- Token reduction: ≥30% (baseline → optimized)
-- Workflow count: +5 new sub-workflows
-- Max workflow size: ≤300 lines
-- Documentation coverage: 100% with frontmatter
+- Token reduction: ≥30% (9,800-16,400 tokens saved from baseline 52,728)
+- Workflow count: +7 new files (3 workflows + 2 rules + 2 templates)
+- Max workflow size: ≤4,000 tokens (~16,000 bytes)
+- Max complexity: <75/100 (all files)
+- Documentation coverage: 100% with YAML frontmatter
 - Auto-versioning rate: 100% of feature/fix commits
 - Test pass rate: 100% (no regressions)
+- Quality automation: 100% (validation + monitoring)
 
 ### Qualitative
 
@@ -114,23 +126,40 @@ This initiative is organized into 7 phases:
 
 - Research completed (token metrics, naming patterns)
 - Workflow naming improved (6 workflows renamed)
-- Foundation established for Phase 3-7
+- Foundation established
 
-**Phase 3-7: Pending** ⏳
+**Phase 3: Ready for Execution** ⏳
 
-- Token optimization planned
-- Decomposition strategy defined
-- Automation workflows designed
-- Ready for implementation
+- Detailed plan created with 5 tasks
+- HIGH PRIORITY: Remove mcp2_git references (Gap #1)
+- Token optimization targets identified
+- 30-50% reduction achievable (verified by web research)
+
+**Phase 4-7: Planned** ⏳
+
+- All phase files created with detailed tasks
+- Decomposition strategy defined (3 complex files)
+- YAML frontmatter schema designed
+- Automation validation plan ready
+- Documentation and migration guide planned
+
+**Phase 8-9: New Phases** 🆕
+
+- Phase 8: Quality automation (Gap #2-4)
+- Phase 9: Advanced context engineering (Gap #5, optional)
 
 ---
 
 ## Timeline
 
 - **Phase 1-2**: 2025-10-17 to 2025-10-18 ✅ Complete
-- **Phase 3-4**: Week of 2025-10-21 (6-10 hours)
-- **Phase 5-6**: Week of 2025-10-28 (8-12 hours)
-- **Phase 7**: Week of 2025-11-04 (3-5 hours)
+- **Phase 3**: Week of 2025-10-21 (8-12 hours) - Token optimization
+- **Phase 4**: Week of 2025-10-21 (6-10 hours) - Workflow decomposition
+- **Phase 5**: Week of 2025-10-28 (4-6 hours) - YAML frontmatter
+- **Phase 6**: Week of 2025-10-28 (5-8 hours) - Automation workflows
+- **Phase 7**: Week of 2025-11-04 (3-5 hours) - Documentation & migration
+- **Phase 8**: Week of 2025-11-11 (7-10 hours) - Quality automation
+- **Phase 9**: Week of 2025-11-18 (10-15 hours) - Advanced features (optional)
 
 ---
 
@@ -138,15 +167,48 @@ This initiative is organized into 7 phases:
 
 - ADR-0002: Windsurf workflow system (foundation)
 - ADR-0003: Documentation standards (metadata strategy)
+- ADR-0018: Workflow Architecture V3 (orchestration patterns)
 - Future: ADR-00XX for workflow decomposition strategy
-- Future: ADR-00XX for automated versioning approach
+- Future: ADR-00XX for context-aware rule loading
 
 ---
 
 ## Progress Summary
 
-### Overall: 15% Complete (2/7 phases complete)
+### Overall: 22% Complete (2/9 phases complete)
 
-Phase 1-2 established the foundation with research and naming improvements. Phases 3-7 will implement the core optimizations.
+Phase 1-2 established the foundation with research and naming improvements. Comprehensive planning complete for Phases 3-9 with detailed action items.
 
-**Latest Update:** 2025-10-18 - Naming improvements complete, ready for token optimization
+**Latest Update:** 2025-10-18 - Comprehensive planning complete
+
+### What's New (2025-10-18)
+
+- ✅ Research claims verified (95% accuracy)
+- ✅ Web research completed (industry best practices)
+- ✅ Gap analysis identified 5 new action items
+- ✅ Detailed phase plans created for Phases 3-9
+- ✅ Comprehensive action plan with 15 tasks
+- 🆕 2 new phases added (Quality Automation, Advanced Context Engineering)
+
+### Key Findings
+
+**Verified:**
+
+- Token reduction 30-50% achievable (confirmed by multiple sources)
+- mcp2_git references outdated (tools don't exist) - HIGH priority fix
+- Complexity scores accurate (work.md=82, consolidate-summaries.md=80)
+
+**New Gaps:**
+
+1. **Gap #1 (HIGH):** Remove mcp2_git references - Phase 3, Task 1
+2. **Gap #2 (MEDIUM):** Workflow validation automation - Phase 8
+3. **Gap #3 (MEDIUM):** Performance monitoring in CI/CD - Phase 8
+4. **Gap #4 (LOW):** Cross-reference validation - Phase 8
+5. **Gap #5 (LOW):** Modular instruction patterns - Phase 9
+
+### External Research Sources
+
+- **Token Optimization:** 40-60% reduction possible (Agenta.ai, 2025)
+- **Prompt Engineering:** 30-50% reduction via compression (10clouds, 2025)
+- **Context Engineering:** Session splitting, modular rules (GitHub, 2025)
+- **Industry Validation:** All research recommendations verified
