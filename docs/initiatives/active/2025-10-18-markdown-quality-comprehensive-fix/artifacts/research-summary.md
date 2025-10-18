@@ -23,12 +23,14 @@
 
 | Tool | Status (2025) | Auto-fix | Custom Rules | Pros | Cons | Verdict |
 |------|---------------|----------|--------------|------|------|---------|
-| **markdownlint-cli2** | ✅ Active | ✅ Yes | ✅ Yes | Modern, fast, good ecosystem | Learning curve | ✅ **Primary** |
-| markdownlint-cli | ⚠️ Maintenance | ✅ Yes | ✅ Yes | Simple, reliable | Less features | ✅ Backup |
+| **markdownlint-cli2** | ✅ Active | ✅ Yes | ✅ Yes | Modern, fast, good ecosystem | Requires proper config | ✅ **Selected** |
+| markdownlint-cli | ⚠️ Maintenance | ✅ Yes | ✅ Yes | Simple, reliable | Deprecated, removed | ❌ Removed |
 | remark-lint | ✅ Active | ✅ Yes | ✅ Yes | AST-based, powerful | More complex | ⏸️ Optional |
 | Vale | ✅ Active | ❌ No | ✅ Yes | Prose quality, style guide enforcement | Different focus | ⏸️ Phase 2 |
 
 ### Detailed Tool Analysis
+
+#### markdownlint-cli2 ✅ **SELECTED**
 
 #### markdownlint-cli2 ✅ **RECOMMENDED**
 

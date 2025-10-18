@@ -115,7 +115,6 @@ Layer 4: Automated Tests → Regression prevention
 | Component | Tool | Version | Purpose |
 |-----------|------|---------|---------|
 | Primary Linter | markdownlint-cli2 | v0.18.1 | Structural validation |
-| Backup Linter | markdownlint-cli | Latest | Comparison/validation |
 | Testing | pytest | Latest | Automated quality tests |
 | CI/CD | GitHub Actions | - | Automated validation |
 | Pre-commit | pre-commit | Latest | Client-side enforcement |
@@ -201,9 +200,9 @@ Layer 4: Automated Tests → Regression prevention
 
 ### Challenge 1: Error Count Discrepancy
 
-**Issue:** markdownlint-cli2 reported 4,188 errors vs markdownlint-cli reported 75
-**Root Cause:** Different default configurations and JSON output formatter
-**Solution:** Used markdownlint-cli for accurate counts, kept cli2 for auto-fix
+**Issue:** markdownlint-cli2 reported 4,188 errors (including node_modules)
+**Root Cause:** Config not ignoring node_modules/.venv directories
+**Solution:** Updated .markdownlint-cli2.jsonc ignores, consolidated on single tool
 
 ### Challenge 2: Pre-commit Hook Bypass
 
