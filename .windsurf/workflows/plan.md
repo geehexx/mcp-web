@@ -196,7 +196,7 @@ Do NOT plan for:
 
 **Workflow chain:**
 
-```
+```text
 /plan → /research → /generate-plan → /implement → /validate → /commit
 ```
 

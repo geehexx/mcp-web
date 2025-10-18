@@ -85,35 +85,35 @@ mcp0_read_text_file("/home/gxx/projects/mcp-web/.windsurf/rules/01_testing_and_t
 
 1. **Broad best practices**
 
-   ```
+   ```text
    search_web("[Technology] best practices 2025")
    Example: "Python API authentication best practices 2025"
    ```
 
 2. **Framework-specific**
 
-   ```
+   ```text
    search_web("[Framework] [Feature] guide 2025")
    Example: "FastAPI security authentication guide 2025"
    ```
 
 3. **Security focus**
 
-   ```
+   ```text
    search_web("OWASP [Feature] security 2025")
    Example: "OWASP API security authentication 2025"
    ```
 
 4. **Real-world examples**
 
-   ```
+   ```text
    search_web("[Technology] production examples [Feature]")
    Example: "Python JWT production examples authentication"
    ```
 
 5. **Recent updates**
 
-   ```
+   ```text
    search_web("[Library] security vulnerabilities CVE 2024 2025")
    Example: "bcrypt security vulnerabilities CVE 2024 2025"
    ```
@@ -288,7 +288,6 @@ uv add [package-name]
 
 - OWASP [relevant guide]
 - RFC [relevant spec]
-
 ```
 
 ---

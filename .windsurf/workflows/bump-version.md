@@ -282,7 +282,7 @@ npx markdownlint-cli2 docs/reference/CHANGELOG.md
 
 **Commits since v0.2.0:**
 
-```
+```text
 feat(cli): add test-robots command
 feat(cache): implement TTL-based expiration
 fix(fetcher): handle timeout gracefully
@@ -306,7 +306,7 @@ docs: update README with examples
 
 **Commits since v0.2.1:**
 
-```
+```text
 fix(security): sanitize HTML in extracted content
 fix(tests): resolve async test timing issue
 test: add golden data test for summarization
@@ -328,7 +328,7 @@ test: add golden data test for summarization
 
 **Commits since v0.9.5:**
 
-```
+```text
 feat(api): add async support for all methods
 
 BREAKING CHANGE: All API methods now return coroutines
@@ -348,7 +348,7 @@ BREAKING CHANGE: All API methods now return coroutines
 
 **Commits since v0.2.0:**
 
-```
+```text
 docs: fix typo in README
 test: add unit test for edge case
 chore: update .gitignore
@@ -443,19 +443,19 @@ Result: Semantic versions reflect actual releases
 
 **Evaluated options:**
 
-1. **bump-my-version** ([link](https://github.com/callowayproject/bump-my-version))
+1. **bump-my-version** ([GitHub](https://github.com/callowayproject/bump-my-version))
    - ✅ Python-native
    - ✅ Configurable
    - ✅ Supports multiple files
    - ❌ Requires configuration
 
-2. **commitizen** ([link](https://commitizen-tools.github.io/commitizen/))
+2. **commitizen** ([Documentation](https://commitizen-tools.github.io/commitizen/))
    - ✅ Full conventional commit workflow
    - ✅ Changelog generation
    - ✅ Version bumping
    - ⚠️ Opinionated workflow
 
-3. **semantic-release** ([link](https://github.com/semantic-release/semantic-release))
+3. **semantic-release** ([GitHub](https://github.com/semantic-release/semantic-release))
    - ✅ Industry standard
    - ✅ CI/CD integration
    - ❌ Node.js dependency
