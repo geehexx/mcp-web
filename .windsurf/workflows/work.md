@@ -73,49 +73,91 @@ update_plan({
 
 ## Stage 3: Route to Appropriate Workflow
 
-### High Confidence (Auto-Route)
+### High Confidence (Auto-Proceed)
 
 **If `/detect-context` returns 80%+ confidence:**
+
+**AUTO-PROCEED with detected action - no user confirmation needed.**
 
 | Detected Context | Route To | Action |
 |------------------|----------|--------|
 | Active initiative with unchecked tasks | `/implement` | Load initiative context, continue work |
-| Test failures | `/implement` | Load test context, fix failures |
+| Test failures (blocking) | Fix immediately | Highest priority - unblock test suite |
+| Test failures (non-blocking) | `/implement` | Load test context, fix failures |
 | Planning markers ("needs design", ADR placeholders) | `/plan` | Create comprehensive plan |
 | Completed initiative pending archive | `/archive-initiative` | Archive completed work |
 | Clean state, no signals | Prompt user | Ask for direction |
 
-### Medium Confidence (Present Options)
+**Output format:**
+
+```markdown
+## ✓ Context Detected (High Confidence: 85%)
+
+**Detected:** [Brief description of what was found]
+
+**Auto-routing to:** [workflow name]
+
+**Rationale:** [1-2 sentence explanation]
+
+Proceeding...
+```
+
+### Medium Confidence (Auto-Proceed with Recommended)
 
 **If `/detect-context` returns 50-79% confidence:**
 
-Present detected options to user with recommendation:
+**AUTO-PROCEED with recommended option - briefly state alternatives but execute recommendation.**
+
+**Output format:**
 
 ```markdown
-## Detected Context (Multiple Options)
+## ✓ Context Detected (Medium Confidence: 65%)
 
-I found [N] possible work streams:
+**Detected:** [N] possible work streams
 
-1. **[Option 1]** ([details])
-   - Estimated: [time]
-   - Recommended: [reason]
+**Proceeding with recommended:** [Option 1 name]
+- [Brief rationale for recommendation]
 
-2. **[Option 2]** ([details])
-   - Estimated: [time]
+**Alternative considered:** [Option 2 name] - [why not chosen]
 
-Which would you like to continue?
+Auto-routing to [workflow]...
 ```
+
+**Rationale for auto-proceeding:**
+
+- AI has identified a clear recommendation
+- User can redirect if wrong (faster than asking permission)
+- Follows principle: "Execute and adjust" beats "Ask and wait"
+- If user disagrees, they can interrupt and redirect
 
 ### Low Confidence (Prompt User)
 
 **If `/detect-context` returns <50% confidence:**
 
-List available options:
+**ONLY NOW prompt user for direction.**
 
-1. Create new plan (`/plan`)
-2. Review open initiatives
-3. Run validation checks (`/validate`)
-4. Something else (specify)
+**Output format:**
+
+```markdown
+## Project State Analysis (Low Confidence: 35%)
+
+**Detected signals:** [List what was found]
+
+**Unable to determine clear next step** - multiple equally valid options.
+
+What would you like to work on?
+
+1. **[Option 1]** - [brief description]
+2. **[Option 2]** - [brief description]
+3. **[Option 3]** - [brief description]
+4. **Something else** (please specify)
+```
+
+**When to prompt:**
+
+- Multiple initiatives equally active
+- Conflicting signals (e.g., both new work and urgent fixes)
+- Truly clean slate with no history
 
 ---
 
