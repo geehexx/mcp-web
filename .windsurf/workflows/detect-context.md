@@ -5,11 +5,9 @@ auto_execution_mode: 3
 
 # Detect Context Workflow
 
-**Purpose:** Intelligently analyze project state to determine what work should happen next, enabling autonomous work continuation.
+**Purpose:** Analyze project state to determine what work should happen next, enabling autonomous continuation.
 
 **Invocation:** `/detect-context` (called by `/work` or directly)
-
-**Philosophy:** AI should understand project state and continuation points without explicit user direction.
 
 ---
 
@@ -17,45 +15,29 @@ auto_execution_mode: 3
 
 ### 1.1 Load Essential Context
 
-**Batch read key files (MUST use absolute paths for MCP tools):**
+Batch read key files (MUST use absolute paths for MCP tools):
 
 ```python
 mcp0_read_multiple_files([
     "/home/gxx/projects/mcp-web/PROJECT_SUMMARY.md",
-    "/home/gxx/projects/mcp-web/docs/initiatives/active/*.md"  # All active initiatives
+    "/home/gxx/projects/mcp-web/docs/initiatives/active/*.md"
 ])
 ```
 
 ### 1.2 Check Session Summaries
 
-**Load recent session context:**
-
 ```bash
 # Get 2-3 most recent summaries
 ls -t /home/gxx/projects/mcp-web/docs/archive/session-summaries/*.md | head -3
-
-# Read them for "Next Steps" and "Unresolved" sections
 ```
 
-**Why session summaries matter:**
-
-- Provide cross-session continuity
-- Show recent work patterns and decisions
-- Identify deferred work and next steps
-- Reveal recurring issues or blockers
+Look for: "Next Steps", "Unresolved" sections, recent decisions
 
 ### 1.3 Check Git Status
 
-**Analyze recent activity:**
-
 ```bash
-# Recent commits
 git log --oneline -5
-
-# Current working tree state
 git status --short
-
-# Modified files
 git diff --name-only
 ```
 
@@ -65,74 +47,51 @@ git diff --name-only
 
 ### 2.1 Search for Continuation Signals
 
-### Priority 1: Session Summary Signals
+**Priority 1: Session Summary**
 
 ```bash
-# Read most recent summary
 recent_summary=$(ls -t docs/archive/session-summaries/*.md | head -1)
-
-# Look for:
-# - "Next Steps" section → continuation points
-# - "Unresolved" issues → blockers to address
-# - "Key Learnings" → context for decisions
+# Look for: "Next Steps", "Unresolved" issues, "Key Learnings"
 ```
 
-### Priority 2: Active Initiative Signals
+**Priority 2: Active Initiatives**
 
 ```python
-# Parse initiative files for:
 for initiative in active_initiatives:
-    # Unchecked tasks: [ ] Task name
     unchecked_tasks = find_pattern(r"- \[ \]", initiative)
-
-    # Status field
     status = extract_field("Status:", initiative)
-
-    # Next Steps section
     next_steps = extract_section("Next Steps", initiative)
 ```
 
-### Priority 3: Git Signals
+**Priority 3: Git Signals**
 
 ```bash
-# Unstaged changes → incomplete work
-git diff --name-only
-
-# Staged but uncommitted → interrupted work
-git diff --staged --name-only
-
-# Recent commit types
-git log --pretty=format:"%s" -5 | grep -E "^(feat|fix|test|docs):"
+git diff --name-only  # Unstaged changes
+git diff --staged --name-only  # Staged but uncommitted
+git log --pretty=format:"%s" -5 | grep -E "^(feat|fix|test):"
 ```
 
-### Priority 4: Test Signals
+**Priority 4: Test Signals**
 
 ```bash
-# Check for test failures
 task test:fast 2>&1 | tail -20 | grep -E "(FAILED|ERROR)"
-
-# Check for pending tests
 grep -r "pytest.mark.skip" tests/
-grep -r "@unittest.skip" tests/
 ```
 
-### Priority 5: Documentation Signals
+**Priority 5: Documentation Signals**
 
 ```bash
-# Efficient grep for markers
 grep -r "TODO\|FIXME\|XXX" docs/ --include="*.md"
 ```
 
 ### 2.2 Classify Signals
 
-**Signal strength classification:**
-
 | Signal Type | Strength | Example |
 |-------------|----------|---------|
-| Session summary "Next Steps" | ⭐⭐⭐ High | "Next: Add CLI key management" |
+| Session summary "Next Steps" | ⭐⭐⭐ High | "Next: Add CLI commands" |
 | Unchecked initiative tasks | ⭐⭐⭐ High | "[ ] Implement validation" |
-| Unstaged changes | ⭐⭐ Medium | src/auth.py modified |
 | Test failures | ⭐⭐⭐ High | 5 tests failing in test_auth.py |
+| Unstaged changes | ⭐⭐ Medium | src/auth.py modified |
 | Recent commit pattern | ⭐ Low | Last 5 commits all "feat(auth)" |
 | TODO markers | ⭐ Low | "TODO: Add error handling" |
 | Clean state | ⚪ None | No signals, prompt user |
@@ -141,50 +100,38 @@ grep -r "TODO\|FIXME\|XXX" docs/ --include="*.md"
 
 ## Stage 3: Context Interpretation
 
-### 3.1 Apply Detection Matrix
+### 3.1 Detection Matrix
 
-**Based on detected signals, determine intent:**
-
-| Detection Pattern | Interpretation | Confidence | Route To |
-|-------------------|----------------|------------|----------|
-| Session summary "Next Steps" + matching initiative | Continue from last session | High | `/implement` with context |
-| Unchecked initiative tasks (3+ remaining) | Continue active initiative | High | `/implement` focused work |
-| Test failures mentioned in recent summary | Bug fixing needed | High | `/implement` + TDD |
-| "Plan" or "Design" keywords in summaries | Planning phase active | High | `/plan` workflow |
-| Multiple incomplete features | Needs prioritization | Medium | `/plan` → prioritize |
-| Recent ADR + "decide" keywords | Architecture decision in progress | Medium | `/new-adr` or review |
-| Unstaged changes + no context | Work interrupted mid-session | Medium | Prompt user |
-| Clean state + no initiative | New work starting | Low | Prompt user |
+| Pattern | Interpretation | Confidence | Route To |
+|---------|----------------|------------|----------|
+| Session "Next Steps" + matching initiative | Continue from last session | High | `/implement` |
+| Unchecked tasks (3+) | Continue initiative | High | `/implement` |
+| Test failures in summary | Bug fixing needed | High | `/implement` + TDD |
+| "Plan" keywords in summary | Planning phase active | High | `/plan` |
+| Multiple incomplete features | Needs prioritization | Medium | `/plan` |
+| Recent ADR + "decide" | Architecture decision | Medium | `/new-adr` |
+| Unstaged changes + no context | Work interrupted | Medium | Prompt user |
+| Clean state + no initiative | New work | Low | Prompt user |
 
 ### 3.2 Extract Specific Context
 
-**For each high-confidence signal:**
-
 ```python
 if signal_type == "initiative_tasks":
-    # Extract exact tasks
-    initiative_file = signal.source
-    unchecked = extract_unchecked_tasks(initiative_file)
     context = {
         "initiative": initiative_file,
-        "next_tasks": unchecked[:3],  # Next 3 tasks
+        "next_tasks": unchecked[:3],
         "phase": extract_current_phase(initiative_file)
     }
 
 elif signal_type == "session_next_steps":
-    # Extract next steps
-    summary_file = signal.source
-    next_steps = extract_section("Next Steps", summary_file)
     context = {
         "summary": summary_file,
-        "next_steps": next_steps,
+        "next_steps": extract_section("Next Steps", summary_file),
         "unresolved": extract_section("Unresolved", summary_file)
     }
 
 elif signal_type == "test_failures":
-    # Extract failure details
-    test_output = run_command("task test:fast")
-    failures = parse_pytest_failures(test_output)
+    failures = parse_pytest_failures(run_command("task test:fast"))
     context = {
         "test_failures": failures,
         "affected_modules": extract_modules(failures)
@@ -197,70 +144,46 @@ elif signal_type == "test_failures":
 
 ### 4.1 Calculate Confidence Score
 
-**Scoring algorithm:**
-
 ```python
 confidence_score = 0
-
-# Session summary signals (+30 each)
-if has_next_steps_in_summary:
-    confidence_score += 30
-if has_unresolved_in_summary:
-    confidence_score += 30
-
-# Initiative signals (+25 each)
-if has_unchecked_tasks:
-    confidence_score += 25
-if initiative_status == "Active":
-    confidence_score += 25
-
-# Git signals (+15 each)
-if has_unstaged_changes:
-    confidence_score += 15
-if recent_commits_same_area:
-    confidence_score += 15
-
-# Test signals (+20 each)
-if has_test_failures:
-    confidence_score += 20
-
-# Documentation signals (+10 each)
-if has_todo_markers:
-    confidence_score += 10
+if has_next_steps_in_summary: confidence_score += 30
+if has_unresolved_in_summary: confidence_score += 30
+if has_unchecked_tasks: confidence_score += 25
+if initiative_status == "Active": confidence_score += 25
+if has_unstaged_changes: confidence_score += 15
+if recent_commits_same_area: confidence_score += 15
+if has_test_failures: confidence_score += 20
+if has_todo_markers: confidence_score += 10
 ```
 
-**Confidence thresholds:**
+**Thresholds:**
 
 | Score | Confidence | Action |
 |-------|------------|--------|
-| 80+ | High | Auto-route to workflow |
+| 80+ | High | Auto-route |
 | 30-79 | Medium | Auto-proceed with recommendation |
-| <30 | Low | Prompt user for direction |
+| <30 | Low | Prompt user |
 
 ### 4.2 Handle Ambiguity
 
-**If multiple strong signals:**
+**Multiple strong signals:**
 
 ```markdown
 ## Detected Multiple Work Streams
 
-I found 2 high-confidence continuation points:
-
-1. **Initiative: API Key Authentication** (Phase 2, 60% complete)
-   - Session summary: "Next: Add CLI key management commands"
-   - 4 unchecked tasks remaining
-   - Estimated: 2-3 hours
+1. **Initiative: API Key Auth** (Phase 2, 60% complete)
+   - Session: "Next: Add CLI commands"
+   - 4 unchecked tasks, ~2-3 hours
 
 2. **Test Failures: Security Module** (5 failures)
-   - test_security.py: 5/15 tests failing
-   - Introduced in last commit (2 hours ago)
-   - Estimated: 1 hour to fix
+   - test_security.py: 5/15 failing
+   - ~1 hour to fix
 
-**Recommendation:** Fix test failures first (blocking), then continue initiative.
+**Recommendation:** Fix tests first (blocking), then continue initiative.
 
-Which would you like to tackle?
+Which would you like?
 1. Fix test failures (recommended)
-2. Continue API Key Authentication
+2. Continue initiative
 3. Something else
 ```
 
@@ -268,9 +191,7 @@ Which would you like to tackle?
 
 ## Stage 5: Routing Decision
 
-### 5.1 High Confidence Auto-Route
-
-**If confidence ≥80%, automatically route:**
+### 5.1 High Confidence (≥80%)
 
 ```markdown
 ## Context Detected ✓
@@ -278,237 +199,156 @@ Which would you like to tackle?
 **Source:** docs/archive/session-summaries/2025-10-17-afternoon.md
 
 **Detection:**
-- Session summary indicates: "Next: Add CLI key management commands"
-- Active initiative: docs/initiatives/active/api-key-auth.md (Phase 2)
-- Status: Active, 3/7 tasks complete
+- Session: "Next: Add CLI key management commands"
+- Initiative: api-key-auth.md (Phase 2, 3/7 tasks complete)
 - No blockers
 
 **Auto-routing to:** `/implement` with initiative context
-
-Loading initiative and related files...
 ```
 
-### 5.2 Medium Confidence Recommendation
-
-**If confidence 50-79%, recommend with options:**
+### 5.2 Medium Confidence (50-79%)
 
 ```markdown
 ## Context Analysis
 
-**Primary Signal:** Unchecked tasks in API Key Authentication initiative
+**Primary:** 4 unchecked tasks in API Key Auth
 
 **Evidence:**
-- 4 tasks remaining in Phase 2
 - No test failures
 - No unstaged changes
-- Last commit: 3 hours ago (feat: add validation)
+- Last commit: 3 hours ago (feat: validation)
 
-**Recommendation:** Continue initiative implementation
+**Recommendation:** Continue initiative
 
-**Alternative Options:**
-1. **Continue initiative** (recommended) - Clear next steps defined
-2. **Run validation** - Ensure current state is clean before continuing
-3. **Review architecture** - Check if ADR needed before implementation
+**Alternatives:**
+1. **Continue initiative** (recommended)
+2. **Run validation** first
+3. **Review architecture**
 
-What would you like to do?
+What would you like?
 ```
 
-### 5.3 Low Confidence Prompt
-
-**If confidence <50%, present options:**
+### 5.3 Low Confidence (<50%)
 
 ```markdown
-## Project State Analysis
+## Project State
 
-**Detected Signals:**
-- Clean git state (no uncommitted changes)
+**Signals:**
+- Clean git state
 - 2 active initiatives (both in progress)
 - No test failures
-- No recent session summary
+- No recent summary
 
 **Unable to determine clear next step.**
 
-What would you like to work on?
+What would you like?
 1. **Continue Initiative A** (API Key Auth)
-2. **Continue Initiative B** (Performance Optimization)
-3. **Create new plan** for upcoming work
-4. **Review and commit** existing work
-5. **Something else** (please specify)
+2. **Continue Initiative B** (Performance Opt)
+3. **Create new plan**
+4. **Review and commit**
+5. **Something else**
 ```
 
 ---
 
 ## Stage 6: Load Detailed Context
 
-### 6.1 Load Context for Detected Work
-
-**Once routing decided, load full context:**
+### 6.1 Load Context for Work
 
 ```python
 if route == "implement_initiative":
-    # Load initiative context
     call_workflow("/load-context", scope="initiative")
-
 elif route == "fix_tests":
-    # Load test module context
     call_workflow("/load-context", scope="module:tests")
-
 elif route == "planning":
-    # Load full context for planning
     call_workflow("/load-context", scope="full")
 ```
 
-### 6.2 Verify Context Completeness
-
-**Before proceeding:**
+### 6.2 Verify Completeness
 
 ```markdown
 ✅ Initiative file loaded
-✅ Related source files loaded (3 files)
+✅ Source files loaded (3 files)
 ✅ Test files loaded (2 files)
-✅ Recent commits analyzed (5 commits)
-⚠️ No related ADR found (acceptable)
+✅ Recent commits analyzed (5)
+⚠️ No related ADR (acceptable)
 
-**Context ready.** Proceeding with implementation...
+**Context ready.** Proceeding...
 ```
 
 ---
 
 ## Examples
 
-### Example 1: Clear Session Continuation
-
-**Input:** New session, user invokes `/work`
+### Example 1: Clear Continuation
 
 **Detection:**
 
-```bash
-# Load recent summary
-$ cat docs/archive/session-summaries/2025-10-17-afternoon.md
-
-## Next Steps
-1. Add CLI key management commands (add, revoke, list)
-2. Implement key rotation logic
-3. Add integration tests for key lifecycle
-```
-
-**Analysis:**
-
-- ⭐⭐⭐ Session summary with clear next steps
-- ⭐⭐⭐ Matching active initiative found
-- Confidence: 85% (High)
-
-**Decision:** Auto-route to `/implement` with initiative context
+- ⭐⭐⭐ Session summary: "Next: Add CLI commands"
+- ⭐⭐⭐ Matching initiative found
+- Confidence: 85%
 
 **Output:**
 
 ```markdown
-✓ Detected continuation point from last session
-→ Routing to /implement for "API Key Authentication" (Phase 2)
-→ Next task: Add CLI key management commands
+✓ Detected continuation from last session
+→ Routing to /implement for "API Key Auth" (Phase 2)
 ```
 
-### Example 2: Test Failure Detected
-
-**Input:** User invokes `/work` after failed CI
+### Example 2: Test Failures
 
 **Detection:**
 
-```bash
-# Run tests
-$ task test:fast
-FAILED tests/unit/test_security.py::test_xss_sanitization
-FAILED tests/unit/test_security.py::test_sql_injection_prevention
-```
-
-**Analysis:**
-
-- ⭐⭐⭐ Test failures (2 tests)
+- ⭐⭐⭐ 2 test failures
 - ⭐⭐ Recent commits modified security.py
-- Confidence: 75% (Medium)
-
-**Decision:** Recommend test fix first
+- Confidence: 75%
 
 **Output:**
 
 ```markdown
-⚠️ Test failures detected (2 failing tests)
+⚠️ Test failures detected (2 failing)
 
-Recommendation: Fix failing tests before continuing other work.
+Recommendation: Fix tests first.
 
-Would you like to:
-1. Fix test failures (recommended)
-2. Continue with initiative work
+1. Fix failures (recommended)
+2. Continue initiative work
 ```
 
 ### Example 3: Multiple Initiatives
 
-**Input:** User invokes `/work`, multiple active initiatives
-
 **Detection:**
 
-```bash
-# Active initiatives
-- docs/initiatives/active/api-key-auth.md (Status: Active, 3/7 tasks)
-- docs/initiatives/active/performance-opt.md (Status: Active, 5/12 tasks)
-
-# No recent session summary
-# No clear signals
-```
-
-**Analysis:**
-
 - ⭐⭐ Two active initiatives
-- ⭐ No clear preference signal
-- Confidence: 40% (Low)
-
-**Decision:** Prompt user to choose
+- ⭐ No clear preference
+- Confidence: 40%
 
 **Output:**
 
 ```markdown
 Found 2 active initiatives:
 
-1. **API Key Authentication** (Phase 2, 43% complete)
-   - 4 tasks remaining
-   - Last updated: 3 hours ago
+1. **API Key Auth** (Phase 2, 43% complete)
+2. **Performance Opt** (Phase 1, 42% complete)
 
-2. **Performance Optimization** (Phase 1, 42% complete)
-   - 7 tasks remaining
-   - Last updated: 2 days ago
-
-Which would you like to continue?
+Which would you like?
 ```
 
 ### Example 4: Clean Slate
 
-**Input:** User invokes `/work`, no active work
-
 **Detection:**
 
-```bash
-# No active initiatives
-# No unstaged changes
-# No test failures
-# Clean git state
-```
-
-**Analysis:**
-
-- ⚪ No signals detected
-- Confidence: 0% (None)
-
-**Decision:** Prompt for new work
+- ⚪ No signals
+- Confidence: 0%
 
 **Output:**
 
 ```markdown
-Project state is clean with no active work detected.
+Project state is clean.
 
-What would you like to do?
-1. Create a new plan (/plan)
-2. Start a new initiative
-3. Review and archive completed work
+What would you like?
+1. Create plan (/plan)
+2. Start initiative
+3. Review completed work
 4. Something else
 ```
 
@@ -518,103 +358,39 @@ What would you like to do?
 
 ### ❌ Don't: Ignore Session Summaries
 
-**Bad:**
+- **Bad:** "What did you work on last session?"
+- **Good:** "Continuing from last session: Add CLI commands"
 
-```markdown
-AI: *ignores session summaries*
-AI: "What would you like to work on?"
-User: "Continue from last session"
-AI: "What did you work on last session?"
-```
+### ❌ Don't: Over-Rely on Git Only
 
-**Good:**
-
-```markdown
-AI: *reads session summary*
-AI: "Detected continuation point: Add CLI key management"
-AI: "Loading context and proceeding..."
-```
-
-### ❌ Don't: Over-Rely on Git Status
-
-**Bad:**
-
-```markdown
-# Only checks git status
-git status: clean
-AI: "No work to continue"
-# Ignores active initiatives and session summaries
-```
-
-**Good:**
-
-```markdown
-# Checks multiple signals
-git status: clean
-session summary: "Next: Implement feature X"
-initiative: [ ] Feature X implementation
-AI: "Continuing feature X from last session"
-```
+- **Bad:** Git clean → "No work to continue"
+- **Good:** Check summaries + initiatives → "Continuing feature X"
 
 ### ❌ Don't: Auto-Route on Low Confidence
 
-**Bad:**
-
-```markdown
-Confidence: 35%
-AI: "Assuming you want to continue initiative A..."
-# Might be wrong assumption
-```
-
-**Good:**
-
-```markdown
-Confidence: 35%
-AI: "Found multiple possible work streams. Which would you like?"
-# Let user decide when ambiguous
-```
+- **Bad:** 35% confidence → "Assuming initiative A..."
+- **Good:** 35% confidence → "Which would you like?"
 
 ---
 
-## Integration Points
+## Performance Targets
 
-### Called By
+| Phase | Target |
+|-------|--------|
+| Load context | <1s |
+| Search signals | <2s |
+| Analyze | <1s |
+| **Total** | **<4s** |
 
-- `/work` - Primary caller for context detection
-- User - Direct invocation for analysis
-
-### Calls
-
-- `/load-context` - Load detailed context after detection
-- Git commands - Analyze repository state
-- File system tools - Read summaries and initiatives
-
----
-
-## Performance
-
-**Detection time targets:**
-
-| Phase | Target Time |
-|-------|-------------|
-| Load essential context | <1 second |
-| Search for signals | <2 seconds |
-| Analyze and classify | <1 second |
-| **Total detection** | **<4 seconds** |
-
-**Optimization:**
-
-- Batch reads for file loading
-- Parallel grep searches where possible
-- Cache git log results within session
+**Optimization:** Batch reads, parallel grep, cache git log
 
 ---
 
 ## References
 
 - [Factory.ai Context Detection](https://factory.ai/news/context-window-problem)
-- [Anthropic Long-Context Patterns](https://docs.anthropic.com/claude/docs/long-context-window-tips)
-- Project: `.windsurf/workflows/work.md` (Context detection strategy)
-- Project: `.windsurf/workflows/load-context.md` (Context loading)
+- [Anthropic Long-Context Tips](https://docs.anthropic.com/claude/docs/long-context-window-tips)
+- `.windsurf/workflows/work.md`
+- `.windsurf/workflows/load-context.md`
 
 ---

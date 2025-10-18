@@ -6,13 +6,11 @@ category: Orchestrator
 
 # Work Orchestration Workflow
 
-**Purpose:** Central orchestration workflow that intelligently detects project context and routes to appropriate specialized workflows.
-
-**Category:** Orchestrator (master workflow coordination)
+**Purpose:** Central orchestration workflow that intelligently detects project context and routes to specialized workflows.
 
 **Invocation:** `/work` (with optional context) or `/work` (autonomous detection)
 
-**Philosophy:** AI agent should understand where to pick up from by analyzing project state, not by requiring explicit direction.
+**Philosophy:** AI should understand where to pick up from by analyzing project state, not requiring explicit direction.
 
 **Workflow Chain:** `/work` → `/detect-context` → [routed workflow] → `/meta-analysis` (at session end)
 
@@ -20,11 +18,9 @@ category: Orchestrator
 
 ## Stage 1: Create Initial Task Plan
 
-🔄 **Entering Stage 1: Create Initial Task Plan**
+**MANDATORY:** Create task list before any actions.
 
-**MANDATORY:** Create task list before any other actions.
-
-**Numbering Format:** Attribute tasks to the workflow that EXECUTES them, not the caller.
+**Numbering:** Attribute tasks to workflow that EXECUTES them.
 
 ```typescript
 update_plan({
@@ -39,24 +35,17 @@ update_plan({
 })
 ```
 
-✓ Task plan created with 5 items
-
-**Note:** Step 1 uses `/detect-context` prefix because that workflow executes the analysis. Steps 2-5 use `/work` prefix because the orchestrator performs these coordination tasks itself.
-
 ---
 
 ## Stage 2: Detect Project Context
 
-**Call `/detect-context` workflow:**
+Call `/detect-context` workflow:
 
 - Analyzes project state (initiatives, git, tests, sessions)
 - Classifies signals by confidence level
 - Identifies continuation points
-- See: `.windsurf/workflows/detect-context.md`
 
 **Returns:** Detection results with routing recommendation
-
-📋 **Task Update:** "1. /detect-context - Analyze project state" → completed
 
 ```typescript
 update_plan({
@@ -75,107 +64,85 @@ update_plan({
 
 ## Stage 3: Route to Appropriate Workflow
 
-### High Confidence (Auto-Proceed)
+### High Confidence (80%+)
 
-**If `/detect-context` returns 80%+ confidence:**
-
-**AUTO-PROCEED with detected action - no user confirmation needed.**
+**AUTO-PROCEED - no user confirmation needed.**
 
 | Detected Context | Route To | Action |
 |------------------|----------|--------|
 | Active initiative with unchecked tasks | `/implement` | Load initiative context, continue work |
-| Test failures (blocking) | Fix immediately | Highest priority - unblock test suite |
-| Test failures (non-blocking) | `/implement` | Load test context, fix failures |
-| Planning markers ("needs design", ADR placeholders) | `/plan` | Create comprehensive plan |
-| Completed initiative pending archive | `/archive-initiative` | Archive completed work |
+| Test failures (blocking) | Fix immediately | Highest priority |
+| Test failures (non-blocking) | `/implement` | Load test context, fix |
+| Planning markers | `/plan` | Create plan |
+| Completed initiative pending archive | `/archive-initiative` | Archive |
 | Clean state, no signals | Prompt user | Ask for direction |
 
-**Output format:**
+**Output:**
 
 ```markdown
 ## ✓ Context Detected (High Confidence: 85%)
 
-**Detected:** [Brief description of what was found]
+**Detected:** [Brief description]
 
 **Auto-routing to:** [workflow name]
 
-**Rationale:** [1-2 sentence explanation]
+**Rationale:** [1-2 sentences]
 
 Proceeding...
 ```
 
-### Medium Confidence (Auto-Proceed with Recommended)
+### Medium Confidence (30-79%)
 
-**If `/detect-context` returns 30-79% confidence:**
+**AUTO-PROCEED with recommended - state alternatives but execute.**
 
-**AUTO-PROCEED with recommended option - briefly state alternatives but execute recommendation.**
-
-**Output format:**
+**Output:**
 
 ```markdown
 ## ✓ Context Detected (Medium Confidence: 65%)
 
 **Detected:** [N] possible work streams
 
-**Proceeding with recommended:** [Option 1 name]
-- [Brief rationale for recommendation]
+**Proceeding with recommended:** [Option 1]
+- [Brief rationale]
 
-**Alternative considered:** [Option 2 name] - [why not chosen]
+**Alternative considered:** [Option 2] - [why not chosen]
 
 Auto-routing to [workflow]...
 ```
 
-**Rationale for auto-proceeding:**
+**Rationale:** AI has recommendation, user can redirect if wrong (faster than asking).
 
-- AI has identified a clear recommendation
-- User can redirect if wrong (faster than asking permission)
-- Follows principle: "Execute and adjust" beats "Ask and wait"
-- If user disagrees, they can interrupt and redirect
+### Low Confidence (<30%)
 
-### Low Confidence (Prompt User)
-
-**If `/detect-context` returns <30% confidence:**
-
-**ONLY NOW prompt user for direction.**
-
-**Output format:**
+**ONLY NOW prompt user.**
 
 ```markdown
 ## Project State Analysis (Low Confidence: 35%)
 
-**Detected signals:** [List what was found]
+**Detected signals:** [List what found]
 
-**Unable to determine clear next step** - multiple equally valid options.
+**Unable to determine clear next step.**
 
 What would you like to work on?
 
 1. **[Option 1]** - [brief description]
 2. **[Option 2]** - [brief description]
 3. **[Option 3]** - [brief description]
-4. **Something else** (please specify)
+4. **Something else**
 ```
-
-**When to prompt:**
-
-- Multiple initiatives equally active
-- Conflicting signals (e.g., both new work and urgent fixes)
-- Truly clean slate with no history
 
 ---
 
-**After routing decision, update task plan with routed workflow steps:**
-
-🔀 **Routing Decision:** Continuing with /implement workflow
+**After routing decision, update plan with routed workflow steps:**
 
 ```typescript
-// Example: Routing to /implement
 update_plan({
-  explanation: "🔀 Routing to /implement workflow. Adding implementation subtasks.",
+  explanation: "🔀 Routing to /implement workflow. Adding subtasks.",
   plan: [
     { step: "1. /detect-context - Analyze project state", status: "completed" },
     { step: "2. /work - Route to appropriate workflow", status: "completed" },
     { step: "3. /work - Execute routed workflow", status: "in_progress" },
-    { step: "  3.1. /implement - Load context files", status: "in_progress" },      // Child workflow uses parent number
+    { step: "  3.1. /implement - Load context files", status: "in_progress" },
     { step: "  3.2. /implement - Design test cases", status: "pending" },
     { step: "  3.3. /implement - Write failing tests", status: "pending" },
     { step: "  3.4. /implement - Implement feature code", status: "pending" },
@@ -187,35 +154,30 @@ update_plan({
 })
 ```
 
-📋 **Task Update:** Added 6 /implement subtasks (3.1-3.6)
-
 ---
 
 ## Stage 4: Execute Workflow
 
-### Load Context Before Execution
+### Load Context
 
-**Call `/load-context` with appropriate scope:**
+Call `/load-context` with scope:
 
-- Initiative scope: Load initiative + related files
-- Planning scope: Load full project context
-- Module scope: Load specific module files
-- See: `.windsurf/workflows/load-context.md`
+- Initiative: initiative + related files
+- Planning: full project context
+- Module: specific module files
 
 ### Execute Routed Workflow
-
-**As routed workflow progresses, update subtask status:**
 
 **Workflow chain examples:**
 
 ```yaml
-# Implementation workflow
+# Implementation
 /work → /detect-context → /implement → /validate → /commit
 
-# Planning workflow
+# Planning
 /work → /detect-context → /plan → /implement → /validate → /commit
 
-# Quick fix workflow
+# Quick fix
 /work → /detect-context → /implement → /commit
 ```
 
@@ -223,22 +185,20 @@ update_plan({
 
 ## Stage 5: Detect Work Completion and Execute Session End Protocol
 
-**Check if Session End Protocol should be triggered:**
-
 ### 5.1 Detect Completion Triggers
 
 ```bash
-# Check if any initiative was marked complete during this work
+# Check if initiative marked complete
 grep -l "Status.*Completed\|Status.*✅" docs/initiatives/active/*.md
 
-# Check git status for uncommitted changes
+# Check git status
 git status --short
 ```
 
 **Trigger Session End Protocol if ANY of:**
 
-1. Initiative marked "Completed" or "✅" (found in grep above)
-2. All planned tasks for routed workflow are done
+1. Initiative marked "Completed" or "✅"
+2. All planned tasks done
 3. User explicitly signals session end
 
 **If triggered, execute FULL protocol:**
@@ -246,11 +206,10 @@ git status --short
 ### 5.2 Commit All Changes
 
 ```bash
-# Commit working changes
 git add <modified files>
-git commit -m "<appropriate conventional commit message>"
+git commit -m "<conventional commit message>"
 
-# Commit any auto-fixes separately
+# Commit auto-fixes separately
 git add <auto-fix files>
 git commit -m "style(scope): apply [tool] auto-fixes"
 ```
@@ -258,7 +217,6 @@ git commit -m "style(scope): apply [tool] auto-fixes"
 ### 5.3 Archive Completed Initiatives
 
 ```bash
-# For each completed initiative found
 /archive-initiative <initiative-name>
 ```
 
@@ -270,13 +228,13 @@ git commit -m "style(scope): apply [tool] auto-fixes"
 /meta-analysis
 ```
 
-**This creates:**
+**Creates:**
 
 - Session summary in `docs/archive/session-summaries/`
 - Workflow improvement recommendations
 - Cross-session continuity documentation
 
-### 5.5 Exit Criteria Checklist
+### 5.5 Exit Criteria
 
 ```markdown
 - [ ] All changes committed (git status clean)
@@ -292,7 +250,7 @@ git commit -m "style(scope): apply [tool] auto-fixes"
 
 ## Stage 6: Continue Working (If Protocol Not Triggered)
 
-**If Session End Protocol was NOT triggered:**
+**If Session End Protocol NOT triggered:**
 
 - Provide brief progress update
 - Continue with next task/phase
@@ -306,38 +264,36 @@ git commit -m "style(scope): apply [tool] auto-fixes"
 
 ### ❌ Don't: Ask Obvious Questions
 
-```markdown
-BAD: "What would you like to work on?"
-GOOD: "Detected initiative X (60% complete). Continuing..."
-```
+- **Bad:** "What would you like to work on?"
+- **Good:** "Detected initiative X (60% complete). Continuing..."
 
 ### ❌ Don't: Skip Session End Protocol
 
-**CRITICAL FAILURE** if:
+**CRITICAL FAILURE:**
 
-- Presenting final summary without running `/meta-analysis`
-- Leaving completed initiatives in active/ directory
+- Presenting summary without `/meta-analysis`
+- Leaving completed initiatives in active/
 - Uncommitted changes at session end
 
 ### ❌ Don't: Over-Prompt
 
-If 80%+ confident on routing, auto-route. User can redirect if wrong.
+If 80%+ confident, auto-route. User can redirect if wrong.
 
 ---
 
 ## Success Metrics
 
-✅ **Good Performance:**
+✅ **Good:**
 
-- Context detection + routing: <30 seconds
-- Autonomous continuation: 70%+ of time
-- Session end protocol executed: 100% of time
+- Context detection + routing: <30s
+- Autonomous continuation: 70%+
+- Session end protocol: 100%
 
 ❌ **Needs Improvement:**
 
-- Asking "what to work on" when context is clear
+- Asking "what to work on" when context clear
 - Skipping session end protocol
-- Requiring user direction for obvious continuations
+- Requiring direction for obvious continuations
 
 ---
 
@@ -345,25 +301,27 @@ If 80%+ confident on routing, auto-route. User can redirect if wrong.
 
 ### Calls
 
-- `/detect-context` - Context analysis (Stage 1)
-- `/load-context` - Efficient context loading (Stage 3)
-- `/plan` - Planning workflow
-- `/implement` - Implementation workflow (includes testing)
+- `/detect-context` - Context analysis
+- `/load-context` - Efficient loading
+- `/plan` - Planning
+- `/implement` - Implementation (includes testing)
 - `/validate` - Quality checks
 - `/commit` - Git operations
-- `/archive-initiative` - Archive completed work (Stage 4)
-- `/meta-analysis` - **MANDATORY** session summary (Stage 4)
+- `/archive-initiative` - Archive completed
+- `/meta-analysis` - **MANDATORY** session summary
 
 ### Called By
 
-- User (direct invocation)
+- User (direct)
 - Other workflows (when orchestration needed)
 
 ---
 
 ## References
 
-- `.windsurf/workflows/detect-context.md` - Context detection logic
-- `.windsurf/workflows/load-context.md` - Context loading strategies
-- `.windsurf/workflows/meta-analysis.md` - Session end requirements
-- `.windsurf/rules/00_agent_directives.md` - Section 1.8 (Session End Protocol)
+- `.windsurf/workflows/detect-context.md`
+- `.windsurf/workflows/load-context.md`
+- `.windsurf/workflows/meta-analysis.md`
+- `.windsurf/rules/00_agent_directives.md` (Section 1.8)
+
+---

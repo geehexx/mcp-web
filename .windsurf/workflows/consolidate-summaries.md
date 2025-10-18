@@ -6,14 +6,14 @@ description: Consolidate historical session summaries into daily comprehensive f
 
 ## Purpose
 
-Merge multiple per-session summaries from the same day into comprehensive daily summaries, reducing redundancy while maintaining all critical information and historical context.
+Merge multiple per-session summaries from the same day into comprehensive daily summaries, reducing redundancy while maintaining critical information.
 
 ## When to Use
 
-- When a day has accumulated 5+ individual session summaries
-- During quarterly documentation reviews
-- When session summary proliferation reduces discoverability
-- **Never** consolidate current day's summaries (allow ongoing work)
+- Day has 5+ individual session summaries
+- Quarterly documentation reviews
+- Session summary proliferation reduces discoverability
+- **Never** consolidate current day (allow ongoing work)
 
 ## Invocation
 
@@ -23,9 +23,9 @@ Merge multiple per-session summaries from the same day into comprehensive daily 
 
 ## Prerequisites
 
-1. **Date must be in the past** (not current day)
-2. **Multiple summaries exist** for the target date
-3. **No active work** referencing individual summaries
+1. Date must be in the past (not current day)
+2. Multiple summaries exist for target date
+3. No active work referencing individual summaries
 
 ---
 
@@ -34,364 +34,228 @@ Merge multiple per-session summaries from the same day into comprehensive daily 
 ### 1.1 Identify Target Summaries
 
 ```bash
-# List all summaries for target date
-ls -1 docs/archive/session-summaries/YYYY-MM-DD-*.md
-
-# Count summaries
+# List summaries for target date
 ls -1 docs/archive/session-summaries/YYYY-MM-DD-*.md | wc -l
 ```
 
 **Decision criteria:**
 
-- **5+ summaries:** Consolidate highly recommended
-- **3-4 summaries:** Consolidate if redundant
-- **1-2 summaries:** Leave as-is
+- 5+ summaries: Consolidate highly recommended
+- 3-4 summaries: Consolidate if redundant
+- 1-2 summaries: Leave as-is
 
 ### 1.2 Read and Categorize Content
 
-Use batch read for efficiency:
+Batch read for efficiency:
 
 ```python
 mcp0_read_multiple_files([
-    "/home/gxx/projects/mcp-web/docs/archive/session-summaries/YYYY-MM-DD-summary1.md",
-    "/home/gxx/projects/mcp-web/docs/archive/session-summaries/YYYY-MM-DD-summary2.md",
-    # ... all summaries for that day
+    "/home/gxx/projects/mcp-web/docs/archive/session-summaries/YYYY-MM-DD-*.md",
 ])
 ```
 
-**Extract from each:**
+Extract from each: objectives, accomplishments, decisions, files modified, commits, learnings, unresolved issues, next steps
 
-- Session objectives and scope
-- Key accomplishments
-- Important decisions made
-- Files modified and commits
-- Lessons learned
-- Unresolved issues
-- Next steps
-
-### 1.3 Check for External References
+### 1.3 Check External References
 
 ```bash
-# Check if any files reference individual summaries
 grep -r "2025-10-15-specific-session.md" docs/ .windsurf/ --include="*.md"
 ```
 
-**If references found:** Update them to point to consolidated summary after creation.
+Update references to consolidated summary after creation if found.
 
 ---
 
-## Stage 2: Methodical Extraction (Information Gathering)
+## Stage 2: Methodical Extraction
 
-**CRITICAL:** This stage uses structured extraction to ensure consistency across LLMs. Follow the exact process below.
+**CRITICAL:** Follow structured extraction for consistency.
 
 ### 2.1 Extract Information Systematically
 
-**Process each summary file individually using this Chain-of-Thought approach:**
+For each summary file:
 
-```markdown
-### For each summary file, extract the following in order:
+**Step 1: Session Metadata**
 
-#### Step 1: Identify Session Metadata
-- Session title/name (from filename or document)
-- Approximate duration (if mentioned)
-- Primary focus area (1-2 words: testing, security, documentation, etc.)
+- Title, duration, primary focus area
 
-#### Step 2: Capture Context Narrative (Preserve Nuance)
-Write 2-3 full sentences (up to 120 words) that capture:
-- Session objectives, constraints, and triggering events
-- Critical observations or inflection points (quote ≤40 words if impactful)
-- Cross-session references (what came before/after)
+**Step 2: Context Narrative (2-3 sentences, ≤120 words)**
 
-Use original phrasing where valuable to retain tone. Do NOT reduce to bullet fragments.
+- Objectives, constraints, triggering events
+- Critical observations
+- Cross-session references
 
-#### Step 3: Extract Accomplishments (Specific Actions)
-List ONLY concrete accomplishments in this exact format:
-- **[Action verb]**: [What was done] ([File/Component if applicable]) — [1 clause of context if needed]
+**Step 3: Accomplishments (concrete actions only)**
 
-Examples:
-- **Created**: Security audit framework (src/mcp_web/security.py) — Foundations for OWASP compliance review
-- **Fixed**: 7 failing unit tests (tests/unit/test_security.py) — Restored green build after validator refactor
+- **[Action verb]**: [What] ([File/Component]) — [Context clause if needed]
 
-DO NOT include vague statements like "made progress" or "worked on".
+**Step 4: Decisions (explicit choices)**
 
-#### Step 4: Extract Decisions (Explicit Choices Made)
-List ONLY explicit architectural or technical decisions:
-- **[Decision topic]**: [What was decided] - [Brief rationale] (include trade-offs or rejected alternatives if mentioned)
+- **[Topic]**: [Decision] - [Rationale] (trade-offs/alternatives)
 
-Example:
-- **Rate limiting**: Implemented token bucket algorithm - Better handles burst traffic than fixed window; leaky bucket rejected due to burst penalties
+**Step 5: Technical Learnings (specific insights)**
 
-DO NOT include routine implementation choices.
+- **[Technology]**: [Learning] (measurements/data)
 
-#### Step 5: Extract Technical Learnings (Knowledge Gained)
-List ONLY specific technical insights:
-- **[Technology/Pattern]**: [What was learned/discovered] (include measurements, benchmarks, or comparative data)
+**Step 6: Issues (unresolved only)**
 
-Example:
-- **pytest-xdist**: Auto scheduling performs 3x faster than loadscope for IO-bound tests at 16 workers
+- **[Component]**: [Problem] - [Why unresolved] (blockers/dependencies)
 
-DO NOT include general observations.
+**Step 7: Dependencies & Interactions**
 
-#### Step 6: Extract Issues (Unresolved Problems)
-List ONLY problems that remain unresolved:
-- **[Component/Area]**: [Problem description] - [Why unresolved] (note blockers, required data, or pending owners)
+- Upstream/downstream work, open questions
 
-Example:
-- **Playwright fallback**: Timeout handling needs refinement - Requires more testing data across slow-loading sites and flaky networks
+**Step 8: Supporting Evidence**
 
-DO NOT include resolved issues.
+- Commit hashes, benchmarks, source quotes
 
-#### Step 7: Record Dependencies & Interactions
-Capture dependencies and cross-session links:
-- Upstream work relied upon (session + artifact)
-- Downstream work enabled
-- Open questions directed at other teams or workflows
+**Step 9: Next Steps (concrete actions)**
 
-#### Step 8: Gather Supporting Evidence
-List verifiable artifacts:
-- Commit hashes or PR IDs (if available)
-- Benchmark results, metrics tables, screenshots (describe location)
-- Source quotes (speaker + ≤40 words)
+- [ ] [Action] [task] — [Owner/dependency]
 
-#### Step 9: Extract Next Steps (Specific Actions)
-List ONLY concrete next steps:
-- [ ] [Action verb] [specific task] — [Owner or dependency if noted]
+**Step 10: Metrics**
 
-Example:
-- [ ] Add integration tests for rate limiter — Depends on security fixture refresh
-- [ ] Document security architecture decisions in ADR — Reference initiative 2024-Q4
-
-DO NOT include vague intentions like "continue working on".
-
-#### Step 10: Extract Metrics
-- Files modified: [count or list if ≤5]
-- Commits: [count or list if ≤3]
-- Tests: [passing/failing counts]
-- ADRs: [created/updated]
-- Duration (if quantified): [minutes/hours]
-```
+- Files modified, commits, tests, ADRs, duration
 
 ### 2.2 Create Extraction Matrix (JSON Format)
-
-**IMPORTANT:** After extracting from all summaries, create a JSON structure for systematic consolidation:
 
 ```json
 {
   "date": "YYYY-MM-DD",
   "sessions": [
     {
-      "title": "Session 1 Name",
+      "title": "Session Name",
       "duration": "~2 hours",
       "focus": "testing",
-      "context": "Two to three sentences preserving narrative, quotes, and cross-session references.",
+      "context": "2-3 sentences preserving narrative.",
       "accomplishments": [
-        {"action": "Created", "what": "Security audit framework", "where": "src/mcp_web/security.py", "context": "Foundational for OWASP review"}
+        {"action": "Created", "what": "Feature", "where": "file.py", "context": "Why"}
       ],
       "decisions": [
-        {"topic": "Rate limiting", "decision": "Implemented token bucket algorithm", "rationale": "Better handles burst traffic", "tradeoffs": "Rejected leaky bucket due to burst penalties"}
+        {"topic": "Topic", "decision": "Choice", "rationale": "Why", "tradeoffs": "Alternatives"}
       ],
       "learnings": [
-        {"category": "pytest-xdist", "insight": "Auto scheduling performs 3x faster for IO-bound tests", "measurement": "n=16 workers"}
+        {"category": "Tool", "insight": "Discovery", "measurement": "Data"}
       ],
       "issues": [
-        {"area": "Playwright fallback", "problem": "Timeout handling needs refinement", "reason": "Requires more testing data", "owner": "QA"}
+        {"area": "Component", "problem": "Issue", "reason": "Blocker", "owner": "Team"}
       ],
       "dependencies": {
-        "upstream": ["2025-10-14-session3"],
-        "downstream": ["2025-10-16-session1"],
-        "notes": "Requires updated fixtures before rollout"
+        "upstream": ["ref"], "downstream": ["ref"], "notes": "Context"
       },
       "evidence": {
-        "commits": ["abc1234"],
-        "benchmarks": ["tests/benchmarks/2025-10-15-chunking.md"],
-        "quotes": [{"speaker": "Lead", "text": "Ensure we preserve semantic boundaries"}]
+        "commits": ["hash"], "benchmarks": ["path"], "quotes": [{"speaker": "X", "text": "Quote"}]
       },
-      "next_steps": [
-        "Add integration tests for rate limiter"
-      ],
+      "next_steps": ["Task"],
       "metrics": {
-        "files_modified": 5,
-        "commits": 3,
-        "tests_passing": 45,
-        "tests_failing": 2,
-        "adrs_created": 1,
-        "duration_minutes": 120
+        "files_modified": 5, "commits": 3, "tests_passing": 45, "adrs_created": 1
       }
     }
   ]
 }
 ```
 
-**Why JSON?** It forces structured thinking, preserves narrative context, and prevents LLMs from hallucinating or over-summarizing.
-
 ---
 
-## Stage 3: Methodical Consolidation (Information Synthesis)
+## Stage 3: Methodical Consolidation
 
 ### 3.1 Merge Using Explicit Rules
 
-**Objective:** Preserve narrative substance while deduplicating factual data. Treat the extraction matrix as the immutable source of truth—never improvise new facts.
+**Rule 1: Deduplicate Accomplishments**
 
-**Process the extraction matrix systematically:**
+- Same action + same component → merge, keep specific description
 
-#### Rule 1: Deduplicate Accomplishments
+**Rule 2: Consolidate Decisions**
 
-```markdown
-IF two accomplishments have:
-  - Same action verb AND
-  - Same file/component
-THEN merge them:
-  - Keep the more specific description
-  - Combine any unique contextual clauses ("— …")
-  - Retain references to affected initiatives/risks if present
+- Same topic: Keep both if complementary, merge if elaboration
 
-Example:
-  - "Fixed failing tests (test_security.py)"
-  - "Fixed 7 unit tests in security module — restored build"
-  → "Fixed 7 failing unit tests (tests/unit/test_security.py) — restored build"
-```
+**Rule 3: Synthesize Learnings**
 
-#### Rule 2: Consolidate Decisions
+- Same tech: Combine, preserve measurements, note progression
 
-```markdown
-IF two decisions have:
-  - Same topic area
-THEN:
-  - Keep both if they represent different aspects
-  - Merge if one is an elaboration of the other
-  - Note if a decision was revisited/changed
+**Rule 4: Aggregate Issues**
 
-Example:
-  - Session 1: "Use httpx for fetching"
-  - Session 3: "Add Playwright fallback for JS sites"
-  → Keep both (complementary decisions)
-```
+- Group by component, keep distinct issues, prioritize by frequency
 
-#### Rule 3: Synthesize Learnings
+**Rule 5: Consolidate Next Steps**
 
-```markdown
-IF two learnings are about:
-  - Same technology/pattern
-THEN:
-  - Combine into single insight
-  - Preserve specific numbers/measurements
-  - Note progression if learning evolved
+- Remove exact duplicates, merge overlapping, group by component, prioritize by dependency
 
-Example:
-  - "pytest-xdist speeds up tests"
-  - "Auto scheduling mode in pytest-xdist is 3x faster"
-  → "pytest-xdist auto scheduling performs 3x faster than loadscope for IO-bound tests"
-```
+### 3.2 Generate Consolidated Summary
 
-#### Rule 4: Aggregate Issues
-
-```markdown
-FOR unresolved issues:
-  - Group by component/area
-  - Keep all distinct issues (do not merge)
-  - Note if issue was mentioned multiple times
-  - Prioritize by frequency of mention
-```
-
-#### Rule 5: Consolidate Next Steps
-
-```markdown
-FOR next steps:
-  - Remove duplicates (exact matches)
-  - Merge overlapping tasks
-  - Group by component/initiative
-  - Prioritize by dependency order
-```
-
-### 3.2 Generate Consolidated Summary Structure
-
-**Use this EXACT template (strict format constraint):**
+**Template:**
 
 ```markdown
 # Daily Summary: [Date]
 
 - **Date:** YYYY-MM-DD
 - **Total Sessions:** N
-- **Duration:** ~X hours (combined)
-- **Focus Areas:** [List 2-4 primary themes]
-- **Major Initiatives Touched:** [List initiatives + progress notes]
+- **Duration:** ~X hours
+- **Focus Areas:** [2-4 themes]
+- **Major Initiatives:** [List + progress]
 
 ---
 
 ## Executive Overview
 
-**Accomplishments:** [1-3 sentences summarizing major achievements with key metrics and initiative impact]
-**Decisions:** [1-3 sentences summarizing critical decisions, trade-offs, and downstream effects]
-**Status:** [1 sentence on overall progress, remaining risks, and upcoming focus]
+**Accomplishments:** [1-3 sentences summarizing key achievements]
+
+**Decisions:** [1-2 sentences on critical technical/architectural decisions]
+
+**Learnings:** [1-2 sentences on key insights and discoveries]
 
 ---
 
-## Sessions Timeline
+## Session Timeline
 
-### Session 1: [Title] (~X hours)
-**Focus:** [1-2 word category]
-**Narrative:** [2-3 sentences preserving objectives, constraints, observations, cross-session references, and tone. Quote ≤40 words if impactful.]
-**Dependencies:** Upstream [sessions/artifacts]; Downstream [sessions/artifacts]; Related initiatives [names]
-**Evidence:** Commits [hashes]; Benchmarks [files]; Metrics [summary]; Quotes [speaker → excerpt]
+### Session 1: [Name] (~X hours)
 
-**Key Actions:**
+**Context:** [2-3 sentences from extraction]
+
+**What Was Done:**
 - [Accomplishment 1]
 - [Accomplishment 2]
-- [Accomplishment 3]
 
-**Decisions:** [List if any, or "None"]
-**Issues Raised:** [Summarize unresolved issues from this session]
-
-### Session 2: [Title] (~X hours)
-[Same structure...]
+**Why:** [1-2 sentences linking to larger goals]
 
 ---
 
-## Consolidated Accomplishments
+## Major Accomplishments (Grouped)
 
-### Code Changes
-- [List all code-related accomplishments with context clauses and initiative ties]
+### [Category 1: e.g., Testing Infrastructure]
+1. **[Action]**: [What] ([Component]) — [Context]
+2. **[Action]**: [What] ([Component]) — [Context]
 
-### Documentation
-- [List all documentation accomplishments with context and references]
-
-### Testing
-- [List all testing accomplishments with metrics, benchmarks, and coverage impact]
-
-### Infrastructure/Tooling
-- [List all infrastructure accomplishments with rationale and performance data]
+### [Category 2: e.g., Documentation]
+1. **[Action]**: [What] ([Component]) — [Context]
 
 ---
 
-## Technical Decisions
+## Architectural & Technical Decisions
 
-1. **[Decision Topic]**
-
-   - **Decision:** [What was decided]
-   - **Rationale:** [Why]
-   - **Trade-offs:** [Alternatives considered or rejected]
-   - **Impact:** [Expected effect with metrics; mention affected systems/initiatives]
-   - **Follow-up:** [Required actions if any]
+### [Decision Topic 1]
+   - **Decision:** [What was chosen]
+   - **Rationale:** [Why; alternatives considered/rejected]
+   - **Impact:** [Effect with metrics]
+   - **Follow-up:** [Actions if any]
 
 ---
 
 ## Key Learnings
 
 ### Technical Insights
-1. **[Technology/Pattern]:** [Specific insight with measurements, experiment details, and context]
-2. **[Technology/Pattern]:** [Specific insight with measurements, experiment details, and context]
+1. **[Technology]:** [Insight with measurements]
+2. **[Technology]:** [Insight with measurements]
 
 ### Process Improvements
-1. **[Process/Workflow]:** [What was learned, triggering event, expected change]
-2. **[Process/Workflow]:** [What was learned, triggering event, expected change]
+1. **[Process]:** [Learning, triggering event]
 
 ---
 
 ## Cross-Session Dynamics
 
-- **Continuity Threads:** [Explain how sessions linked; track initiative progression and milestone completion]
-- **Unblocked Work:** [List downstream tasks enabled by completed work; include owners if noted]
-- **Outstanding Questions:** [Document open questions directed to teams/workflows]
+- **Continuity Threads:** [How sessions linked, initiative progression]
+- **Unblocked Work:** [Downstream tasks enabled]
+- **Outstanding Questions:** [Open questions]
 
 ---
 
@@ -399,62 +263,56 @@ FOR next steps:
 
 | Metric | Count | Details |
 |--------|-------|----------|
-| Files Modified | N | [List if ≤ 5 or provide grouped summary] |
-| Commits | N | [Hashes if ≤ 5; else summary with references] |
-| Tests Passing | N | [Context if changed + coverage impact] |
-| Tests Failing | N | [Issues + owners + session origins] |
-| ADRs Created | N | [List titles + decisions] |
-| Initiatives Updated | N | [List names + progress notes] |
-| Total Duration | ~N hours | [Breakdown per initiative or workstream] |
+| Files Modified | N | [List if ≤5] |
+| Commits | N | [Hashes if ≤5] |
+| Tests Passing | N | [Context] |
+| Tests Failing | N | [Issues + owners] |
+| ADRs Created | N | [Titles] |
+| Initiatives Updated | N | [Names + progress] |
+| Total Duration | ~N hours | [Breakdown] |
 
 ---
 
 ## Unresolved Issues
 
-### [Component/Area 1]
-- **Issue:** [Problem description]
-- **Reason:** [Why unresolved + blockers]
-- **Owner:** [Name/team if mentioned]
-- **Priority:** [High/Medium/Low; justify with frequency or impact]
-- **Next Checkpoint:** [Date or condition if noted]
-
-### [Component/Area 2]
-[Same structure...]
+### [Component 1]
+- **Issue:** [Problem]
+- **Reason:** [Why unresolved]
+- **Owner:** [Team]
+- **Priority:** [High/Med/Low]
 
 ---
 
 ## Next Steps (Prioritized)
 
 ### Immediate (Next Session)
-- [ ] [Highest priority task] — [Owner/dependency]
-- [ ] [Second priority task] — [Owner/dependency]
+- [ ] [Task 1] — [Owner]
+- [ ] [Task 2] — [Owner]
 
 ### Short-term (This Week)
-- [ ] [Important but not urgent] — [Owner/dependency]
-- [ ] [Important but not urgent] — [Owner/dependency]
+- [ ] [Task 3] — [Owner]
 
 ### Future Considerations
-- [ ] [Nice to have] — [Context + triggering condition]
-- [ ] [Nice to have] — [Context + triggering condition]
+- [ ] [Task 4] — [Context]
 
 ---
 
 ## Supporting Evidence Index
 
-- **Commits:** [List hashes → descriptions + initiative reference]
-- **Benchmarks & Artifacts:** [List files/links with context]
-- **Key Quotes:** [Speaker → "Quote" (source session) + relevance]
+- **Commits:** [Hash → description + initiative]
+- **Benchmarks:** [Files/links with context]
+- **Key Quotes:** [Speaker → "Quote" (source)]
 
 ---
 
 ## Metadata
 
 **Original Sessions:**
-- `2025-MM-DD-session1.md` → Session 1 above
-- `2025-MM-DD-session2.md` → Session 2 above
+- `YYYY-MM-DD-session1.md` → Session 1 above
+- `YYYY-MM-DD-session2.md` → Session 2 above
 
-**Consolidation Method:** Methodical extraction with structured merge rules
-**Workflow Version:** 2.1.0 (Context-preserving)
+**Consolidation Method:** Structured extraction + merge rules
+**Workflow Version:** 2.1.0
 ```
 
 ---
@@ -463,152 +321,133 @@ FOR next steps:
 
 ### 4.1 Validation Checklist
 
-**Information Preservation (MUST verify each):**
+**Information Preservation:**
 
 ```markdown
 For EACH original summary:
-  ✓ All unique accomplishments captured (check extraction matrix)
-  ✓ All decisions documented (compare decision sections)
-  ✓ All learnings preserved (verify no technical insights lost)
-  ✓ All unresolved issues listed (cross-reference issues section)
-  ✓ All next steps included (deduplicated but present)
-  ✓ All metrics aggregated (sum/count matches)
+  ✓ All accomplishments captured
+  ✓ All decisions documented
+  ✓ All learnings preserved
+  ✓ All issues listed
+  ✓ All next steps included
+  ✓ All metrics aggregated
 ```
 
-**Format Compliance (MUST verify):**
+**Format Compliance:**
 
 ```markdown
-  ✓ Exact template structure followed (headings match)
-  ✓ No vague statements ("made progress", "worked on")
-  ✓ Action verbs used consistently
-  ✓ Specific file/component references included
-  ✓ Measurements/numbers preserved
-  ✓ Tables formatted correctly
-  ✓ Checkboxes use [ ] format
+  ✓ Template structure followed
+  ✓ No vague statements
+  ✓ Action verbs consistent
+  ✓ File references included
+  ✓ Measurements preserved
+  ✓ Tables formatted
+  ✓ Checkboxes use [ ]
 ```
 
-**Content Quality (MUST verify):**
+**Content Quality:**
 
 ```markdown
-  ✓ Executive overview is ≤ 3 sentences
-  ✓ Each accomplishment is specific and actionable
-  ✓ Decisions include rationale and impact
-  ✓ Learnings include specific measurements
+  ✓ Executive overview ≤3 sentences
+  ✓ Accomplishments specific
+  ✓ Decisions include rationale
+  ✓ Learnings include measurements
   ✓ Issues explain why unresolved
-  ✓ Next steps are concrete (not vague)
-  ✓ No duplicate information across sections
+  ✓ Next steps concrete
+  ✓ No duplicates
 ```
 
 ### 4.2 LLM-Agnostic Verification
 
-**Test your consolidation by asking:**
-
-1. **Can another person reconstruct the day's work from this summary?**
-   If no → Add missing context
-
-2. **Are all numbers/metrics verifiable from git/files?**
-   If no → Correct or remove unverifiable claims
-
-3. **Could this be generated by any LLM following the rules?**
-   If no → You introduced model-specific bias
-
-4. **Is every accomplishment specific enough to verify?**
-   If no → Add file references or specific details
-
-5. **Would ChatGPT, Claude, and Gemini produce similar output?**
-   If no → Your instructions need more constraints
+1. Can another person reconstruct day's work? → Add context if no
+2. Are metrics verifiable from git/files? → Correct if no
+3. Could any LLM following rules produce this? → Add constraints if no
+4. Is every accomplishment verifiable? → Add details if no
+5. Would ChatGPT/Claude/Gemini produce similar output? → Tighten instructions if no
 
 ---
 
 ## Stage 5: Implementation
 
-### 5.1 Create Consolidated Summary File
+### 5.1 Create Consolidated Summary
 
 ```bash
-# Create with exact naming convention
 docs/archive/session-summaries/YYYY-MM-DD-daily-summary.md
 ```
 
-### 5.2 Write Content (Following Template Exactly)
+### 5.2 Write Content
 
-1. Copy the template from Stage 3.2
-2. Fill in extracted and consolidated information
-3. DO NOT deviate from template structure
-4. DO NOT add explanatory text outside template
-5. DO NOT skip sections (use "None" if empty)
+1. Copy template from Stage 3.2
+2. Fill extracted/consolidated information
+3. Follow template exactly
+4. Do not skip sections (use "None" if empty)
 
-### 5.3 Verify Content (Before Committing)
+### 5.3 Verify Content
 
-#### Run through validation checklist (Stage 4.1) line by line
+Run validation checklist (Stage 4.1) line by line
 
-### 5.4 Remove Original Session Files
+### 5.4 Remove Original Files
 
-After validating the consolidated summary, delete the original session files to keep the archive lean:
+⚠️ **After validation:**
 
 ```bash
 rm docs/archive/session-summaries/YYYY-MM-DD-*.md
 ```
 
-⚠️ **Safety check:** Ensure the new `YYYY-MM-DD-daily-summary.md` is complete and backed up in version control before deleting originals. If unsure, pause and review with the team.
+Ensure consolidated summary is complete and backed up in git first.
 
 ### 5.5 Update References
-
-**Search for references:**
 
 ```bash
 grep -r "YYYY-MM-DD-session" docs/ .windsurf/ --include="*.md"
 ```
 
-**Update each reference to:** `YYYY-MM-DD-daily-summary.md`
+Update each to `YYYY-MM-DD-daily-summary.md`
 
 ---
 
 ## Stage 6: Final Verification
 
-### 6.1 Automated Quality Checks
+### 6.1 Automated Checks
 
 ```bash
-# Run markdown linting
 task lint:docs
-
-# Check for broken links (if available)
 markdown-link-check docs/archive/session-summaries/YYYY-MM-DD-daily-summary.md
 ```
 
-### 6.2 Manual Quality Checks
+### 6.2 Manual Checks
 
-**Completeness (verify against original files):**
+**Completeness:**
 
-- [ ] All sessions represented in timeline
-- [ ] All commits listed in metrics table
-- [ ] All decisions captured with rationale
-- [ ] All learnings preserved with measurements
-- [ ] All unresolved issues noted with reasons
+- [ ] All sessions in timeline
+- [ ] All commits in metrics
+- [ ] All decisions with rationale
+- [ ] All learnings with measurements
+- [ ] All issues with reasons
 
-**Format Compliance:**
+**Format:**
 
-- [ ] Template structure exactly followed
-- [ ] Tables formatted correctly
-- [ ] No vague language ("made progress", "worked on")
-- [ ] All action items use [ ] checkbox format
-- [ ] File paths use backticks
+- [ ] Template followed
+- [ ] Tables formatted
+- [ ] No vague language
+- [ ] Checkboxes use [ ]
+- [ ] File paths backticked
 
 **Clean-up:**
 
-- [ ] Original session files deleted
-- [ ] No broken references to removed files
-- [ ] Metadata section correctly lists original files
+- [ ] Originals deleted
+- [ ] No broken references
+- [ ] Metadata correct
 
 ### 6.3 Git Commit
 
 ```bash
 git add docs/archive/session-summaries/YYYY-MM-DD-daily-summary.md
-git add docs/archive/session-summaries/archived/YYYY-MM-DD/
 git commit -m "docs(archive): consolidate YYYY-MM-DD session summaries
 
 - Created comprehensive daily summary
-- Archived 15 individual session summaries
-- Updated all references
+- Archived N individual summaries
+- Updated references
 - Preserved all critical information"
 ```
 
@@ -618,56 +457,20 @@ git commit -m "docs(archive): consolidate YYYY-MM-DD session summaries
 
 ### DO
 
-✅ **Wait 24-48 hours** after date before consolidating (ensure no late additions)
-✅ **Preserve unique insights** even if brief
-✅ **Cross-reference initiatives** mentioned
-✅ **Include metrics** for measurability
-✅ **Cite original sources** for traceability
-✅ **Update external references** to new location
+✅ Wait 24-48 hours after date before consolidating
+✅ Preserve unique insights
+✅ Cross-reference initiatives
+✅ Include metrics
+✅ Cite original sources
+✅ Update external references
 
 ### DON'T
 
-❌ **Don't consolidate current day** (ongoing work)
-❌ **Don't omit unresolved issues** (needed for continuity)
-❌ **Don't delete originals until the consolidated summary is verified**
-❌ **Don't lose commit history** (git mv for file moves)
-❌ **Don't skip reference updates** (breaks navigation)
-
----
-
-## Examples
-
-### Before Consolidation
-
-```text
-docs/archive/session-summaries/
-├── 2025-10-15-comprehensive-overhaul.md
-├── 2025-10-15-improvements-v2.md
-├── 2025-10-15-testing-implementation.md
-├── 2025-10-15-workflow-optimization.md
-├── 2025-10-15-initiative-documentation.md
-├── ... (10 more files)
-```
-
-**Problems:**
-
-- Hard to find information (15 files)
-- Redundant context across files
-- Unclear which to read first
-- Navigation overhead
-
-### After Consolidation
-
-```text
-docs/archive/session-summaries/
-├── 2025-10-15-daily-summary.md (comprehensive)
-```
-
-**Benefits:**
-
-- Single entry point per day
-- Reduced clutter and redundancy
-- Historical context retained in consolidated file
+❌ Don't consolidate current day
+❌ Don't omit unresolved issues
+❌ Don't delete originals until verified
+❌ Don't lose commit history
+❌ Don't skip reference updates
 
 ---
 
@@ -678,56 +481,16 @@ docs/archive/session-summaries/
 - [ ] Original summaries removed after verification
 - [ ] All references updated
 - [ ] Markdown linting passes
-- [ ] Git commit completed with descriptive message
-
----
-
-## Maintenance
-
-**Frequency:** Monthly or as needed
-
-**Trigger points:**
-
-- Day has 5+ summaries
-- Quarterly documentation review
-- Historical research becomes difficult
-
-**Review:** Annual assessment of consolidation effectiveness
+- [ ] Git commit completed
 
 ---
 
 ## References
 
-- [CONSTITUTION.md](../../docs/CONSTITUTION.md) - Documentation standards
-- [DOCUMENTATION_STRUCTURE.md](../../docs/DOCUMENTATION_STRUCTURE.md) - Archive policies
-- [ADR-0003](../../docs/adr/0003-documentation-standards-and-structure.md) - Documentation decisions
+- [CONSTITUTION.md](../../docs/CONSTITUTION.md)
+- [DOCUMENTATION_STRUCTURE.md](../../docs/DOCUMENTATION_STRUCTURE.md)
+- [ADR-0003](../../docs/adr/0003-documentation-standards-and-structure.md)
 
 ---
 
-**Last Updated:** 2025-10-16
-**Version:** 2.0.0 (Methodical LLM-agnostic approach)
-
----
-
-## Changelog
-
-### Version 2.0.0 (2025-10-16)
-
-- **BREAKING:** Complete methodology overhaul for LLM-agnostic consolidation
-- Added: Chain-of-Thought extraction process (Stage 2)
-- Added: Structured JSON extraction matrix
-- Added: Explicit merge rules with examples
-- Added: Strict format constraints to reduce model variance
-- Added: LLM-agnostic verification checklist
-- Changed: Template structure with executive overview
-- Changed: Accomplishments grouped by category
-- Changed: Next steps prioritized by urgency
-- Improved: Validation checklist with specific criteria
-- Research: Based on October 2025 prompt engineering best practices
-  - Chain-of-Thought reasoning (Lakera AI Guide, 2025)
-  - Format constraints (Towards Data Science, 2025)
-  - Structured extraction (Matt Stockton LLM Summarization, 2025)
-
-### Version 1.0.0 (2025-10-15)
-
-- Initial workflow version
+**Version:** 2.1.0 (Optimized for conciseness, Oct 2025)
