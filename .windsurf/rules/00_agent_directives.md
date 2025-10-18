@@ -136,9 +136,9 @@ docs/initiatives/active/YYYY-MM-DD-name/
 
 ## 1.7 Git Operations
 
-- **All Git operations via MCP tools when available:** `mcp2_git_status`, `mcp2_git_diff_unstaged`, `mcp2_git_diff_staged`, `mcp2_git_add`, `mcp2_git_commit`
-- **Status before and after edits:** Run `mcp2_git_status` to maintain awareness of working tree
-- **Review all diffs:** Inspect with `mcp2_git_diff_unstaged` before staging
+- **Use run_command tool for git operations:** All git commands via `run_command` with appropriate `Cwd` parameter
+- **Status before and after edits:** Run `git status --short` to maintain awareness of working tree
+- **Review all diffs:** Inspect with `git diff` (unstaged) or `git diff --cached` (staged) before committing
 - **Ownership verification:** Ensure every change belongs to current task before committing
 - **Conventional commits:** Use format `type(scope): description` (feat, fix, docs, test, refactor, security, chore)
 

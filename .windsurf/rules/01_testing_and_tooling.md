@@ -139,7 +139,7 @@ Before delivering checkpoints:
 1. Run `task lint` - All linters pass
 2. Run `task test:fast:parallel` - Fast tests pass
 3. Run `task security` - Security checks pass
-4. Review `mcp2_git_diff_unstaged` - All changes intentional
+4. Review `git diff` output - All changes intentional
 5. Verify documentation updated
 
 ## 1.12 Network Intelligence
