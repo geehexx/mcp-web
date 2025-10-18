@@ -106,7 +106,7 @@ Proceeding...
 
 ### Medium Confidence (Auto-Proceed with Recommended)
 
-**If `/detect-context` returns 50-79% confidence:**
+**If `/detect-context` returns 30-79% confidence:**
 
 **AUTO-PROCEED with recommended option - briefly state alternatives but execute recommendation.**
 
@@ -134,7 +134,7 @@ Auto-routing to [workflow]...
 
 ### Low Confidence (Prompt User)
 
-**If `/detect-context` returns <50% confidence:**
+**If `/detect-context` returns <30% confidence:**
 
 **ONLY NOW prompt user for direction.**
 

@@ -234,9 +234,8 @@ if has_todo_markers:
 | Score | Confidence | Action |
 |-------|------------|--------|
 | 80+ | High | Auto-route to workflow |
-| 50-79 | Medium | Present options with recommendation |
-| 20-49 | Low | Present multiple options |
-| <20 | None | Prompt user for direction |
+| 30-79 | Medium | Auto-proceed with recommendation |
+| <30 | Low | Prompt user for direction |
 
 ### 4.2 Handle Ambiguity
 
