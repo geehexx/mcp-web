@@ -8,6 +8,7 @@ description: Session end protocol, progress communication, and operational effic
 **Purpose:** Defines when and how to end sessions, communicate progress, and optimize operations.
 
 **See also:**
+
 - Core principles: [00_agent_directives.md](./00_agent_directives.md)
 - Context engineering: [06_context_engineering.md](./06_context_engineering.md)
 

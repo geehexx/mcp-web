@@ -8,6 +8,7 @@ description: File operations, git operations, and context management strategies
 **Purpose:** Defines how to efficiently load, manage, and operate on files and git context.
 
 **See also:**
+
 - Core principles: [00_agent_directives.md](./00_agent_directives.md)
 - Operational protocols: [05_operational_protocols.md](./05_operational_protocols.md)
 - Context loading patterns: [context-loading-patterns.md](../workflows/context-loading-patterns.md)
