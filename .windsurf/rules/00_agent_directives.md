@@ -293,18 +293,61 @@ update_plan({
 4. **Blocked state:** Add unblocking task
 5. **User requests change:** Adjust plan accordingly
 
-**Update example:**
+**CRITICAL: Never Remove Completed Tasks**
+
+**When updating plan:**
+
+- ✅ **ALWAYS include all previous tasks** with their current status
+- ✅ **Preserve hierarchical structure** (keep parent and children together)
+- ✅ **Only change status** of tasks that have progressed
+- ✅ **ALWAYS include workflow prefix** in every task (no exceptions)
+- ❌ **NEVER create fresh plan** that drops completed tasks
+- ❌ **NEVER omit workflow name** from any task
+- ❌ **NEVER replace entire plan** with subset of tasks
+
+**Anti-pattern (WRONG):**
+
+```typescript
+// This LOSES tasks 4.1-4.6 and omits workflow names!
+update_plan({
+  explanation: "Fixing validation issues",
+  plan: [
+    { step: "4. Execute Phase 5", status: "in_progress" },       // Missing /work
+    { step: "  4.7. Fix validation issues", status: "in_progress" }, // Missing /implement
+    { step: "  4.8. Commit changes", status: "pending" }          // Missing /implement
+  ]
+})
+```
+
+**Correct pattern:**
 
 ```typescript
 update_plan({
   explanation: "Research complete, moving to implementation",
   plan: [
-    { step: "Research approach", status: "completed" },
-    { step: "Implement changes", status: "in_progress" },  // Advanced
-    { step: "Run tests", status: "pending" },
-    { step: "Commit", status: "pending" }
+    { step: "1. /research - Gather requirements", status: "completed" },
+    { step: "2. /implement - Design solution", status: "in_progress" },  // Advanced
+    { step: "3. /implement - Run tests", status: "pending" },
+    { step: "4. /commit - Commit changes", status: "pending" }
   ]
 })
+```
+
+**Adding new tasks (CORRECT):**
+
+```typescript
+// Previous plan had tasks 1-4, now discovering new work
+update_plan({
+  explanation: "Validation failed, adding fix task",
+  plan: [
+    { step: "1. /research - Gather requirements", status: "completed" },
+    { step: "2. /implement - Design solution", status: "completed" },
+    { step: "3. /implement - Run tests", status: "completed" },
+    { step: "  3.1. /implement - Fix test failures", status: "in_progress" },  // NEW
+    { step: "4. /commit - Commit changes", status: "pending" }
+  ]
+})
+// Note: ALL previous tasks preserved, new task inserted with workflow prefix
 ```
 
 ### 1.11.3 Task Hierarchy and Numbering
