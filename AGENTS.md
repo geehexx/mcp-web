@@ -13,7 +13,7 @@ This repository contains two types of agents:
 1. **MCP Web Server** - Production MCP server providing web summarization capabilities
 2. **Windsurf Agent Configuration** - Development-time AI agent setup for repository maintenance
 
-For human-facing documentation, see [README.md](../README.md). This file focuses on machine-readable agent specifications.
+For human-facing documentation, see [README.md](./README.md). This file focuses on machine-readable agent specifications.
 
 ---
 
@@ -77,7 +77,7 @@ Use this template when adding new agents to this file:
 **Configuration:**
 
 - Config file: `config.toml` (optional, uses sane defaults)
-- Environment variables: See [ENVIRONMENT_VARIABLES.md](reference/ENVIRONMENT_VARIABLES.md)
+- Environment variables: See [ENVIRONMENT_VARIABLES.md](docs/reference/ENVIRONMENT_VARIABLES.md)
 - Dependencies: Python 3.10+, httpx, playwright, trafilatura, FastMCP
 
 **Usage Example:**
@@ -112,11 +112,11 @@ python -m mcp_web.mcp_server
 
 **Related Documentation:**
 
-- [Architecture Overview](architecture/ARCHITECTURE.md)
-- [API Reference](api/API.md)
-- [Configuration Guide](reference/ENVIRONMENT_VARIABLES.md)
-- [ADR-0001: httpx/Playwright Fallback](adr/0001-use-httpx-playwright-fallback.md)
-- [ADR-0012: Monolithic Tool Design](adr/0012-monolithic-tool-design.md)
+- [Architecture Overview](docs/architecture/ARCHITECTURE.md)
+- [API Reference](docs/api/API.md)
+- [Configuration Guide](docs/reference/ENVIRONMENT_VARIABLES.md)
+- [ADR-0001: httpx/Playwright Fallback](docs/adr/0001-use-httpx-playwright-fallback.md)
+- [ADR-0012: Monolithic Tool Design](docs/adr/0012-monolithic-tool-design.md)
 
 **Maintainer:** Core Team
 **Last Verified:** 2025-10-18
@@ -168,10 +168,10 @@ ls .windsurf/workflows/
 
 **Related Documentation:**
 
-- [Constitution](CONSTITUTION.md) - Project principles and standards
-- [Documentation Structure](DOCUMENTATION_STRUCTURE.md) - Documentation organization
+- [Constitution](docs/CONSTITUTION.md) - Project principles and standards
+- [Documentation Structure](docs/DOCUMENTATION_STRUCTURE.md) - Documentation organization
 - [Agent Directives](.windsurf/rules/00_agent_directives.md) - Core agent behavior rules
-- [ADR-0018: Workflow Architecture V3](adr/0018-workflow-architecture-v3.md)
+- [ADR-0018: Workflow Architecture V3](docs/adr/0018-workflow-architecture-v3.md)
 
 **Maintainer:** Core Team
 **Last Verified:** 2025-10-18
@@ -210,7 +210,7 @@ To validate this file:
 task docs:lint
 
 # Link checking (verify all internal links work)
-grep -oP '\[.*?\]\(\K[^)]+' docs/AGENTS.md | while read link; do
+grep -oP '\[.*?\]\(\K[^)]+' AGENTS.md | while read link; do
   [[ "$link" =~ ^http ]] || [ -f "$link" ] || echo "Broken link: $link"
 done
 
@@ -262,13 +262,13 @@ agents:
 
 - [AGENTS.md Standard](https://github.com/agentmd/agent.md) - Community-driven format for agent documentation
 - [MCP Registry Format](https://github.com/modelcontextprotocol/registry) - Model Context Protocol server registry
-- Project documentation standards: [DOCUMENTATION_STRUCTURE.md](DOCUMENTATION_STRUCTURE.md)
+- Project documentation standards: [DOCUMENTATION_STRUCTURE.md](docs/DOCUMENTATION_STRUCTURE.md)
 
 **Related Standards:**
 
 - [MCP Specification](https://modelcontextprotocol.io/) - Protocol specification
-- [ADR-0002: Windsurf Workflow System](adr/0002-adopt-windsurf-workflow-system.md)
-- [ADR-0003: Documentation Standards](adr/0003-documentation-standards-and-structure.md)
+- [ADR-0002: Windsurf Workflow System](docs/adr/0002-adopt-windsurf-workflow-system.md)
+- [ADR-0003: Documentation Standards](docs/adr/0003-documentation-standards-and-structure.md)
 
 ---
 

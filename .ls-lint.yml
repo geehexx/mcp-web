@@ -10,12 +10,12 @@ ls:
 
   # Root level - strict control
   .:
-    .md: regex:[A-Z_]+|README|LICENSE|CONTRIBUTING  # README.md, PROJECT_SUMMARY.md, LICENSE, etc.
+    .md: regex:[A-Z_]+|README|LICENSE|CONTRIBUTING|AGENTS  # README.md, PROJECT_SUMMARY.md, LICENSE, etc.
     .dir: kebab-case  # Root directories should be kebab-case
 
   # Documentation root - UPPER_CASE only for allowed files
   docs:
-    .md: regex:README|CONSTITUTION|DOCUMENTATION_STRUCTURE|AGENTS  # Core docs in root
+    .md: regex:README|CONSTITUTION|DOCUMENTATION_STRUCTURE  # Core docs in docs root
     .dir: kebab-case  # Subdirectories use kebab-case
 
   # ADRs - numbered with kebab-case titles

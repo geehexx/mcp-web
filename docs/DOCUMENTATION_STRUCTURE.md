@@ -60,6 +60,8 @@ docs/
 │       ├── 2025-10-16-fix-security-unit-tests.md
 │       └── 2025-10-16-windsurf-workflow-rules-improvements.md
 │
+├── AGENTS.md                      # Agent catalog and machine-readable specs
+│
 ├── guides/                        # Reference guides (NOT workflows)
 │   ├── README.md
 │   ├── TESTING_REFERENCE.md       # Test command reference

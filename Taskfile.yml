@@ -259,16 +259,16 @@ tasks:
     desc: Validate AGENTS.md structure and links
     cmds:
       - |
-        echo "Validating docs/AGENTS.md..."
+        echo "Validating AGENTS.md..."
         # Check file exists
-        if [ ! -f docs/AGENTS.md ]; then
-          echo "ERROR: docs/AGENTS.md not found"
+        if [ ! -f AGENTS.md ]; then
+          echo "ERROR: AGENTS.md not found"
           exit 1
         fi
         # Check required sections exist
         required_sections=("Overview" "Agent Entry Template" "Agents in This Repository" "Adding or Updating Agents")
         for section in "${required_sections[@]}"; do
-          if ! grep -q "## $section" docs/AGENTS.md; then
+          if ! grep -q "## $section" AGENTS.md; then
             echo "ERROR: Missing required section: $section"
             exit 1
           fi
@@ -278,7 +278,7 @@ tasks:
         echo "Checking internal links..."
         broken_links=0
         # Remove code blocks from file before extracting links
-        content=$(awk '/^```/{f=!f;next}!f' docs/AGENTS.md)
+        content=$(awk '/^```/{f=!f;next}!f' AGENTS.md)
         while IFS= read -r link; do
           # Skip external links (http/https)
           if [[ "$link" =~ ^https?:// ]]; then
@@ -294,8 +294,8 @@ tasks:
           fi
           # Remove anchor from link if present
           file_path="${link%%#*}"
-          # Check relative to docs/ directory
-          if [ ! -f "docs/$file_path" ] && [ ! -f "$file_path" ]; then
+          # Resolve relative paths from repository root
+          if [ ! -f "$file_path" ] && [ ! -f "docs/$file_path" ]; then
             echo "  ✗ Broken link: $link"
             broken_links=$((broken_links + 1))
           fi
