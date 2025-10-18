@@ -222,6 +222,7 @@ More text after code.
 **Source:** [Pre-commit Hooks Best Practices](https://gatlenculp.medium.com/effortless-code-quality-the-ultimate-pre-commit-hooks-guide-for-2025-57ca501d9835)
 
 **Recommended approach:**
+
 1. ✅ Use official pre-commit framework (https://pre-commit.com/)
 2. ✅ Enable auto-fix where safe (`--fix` flag)
 3. ✅ Run hooks in CI to catch bypassed commits
@@ -229,6 +230,7 @@ More text after code.
 5. ✅ Pin versions for reproducibility
 
 **Current implementation:**
+
 ```yaml
 # .pre-commit-config.yaml
 - repo: https://github.com/DavidAnson/markdownlint-cli2
@@ -482,6 +484,7 @@ src/
 **Recommendation:** **Defer to Phase 2 evaluation** - Focus on structural issues first
 
 **If adding Vale:**
+
 - Start with write-good style (general prose)
 - Add project-specific terminology rules
 - Configure `.vale.ini` with appropriate styles
@@ -493,22 +496,26 @@ src/
 ## References & Further Reading
 
 ### Official Documentation
+
 - [markdownlint Rules](https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md)
 - [markdownlint-cli2 README](https://github.com/DavidAnson/markdownlint-cli2)
 - [CommonMark Specification](https://spec.commonmark.org/0.31.2/)
 - [GitHub Flavored Markdown Spec](https://github.github.com/gfm/)
 
 ### Best Practices Guides
+
 - [Markdown Style Guide (Google)](https://google.github.io/styleguide/docguide/style.html)
 - [Markdown Style Guide (Ciro Santilli)](https://cirosantilli.com/markdown-style-guide)
 - [Pre-commit Hooks Guide 2025](https://gatlenculp.medium.com/effortless-code-quality-the-ultimate-pre-commit-hooks-guide-for-2025-57ca501d9835)
 
 ### Tool Documentation
+
 - [Vale Documentation](https://vale.sh/docs/)
 - [remark-lint Documentation](https://github.com/remarkjs/remark-lint)
 - [Pre-commit Framework](https://pre-commit.com/)
 
 ### Articles
+
 - [Markdown Auto-fix Implementation](https://dlaa.me/blog/post/markdownlintfixinfo)
 - [Markdownlint Rules Comparison](https://github.com/remarkjs/remark-lint/blob/main/doc/comparison-to-markdownlint.md)
 
@@ -520,11 +527,13 @@ src/
 Continue with markdownlint-cli2 as the primary linting tool, enhance pre-commit hooks, add CI checks, and implement automated tests for regression prevention.
 
 **Phase 2 Decision Points:**
+
 1. Vale integration: Evaluate after structural issues resolved
 2. CI workflow: Add GitHub Actions for markdown quality
 3. Test suite: Implement pytest-based markdown quality tests
 
 **Success Metrics:**
+
 - Zero markdown linting errors
 - Pre-commit hooks catch 100% of new violations
 - CI blocks invalid markdown from merging
