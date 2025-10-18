@@ -1,7 +1,17 @@
 ---
+created: "2025-10-15"
+updated: "2025-10-18"
 trigger: glob
 description: Governs documentation creation, maintenance, and archival. Meta-rule about the development process.
 globs: ["docs/**/*.md", "*.md"]
+category: documentation
+tokens: 1313
+applyTo:
+  - documentation
+  - adr
+  - initiatives
+priority: medium
+status: active
 ---
 
 # Rule: Documentation Lifecycle & Management

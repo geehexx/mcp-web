@@ -1,6 +1,13 @@
 ---
+created: "2025-10-17"
+updated: "2025-10-18"
 description: Auto-bump version based on conventional commits
 auto_execution_mode: 3
+category: Automation
+complexity: 70
+tokens: 1789
+dependencies: []
+status: active
 ---
 
 # Bump Version Workflow

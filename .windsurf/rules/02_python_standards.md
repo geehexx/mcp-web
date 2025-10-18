@@ -1,7 +1,16 @@
 ---
+created: "2025-10-15"
+updated: "2025-10-18"
 trigger: glob
 description: Python code style, type hints, async patterns, and best practices.
 globs: ["**/*.py"]
+category: language
+tokens: 1549
+applyTo:
+  - python
+  - implementation
+priority: high
+status: active
 ---
 
 # Rule: Python Standards and Best Practices
@@ -69,22 +78,22 @@ def summarize_content(
     max_tokens: int = 1000
 ) -> str:
     """Summarize content with optional query focus.
-    
+
     Implements map-reduce summarization strategy per ADR-0006.
     Uses query-aware chunking per ADR-0003.
-    
+
     Args:
         content: The text content to summarize
         query: Optional query to focus the summary
         max_tokens: Maximum tokens in summary (default: 1000)
-    
+
     Returns:
         Generated summary as string
-    
+
     Raises:
         ValueError: If content is empty or too short
         TokenLimitError: If content exceeds maximum processable size
-    
+
     Example:
         >>> summary = summarize_content(
         ...     "Long article text...",
@@ -131,11 +140,11 @@ async def process_with_limit(
 ) -> list[str]:
     """Process items with concurrency limit."""
     semaphore = asyncio.Semaphore(max_concurrent)
-    
+
     async def process_one(item: str) -> str:
         async with semaphore:
             return await process_item(item)
-    
+
     return await asyncio.gather(*[process_one(item) for item in items])
 
 # Async generator (streaming)
@@ -238,7 +247,7 @@ async def cached_fetch(url: str) -> str:
     """Fetch with caching."""
     if url in _cache:
         return _cache[url]
-    
+
     result = await fetch(url)
     _cache[url] = result
     return result
@@ -295,10 +304,10 @@ async def test_async_function():
     """Test async function with proper setup."""
     # Arrange
     fetcher = URLFetcher(config)
-    
+
     # Act
     result = await fetcher.fetch("https://example.com")
-    
+
     # Assert
     assert result.status_code == 200
     assert len(result.content) > 0
@@ -310,7 +319,7 @@ def test_with_mock():
         mock_response = AsyncMock()
         mock_response.status_code = 200
         mock_client.return_value.__aenter__.return_value.get.return_value = mock_response
-        
+
         # Test code here
         pass
 

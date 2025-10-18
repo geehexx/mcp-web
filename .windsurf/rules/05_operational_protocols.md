@@ -1,6 +1,15 @@
 ---
+created: "2025-10-18"
+updated: "2025-10-18"
 trigger: session_management
 description: Session end protocol, progress communication, and operational efficiency principles
+category: operations
+tokens: 1100
+applyTo:
+  - all
+  - session_management
+priority: high
+status: active
 ---
 
 # Rule: Operational Protocols

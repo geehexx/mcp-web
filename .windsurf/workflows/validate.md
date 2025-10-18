@@ -1,7 +1,13 @@
 ---
+created: "2025-10-17"
+updated: "2025-10-18"
 description: Run linting, tests, security checks
 auto_execution_mode: 3
-category: Specialized Operation
+category: Validation
+complexity: 60
+tokens: 1884
+dependencies: []
+status: active
 ---
 
 # Validate Workflow

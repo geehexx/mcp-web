@@ -1,8 +1,15 @@
 ---
+created: "2025-10-18"
+updated: "2025-10-18"
 description: /work-routing - Routing decision logic for work orchestration
 auto_execution_mode: 3
 category: Sub-workflow
 parent: work.md
+complexity: 70
+tokens: 1221
+dependencies:
+  - detect-context
+status: active
 ---
 
 # Work Routing Logic

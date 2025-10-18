@@ -1,6 +1,13 @@
 ---
+created: "2025-10-17"
+updated: "2025-10-18"
 description: Archive completed initiative
 auto_execution_mode: 3
+category: Documentation
+complexity: 40
+tokens: 409
+dependencies: []
+status: active
 ---
 
 # Archive Initiative Workflow

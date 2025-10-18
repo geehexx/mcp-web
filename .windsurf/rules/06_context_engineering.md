@@ -1,6 +1,16 @@
 ---
+created: "2025-10-18"
+updated: "2025-10-18"
 trigger: file_operations
 description: File operations, git operations, and context management strategies
+category: operations
+tokens: 1680
+applyTo:
+  - file_operations
+  - git
+  - context_loading
+priority: medium
+status: active
 ---
 
 # Rule: Context Engineering

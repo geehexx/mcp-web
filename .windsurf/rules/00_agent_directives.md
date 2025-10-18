@@ -1,6 +1,14 @@
 ---
+created: "2025-10-15"
+updated: "2025-10-18"
 trigger: always_on
 description: Meta-rules defining agent persona, core principles, and operational directives. Highest-level rule applying globally.
+category: core
+tokens: 3074
+applyTo:
+  - all
+priority: high
+status: active
 ---
 
 # Rule: Agent Persona & Directives
@@ -8,15 +16,19 @@ description: Meta-rules defining agent persona, core principles, and operational
 ## Quick Navigation
 
 **Core Principles:** (this file)
+
 - Persona, Guiding Principles, Operational Mandate, Tool Selection, Research Standards, Task System
 
 **Operational Protocols:** [05_operational_protocols.md](./05_operational_protocols.md)
+
 - Session end protocol, progress communication, operational efficiency
 
 **Context Engineering:** [06_context_engineering.md](./06_context_engineering.md)
+
 - File operations, git operations, initiative structure, artifact management
 
 **Specialized Rules:**
+
 - Testing & Tooling: [01_testing_and_tooling.md](./01_testing_and_tooling.md)
 - Python Standards: [02_python_standards.md](./02_python_standards.md)
 - Documentation Lifecycle: [03_documentation_lifecycle.md](./03_documentation_lifecycle.md)
@@ -132,6 +144,7 @@ When making any implementation decision, prioritize the following principles in 
 - Performance first: Minimize tool calls
 
 **Detailed patterns:**
+
 - [context-loading-patterns.md](../workflows/context-loading-patterns.md)
 - [batch-operations.md](../workflows/batch-operations.md)
 

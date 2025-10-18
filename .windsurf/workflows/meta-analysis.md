@@ -1,6 +1,15 @@
 ---
+created: "2025-10-17"
+updated: "2025-10-18"
 description: Systematic session review and improvement identification
 auto_execution_mode: 3
+category: Analysis
+complexity: 50
+tokens: 766
+dependencies:
+  - extract-session
+  - summarize-session
+status: active
 ---
 
 # Meta-Analysis Workflow

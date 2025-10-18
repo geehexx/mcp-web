@@ -98,7 +98,7 @@ docs/
         └── YYYY-MM-DD-*.md
 
 .windsurf/                         # Windsurf AI configuration
-├── workflows/                     # Executable workflows (17 workflows)
+├── workflows/                     # Executable workflows (19 workflows)
 │   ├── work.md                    # Orchestrator: Master workflow
 │   ├── plan.md                    # Orchestrator: Planning
 │   ├── implement.md               # Orchestrator: Implementation
@@ -115,14 +115,28 @@ docs/
 │   ├── extract-session.md         # Context Handler: Session extraction
 │   ├── new-adr.md                 # Artifact Generator: ADR creation
 │   ├── research.md                # Context Handler: Research
-│   └── update-docs.md             # Specialized Operation: Doc updates
+│   ├── update-docs.md             # Specialized Operation: Doc updates
+│   ├── work-routing.md            # Sub-workflow: Routing logic
+│   └── work-session-protocol.md   # Sub-workflow: Session end protocol
 │
-└── rules/                         # Agent behavior rules (5 rules)
-    ├── 00_agent_directives.md     # Core principles and persona
-    ├── 01_testing_and_tooling.md  # Testing standards
-    ├── 02_python_standards.md     # Code standards
-    ├── 03_documentation_lifecycle.md  # Documentation rules
-    └── 04_security.md             # Security patterns
+├── rules/                         # Agent behavior rules (7 rules)
+│   ├── 00_agent_directives.md     # Core principles and persona
+│   ├── 01_testing_and_tooling.md  # Testing standards
+│   ├── 02_python_standards.md     # Code standards
+│   ├── 03_documentation_lifecycle.md  # Documentation rules
+│   ├── 04_security.md             # Security patterns
+│   ├── 05_operational_protocols.md    # Session end, progress communication
+│   └── 06_context_engineering.md  # File ops, git ops, context management
+│
+├── docs/                          # AI-specific reference documentation
+│   ├── context-loading-patterns.md # Context loading strategies
+│   ├── batch-operations.md        # Batch operation optimization
+│   └── [other reference guides]
+│
+├── schemas/                       # Validation schemas
+│   └── frontmatter-schema.json    # YAML frontmatter schema
+│
+└── templates/                     # Code/document templates
 ```
 
 **Key Distinction:** Workflows (`.windsurf/workflows/`) are **executable**, Guides (`docs/guides/`) are **reference documentation**. See [ADR-0018](adr/0018-workflow-architecture-v3.md) for taxonomy.
