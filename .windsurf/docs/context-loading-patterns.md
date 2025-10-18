@@ -47,7 +47,7 @@ mcp0_read_multiple_files(paths=[
 - Process 10-15 files per batch (optimal performance)
 - Use absolute paths for MCP tools
 - Handle missing files gracefully
-- See [Batch Operations](./batch-operations.md) for optimization
+- See [Batch Operations](./batch-operations.md) for optimization strategies
 
 ### Glob-Based Batch Read
 
@@ -356,8 +356,8 @@ else:
 ## References
 
 - [Batch Operations](./batch-operations.md) - Optimization strategies
-- [load-context.md](./load-context.md) - Context loading workflow
-- [detect-context.md](./detect-context.md) - Context detection
+- [load-context.md](../workflows/load-context.md) - Context loading workflow
+- [detect-context.md](../workflows/detect-context.md) - Context detection
 - Agent directives: [00_agent_directives.md](../rules/00_agent_directives.md) - Section 1.10
 
 ---

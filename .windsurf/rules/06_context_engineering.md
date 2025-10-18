@@ -11,8 +11,42 @@ description: File operations, git operations, and context management strategies
 
 - Core principles: [00_agent_directives.md](./00_agent_directives.md)
 - Operational protocols: [05_operational_protocols.md](./05_operational_protocols.md)
-- Context loading patterns: [context-loading-patterns.md](../workflows/context-loading-patterns.md)
-- Batch operations: [batch-operations.md](../workflows/batch-operations.md)
+- Context loading patterns: [context-loading-patterns.md](../docs/context-loading-patterns.md)
+- Batch operations: [batch-operations.md](../docs/batch-operations.md)
+
+---
+
+## 0. .windsurf/ Directory Structure
+
+**Standard Structure:**
+
+```text
+.windsurf/
+├── docs/              # AI-specific reference documentation (machine-readable)
+│   ├── context-loading-patterns.md
+│   ├── batch-operations.md
+│   └── [other reference guides]
+├── rules/             # Agent behavior rules
+│   ├── 00_agent_directives.md
+│   ├── 01_testing_and_tooling.md
+│   └── [...]
+├── workflows/         # Executable workflows only
+│   ├── work.md
+│   ├── implement.md
+│   └── [...]
+└── templates/         # Code/document templates (deprecated - use docs/)
+```
+
+### Critical: .windsurf/docs/ vs .windsurf/workflows/
+
+- **workflows/**: Executable workflows ONLY (invokable via `/workflow-name`)
+- **docs/**: Reference documentation, pattern libraries, guides (NOT executable)
+  - These are machine-readable documentation for AI agents
+  - Maintained with same rigor as regular documentation
+  - Provide improved reference points over harder-to-find context in docs/
+  - Examples: context-loading-patterns.md, batch-operations.md
+
+**Rule:** Never put non-workflow reference documentation in workflows/ directory. Use docs/ for pattern libraries, guides, and AI-specific references.
 
 ---
 

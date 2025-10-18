@@ -454,6 +454,7 @@ run_parallel(commands)
 ## References
 
 - [Context Loading Patterns](./context-loading-patterns.md) - File loading strategies
+- [load-context.md](../workflows/load-context.md) - Context loading workflow
 - [pytest-xdist docs](https://pytest-xdist.readthedocs.io/) - Test parallelization
 - Agent directives: [00_agent_directives.md](../rules/00_agent_directives.md) - Section 1.10
 

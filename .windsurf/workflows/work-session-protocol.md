@@ -1,5 +1,6 @@
 ---
-description: Session end protocol and completion detection
+description: /work-session-protocol - Session end protocol and completion detection
+auto_execution_mode: 3
 category: Sub-workflow
 parent: work.md
 ---
