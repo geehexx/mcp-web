@@ -340,11 +340,30 @@ When creating or updating initiatives:
 6. **Update after each session** - Document progress in Updates section
 7. **Move when complete** - Don't leave completed initiatives in active/
 
+## Comprehensive Guide
+
+For detailed documentation on the complete initiative lifecycle system, see:
+
+**📖 [Initiative Lifecycle Management Guide](../guides/INITIATIVE_LIFECYCLE.md)**
+
+This comprehensive guide covers:
+
+- Complete lifecycle stages with validation
+- Dependency management and blocker propagation
+- Phase management with automated validation
+- Three-layer validation system (pre-commit, on-demand, archival)
+- Archival process with five-gate validation
+- Automated tools reference
+- Troubleshooting common issues
+
 ## References
 
-- [ADR-0013: Initiative Documentation Standards](../adr/0013-initiative-documentation-standards.md)
-- [ADR-0003: Documentation Standards and Structure](../adr/0003-documentation-standards-and-structure.md)
-- [Template](template.md)
+- **[Initiative Lifecycle Guide](../guides/INITIATIVE_LIFECYCLE.md)** - Comprehensive lifecycle documentation
+- [ADR-0021: Initiative System Lifecycle Improvements](../adr/0021-initiative-system-lifecycle-improvements.md) - Architecture decision
+- [ADR-0013: Initiative Documentation Standards](../adr/0013-initiative-documentation-standards.md) - Original standards
+- [ADR-0003: Documentation Standards and Structure](../adr/0003-documentation-standards-and-structure.md) - Overall documentation structure
+- [Template](template.md) - Legacy template (use scaffolding tool instead)
+- [Archive Initiative Workflow](../../.windsurf/workflows/archive-initiative.md) - Archival workflow
 - [GitHub: Planning and Tracking Work](https://docs.github.com/en/issues/tracking-your-work-with-issues/learning-about-issues/planning-and-tracking-work-for-your-team-or-project)
 
 ---
