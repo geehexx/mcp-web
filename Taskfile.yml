@@ -374,9 +374,19 @@ tasks:
       - npx markdownlint-cli2 --fix "**/*.md" "#node_modules" "#.venv"
 
   docs:windsurf:update:
-    desc: Update auto-generated .windsurf/docs/ indexes
+    desc: Update auto-generated .windsurf/docs/ indexes (intelligent regeneration)
     cmds:
-      - python scripts/generate_indexes.py
+      - python scripts/update_machine_readable_docs.py
+
+  docs:windsurf:update:force:
+    desc: Force regeneration of all .windsurf/docs/ indexes
+    cmds:
+      - python scripts/update_machine_readable_docs.py --force
+
+  docs:windsurf:check:
+    desc: Check if .windsurf/docs/ indexes need regeneration
+    cmds:
+      - python scripts/update_machine_readable_docs.py --check
 
   docs:clean:
     desc: Remove double-spaces and LLM artifacts
