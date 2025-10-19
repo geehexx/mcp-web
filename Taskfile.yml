@@ -565,6 +565,38 @@ tasks:
     cmds:
       - "{{.UV}} run python scripts/scaffold.py --type summary --mode interactive"
 
+  # Initiative validation tasks
+  validate:initiatives:
+    desc: Validate all initiative files (frontmatter, status, dependencies)
+    cmds:
+      - "{{.UV}} run python scripts/validate_initiatives.py"
+
+  validate:initiatives:ci:
+    desc: Validate initiatives in CI mode (exit 1 on failures)
+    cmds:
+      - "{{.UV}} run python scripts/validate_initiatives.py --ci"
+
+  validate:dependencies:
+    desc: Validate initiative dependencies and detect circular deps
+    cmds:
+      - "{{.UV}} run python scripts/dependency_registry.py --validate"
+
+  deps:graph:
+    desc: Generate initiative dependency graph (DOT format)
+    cmds:
+      - "{{.UV}} run python scripts/dependency_registry.py --graph"
+
+  deps:blockers:
+    desc: Show blocker propagation cascade across initiatives
+    cmds:
+      - "{{.UV}} run python scripts/dependency_registry.py --blockers"
+
+  deps:export:
+    desc: Export dependency registry to JSON (FILE required)
+    cmds:
+      - '[ -n "{{.FILE}}" ] || (echo "FILE is required" && exit 1)'
+      - "{{.UV}} run python scripts/dependency_registry.py --export {{.FILE}}"
+
   archive:initiative:
     desc: Archive initiative from active to completed (NAME required)
     cmds:

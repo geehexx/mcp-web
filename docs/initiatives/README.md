@@ -127,34 +127,38 @@ docs/initiatives/
 - Complex coordination needed
 - Example: Architecture refactors, large feature development
 
-### Step 1: Copy the Appropriate Template
+### Step 1: Use Automated Scaffolding
 
-**IMPORTANT:** Always use `YYYY-MM-DD` date format (not quarterly format like `2025-q4`). Use the initiative creation date.
+**IMPORTANT:** Always use automated scaffolding to ensure consistency and required metadata.
 
-**For small initiatives (flat file):**
-
-```bash
-cp docs/initiatives/template.md docs/initiatives/active/YYYY-MM-DD-your-initiative.md
-```
-
-**For large initiatives (folder-based - RECOMMENDED):**
+**Use the scaffolding command:**
 
 ```bash
-# Create folder
-mkdir -p docs/initiatives/active/YYYY-MM-DD-your-initiative/{phases,artifacts}
+# Scaffold new initiative (interactive prompts)
+task scaffold:initiative
 
-# Copy template
-cp docs/initiatives/template/initiative.md docs/initiatives/active/YYYY-MM-DD-your-initiative/initiative.md
-
-# Optionally copy phase template
-cp docs/initiatives/template/phases/phase-example.md docs/initiatives/active/YYYY-MM-DD-your-initiative/phases/phase-1-name.md
+# Or specify parameters directly
+task scaffold:initiative NAME="your-initiative-name" TYPE="folder" PRIORITY="high"
 ```
 
-**Examples:**
+**The scaffolding system will:**
+- ✅ Create proper directory structure (folder-based or flat-file)
+- ✅ Generate initiative file with required frontmatter fields
+- ✅ Use correct `YYYY-MM-DD` date format automatically
+- ✅ Create `phases/` and `artifacts/` directories (folder-based)
+- ✅ Validate naming conventions
+- ✅ Initialize with template content
 
-- `2025-10-15-quality-foundation/`
-- `2025-10-18-new-feature.md`
-- `2025-10-20-documentation-infrastructure.md`
+**Decision criteria (scaffolding will prompt):**
+- **Flat file (`.md`)**: Small (<1000 words), single phase, no artifacts
+- **Folder-based**: Large (>1000 words), multiple phases, or supporting artifacts
+
+**Examples of generated names:**
+- `2025-10-15-quality-foundation/` (folder-based)
+- `2025-10-18-new-feature.md` (flat-file)
+- `2025-10-20-documentation-infrastructure/` (folder-based)
+
+> **⚠️ DEPRECATED:** Manual `cp`/`mkdir` commands are no longer recommended. Use `task scaffold:initiative` for consistency and automated validation.
 
 ### Step 2: Fill in Required Sections
 

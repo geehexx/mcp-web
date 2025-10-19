@@ -94,6 +94,14 @@ repos:
         always_run: false
         files: \.(md|py|yml|yaml|json|toml)$
 
+      - id: validate-initiatives
+        name: "📋 initiatives · Validate initiative files"
+        entry: uv run python scripts/validate_initiatives.py
+        language: system
+        files: ^docs/initiatives/(active|completed)/.*\.md$
+        pass_filenames: false
+        args: [--ci]
+
   # Local - Fast Tests (Optional, can be slow)
   # Uncomment to run fast tests on every commit
   # - repo: local

@@ -47,6 +47,52 @@ update_plan({
    - Mentions in guides
    - Task references
 
+## Phase 1.5: Automated Validation Gates
+
+**Run validation before archival:**
+
+```bash
+task validate:initiatives
+task validate:dependencies
+```
+
+**Archival quality gates (must pass before archival):**
+
+| Gate | Check | Severity | Bypass |
+|------|-------|----------|--------|
+| **Success Criteria** | All checkboxes checked (`[x]`) | CRITICAL | No |
+| **Dependencies** | No initiatives depend on this one | CRITICAL | Waiver required |
+| **Blockers** | All blockers resolved | WARNING | Yes |
+| **Documentation** | Updates section has completion entry | WARNING | Yes |
+| **Status** | Status = "Completed" or "✅ Completed" | CRITICAL | No |
+
+**Automated gate check:**
+
+```bash
+# Validate initiative before archival
+python scripts/validate_initiatives.py --file docs/initiatives/active/[initiative-name]/initiative.md
+```
+
+**Dependency check:**
+
+```bash
+# Ensure no other initiatives depend on this one
+python scripts/dependency_registry.py --validate
+```
+
+**If gates fail:**
+
+- **CRITICAL failures:** Must fix before archival
+- **WARNING failures:** Document waiver reason in commit message
+- **Bypass:** Use `--force-archive` flag with justification
+
+**Waiver decisions (from Quality Gates, PMI/DTU):**
+
+- **Go:** All gates passed, proceed to archival
+- **Waiver:** Minor issues, document and proceed
+- **Waiver with re-view:** Document issues, review in 30 days
+- **Kill/Recycle:** Gate failures indicate incomplete work, return to active
+
 ## Phase 2: Archival Actions
 
 1. **Add archived notice:** At top of initiative document:
