@@ -4,11 +4,11 @@ updated: "2025-10-19"
 description: Archive completed initiative or handle superseded initiatives
 auto_execution_mode: 3
 category: Documentation
-complexity: 45
-tokens: 550
-dependencies: []
+complexity: 50
+tokens: 800
+dependencies: ["scripts/validate_archival.py", "scripts/dependency_registry.py"]
 status: active
-version: 1.1.0
+version: 1.2.0
 ---
 
 # Archive Initiative Workflow
@@ -49,49 +49,103 @@ update_plan({
 
 ## Phase 1.5: Automated Validation Gates
 
-**Run validation before archival:**
+**MANDATORY:** Run archival validation before moving initiatives.
+
+### Step 1: Run Archival Validator
 
 ```bash
-task validate:initiatives
-task validate:dependencies
+# Validate initiative against all archival gates
+python scripts/validate_archival.py docs/initiatives/active/[initiative-name]/initiative.md
 ```
 
-**Archival quality gates (must pass before archival):**
+**The validator checks 5 gates:**
 
-| Gate | Check | Severity | Bypass |
-|------|-------|----------|--------|
-| **Success Criteria** | All checkboxes checked (`[x]`) | CRITICAL | No |
+| Gate | Check | Severity | Bypass Allowed |
+|------|-------|----------|----------------|
+| **Status Completion** | Status = "Completed" or "✅ Completed" | CRITICAL | No |
+| **Success Criteria** | All success criteria checkboxes checked (`[x]`) | CRITICAL | No |
+| **Blockers** | All current blockers resolved | WARNING | Yes (with --force) |
 | **Dependencies** | No initiatives depend on this one | CRITICAL | Waiver required |
-| **Blockers** | All blockers resolved | WARNING | Yes |
-| **Documentation** | Updates section has completion entry | WARNING | Yes |
-| **Status** | Status = "Completed" or "✅ Completed" | CRITICAL | No |
+| **Documentation** | Updates section has completion entry | WARNING | Yes (with --force) |
 
-**Automated gate check:**
+### Step 2: Interpret Results
 
-```bash
-# Validate initiative before archival
-python scripts/validate_initiatives.py --file docs/initiatives/active/[initiative-name]/initiative.md
+**Exit codes:**
+- `0` = All gates passed (or force bypass used)
+- `1` = Gate failures, archival blocked
+
+**Example output:**
+
+```
+📋 Archival Validation: initiative.md
+============================================================
+
+✅ [CRITICAL]    Status Completion    Status: Completed
+✅ [CRITICAL]    Success Criteria     5/5 success criteria met
+✅ [WARNING]     Blockers            No active blockers
+✅ [CRITICAL]    Dependencies        No dependents
+⚠️  [WARNING]     Documentation       No completion entry found
+   └─ Add completion entry with date and summary to Updates section
+
+============================================================
+Passed: 4/5
+Critical failures: 0
+Warning failures: 1
+
+✅ ARCHIVAL ALLOWED
 ```
 
-**Dependency check:**
+### Step 3: Handle Gate Failures
+
+**If CRITICAL gates fail:**
+
+1. Fix the issues (cannot bypass)
+2. Re-run validator
+3. Proceed only when all critical gates pass
+
+**If WARNING gates fail:**
+
+**Option A:** Fix the warnings (recommended)
+
+**Option B:** Use force bypass with justification
 
 ```bash
-# Ensure no other initiatives depend on this one
-python scripts/dependency_registry.py --validate
+python scripts/validate_archival.py \
+  docs/initiatives/active/[initiative-name]/initiative.md \
+  --force \
+  --reason "Superseded by initiative X, blockers no longer relevant"
 ```
 
-**If gates fail:**
+### Step 4: Generate Validation Report (Optional)
 
-- **CRITICAL failures:** Must fix before archival
-- **WARNING failures:** Document waiver reason in commit message
-- **Bypass:** Use `--force-archive` flag with justification
+```bash
+# Generate detailed markdown report
+python scripts/validate_archival.py \
+  docs/initiatives/active/[initiative-name]/initiative.md \
+  --report archival-validation-report.md
+```
 
-**Waiver decisions (from Quality Gates, PMI/DTU):**
+**Use report for:**
+- Documentation of archival decision
+- Waiver justification records
+- Portfolio governance audits
 
-- **Go:** All gates passed, proceed to archival
-- **Waiver:** Minor issues, document and proceed
-- **Waiver with re-view:** Document issues, review in 30 days
-- **Kill/Recycle:** Gate failures indicate incomplete work, return to active
+### Waiver Decision Framework
+
+Based on Quality Gates (PMI/DTU ProjectLab):
+
+| Decision | Criteria | Action |
+|----------|----------|--------|
+| **Go** | All gates passed | Proceed to Phase 2 (archival) |
+| **Waiver** | Minor warnings only | Document reason, proceed with `--force` |
+| **Waiver with Review** | Multiple warnings | Document issues, archive, review in 30 days |
+| **Kill/Recycle** | Critical failures | Return to active, fix issues |
+
+**Waiver documentation must include:**
+- Which gates failed
+- Business justification for bypass
+- Mitigation plan (if applicable)
+- Approval authority (if required)
 
 ## Phase 2: Archival Actions
 
@@ -243,5 +297,5 @@ git commit -m "chore(docs): archive Q4 2024 quality foundation initiative"
 
 ---
 
-**Version:** 1.1 (Added superseded initiative handling)
+**Version:** 1.2.0 (Added automated validation gates with validate_archival.py)
 **Last Updated:** 2025-10-19

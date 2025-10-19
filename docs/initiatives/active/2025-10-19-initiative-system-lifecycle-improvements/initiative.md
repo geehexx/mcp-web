@@ -251,7 +251,7 @@ This initiative is organized into 6 phases based on industry lifecycle managemen
 
 **Tasks:**
 
-- [ ] Design archival validation gates:
+- [x] Design archival validation gates:
 
   ```yaml
   gates:
@@ -269,10 +269,10 @@ This initiative is organized into 6 phases based on industry lifecycle managemen
       severity: "warning"
   ```
 
-- [ ] Implement gate validator script
-- [ ] Update `/archive-initiative` workflow with gate checks
-- [ ] Add bypass mechanism (`--force-archive` with justification required)
-- [ ] Generate archival report (gate pass/fail status)
+- [x] Implement gate validator script
+- [x] Update `/archive-initiative` workflow with gate checks
+- [x] Add bypass mechanism (`--force-archive` with justification required)
+- [x] Generate archival report (gate pass/fail status)
 
 **Success Criteria:**
 
@@ -528,9 +528,46 @@ Phase 4 (Blocker Propagation System) implementation complete:
 
 - [ ] Integrate with session end protocol
 
-**Next:** Phase 5 - Enhanced Archival Workflow (future work)
+**Next:** Phase 6 - Integration & Documentation
+
+### 2025-10-19 (Phase 5 Complete)
+
+Phase 5 (Enhanced Archival Workflow) implementation complete:
+
+**Implemented:**
+
+- ✅ Archival validation gate system (5 gates: Status, Success Criteria, Blockers, Dependencies, Documentation)
+- ✅ `scripts/validate_archival.py` script with comprehensive validation
+  - Exit codes: 0 (pass/bypass), 1 (blocked)
+  - Severity levels: CRITICAL (must fix), WARNING (can bypass)
+  - Report generation: `--report path/to/report.md`
+  - Force bypass: `--force --reason "justification"`
+- ✅ Updated `.windsurf/workflows/archive-initiative.md` v1.2.0
+  - Integrated validation gates into Phase 1.5
+  - Added waiver decision framework (Go/Waiver/Kill/Recycle)
+  - Documented bypass procedures and justification requirements
+- ✅ Bypass mechanism with required justification
+- ✅ Markdown report generator for archival decisions
+
+**Testing Results:**
+
+- Validator tested on active initiative (correctly blocked)
+- All 5 gates operational
+- Dependency checking integrated with `dependency_registry.py`
+- Force bypass mechanism functional
+
+**Files Created:**
+
+- `scripts/validate_archival.py` (+454 lines)
+
+**Files Modified:**
+
+- `.windsurf/workflows/archive-initiative.md` (v1.1.0 → v1.2.0, +98 lines)
+- `docs/initiatives/active/2025-10-19-initiative-system-lifecycle-improvements/initiative.md` (Phase 5 tasks marked complete)
+
+**Next:** Phase 6 - Integration & Documentation
 
 ---
 
 **Last Updated:** 2025-10-19
-**Status:** Active (Phases 3-4 Complete)
+**Status:** Active (Phases 3-5 Complete, 83% complete)
