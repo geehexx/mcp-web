@@ -82,13 +82,17 @@ Manual validation is unsustainable and error-prone:
 
 ### Phase 1: Cross-Reference Validation (2-3 hours)
 
+**Scope Clarification (2025-10-19):** Focus on **documentation links** (docs/, README, guides), not initiative cross-references (handled by [Initiative System](../2025-10-19-initiative-system-lifecycle-improvements/initiative.md) Phase 2).
+
 - [ ] Create `scripts/validate_references.py`
-- [ ] Parse all markdown files for internal links
-- [ ] Check if linked files/sections exist
+- [ ] Parse all markdown files in `docs/` for internal links
+- [ ] Check if linked files/sections exist (documentation only)
 - [ ] Generate report of broken links
-- [ ] Integrate with pre-commit hook
+- [ ] Integrate with pre-commit hook (docs/ files only)
 - [ ] Document in validation workflow
 - [ ] Test on current codebase
+
+**Coordination:** Initiative system's `dependency_registry.py` validates initiative cross-references. This phase validates general documentation links (ADRs, guides, README, architecture docs).
 
 ### Phase 2: Performance Regression Testing (2-3 hours)
 

@@ -372,6 +372,33 @@ This initiative is organized into 6 phases based on industry lifecycle managemen
 - [Workflow Automation Enhancement](../2025-10-18-workflow-automation-enhancement/initiative.md) - Phase 1-6 automation patterns apply
 - [Task System Validation](../2025-10-19-task-system-validation-enforcement/initiative.md) - Similar validation philosophy
 - [Windsurf Workflows V2](../2025-10-17-windsurf-workflows-v2-optimization/initiative.md) - Quality automation (Phase 8)
+- [Quality Automation and Monitoring](../2025-10-19-quality-automation-and-monitoring/initiative.md) - Cross-reference validation overlaps with Phase 3
+
+**⚠️ Overlap Notes (2025-10-19):**
+
+1. **Frontmatter Management (workflow-automation Phase 3)** → **SUPERSEDED** by this initiative Phase 1-2
+   - Workflow-automation planned frontmatter validator
+   - This initiative implemented `scripts/validate_initiatives.py` (Phase 1 complete)
+   - **Resolution:** Mark workflow-automation Phase 3 as "complete via initiative-system"
+
+2. **Cross-Reference Validation (quality-automation Phase 1)** → **COMPLEMENTARY** with Phase 3
+   - Quality-automation plans cross-reference validation tool
+   - This initiative Phase 3 plans phase/status validation
+   - **Resolution:** Quality-automation focuses on doc links, initiative-system focuses on initiative integrity
+   - **Coordination:** Both use similar validation patterns, share validator infrastructure
+
+3. **Pre-commit Validation (task-system-validation)** → **ALIGNED**
+   - Task-system plans pre-commit hooks for task format validation
+   - This initiative has pre-commit hooks for initiative frontmatter validation
+   - **Resolution:** Different validation domains, both use `.pre-commit-config.yaml` successfully
+   - **No conflict:** Task format vs initiative metadata are orthogonal
+
+**Actions Taken (2025-10-19):**
+
+- ✅ Converted all 16 initiatives to YAML frontmatter format (fix validation compatibility)
+- ✅ Updated workflow-automation to note Phase 3 completion via this initiative
+- ✅ Updated quality-automation to clarify cross-reference scope (docs, not initiatives)
+- ✅ Confirmed task-system-validation is orthogonal (no conflict)
 
 ---
 
