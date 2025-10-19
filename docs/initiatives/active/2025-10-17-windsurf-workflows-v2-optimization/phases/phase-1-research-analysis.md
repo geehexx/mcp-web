@@ -16,7 +16,7 @@ Research AI documentation best practices and establish baseline metrics for opti
 
 ### 1. Context Engineering (2025)
 
-**Source:** https://www.decodingai.com/p/context-engineering-2025s-1-skill
+**Source:** <https://www.decodingai.com/p/context-engineering-2025s-1-skill>
 
 **Key Findings:**
 
@@ -28,7 +28,7 @@ Research AI documentation best practices and establish baseline metrics for opti
 
 ### 2. Factory.ai Context Stack
 
-**Source:** https://factory.ai/news/context-window-problem
+**Source:** <https://factory.ai/news/context-window-problem>
 
 **Key Findings:**
 
@@ -40,7 +40,7 @@ Research AI documentation best practices and establish baseline metrics for opti
 
 ### 3. Semantic Release Tools
 
-**Source:** https://github.com/semantic-release/semantic-release
+**Source:** <https://github.com/semantic-release/semantic-release>
 
 **Key Findings:**
 
@@ -52,7 +52,7 @@ Research AI documentation best practices and establish baseline metrics for opti
 
 ### 4. AI-Readable Documentation
 
-**Source:** https://martech.org/how-to-optimize-your-content-for-ai-search-and-agents/
+**Source:** <https://martech.org/how-to-optimize-your-content-for-ai-search-and-agents/>
 
 **Key Findings:**
 

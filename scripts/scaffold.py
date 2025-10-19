@@ -518,14 +518,18 @@ class Scaffolder:
         """Generate output path from fields."""
         if self.template_type == TemplateType.INITIATIVE_FLAT:
             filename = self.slugify(fields["title"])
-            return Path("docs/initiatives/active") / f"{self.today()}-{filename}.md"
+            # Use provided 'created' date or default to today
+            created_date = fields.get("created", self.today())
+            return Path("docs/initiatives/active") / f"{created_date}-{filename}.md"
         elif self.template_type == TemplateType.ADR:
             number = fields["number"]
             title = self.slugify(fields["title"])
             return Path("docs/adr") / f"{number:04d}-{title}.md"
         elif self.template_type == TemplateType.SESSION_SUMMARY:
             title = self.slugify(fields["title"])
-            return Path("docs/archive/session-summaries") / f"{self.today()}-{title}.md"
+            # Use provided 'date' field or default to today
+            summary_date = fields.get("date", self.today())
+            return Path("docs/archive/session-summaries") / f"{summary_date}-{title}.md"
         else:
             raise ValueError(f"Unknown template type: {self.template_type}")
 

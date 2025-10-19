@@ -127,8 +127,8 @@ Test content.
 
         initiative = registry.initiatives["2025-10-19-initiative-a"]
         assert len(initiative.blockers) == 2
-        assert "API approval" in initiative.blockers[0]
-        assert "Performance optimization" in initiative.blockers[1]
+        assert "API approval" in initiative.blockers[0].description
+        assert "Performance optimization" in initiative.blockers[1].description
 
     def test_parse_no_blockers(self, temp_initiatives_dir, initiative_without_blockers):
         """Test parsing initiative with no blockers."""

@@ -55,7 +55,7 @@ None identified. All major claims verified.
    - 40-60% token reduction achievable
    - Remove filler words, redundant phrases
    - Preserve key information integrity
-   - **Source:** https://agenta.ai/blog/top-6-techniques-to-manage-context-length-in-llms
+   - **Source:** <https://agenta.ai/blog/top-6-techniques-to-manage-context-length-in-llms>
 
 2. **Hierarchical Summarization**
    - Break complex documents into layered summaries
@@ -67,7 +67,7 @@ None identified. All major claims verified.
    - Use distinct sessions for different phases
    - Fresh context improves focus
    - Reduces context pollution
-   - **Source:** https://github.blog/ai-and-ml/github-copilot/how-to-build-reliable-ai-workflows-with-agentic-primitives-and-context-engineering/
+   - **Source:** <https://github.blog/ai-and-ml/github-copilot/how-to-build-reliable-ai-workflows-with-agentic-primitives-and-context-engineering/>
 
 4. **Modular Instructions**
    - Apply only relevant rules via YAML frontmatter
@@ -79,7 +79,7 @@ None identified. All major claims verified.
    - Craft concise, targeted prompts
    - Cut fluff, use precise instructions
    - 30-50% token reduction typical
-   - **Source:** https://10clouds.com/blog/a-i/mastering-ai-token-optimization-proven-strategies-to-cut-ai-cost/
+   - **Source:** <https://10clouds.com/blog/a-i/mastering-ai-token-optimization-proven-strategies-to-cut-ai-cost/>
 
 6. **Caching Strategies**
    - Reuse context across sessions

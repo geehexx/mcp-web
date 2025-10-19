@@ -316,7 +316,7 @@ class ActionItem(BaseModel):
 
 **Workflow:**
 
-```
+```text
 Extract → Level 1 filter → Level 2 cluster → Level 3 validate → Human review
 ```
 

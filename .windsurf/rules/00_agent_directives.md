@@ -316,6 +316,7 @@ update_plan({
 4. **Blocked state:** Add unblocking task
 5. **User requests change:** Adjust plan accordingly
 
+<!-- markdownlint-disable-next-line MD036 -->
 **CRITICAL: Never Remove Completed Tasks**
 
 **When updating plan:**

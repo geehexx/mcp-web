@@ -304,8 +304,9 @@ class DependencyRegistry:
                         )
 
                     if len(target.blockers) > 0:
+                        blocker_descriptions = ", ".join(b.description for b in target.blockers)
                         issues.append(
-                            f"🚫 {initiative_id}: Prerequisite '{dep.target_id}' is blocked: {', '.join(target.blockers)}"
+                            f"🚫 {initiative_id}: Prerequisite '{dep.target_id}' is blocked: {blocker_descriptions}"
                         )
 
                 # Check 3: Active initiative shouldn't depend on incomplete prerequisite

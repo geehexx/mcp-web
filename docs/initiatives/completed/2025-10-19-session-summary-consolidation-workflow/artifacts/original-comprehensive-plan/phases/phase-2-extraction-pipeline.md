@@ -98,7 +98,7 @@ class ActionItem(BaseModel):
 
 #### System Prompt Template
 
-```
+```text
 You are an expert at analyzing software development session summaries to extract actionable items.
 
 Your task is to identify:
@@ -118,17 +118,14 @@ Output format: Structured JSON matching the ActionItem schema.
 
 #### User Prompt Template
 
-```
+```text
 Extract action items from the following session summary section:
 
 **Session:** {session_date} - {session_title}
 **Section:** {section_name}
 **Content:**
-```
 
 {section_content}
-
-```
 
 Identify all pain points, missing capabilities, regressions, and improvement opportunities.
 For each, provide: title, description, category, impact, confidence, source tracking, and context.
@@ -148,7 +145,7 @@ For each, provide: title, description, category, impact, confidence, source trac
 
 #### Pipeline Architecture
 
-```
+```text
 Input: Session Summary Files
     ↓
 Stage 1: Preprocessing
@@ -219,7 +216,7 @@ def extract_from_section(
     **Session:** {metadata['date']} - {metadata['title']}
     **Section:** {section['header']}
     **Content:**
-    ```
+    ```text
     {section['content']}
     ```
 

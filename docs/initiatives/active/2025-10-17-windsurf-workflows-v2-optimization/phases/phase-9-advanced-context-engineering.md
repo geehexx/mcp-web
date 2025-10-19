@@ -46,7 +46,7 @@ Implement modular instruction patterns for context-specific rule loading, achiev
 
 **Sources to Research:**
 
-- Windsurf documentation: https://docs.windsurf.com/
+- Windsurf documentation: <https://docs.windsurf.com/>
 - GitHub Copilot agent configuration
 - Community examples and patterns
 

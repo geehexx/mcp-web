@@ -242,7 +242,9 @@ def archive_initiative(
     if active_dir not in src.parents and src != active_dir:
         raise ValueError("Initiative must be under docs/initiatives/active")
 
-    destination = completed_dir / relative.relative_to(active_dir)
+    # Use relative path components for path manipulation
+    active_dir_rel = Path("docs/initiatives/active")
+    destination = completed_dir / relative.relative_to(active_dir_rel)
 
     changed_files: list[str] = []
 
