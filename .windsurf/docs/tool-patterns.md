@@ -32,6 +32,7 @@ tags: ["mcp-tools", "patterns", "file-operations", "git", "commands"]
 | List directory | `mcp0_list_directory` | `mcp0_list_directory(path)` |
 | Git command | `run_command` | `run_command("git status", cwd)` |
 | Run tests | `run_command` | `run_command("task test", cwd)` |
+| Automation scripts | `run_command` | `run_command("task scaffold:initiative", cwd)` |
 
 ---
 
@@ -257,6 +258,65 @@ mcp0_get_file_info({
 
 ---
 
+## Pattern 8: Automation Scripts
+
+**Use when:** Repetitive tasks that can be automated
+
+**Tool:** `run_command` with `task` commands
+
+**High-impact commands:**
+
+```typescript
+// Archive initiative (90x faster than manual)
+run_command({
+  CommandLine: "task archive:initiative NAME=2025-10-18-my-feature",
+  Cwd: "/home/gxx/projects/mcp-web",
+  Blocking: true,
+  SafeToAutoRun: false  // Modifies files
+})
+
+// Create new initiative (97% token savings)
+run_command({
+  CommandLine: "task scaffold:initiative",
+  Cwd: "/home/gxx/projects/mcp-web",
+  Blocking: true,
+  SafeToAutoRun: false  // Interactive prompt
+})
+
+// Move file with automatic reference updates
+run_command({
+  CommandLine: "task move:file SRC=docs/old.md DST=docs/new.md",
+  Cwd: "/home/gxx/projects/mcp-web",
+  Blocking: true,
+  SafeToAutoRun: false  // Modifies multiple files
+})
+```
+
+**Key scripts:**
+
+- `task scaffold:initiative` - Create initiative (1500→50 tokens)
+- `task scaffold:adr` - Create ADR (1200→50 tokens)
+- `task archive:initiative NAME=<name>` - Archive (15 min→10 sec)
+- `task move:file SRC=<src> DST=<dst>` - Move + update refs
+- `task update:index` - Regenerate initiative index
+
+**When to use:**
+
+- ✅ Template generation (initiatives, ADRs, summaries)
+- ✅ File archival with cross-reference updates
+- ✅ Index regeneration
+- ✅ Repetitive file operations
+
+**When NOT to use:**
+
+- ❌ One-off edits
+- ❌ Context-heavy decisions
+- ❌ Content writing
+
+**See:** [automation-scripts.md](./automation-scripts.md) for complete reference
+
+---
+
 ## Anti-Patterns
 
 ### ❌ Don't: Use Relative Paths with MCP Tools
@@ -309,10 +369,12 @@ mcp0_edit_file({ path: "/home/gxx/projects/mcp-web/.windsurf/workflows/work.md",
 
 ## References
 
+- [automation-scripts.md](./automation-scripts.md) - Automation script reference
 - [06_context_engineering.md](../rules/06_context_engineering.md) - File operations rules
 - [batch-operations.md](./batch-operations.md) - Batch operation strategies
 - [context-loading-patterns.md](./context-loading-patterns.md) - Context loading patterns
 - [MCP Filesystem Server Docs](https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem)
+- [Taskfile.yml](../../Taskfile.yml) - All available task commands
 
 ---
 

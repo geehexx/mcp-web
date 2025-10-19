@@ -31,8 +31,10 @@ status: active
 
 **Machine-Readable Documentation:**
 
+- Automation Scripts: [automation-scripts.md](../docs/automation-scripts.md)
 - Context Loading: [context-loading-patterns.md](../docs/context-loading-patterns.md)
 - Batch Operations: [batch-operations.md](../docs/batch-operations.md)
+- Tool Patterns: [tool-patterns.md](../docs/tool-patterns.md)
 - Workflow Guide: [WORKFLOW_GUIDE.md](../../docs/guides/WORKFLOW_GUIDE.md)
 - Rules Guide: [RULES_GUIDE.md](../../docs/guides/RULES_GUIDE.md)
 
@@ -75,6 +77,34 @@ When making any implementation decision, prioritize the following principles in 
 - **Linting:** ruff (replaces black, isort, flake8), mypy
 - **Security:** bandit, semgrep, safety
 - **Documentation:** markdownlint-cli2
+- **Automation Scripts:** `scripts/*.py` (accessed via `task` commands)
+
+### 4.1 Automation Scripts (High Priority)
+
+**Principle:** Always prefer automation over manual operations for repetitive tasks.
+
+**High-Impact Scripts:**
+
+- **`task archive:initiative NAME=<name>`** - Archive initiative (90x faster, auto-updates refs)
+- **`task scaffold:initiative`** - Create initiative (97% token savings: 1500→50)
+- **`task scaffold:adr`** - Create ADR (96% token savings: 1200→50)
+- **`task move:file SRC=<src> DST=<dst>`** - Move file + update all repository references
+- **`task update:index`** - Regenerate initiative index
+
+**When to use:**
+
+- ✅ Template generation (initiatives, ADRs, session summaries)
+- ✅ File archival with cross-reference updates
+- ✅ Index regeneration
+- ✅ Repetitive file operations
+
+**When NOT to use:**
+
+- ❌ One-off edits
+- ❌ Context-heavy decisions
+- ❌ Content writing
+
+**See:** [automation-scripts.md](../docs/automation-scripts.md) for complete reference
 
 ---
 
