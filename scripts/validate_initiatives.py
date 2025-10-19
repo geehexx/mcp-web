@@ -90,6 +90,9 @@ class InitiativeValidator:
             # Check 7: Status inference
             self._infer_status(post, file_path)
 
+            # Check 8: Folder structure validation
+            self._check_folder_structure(file_path)
+
         except Exception as e:
             self.results.append(
                 ValidationResult(
@@ -372,6 +375,47 @@ class InitiativeValidator:
             return suggested_status
 
         return None
+
+    def _check_folder_structure(self, file_path: Path):
+        """
+        Validate initiative folder structure.
+
+        Rules:
+        - Folder-based initiatives MUST have artifacts/ or phases/ subdirectories
+        - Flat-file initiatives MUST NOT be in folders
+        - Empty folders (only initiative.md, no artifacts/phases) are violations
+        """
+        # Check if this is a folder-based initiative
+        parent_dir = file_path.parent
+        is_in_folder = parent_dir.name not in ["active", "completed"]
+
+        if not is_in_folder:
+            # Flat file - this is correct
+            return
+
+        # This is a folder-based initiative - check for artifacts, phases, or other files
+        artifacts_dir = parent_dir / "artifacts"
+        phases_dir = parent_dir / "phases"
+
+        has_artifacts = artifacts_dir.exists() and any(artifacts_dir.iterdir())
+        has_phases = phases_dir.exists() and any(phases_dir.iterdir())
+
+        # Check for any other files besides initiative.md
+        other_files = [f for f in parent_dir.iterdir() if f.is_file() and f.name != "initiative.md"]
+        has_other_files = len(other_files) > 0
+
+        if not has_artifacts and not has_phases and not has_other_files:
+            # Empty folder - should be flat file
+            self.results.append(
+                ValidationResult(
+                    check_name="Folder Structure",
+                    severity="critical",
+                    passed=False,
+                    message=f"Empty folder initiative detected. Initiative has no artifacts/ or phases/ content. "
+                    f"Should be flat file: {parent_dir.parent}/{parent_dir.name}.md",
+                    file_path=str(file_path),
+                )
+            )
 
     def validate_all(self) -> dict[str, list[ValidationResult]]:
         """Validate all initiative files in active/ and completed/ directories."""

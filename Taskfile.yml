@@ -551,9 +551,14 @@ tasks:
 
   # Scaffolding tasks (automation)
   scaffold:initiative:
-    desc: Create new initiative from template (interactive)
+    desc: Create new flat-file initiative from template (interactive)
     cmds:
       - "{{.UV}} run python scripts/scaffold.py --type initiative --mode interactive"
+
+  scaffold:initiative-folder:
+    desc: Create new folder-based initiative with artifacts/ and phases/ (interactive)
+    cmds:
+      - "{{.UV}} run python scripts/scaffold.py --type initiative-folder --mode interactive"
 
   scaffold:adr:
     desc: Create new ADR from template (interactive)

@@ -24,6 +24,7 @@ class TemplateType(str, Enum):
     """Supported template types."""
 
     INITIATIVE_FLAT = "initiative"
+    INITIATIVE_FOLDER = "initiative-folder"
     ADR = "adr"
     SESSION_SUMMARY = "summary"
 
@@ -199,6 +200,105 @@ class Scaffolder:
         """Get field schema for template type."""
         schemas = {
             TemplateType.INITIATIVE_FLAT: {
+                "title": {
+                    "label": "Initiative title",
+                    "type": "str",
+                    "required": True,
+                },
+                "owner": {"label": "Owner", "type": "str", "default": "@ai-agent"},
+                "priority": {
+                    "label": "Priority",
+                    "type": "choice",
+                    "choices": ["critical", "high", "medium", "low"],
+                    "default": "medium",
+                },
+                "estimated_duration": {
+                    "label": "Estimated duration",
+                    "type": "str",
+                    "default": "2-3 weeks",
+                },
+                "target_completion": {
+                    "label": "Target completion (YYYY-MM-DD, optional)",
+                    "type": "str",
+                    "default": "",
+                },
+                "objective": {
+                    "label": "Objective (1-2 sentences)",
+                    "type": "str",
+                    "required": True,
+                },
+                "problem": {
+                    "label": "Problem being solved",
+                    "type": "str",
+                    "required": True,
+                },
+                "impact": {"label": "Impact/Why important", "type": "str", "required": True},
+                "value": {"label": "Value/Benefit", "type": "str", "required": True},
+                "success_criteria": {
+                    "label": "Success criteria",
+                    "type": "list",
+                    "default": [],
+                },
+                "in_scope": {"label": "In scope items", "type": "list", "default": []},
+                "out_of_scope": {
+                    "label": "Out of scope items",
+                    "type": "list",
+                    "default": [],
+                },
+                "phases": {
+                    "label": "Phases with tasks",
+                    "type": "dict_list",
+                    "schema": {
+                        "name": {"label": "Phase name"},
+                        "tasks": {"label": "Tasks (comma-separated)"},
+                    },
+                    "default": [],
+                },
+                "dependencies": {"label": "Dependencies", "type": "list", "default": []},
+                "risks": {
+                    "label": "Risks",
+                    "type": "dict_list",
+                    "schema": {
+                        "description": {"label": "Risk description"},
+                        "impact": {"label": "Impact (Low/Medium/High)"},
+                        "likelihood": {"label": "Likelihood (Low/Medium/High)"},
+                        "mitigation": {"label": "Mitigation strategy"},
+                    },
+                    "default": [],
+                },
+                "timeline": {
+                    "label": "Timeline",
+                    "type": "dict_list",
+                    "schema": {
+                        "period": {"label": "Period (e.g., Week 1-2)"},
+                        "description": {"label": "Description"},
+                    },
+                    "default": [],
+                },
+                "related_docs": {
+                    "label": "Related documentation",
+                    "type": "dict_list",
+                    "schema": {
+                        "title": {"label": "Document title"},
+                        "path": {"label": "Document path"},
+                    },
+                    "default": [],
+                },
+                "created": {
+                    "label": "Created date",
+                    "type": "str",
+                    "auto": True,
+                    "default": self.today(),
+                },
+                "status": {
+                    "label": "Status",
+                    "type": "str",
+                    "auto": True,
+                    "default": "Proposed",
+                },
+            },
+            TemplateType.INITIATIVE_FOLDER: {
+                # Same schema as INITIATIVE_FLAT - different output structure (folder vs file)
                 "title": {
                     "label": "Initiative title",
                     "type": "str",
@@ -481,6 +581,7 @@ class Scaffolder:
         # Map template types to template files
         template_files = {
             TemplateType.INITIATIVE_FLAT: "initiative-flat.md.j2",
+            TemplateType.INITIATIVE_FOLDER: "initiative-flat.md.j2",  # Same template, different output structure
             TemplateType.ADR: "adr.md.j2",
             TemplateType.SESSION_SUMMARY: "session-summary.md.j2",
         }
@@ -521,6 +622,11 @@ class Scaffolder:
             # Use provided 'created' date or default to today
             created_date = fields.get("created", self.today())
             return Path("docs/initiatives/active") / f"{created_date}-{filename}.md"
+        elif self.template_type == TemplateType.INITIATIVE_FOLDER:
+            filename = self.slugify(fields["title"])
+            created_date = fields.get("created", self.today())
+            # Return path to initiative.md inside folder
+            return Path("docs/initiatives/active") / f"{created_date}-{filename}" / "initiative.md"
         elif self.template_type == TemplateType.ADR:
             number = fields["number"]
             title = self.slugify(fields["title"])
@@ -534,15 +640,25 @@ class Scaffolder:
             raise ValueError(f"Unknown template type: {self.template_type}")
 
     def write_file(self, path: Path, content: str) -> None:
-        """Write content to file."""
+        """Write content to file and create folder structure if needed."""
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(content)
+
+        # For folder-based initiatives, create artifacts/ and phases/ directories
+        if self.template_type == TemplateType.INITIATIVE_FOLDER:
+            initiative_dir = path.parent
+            (initiative_dir / "artifacts").mkdir(exist_ok=True)
+            (initiative_dir / "phases").mkdir(exist_ok=True)
+            click.echo(f"✓ Created folder structure: {initiative_dir}/")
+            click.echo("  - artifacts/")
+            click.echo("  - phases/")
 
     def validate_template(self) -> bool:
         """Validate template can be loaded."""
         try:
             template_files = {
                 TemplateType.INITIATIVE_FLAT: "initiative-flat.md.j2",
+                TemplateType.INITIATIVE_FOLDER: "initiative-flat.md.j2",
                 TemplateType.ADR: "adr.md.j2",
                 TemplateType.SESSION_SUMMARY: "session-summary.md.j2",
             }
