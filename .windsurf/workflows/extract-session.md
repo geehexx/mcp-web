@@ -43,13 +43,25 @@ update_plan({
   explanation: "🔍 Starting /extract-session workflow",
   plan: [
     { step: "1. /extract-session - Identify session scope", status: "in_progress" },
+    { step: "  1.1. /extract-session - Determine time boundaries", status: "in_progress" },
+    { step: "  1.2. /extract-session - Identify primary focus", status: "pending" },
     { step: "2. /extract-session - Extract accomplishments", status: "pending" },
+    { step: "  2.1. /extract-session - Analyze changed files", status: "pending" },
+    { step: "  2.2. /extract-session - Parse commit messages", status: "pending" },
+    { step: "  2.3. /extract-session - Categorize by task type", status: "pending" },
     { step: "3. /extract-session - Extract decisions and learnings", status: "pending" },
+    { step: "  3.1. /extract-session - Identify technical decisions", status: "pending" },
+    { step: "  3.2. /extract-session - Extract process learnings", status: "pending" },
     { step: "4. /extract-session - Identify patterns and metrics", status: "pending" },
+    { step: "  4.1. /extract-session - Detect positive patterns", status: "pending" },
+    { step: "  4.2. /extract-session - Detect improvement areas", status: "pending" },
+    { step: "  4.3. /extract-session - Calculate metrics", status: "pending" },
     { step: "5. /extract-session - Check protocol compliance", status: "pending" }
   ]
 })
 ```
+
+✓ Task plan created with 15 granular steps
 
 ---
 
@@ -92,9 +104,33 @@ git log --since="$LAST_RUN" --format="%s" | grep -oE "\([^)]+\)" | sort | uniq -
 - `security:` → Security
 - Multiple types → Mixed session
 
+**Print stage completion:**
+
+```markdown
+📋 **Stage 1 Complete:** Session scope identified ([N] commits over [M] hours)
+```
+
+**Update task plan:**
+
+```typescript
+update_plan({
+  explanation: "Scope identified, extracting accomplishments",
+  plan: [
+    { step: "1. /extract-session - Identify session scope", status: "completed" },
+    { step: "  1.1. /extract-session - Determine time boundaries", status: "completed" },
+    { step: "  1.2. /extract-session - Identify primary focus", status: "completed" },
+    { step: "2. /extract-session - Extract accomplishments", status: "in_progress" },
+    { step: "  2.1. /extract-session - Analyze changed files", status: "in_progress" },
+    // ... rest of tasks
+  ]
+})
+```
+
 ---
 
 ## Stage 2: Extract Accomplishments
+
+🔄 **Entering Stage 2: Extract Accomplishments**
 
 ### Get Changed Files
 
@@ -123,9 +159,17 @@ done
 
 **Format:** Action verb + what + where + context
 
+**Print stage completion:**
+
+```markdown
+📋 **Stage 2 Complete:** [N] accomplishments extracted from [M] commits
+```
+
 ---
 
 ## Stage 3: Extract Technical Decisions
+
+🔄 **Entering Stage 3: Extract Technical Decisions**
 
 ### Search for Decision Keywords
 
@@ -146,9 +190,17 @@ git log --since="$LAST_RUN" --name-only --diff-filter=A | grep "docs/adr/"
 
 **If no decisions:** Write "None - Implementation session"
 
+**Print stage completion:**
+
+```markdown
+📋 **Stage 3 Complete:** Technical decisions documented
+```
+
 ---
 
 ## Stage 4: Extract Learnings
+
+🔄 **Entering Stage 4: Extract Learnings**
 
 ### Search for Measurement Keywords
 
@@ -167,9 +219,17 @@ git log --since="$LAST_RUN" --format="%B" | grep -iE "discovered|learned|found t
 - Measurement (if applicable)
 - Applicability (when to use)
 
+**Print stage completion:**
+
+```markdown
+📋 **Stage 4 Complete:** Learnings extracted and categorized
+```
+
 ---
 
 ## Stage 5: Identify Patterns
+
+🔄 **Entering Stage 5: Identify Patterns**
 
 ### Positive Patterns
 
@@ -207,9 +267,17 @@ git log --since="$LAST_RUN" --format="%s" | grep -iE "style.*auto-fix"
 - Why it failed
 - Better alternative
 
+**Print stage completion:**
+
+```markdown
+📋 **Stage 5 Complete:** Patterns identified (positive and areas for improvement)
+```
+
 ---
 
 ## Stage 6: Extract Metrics
+
+🔄 **Entering Stage 6: Extract Metrics**
 
 ### Test Metrics
 
@@ -238,9 +306,17 @@ git diff --name-only "$LAST_RUN"..HEAD | wc -l
 git log --oneline --since="$LAST_RUN" | wc -l
 ```
 
+**Print stage completion:**
+
+```markdown
+📋 **Stage 6 Complete:** Metrics calculated and formatted
+```
+
 ---
 
 ## Stage 7: Protocol Compliance Check
+
+🔄 **Entering Stage 7: Protocol Compliance Check**
 
 ### Check Session End Protocol
 
@@ -266,6 +342,12 @@ grep -l "Status.*Completed" docs/initiatives/active/*.md 2>/dev/null
 - Meta-analysis timestamp missing/stale
 - Session summary in wrong location
 - Completed initiatives not archived
+
+**Print stage completion:**
+
+```markdown
+📋 **Stage 7 Complete:** Protocol compliance checked, extraction complete
+```
 
 ---
 

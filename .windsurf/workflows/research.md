@@ -20,9 +20,21 @@ status: active
 
 ---
 
-## Stage 0: Create Task Plan
+## Stage 0: Workflow Entry
 
-🔄 **Entering /research workflow**
+🔄 **Entering /research:** Comprehensive research and pattern discovery
+
+**Print workflow entry announcement:**
+
+```markdown
+🔄 **Entering /research:** Gathering best practices and analyzing patterns
+```
+
+---
+
+## Stage 1: Create Task Plan
+
+🔄 **Entering Stage 1: Create Task Plan**
 
 **Create task plan:**
 
@@ -32,16 +44,29 @@ update_plan({
   plan: [
     { step: "1. /research - Define research scope", status: "in_progress" },
     { step: "2. /research - Search internal patterns", status: "pending" },
+    { step: "  2.1. /research - Search codebase", status: "pending" },
+    { step: "  2.2. /research - Review ADRs", status: "pending" },
+    { step: "  2.3. /research - Check project rules", status: "pending" },
     { step: "3. /research - Perform external web research", status: "pending" },
+    { step: "  3.1. /research - Run web searches (5+ queries)", status: "pending" },
+    { step: "  3.2. /research - Document findings", status: "pending" },
+    { step: "  3.3. /research - Compare alternatives", status: "pending" },
     { step: "4. /research - Technical assessment", status: "pending" },
+    { step: "  4.1. /research - Analyze dependencies", status: "pending" },
+    { step: "  4.2. /research - Assess performance", status: "pending" },
+    { step: "  4.3. /research - Security review", status: "pending" },
     { step: "5. /research - Compile research summary", status: "pending" }
   ]
 })
 ```
 
+✓ Task plan created with 14 granular steps
+
 ---
 
-## Stage 1: Define Research Scope
+## Stage 2: Define Research Scope
+
+🔄 **Entering Stage 2: Define Research Scope**
 
 ### Identify What to Research
 
@@ -63,9 +88,31 @@ update_plan({
 - OWASP API security guidelines
 ```
 
+**Print stage completion:**
+
+```markdown
+📋 **Stage 2 Complete:** Research scope defined
+```
+
+**Update task plan:**
+
+```typescript
+update_plan({
+  explanation: "Scope defined, moving to internal pattern search",
+  plan: [
+    { step: "1. /research - Define research scope", status: "completed" },
+    { step: "2. /research - Search internal patterns", status: "in_progress" },
+    { step: "  2.1. /research - Search codebase", status: "in_progress" },
+    // ... rest of tasks
+  ]
+})
+```
+
 ---
 
-## Stage 2: Internal Pattern Discovery
+## Stage 3: Internal Pattern Discovery
+
+🔄 **Entering Stage 3: Internal Pattern Discovery**
 
 ### 2.1 Search Existing Codebase
 
@@ -101,9 +148,35 @@ mcp0_read_text_file("/home/gxx/projects/mcp-web/.windsurf/rules/04_security.md")
 mcp0_read_text_file("/home/gxx/projects/mcp-web/.windsurf/rules/01_testing_and_tooling.md")
 ```
 
+**Print stage completion:**
+
+```markdown
+📋 **Stage 3 Complete:** Internal patterns analyzed
+```
+
+**Update task plan:**
+
+```typescript
+update_plan({
+  explanation: "Internal search complete, proceeding to web research",
+  plan: [
+    { step: "1. /research - Define research scope", status: "completed" },
+    { step: "2. /research - Search internal patterns", status: "completed" },
+    { step: "  2.1. /research - Search codebase", status: "completed" },
+    { step: "  2.2. /research - Review ADRs", status: "completed" },
+    { step: "  2.3. /research - Check project rules", status: "completed" },
+    { step: "3. /research - Perform external web research", status: "in_progress" },
+    { step: "  3.1. /research - Run web searches (5+ queries)", status: "in_progress" },
+    // ... rest of tasks
+  ]
+})
+```
+
 ---
 
-## Stage 3: External Research (MANDATORY)
+## Stage 4: External Research (MANDATORY)
+
+🔄 **Entering Stage 4: External Research (MANDATORY)**
 
 ### 3.1 Web Search Strategy
 
@@ -178,9 +251,35 @@ mcp0_read_text_file("/home/gxx/projects/mcp-web/.windsurf/rules/01_testing_and_t
 - Security needs
 - Maintenance burden
 
+**Print stage completion:**
+
+```markdown
+📋 **Stage 4 Complete:** External research finished, [N] sources analyzed
+```
+
+**Update task plan:**
+
+```typescript
+update_plan({
+  explanation: "Web research complete, moving to technical assessment",
+  plan: [
+    // ... completed tasks ...
+    { step: "3. /research - Perform external web research", status: "completed" },
+    { step: "  3.1. /research - Run web searches (5+ queries)", status: "completed" },
+    { step: "  3.2. /research - Document findings", status: "completed" },
+    { step: "  3.3. /research - Compare alternatives", status: "completed" },
+    { step: "4. /research - Technical assessment", status: "in_progress" },
+    { step: "  4.1. /research - Analyze dependencies", status: "in_progress" },
+    // ... rest of tasks
+  ]
+})
+```
+
 ---
 
-## Stage 4: Technical Assessment
+## Stage 5: Technical Assessment
+
+🔄 **Entering Stage 5: Technical Assessment**
 
 ### 4.1 Dependency Analysis
 
@@ -228,9 +327,33 @@ search_web("[package-name] security advisories CVE")
 - [ ] Audit logging included
 - [ ] Rate limiting considered
 
+**Print stage completion:**
+
+```markdown
+📋 **Stage 5 Complete:** Technical assessment finished
+```
+
+**Update task plan:**
+
+```typescript
+update_plan({
+  explanation: "Technical assessment complete, compiling summary",
+  plan: [
+    // ... completed tasks ...
+    { step: "4. /research - Technical assessment", status: "completed" },
+    { step: "  4.1. /research - Analyze dependencies", status: "completed" },
+    { step: "  4.2. /research - Assess performance", status: "completed" },
+    { step: "  4.3. /research - Security review", status: "completed" },
+    { step: "5. /research - Compile research summary", status: "in_progress" }
+  ]
+})
+```
+
 ---
 
-## Stage 5: Compile Research Summary
+## Stage 6: Compile Research Summary
+
+🔄 **Entering Stage 6: Compile Research Summary**
 
 ### Format Output
 
@@ -297,6 +420,12 @@ uv add [package-name]
 **Security Requirements:**
 
 - [Requirement 1] — Implementation: [how to satisfy]
+
+**Print workflow exit:**
+
+```markdown
+✅ **Completed /research:** Research complete with [N] sources analyzed and recommendation provided
+```
 
 ---
 

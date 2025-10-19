@@ -531,7 +531,35 @@ call_workflow("/research")
 - Sub-workflow visibility: Implemented in `/plan`, `/meta-analysis`, `/implement`
 - Documentation overhead: ~15% increase in workflow file size (acceptable)
 
-**Next:** Phase 2 (Enhanced Granularity) - Future session
+**Next:** Phase 2 (Enhanced Granularity) - This session
+
+### 2025-10-19 - Phase 2 Complete ✅
+
+**Completed:**
+- Enhanced `/research` workflow granularity (14 granular steps vs 5 original)
+  - Added workflow entry/exit messages
+  - Stage completion messages after each of 6 stages
+  - Subtask breakdown for internal/external research phases
+- Enhanced `/extract-session` workflow granularity (15 granular steps vs 5 original)
+  - Added workflow entry/exit messages
+  - Stage completion messages after each of 7 stages
+  - Subtask breakdown for scope, accomplishments, decisions, learnings, patterns, metrics, compliance
+
+**Impact:**
+- No workflow silent for >2 minutes during research or extraction
+- Observable progress every 30-90 seconds in complex workflows
+- Users can see detailed progress during long-running operations
+
+**Files Modified:**
+- `.windsurf/workflows/research.md` (enhanced granularity)
+- `.windsurf/workflows/extract-session.md` (enhanced granularity)
+
+**Metrics:**
+- `/research`: 5 → 14 task steps (180% increase in granularity)
+- `/extract-session`: 5 → 15 task steps (200% increase in granularity)
+- Stage completion messages: 6 in `/research`, 7 in `/extract-session`
+
+**Next:** Phase 3 (Validation & Documentation) - This session
 
 ---
 
