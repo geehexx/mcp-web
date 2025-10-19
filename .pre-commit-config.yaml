@@ -102,6 +102,13 @@ repos:
         pass_filenames: false
         args: [--ci]
 
+      - id: validate-task-format
+        name: "📋 tasks · Validate task format in documentation"
+        entry: uv run python scripts/hooks/validate_task_format_hook.py
+        language: system
+        files: ^\.(windsurf/workflows|docs/archive/session-summaries)/.*\.md$
+        args: [--skip-non-md]
+
   # Local - Fast Tests (Optional, can be slow)
   # Uncomment to run fast tests on every commit
   # - repo: local
