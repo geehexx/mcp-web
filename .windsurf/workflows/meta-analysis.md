@@ -1,15 +1,17 @@
 ---
 created: "2025-10-17"
-updated: "2025-10-18"
-description: Systematic session review and improvement identification
+updated: "2025-10-19"
+description: Systematic session review with intelligent consolidation detection
 auto_execution_mode: 3
 category: Analysis
-complexity: 50
-tokens: 766
+complexity: 60
+tokens: 1200
 dependencies:
   - extract-session
   - summarize-session
+  - consolidate-summaries
 status: active
+version: 2.0.0
 ---
 
 # Meta-Analysis Workflow
@@ -39,9 +41,10 @@ update_plan({
   explanation: "📊 Starting /meta-analysis workflow",
   plan: [
     { step: "1. /meta-analysis - Check protocol and update timestamp", status: "in_progress" },
-    { step: "2. /meta-analysis - Extract and summarize session", status: "pending" },
-    { step: "3. /meta-analysis - Check living documentation", status: "pending" },
-    { step: "4. /meta-analysis - Commit session summary", status: "pending" }
+    { step: "2. /meta-analysis - Check for existing summaries (consolidation detection)", status: "pending" },
+    { step: "3. /meta-analysis - Extract and summarize session", status: "pending" },
+    { step: "4. /meta-analysis - Check living documentation", status: "pending" },
+    { step: "5. /meta-analysis - Commit session summary", status: "pending" }
   ]
 })
 ```
@@ -83,18 +86,206 @@ update_plan({
   explanation: "Protocol check complete",
   plan: [
     { step: "1. /meta-analysis - Check protocol and update timestamp", status: "completed" },
-    { step: "2. /meta-analysis - Extract and summarize session", status: "in_progress" },
-    { step: "3. /meta-analysis - Check living documentation", status: "pending" },
-    { step: "4. /meta-analysis - Commit session summary", status: "pending" }
+    { step: "2. /meta-analysis - Check for existing summaries (consolidation detection)", status: "in_progress" },
+    { step: "3. /meta-analysis - Extract and summarize session", status: "pending" },
+    { step: "4. /meta-analysis - Check living documentation", status: "pending" },
+    { step: "5. /meta-analysis - Commit session summary", status: "pending" }
   ]
 })
 ```
 
 ---
 
-## Stage 2: Extract Session Data
+## Stage 2: Consolidation Detection
 
-🔄 **Entering Stage 2: Extract Session Data**
+🔄 **Entering Stage 2: Consolidation Detection**
+
+### 2.1 Check for Today's Summaries
+
+```bash
+# Get today's date
+TODAY=$(date +"%Y-%m-%d")
+
+# Check for existing summaries from today
+ls -1 docs/archive/session-summaries/${TODAY}-*.md 2>/dev/null | wc -l
+```
+
+### 2.2 Consolidation Decision Logic
+
+**CRITICAL:** Consolidation is RARE. Only consolidate when HIGH CONFIDENCE of:
+
+1. Session continuation (not a new session)
+2. High semantic overlap (same initiative/topic)
+3. Low information loss risk
+
+**IF existing summaries found for today:**
+
+#### Step 1: Check conversation history (if available)
+
+- Look for explicit session continuation signals
+- Check if user said "continue from previous session"
+- Verify initiative/topic mentioned in current conversation
+
+#### Step 2: Analyze most recent summary
+
+```bash
+# Get most recent summary from today
+LATEST=$(ls -t docs/archive/session-summaries/${TODAY}-*.md 2>/dev/null | head -1)
+
+# Extract key indicators:
+# - Primary initiative name
+# - Focus area
+# - Files modified
+# - Commit messages
+```
+
+#### Step 3: Compare with current session
+
+```bash
+# Get current session info
+git log --oneline --since="$(cat .windsurf/.last-meta-analysis)" | head -10
+
+# Check overlap:
+# - Same initiative mentioned?
+# - Same files being modified?
+# - Related commit messages?
+# - Time gap < 2 hours?
+```
+
+#### Step 4: Calculate confidence score
+
+| Signal | Weight | Check |
+|--------|--------|-------|
+| Same initiative in conversation history | 40% | Explicit mention |
+| Same files modified (>50% overlap) | 25% | Git diff comparison |
+| Time gap < 1 hour | 15% | Timestamp check |
+| Related commit messages (semantic) | 10% | Keyword overlap |
+| User explicitly said "continue" | 10% | Conversation analysis |
+
+#### Confidence Threshold: 70%+
+
+**Decision Matrix:**
+
+| Confidence | Time Gap | Action |
+|------------|----------|--------|
+| ≥70% | <1h | **CONSOLIDATE** - High confidence continuation |
+| ≥70% | 1-2h | **CONSOLIDATE** - Likely continuation |
+| 50-69% | <1h | **SEPARATE** - Uncertain, preserve context |
+| <50% | Any | **SEPARATE** - Different work, keep separate |
+| Any | >2h | **SEPARATE** - Different session |
+
+**NEVER consolidate if:**
+
+- ❌ Different initiatives
+- ❌ Unrelated file changes
+- ❌ Time gap >2 hours
+- ❌ Confidence <70%
+- ❌ User started new topic
+
+**Example Scenarios:**
+
+✅ **CONSOLIDATE** (Confidence: 85%):
+
+- Previous summary: "Workflow Transparency Initiative - Phase 2"
+- Current session: User says "continue Phase 3 of transparency work"
+- Same files: `.windsurf/workflows/*.md`
+- Time gap: 45 minutes
+- Commits: Both about workflow enhancements
+➡️ **Action:** Merge into single comprehensive summary
+
+❌ **SEPARATE** (Confidence: 35%):
+
+- Previous summary: "Workflow Transparency Initiative"
+- Current session: "Fix security vulnerabilities"
+- Different files: `src/mcp_web/*.py` vs `.windsurf/workflows/*.md`
+- Time gap: 3 hours
+- Commits: Unrelated topics
+➡️ **Action:** Create new summary, preserve previous context
+
+❌ **SEPARATE** (Confidence: 55%):
+
+- Previous summary: "Initiative planning"
+- Current session: "Implementation work" (same initiative)
+- Same files: 60% overlap
+- Time gap: 30 minutes
+- BUT: Different phase, different focus
+➡️ **Action:** Keep separate - different aspects deserve separate summaries
+
+### 2.3 Execute Consolidation (if triggered)
+
+**If consolidation triggered:**
+
+**Print delegation announcement:**
+
+```markdown
+↪️ **Delegating to /consolidate-summaries:** Merging with existing summary from today
+```
+
+**Add sub-workflow task:**
+
+```typescript
+update_plan({
+  explanation: "↪️ Consolidating with existing summary",
+  plan: [
+    { step: "1. /meta-analysis - Check protocol and update timestamp", status: "completed" },
+    { step: "2. /meta-analysis - Check for existing summaries (consolidation detection)", status: "in_progress" },
+    { step: "  2.1. /consolidate-summaries - Merge summaries", status: "in_progress" },
+    { step: "3. /meta-analysis - Extract and summarize session", status: "pending" },
+    { step: "4. /meta-analysis - Check living documentation", status: "pending" },
+    { step: "5. /meta-analysis - Commit session summary", status: "pending" }
+  ]
+})
+```
+
+**Call `/consolidate-summaries` with specific summaries:**
+
+```bash
+# Only consolidate the current session with the most recent summary
+# NOT all summaries from today (preserves other unrelated sessions)
+/consolidate-summaries --target "${LATEST}" --merge-with-current
+```
+
+**Note:** This consolidates ONLY the current session with the most recent summary,
+preserving all other summaries from today as separate contexts.
+
+**After consolidation returns:**
+
+```markdown
+📋 **Consolidation Complete:** Merged with existing summary
+```
+
+**SKIP to Stage 4** (living documentation check) - no need to extract/summarize again
+
+### 2.4 Proceed with Normal Flow (if no consolidation)
+
+**If no consolidation needed:**
+
+**Print stage completion:**
+
+```markdown
+📋 **Stage 2 Complete:** No consolidation needed, proceeding with new summary
+```
+
+**Update task plan:**
+
+```typescript
+update_plan({
+  explanation: "No consolidation needed",
+  plan: [
+    { step: "1. /meta-analysis - Check protocol and update timestamp", status: "completed" },
+    { step: "2. /meta-analysis - Check for existing summaries (consolidation detection)", status: "completed" },
+    { step: "3. /meta-analysis - Extract and summarize session", status: "in_progress" },
+    { step: "4. /meta-analysis - Check living documentation", status: "pending" },
+    { step: "5. /meta-analysis - Commit session summary", status: "pending" }
+  ]
+})
+```
+
+---
+
+## Stage 3: Extract Session Data
+
+🔄 **Entering Stage 3: Extract Session Data**
 
 **Before calling `/extract-session`, add sub-workflow task:**
 
@@ -103,11 +294,12 @@ update_plan({
   explanation: "↪️ Delegating to /extract-session",
   plan: [
     { step: "1. /meta-analysis - Check protocol and update timestamp", status: "completed" },
-    { step: "2. /meta-analysis - Extract and summarize session", status: "in_progress" },
-    { step: "  2.1. /extract-session - Extract session data", status: "in_progress" },
-    { step: "  2.2. /summarize-session - Generate formatted summary", status: "pending" },
-    { step: "3. /meta-analysis - Check living documentation", status: "pending" },
-    { step: "4. /meta-analysis - Commit session summary", status: "pending" }
+    { step: "2. /meta-analysis - Check for existing summaries (consolidation detection)", status: "completed" },
+    { step: "3. /meta-analysis - Extract and summarize session", status: "in_progress" },
+    { step: "  3.1. /extract-session - Extract session data", status: "in_progress" },
+    { step: "  3.2. /summarize-session - Generate formatted summary", status: "pending" },
+    { step: "4. /meta-analysis - Check living documentation", status: "pending" },
+    { step: "5. /meta-analysis - Commit session summary", status: "pending" }
   ]
 })
 ```
@@ -136,9 +328,9 @@ update_plan({
 
 ---
 
-## Stage 3: Generate Session Summary
+## Stage 4: Generate Session Summary
 
-🔄 **Entering Stage 3: Generate Session Summary**
+🔄 **Entering Stage 4: Generate Session Summary**
 
 **Before calling `/summarize-session`, update task:**
 
@@ -197,9 +389,9 @@ update_plan({
 
 ---
 
-## Stage 4: Living Documentation Check
+## Stage 5: Living Documentation Check
 
-🔄 **Entering Stage 4: Living Documentation Check**
+🔄 **Entering Stage 5: Living Documentation Check**
 
 ### 4.1 PROJECT_SUMMARY.md Update Triggers
 
@@ -278,9 +470,9 @@ Call `/update-docs` workflow to apply changes
 
 ---
 
-## Stage 5: Commit Session Summary
+## Stage 6: Commit Session Summary
 
-🔄 **Entering Stage 5: Commit Session Summary**
+🔄 **Entering Stage 6: Commit Session Summary**
 
 ### 5.1 Stage Files
 
