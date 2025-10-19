@@ -34,6 +34,7 @@ tags: ["automation", "scripts", "taskfile", "efficiency", "file-operations"]
 ## Pattern: When to Use Scripts
 
 **✅ USE scripts for:**
+
 - Template generation (initiatives, ADRs, summaries)
 - File archival with cross-reference updates
 - Index regeneration
@@ -41,6 +42,7 @@ tags: ["automation", "scripts", "taskfile", "efficiency", "file-operations"]
 - Validation tasks
 
 **❌ DON'T use scripts for:**
+
 - One-off edits
 - Context-heavy decisions
 - Content writing
@@ -53,6 +55,7 @@ tags: ["automation", "scripts", "taskfile", "efficiency", "file-operations"]
 ### 1. Initiative Management
 
 **Create new initiative:**
+
 ```bash
 task scaffold:initiative
 # Interactive prompts for all fields
@@ -60,6 +63,7 @@ task scaffold:initiative
 ```
 
 **Archive completed initiative:**
+
 ```bash
 task archive:initiative NAME=2025-10-18-my-initiative
 # Moves to completed/, updates references, adds archive banner
@@ -67,6 +71,7 @@ task archive:initiative NAME=2025-10-18-my-initiative
 ```
 
 **Validation:**
+
 ```bash
 task validate:initiatives
 # Validates frontmatter, status, dates
@@ -78,6 +83,7 @@ task validate:initiatives
 ### 2. Document Generation
 
 **Create ADR:**
+
 ```bash
 task scaffold:adr
 # Interactive: title, status, context, decision
@@ -85,6 +91,7 @@ task scaffold:adr
 ```
 
 **Create session summary:**
+
 ```bash
 task scaffold:summary
 # Interactive: date, type, duration, objectives
@@ -96,6 +103,7 @@ task scaffold:summary
 ### 3. File Operations
 
 **Move file with automatic reference updates:**
+
 ```bash
 task move:file SRC=docs/old.md DST=docs/new.md
 # Updates ALL repository references automatically
@@ -103,6 +111,7 @@ task move:file SRC=docs/old.md DST=docs/new.md
 ```
 
 **Update initiative index:**
+
 ```bash
 task update:index DIR=docs/initiatives
 # Regenerates README.md with Active/Completed sections
@@ -114,6 +123,7 @@ task update:index DIR=docs/initiatives
 ### 4. Validation & Quality
 
 **Validate workflows:**
+
 ```bash
 task validate:workflows
 # YAML schema, cross-refs, complexity, tokens
@@ -121,6 +131,7 @@ task validate:workflows
 ```
 
 **Check token counts:**
+
 ```bash
 task check:workflow-tokens
 # Monitor token budget (60,000 limit)
@@ -134,6 +145,7 @@ task check:workflow-tokens
 ### Archive Initiative Workflow
 
 **OLD (manual):**
+
 ```markdown
 1. Update initiative status
 2. Move file to completed/
@@ -144,6 +156,7 @@ task check:workflow-tokens
 ```
 
 **NEW (automated):**
+
 ```bash
 task archive:initiative NAME=my-initiative
 # All 6 steps automated in 10 seconds
@@ -152,6 +165,7 @@ task archive:initiative NAME=my-initiative
 ### Session End Protocol
 
 **When archiving initiative:**
+
 ```markdown
 1. Mark initiative "Completed"
 2. Run: task archive:initiative NAME=<initiative-folder>
@@ -168,12 +182,14 @@ task archive:initiative NAME=my-initiative
 **Location:** `scripts/scaffold.py`
 
 **Templates:**
+
 - `initiative-flat.md.j2` - Single-file initiative
 - `initiative-folder/` - Multi-file initiative with artifacts/phases
 - `adr.md.j2` - Architecture Decision Record
 - `session-summary.md.j2` - Session summary
 
 **Features:**
+
 - Interactive prompts
 - Config file support (YAML/JSON)
 - Auto-numbering (ADRs)
@@ -190,11 +206,13 @@ task archive:initiative NAME=my-initiative
 **Location:** `scripts/file_ops.py`
 
 **Functions:**
+
 - `archive_initiative()` - Archive with reference updates
 - `move_file_with_refs()` - Move + update all refs
 - `update_index()` - Regenerate initiative index
 
 **Features:**
+
 - Automatic cross-reference updates (repo-wide)
 - Archive banner insertion
 - Path safety validation
@@ -210,6 +228,7 @@ task archive:initiative NAME=my-initiative
 **Location:** `scripts/validate_archival.py`
 
 **Gates:**
+
 1. Status Completion (CRITICAL)
 2. Success Criteria (CRITICAL)
 3. Blockers (WARNING)
@@ -217,6 +236,7 @@ task archive:initiative NAME=my-initiative
 5. Documentation (WARNING)
 
 **Usage:**
+
 ```bash
 python scripts/validate_archival.py docs/initiatives/active/my-initiative/initiative.md
 # Returns exit code 0 (pass) or 1 (fail)
@@ -229,6 +249,7 @@ python scripts/validate_archival.py docs/initiatives/active/my-initiative/initia
 **Location:** `scripts/validate_workflows.py`
 
 **Checks:**
+
 - YAML frontmatter schema
 - Cross-reference validity
 - Complexity metrics
@@ -244,12 +265,14 @@ python scripts/validate_archival.py docs/initiatives/active/my-initiative/initia
 **Location:** `scripts/check_workflow_tokens.py`
 
 **Features:**
+
 - Token counting (workflows + rules)
 - Baseline tracking
 - Threshold enforcement (60,000)
 - Historical tracking (`.benchmarks/`)
 
 **Usage:**
+
 ```bash
 python scripts/check_workflow_tokens.py --threshold 60000
 python scripts/check_workflow_tokens.py --save-baseline
@@ -260,6 +283,7 @@ python scripts/check_workflow_tokens.py --save-baseline
 ## Taskfile Command Reference
 
 ### Testing
+
 - `task test` - All tests (parallel)
 - `task test:fast` - Fast tests only
 - `task test:unit` - Unit tests
@@ -267,22 +291,26 @@ python scripts/check_workflow_tokens.py --save-baseline
 - `task security` - Security checks
 
 ### Scaffolding
+
 - `task scaffold:initiative` - New flat initiative
 - `task scaffold:initiative-folder` - New folder initiative
 - `task scaffold:adr` - New ADR
 - `task scaffold:summary` - New session summary
 
 ### File Operations
+
 - `task archive:initiative NAME=<name>` - Archive initiative
 - `task move:file SRC=<src> DST=<dst>` - Move + update refs
 - `task update:index DIR=<dir>` - Update index
 
 ### Validation
+
 - `task validate:initiatives` - Validate all initiatives
 - `task validate:workflows` - Validate workflows/rules
 - `task check:workflow-tokens` - Check token budget
 
 ### Documentation
+
 - `task docs:lint` - Lint all docs
 - `task docs:lint:markdown` - Markdown linting
 - `task docs:lint:prose` - Prose quality
@@ -308,12 +336,14 @@ python scripts/check_workflow_tokens.py --save-baseline
 **Scripts that appear in task lists:**
 
 ✅ **Pre-commit validation scripts** - Silent, don't need task tracking:
+
 - `validate_workflows.py`
 - `check_workflow_tokens.py`
 - `validate_task_format.py`
 - `validate_initiatives.py`
 
 ✅ **User-invoked scripts** - Task tracking when called from workflows:
+
 - `task archive:initiative` - Track as `/archive-initiative` workflow step
 - `task scaffold:initiative` - Track as manual user action (not in workflow)
 
@@ -324,6 +354,7 @@ python scripts/check_workflow_tokens.py --save-baseline
 ## Common Patterns
 
 ### Pattern 1: Create New Initiative
+
 ```bash
 # 1. Run scaffolder
 task scaffold:initiative
@@ -338,6 +369,7 @@ task scaffold:initiative
 ```
 
 ### Pattern 2: Archive Completed Initiative
+
 ```bash
 # 1. Mark initiative "Completed" in frontmatter
 # 2. Run archival
@@ -348,6 +380,7 @@ git status  # Check moved files and updated references
 ```
 
 ### Pattern 3: Move File Safely
+
 ```bash
 # Preview changes first
 task move:file SRC=docs/old.md DST=docs/new.md DRY_RUN=true
@@ -363,6 +396,7 @@ task move:file SRC=docs/old.md DST=docs/new.md
 ## Anti-Patterns
 
 ### ❌ Don't: Manually Archive Initiatives
+
 ```markdown
 # ❌ Wrong: Manual 6-step process (error-prone, slow)
 1. Edit status...
@@ -377,6 +411,7 @@ task archive:initiative NAME=my-initiative
 ```
 
 ### ❌ Don't: Manual Template Creation
+
 ```markdown
 # ❌ Wrong: Copy-paste from old initiative (1500 tokens)
 # ✅ Correct: Use scaffolder (50 tokens)
@@ -384,6 +419,7 @@ task scaffold:initiative
 ```
 
 ### ❌ Don't: Move Files Without Updating References
+
 ```bash
 # ❌ Wrong: Broken links
 mv docs/old.md docs/new.md
@@ -402,6 +438,7 @@ task move:file SRC=docs/old.md DST=docs/new.md
 - **Tests:** `tests/unit/test_*.py`
 
 **External Research:**
+
 - [GitHub: Agentic Primitives](https://github.blog/ai-and-ml/github-copilot/how-to-build-reliable-ai-workflows-with-agentic-primitives-and-context-engineering/)
 - [Anthropic: Context Engineering](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)
 - [Anthropic: Building Effective Agents](https://www.anthropic.com/research/building-effective-agents)
