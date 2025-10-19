@@ -44,6 +44,80 @@ class InitiativeDependency:
 
 
 @dataclass
+class Blocker:
+    """Represents a blocker with classification."""
+
+    description: str
+    category: str  # "technical", "people", "logistical", "time"
+    source_initiative_id: str | None = None  # If propagated from upstream
+    added_date: str | None = None
+
+    @staticmethod
+    def classify(description: str) -> str:
+        """
+        Auto-classify blocker based on keywords.
+
+        Categories:
+        - technical: Code, API, infrastructure, dependencies
+        - people: Team, staffing, skills, availability
+        - logistical: Process, approvals, coordination
+        - time: Timeline, deadlines, scheduling
+        """
+        desc_lower = description.lower()
+
+        # Technical keywords
+        if any(
+            kw in desc_lower
+            for kw in [
+                "api",
+                "code",
+                "bug",
+                "infrastructure",
+                "dependency",
+                "library",
+                "system",
+                "integration",
+                "technical",
+            ]
+        ):
+            return "technical"
+
+        # People keywords
+        if any(
+            kw in desc_lower
+            for kw in [
+                "team",
+                "staff",
+                "resource",
+                "skill",
+                "hire",
+                "people",
+                "availability",
+                "assignment",
+            ]
+        ):
+            return "people"
+
+        # Time keywords
+        if any(
+            kw in desc_lower
+            for kw in [
+                "deadline",
+                "timeline",
+                "schedule",
+                "delay",
+                "time",
+                "date",
+                "overrun",
+            ]
+        ):
+            return "time"
+
+        # Default to logistical
+        return "logistical"
+
+
+@dataclass
 class Initiative:
     """Initiative metadata and relationships."""
 
@@ -53,7 +127,7 @@ class Initiative:
     priority: str
     file_path: str
     dependencies: list[InitiativeDependency] = field(default_factory=list)
-    blockers: list[str] = field(default_factory=list)
+    blockers: list[Blocker] = field(default_factory=list)
     is_folder_based: bool = False
 
 
@@ -174,10 +248,25 @@ class DependencyRegistry:
 
         if current_blockers:
             blocker_lines = re.findall(r"^- (.+)$", current_blockers.group(1), re.MULTILINE)
-            # Filter out "None" entries
-            initiative.blockers = [
-                b.strip() for b in blocker_lines if not b.strip().lower().startswith("none")
-            ]
+            # Filter out "None" entries and create Blocker objects
+            for line in blocker_lines:
+                line = line.strip()
+                if line.lower().startswith("none"):
+                    continue
+
+                # Check if it's a propagated blocker
+                source_id = None
+                if "Upstream blocker from" in line:
+                    match = re.search(r"Upstream blocker from ([^:]+):", line)
+                    if match:
+                        source_id = match.group(1).strip()
+
+                blocker = Blocker(
+                    description=line,
+                    category=Blocker.classify(line),
+                    source_initiative_id=source_id,
+                )
+                initiative.blockers.append(blocker)
 
     def build_dependency_graph(self) -> dict[str, list[str]]:
         """Build adjacency list representation of dependency graph."""
@@ -258,8 +347,12 @@ class DependencyRegistry:
 
         return cycles
 
-    def propagate_blockers(self) -> dict[str, list[str]]:
-        """Propagate blockers to dependent initiatives."""
+    def propagate_blockers(self) -> dict[str, list[Blocker]]:
+        """
+        Propagate blockers to dependent initiatives.
+
+        Returns dict mapping initiative_id -> list of propagated Blocker objects.
+        """
         propagated_blockers = {}
 
         for initiative_id, initiative in self.initiatives.items():
@@ -277,12 +370,18 @@ class DependencyRegistry:
                         if dep_id not in propagated_blockers:
                             propagated_blockers[dep_id] = []
 
-                        propagated_blockers[dep_id].extend(
-                            [
-                                f"Upstream blocker in {initiative_id}: {b}"
-                                for b in initiative.blockers
-                            ]
-                        )
+                        # Create propagated blocker objects
+                        for blocker in initiative.blockers:
+                            # Skip already-propagated blockers to avoid duplication
+                            if blocker.source_initiative_id:
+                                continue
+
+                            propagated_blocker = Blocker(
+                                description=f"Upstream blocker from {initiative_id}: {blocker.description}",
+                                category=blocker.category,
+                                source_initiative_id=initiative_id,
+                            )
+                            propagated_blockers[dep_id].append(propagated_blocker)
 
         return propagated_blockers
 
@@ -315,6 +414,88 @@ class DependencyRegistry:
         dot.append("}")
         return "\n".join(dot)
 
+    def generate_blocker_dashboard(self) -> str:
+        """
+        Generate portfolio-wide blocker dashboard in markdown format.
+
+        Returns markdown table with all active blockers and propagated impact.
+        """
+        from datetime import datetime
+
+        lines = []
+        lines.append("# Blocker Dashboard")
+        lines.append("")
+        lines.append(f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        lines.append("")
+
+        # Count blockers by category
+        blocker_counts = {"technical": 0, "people": 0, "logistical": 0, "time": 0}
+        total_blocked_initiatives = 0
+
+        for initiative in self.initiatives.values():
+            if len(initiative.blockers) > 0:
+                total_blocked_initiatives += 1
+                for blocker in initiative.blockers:
+                    blocker_counts[blocker.category] += 1
+
+        # Summary section
+        lines.append("## Summary")
+        lines.append("")
+        lines.append(
+            f"- **Total blocked initiatives:** {total_blocked_initiatives}/{len(self.initiatives)}"
+        )
+        lines.append(f"- **Technical blockers:** {blocker_counts['technical']}")
+        lines.append(f"- **People blockers:** {blocker_counts['people']}")
+        lines.append(f"- **Logistical blockers:** {blocker_counts['logistical']}")
+        lines.append(f"- **Time blockers:** {blocker_counts['time']}")
+        lines.append("")
+
+        # Active blockers table
+        lines.append("## Active Blockers")
+        lines.append("")
+        lines.append("| Initiative | Category | Blocker | Impact |")
+        lines.append("|------------|----------|---------|--------|")
+
+        propagated = self.propagate_blockers()
+
+        for initiative_id, initiative in sorted(self.initiatives.items()):
+            if len(initiative.blockers) == 0:
+                continue
+
+            # Count dependent initiatives affected
+            affected_count = len(propagated.get(initiative_id, []))
+            impact = f"{affected_count} dependents" if affected_count > 0 else "No dependents"
+
+            for blocker in initiative.blockers:
+                # Truncate long descriptions
+                desc = blocker.description
+                if len(desc) > 60:
+                    desc = desc[:57] + "..."
+
+                lines.append(f"| {initiative_id} | {blocker.category} | {desc} | {impact} |")
+
+        lines.append("")
+
+        # Propagation impact section
+        if propagated:
+            lines.append("## Propagation Impact")
+            lines.append("")
+            lines.append("Initiatives affected by upstream blockers:")
+            lines.append("")
+
+            for init_id, blockers in sorted(propagated.items()):
+                lines.append(f"### {init_id}")
+                lines.append("")
+                for blocker in blockers:
+                    lines.append(f"- **[{blocker.category}]** {blocker.description}")
+                lines.append("")
+
+        lines.append("---")
+        lines.append("")
+        lines.append("*Generated by `scripts/dependency_registry.py --dashboard`*")
+
+        return "\n".join(lines)
+
     def export_registry(self, output_path: Path) -> None:
         """Export dependency registry as JSON."""
         registry_data = {
@@ -324,7 +505,14 @@ class DependencyRegistry:
                     "status": init.status,
                     "priority": init.priority,
                     "file_path": init.file_path,
-                    "blockers": init.blockers,
+                    "blockers": [
+                        {
+                            "description": b.description,
+                            "category": b.category,
+                            "source_initiative_id": b.source_initiative_id,
+                        }
+                        for b in init.blockers
+                    ],
                     "dependencies": [
                         {
                             "target": dep.target_id,
@@ -368,6 +556,11 @@ def main():
         "--export",
         type=Path,
         help="Export registry to JSON file",
+    )
+    parser.add_argument(
+        "--dashboard",
+        type=Path,
+        help="Generate blocker dashboard markdown file",
     )
     parser.add_argument(
         "--initiatives-dir",
@@ -414,7 +607,7 @@ def main():
             for initiative_id, blockers in propagated.items():
                 print(f"  {initiative_id}:")
                 for blocker in blockers:
-                    print(f"    - {blocker}")
+                    print(f"    - [{blocker.category}] {blocker.description}")
         else:
             print("  No blockers to propagate")
 
@@ -427,6 +620,11 @@ def main():
 
     if args.export:
         registry.export_registry(args.export)
+
+    if args.dashboard:
+        dashboard = registry.generate_blocker_dashboard()
+        args.dashboard.write_text(dashboard, encoding="utf-8")
+        print(f"✅ Blocker dashboard written to {args.dashboard}")
 
 
 if __name__ == "__main__":
