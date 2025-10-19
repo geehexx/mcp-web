@@ -186,6 +186,70 @@ task validate:initiatives:ci
 - Manual 5-step extraction process (good-enough for current needs)
 - Advanced LLM automation deferred to [Session Summary Mining Advanced](../docs/initiatives/active/2025-10-19-session-summary-mining-advanced/initiative.md) (blocked on MCP file system support)
 
+## Phase 5: Task Format Validation (Complete)
+
+**Status:** Completed 2025-10-19
+
+**Purpose:** Automated validation and enforcement for task system compliance (Section 1.11).
+
+### validate_task_format.py - Task Validation Script
+
+**Purpose:** Validate task format in `update_plan()` calls to prevent violations.
+
+**Usage:**
+
+```bash
+# Validate a single task
+python scripts/validate_task_format.py --validate "1. /implement - Add feature"
+
+# Validate session summary file (future)
+python scripts/validate_task_format.py --session path/to/summary.md
+```
+
+**Validation Checks:**
+
+- ✅ Workflow prefix presence (`/<workflow>` format)
+- ✅ Completed task preservation (no history loss)
+- ✅ Correct workflow attribution (executor vs orchestrator)
+- ✅ Hierarchical numbering validation
+- ✅ Single in-progress task enforcement
+
+**Test Suite:**
+
+```bash
+uv run pytest tests/unit/test_validate_task_format.py -v
+```
+
+### hooks/validate_task_format_hook.py - Pre-commit Hook
+
+**Purpose:** Automatically validate task format in workflow documentation before commit.
+
+**Targets:**
+
+- `.windsurf/workflows/*.md` - Workflow documentation
+- `docs/archive/session-summaries/*.md` - Session summaries
+
+**Integration:**
+
+- Configured in `.pre-commit-config.yaml`
+- Runs automatically on relevant file changes
+- Skips placeholder examples (`/<routed-workflow>`, etc.)
+
+**Bypass (not recommended):**
+
+```bash
+git commit --no-verify
+```
+
+**Common Violations Guide:**
+
+See [TASK_FORMAT_VIOLATIONS.md](../docs/guides/TASK_FORMAT_VIOLATIONS.md) for:
+
+- 5 violation types with examples
+- Wrong/correct patterns
+- Workflow attribution rules
+- Quick reference guide
+
 ## Development
 
 ### Adding New Templates

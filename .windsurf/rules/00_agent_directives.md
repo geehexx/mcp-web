@@ -484,3 +484,35 @@ update_plan({
 - Routed workflows add their own subtasks
 
 **For complete specification, see:** `docs/architecture/TASK_SYSTEM_INTEGRATION.md`
+
+### 1.11.7 Automated Validation
+
+**Available tools (2025-10-19):**
+
+**1. Validation Script:**
+
+```bash
+python scripts/validate_task_format.py --validate "task text"
+```
+
+**2. Pre-commit Hook:**
+
+- Automatically validates task format in workflow documentation
+- Targets: `.windsurf/workflows/*.md`, session summaries
+- Bypass: `git commit --no-verify` (not recommended)
+
+**3. Test Suite:**
+
+```bash
+uv run pytest tests/unit/test_validate_task_format.py -v
+```
+
+**Violation types detected:**
+
+- Missing workflow prefixes (`/<workflow>` format)
+- Removed completed tasks (history loss)
+- Wrong workflow attribution (orchestrator vs executor)
+- Invalid hierarchical numbering
+- Multiple in-progress tasks
+
+**For violation examples and fixes, see:** `docs/guides/TASK_FORMAT_VIOLATIONS.md`
