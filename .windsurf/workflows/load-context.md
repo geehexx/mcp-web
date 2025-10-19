@@ -20,6 +20,28 @@ status: active
 
 ---
 
+## Stage 0: Create Task Plan (If Called Directly)
+
+🔄 **Entering Stage 0: Create Task Plan**
+
+**If called directly by user** (not by parent workflow), create task plan:
+
+```typescript
+update_plan({
+  explanation: "📂 Starting /load-context workflow",
+  plan: [
+    { step: "1. /load-context - Determine context scope", status: "in_progress" },
+    { step: "2. /load-context - Batch load files", status: "pending" },
+    { step: "3. /load-context - Parse and extract key information", status: "pending" },
+    { step: "4. /load-context - Validate context completeness", status: "pending" }
+  ]
+})
+```
+
+**If called by parent workflow** (e.g., `/implement` step 3.1), parent already has task tracking.
+
+---
+
 ## Scope Options
 
 **Available scopes:**

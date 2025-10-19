@@ -21,6 +21,27 @@ status: active
 
 ---
 
+## Stage 0: Task Integration
+
+**Note:** This workflow is called by `/meta-analysis` as a subtask. Parent workflow handles task tracking.
+
+**If called directly** (unusual), create plan:
+
+```typescript
+update_plan({
+  explanation: "📝 Starting /summarize-session workflow",
+  plan: [
+    { step: "1. /summarize-session - Format header and objectives", status: "in_progress" },
+    { step: "2. /summarize-session - Document completed work and commits", status: "pending" },
+    { step: "3. /summarize-session - Add learnings and patterns", status: "pending" },
+    { step: "4. /summarize-session - Define next steps and metrics", status: "pending" },
+    { step: "5. /summarize-session - Validate and write file", status: "pending" }
+  ]
+})
+```
+
+---
+
 ## Template Structure
 
 ### Required Sections

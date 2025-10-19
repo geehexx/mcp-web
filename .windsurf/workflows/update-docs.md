@@ -20,6 +20,26 @@ status: active
 
 ---
 
+## Stage 0: Create Task Plan
+
+🔄 **Entering /update-docs workflow**
+
+**Create task plan:**
+
+```typescript
+update_plan({
+  explanation: "📚 Starting /update-docs workflow",
+  plan: [
+    { step: "1. /update-docs - Assess update need", status: "in_progress" },
+    { step: "2. /update-docs - Update PROJECT_SUMMARY.md", status: "pending" },
+    { step: "3. /update-docs - Update CHANGELOG.md", status: "pending" },
+    { step: "4. /update-docs - Validate changes", status: "pending" }
+  ]
+})
+```
+
+---
+
 ## When to Run
 
 **Always check, but only update if:**

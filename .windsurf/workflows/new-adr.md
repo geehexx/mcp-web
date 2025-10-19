@@ -14,6 +14,30 @@ status: active
 
 Use this workflow when a significant architectural decision needs to be documented.
 
+---
+
+## Stage 0: Create Task Plan
+
+🔄 **Entering /new-adr workflow**
+
+**Create task plan:**
+
+```typescript
+update_plan({
+  explanation: "📝 Starting /new-adr workflow",
+  plan: [
+    { step: "1. /new-adr - Identify decision and clarify requirements", status: "in_progress" },
+    { step: "2. /new-adr - Research alternatives and best practices", status: "pending" },
+    { step: "3. /new-adr - Draft ADR document", status: "pending" },
+    { step: "4. /new-adr - Present for review and approval", status: "pending" },
+    { step: "5. /new-adr - Update related documentation", status: "pending" },
+    { step: "6. /commit - Commit ADR", status: "pending" }
+  ]
+})
+```
+
+---
+
 ## When to Use
 
 Create an ADR for:

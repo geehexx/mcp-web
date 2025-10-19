@@ -19,6 +19,29 @@ version: 2.2.0
 
 Merge multiple per-session summaries from the same day into comprehensive daily summaries, reducing redundancy while maintaining critical information.
 
+---
+
+## Stage 0: Create Task Plan
+
+🔄 **Entering /consolidate-summaries workflow**
+
+**Create task plan:**
+
+```typescript
+update_plan({
+  explanation: "📋 Starting /consolidate-summaries workflow",
+  plan: [
+    { step: "1. /consolidate-summaries - Identify and analyze target summaries", status: "in_progress" },
+    { step: "2. /consolidate-summaries - Extract information systematically", status: "pending" },
+    { step: "3. /consolidate-summaries - Apply consolidation rules", status: "pending" },
+    { step: "4. /consolidate-summaries - Validate and create consolidated summary", status: "pending" },
+    { step: "5. /consolidate-summaries - Archive originals and commit", status: "pending" }
+  ]
+})
+```
+
+---
+
 ## When to Use
 
 - Day has 5+ individual session summaries

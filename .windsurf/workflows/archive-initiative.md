@@ -14,6 +14,28 @@ status: active
 
 Use this workflow to properly archive a completed initiative.
 
+---
+
+## Stage 0: Create Task Plan
+
+🔄 **Entering /archive-initiative workflow**
+
+**Create task plan:**
+
+```typescript
+update_plan({
+  explanation: "📦 Starting /archive-initiative workflow",
+  plan: [
+    { step: "1. /archive-initiative - Verify completion", status: "in_progress" },
+    { step: "2. /archive-initiative - Add archived notice and move file", status: "pending" },
+    { step: "3. /archive-initiative - Update cross-references", status: "pending" },
+    { step: "4. /archive-initiative - Validate and commit", status: "pending" }
+  ]
+})
+```
+
+---
+
 ## Phase 1: Verification
 
 1. **Confirm completion:** Ensure all success criteria are met and living documentation is updated.

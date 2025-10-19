@@ -13,11 +13,33 @@ status: active
 
 # Generate Plan Workflow
 
-**Purpose:** Transform research findings into actionable implementation plan with phases, tasks, and risk assessment.
+**Purpose:** Transform research into concrete implementation plan with phases, tasks, and timelines.
 
-**Invocation:** Called by `/plan` after research complete
+**Invocation:** Called by `/plan` (Stage 3)
 
-**Input:** Research summary with recommendations
+**Input:** Research summary from `/research`
+
+---
+
+## Stage 0: Create Task Plan
+
+🔄 **Entering /generate-plan workflow**
+
+**Create task plan:**
+
+```typescript
+update_plan({
+  explanation: " Starting /generate-plan workflow",
+  plan: [
+    { step: "1. /generate-plan - Define initiative and success criteria", status: "in_progress" },
+    { step: "2. /generate-plan - Break down work into phases", status: "pending" },
+    { step: "3. /generate-plan - Identify dependencies and constraints", status: "pending" },
+    { step: "4. /generate-plan - Assess risks and define scope", status: "pending" },
+    { step: "5. /generate-plan - Create initiative document", status: "pending" },
+    { step: "6. /generate-plan - Present plan for approval", status: "pending" }
+  ]
+})
+```
 
 ---
 

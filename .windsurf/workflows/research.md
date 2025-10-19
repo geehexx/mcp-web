@@ -20,6 +20,27 @@ status: active
 
 ---
 
+## Stage 0: Create Task Plan
+
+🔄 **Entering /research workflow**
+
+**Create task plan:**
+
+```typescript
+update_plan({
+  explanation: "🔍 Starting /research workflow",
+  plan: [
+    { step: "1. /research - Define research scope", status: "in_progress" },
+    { step: "2. /research - Search internal patterns", status: "pending" },
+    { step: "3. /research - Perform external web research", status: "pending" },
+    { step: "4. /research - Technical assessment", status: "pending" },
+    { step: "5. /research - Compile research summary", status: "pending" }
+  ]
+})
+```
+
+---
+
 ## Stage 1: Define Research Scope
 
 ### Identify What to Research

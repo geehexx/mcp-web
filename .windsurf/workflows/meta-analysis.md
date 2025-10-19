@@ -22,6 +22,27 @@ status: active
 
 ---
 
+## Stage 0: Create Task Plan
+
+🔄 **Entering /meta-analysis workflow**
+
+**Create task plan:**
+
+```typescript
+update_plan({
+  explanation: "📊 Starting /meta-analysis workflow",
+  plan: [
+    { step: "1. /meta-analysis - Check protocol and update timestamp", status: "in_progress" },
+    { step: "2. /extract-session - Extract session data", status: "pending" },
+    { step: "3. /summarize-session - Generate session summary", status: "pending" },
+    { step: "4. /meta-analysis - Check living documentation", status: "pending" },
+    { step: "5. /commit - Commit session summary", status: "pending" }
+  ]
+})
+```
+
+---
+
 ## Stage 1: Protocol Check
 
 ### 1.1 Check Last Execution

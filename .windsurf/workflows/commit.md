@@ -25,6 +25,28 @@ status: active
 
 ---
 
+## Stage 0: Create Task Plan
+
+🔄 **Entering /commit workflow**
+
+**Create task plan:**
+
+```typescript
+update_plan({
+  explanation: "💾 Starting /commit workflow",
+  plan: [
+    { step: "1. /commit - Check for auto-fix changes", status: "in_progress" },
+    { step: "2. /validate - Run validation checks (MANDATORY)", status: "pending" },
+    { step: "3. /commit - Review and stage changes", status: "pending" },
+    { step: "4. /commit - Create conventional commit", status: "pending" },
+    { step: "5. /commit - Check version bump requirement", status: "pending" },
+    { step: "6. /bump-version - Bump version (if needed)", status: "pending" }
+  ]
+})
+```
+
+---
+
 ## Process
 
 ### 1. Check for Auto-Fix Changes

@@ -20,6 +20,27 @@ status: active
 
 ---
 
+## Stage 0: Task Integration
+
+**Note:** This workflow is called by `/meta-analysis` as a subtask. Parent workflow handles task tracking.
+
+**If called directly** (unusual), create plan:
+
+```typescript
+update_plan({
+  explanation: "🔍 Starting /extract-session workflow",
+  plan: [
+    { step: "1. /extract-session - Identify session scope", status: "in_progress" },
+    { step: "2. /extract-session - Extract accomplishments", status: "pending" },
+    { step: "3. /extract-session - Extract decisions and learnings", status: "pending" },
+    { step: "4. /extract-session - Identify patterns and metrics", status: "pending" },
+    { step: "5. /extract-session - Check protocol compliance", status: "pending" }
+  ]
+})
+```
+
+---
+
 ## Stage 1: Identify Session Scope
 
 ### Determine Boundaries

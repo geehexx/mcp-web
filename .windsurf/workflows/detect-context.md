@@ -18,6 +18,28 @@ status: active
 
 ---
 
+## Stage 0: Create Task Plan (If Called Directly)
+
+🔄 **Entering Stage 0: Create Task Plan**
+
+**If called directly by user** (not by `/work`), create task plan:
+
+```typescript
+update_plan({
+  explanation: "🔍 Starting /detect-context workflow",
+  plan: [
+    { step: "1. /detect-context - Load essential context", status: "in_progress" },
+    { step: "2. /detect-context - Detect continuation signals", status: "pending" },
+    { step: "3. /detect-context - Interpret context and assess confidence", status: "pending" },
+    { step: "4. /detect-context - Return routing recommendation", status: "pending" }
+  ]
+})
+```
+
+**If called by parent workflow** (e.g., `/work` step 1), parent already has task tracking.
+
+---
+
 ## Stage 1: Rapid Project Scan
 
 ### 1.1 Load Essential Context

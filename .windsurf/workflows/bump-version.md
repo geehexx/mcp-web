@@ -20,6 +20,27 @@ status: active
 
 ---
 
+## Stage 0: Create Task Plan
+
+🔄 **Entering /bump-version workflow**
+
+**Create task plan:**
+
+```typescript
+update_plan({
+  explanation: "📦 Starting /bump-version workflow",
+  plan: [
+    { step: "1. /bump-version - Analyze commits since last version", status: "in_progress" },
+    { step: "2. /bump-version - Calculate new version", status: "pending" },
+    { step: "3. /bump-version - Update project files", status: "pending" },
+    { step: "4. /bump-version - Create git tag", status: "pending" },
+    { step: "5. /bump-version - Validate version consistency", status: "pending" }
+  ]
+})
+```
+
+---
+
 ## Prerequisites
 
 **Requirements:**

@@ -37,6 +37,29 @@ The Session End Protocol ensures proper closure of work sessions with full docum
 
 ---
 
+## Stage 0: Create Session End Task Plan
+
+🔄 **Entering Session End Protocol**
+
+**ALWAYS create task plan when protocol triggered:**
+
+```typescript
+update_plan({
+  explanation: "🏁 Session end detected. Executing protocol.",
+  plan: [
+    { step: "5.1. /work-session-protocol - Detect completion triggers", status: "in_progress" },
+    { step: "5.2. /commit - Commit all changes", status: "pending" },
+    { step: "5.3. /archive-initiative - Archive completed initiatives", status: "pending" },
+    { step: "5.4. /meta-analysis - Execute session meta-analysis", status: "pending" },
+    { step: "5.5. /work-session-protocol - Verify exit criteria", status: "pending" }
+  ]
+})
+```
+
+**Note:** Numbering assumes this is step 5 of parent `/work` workflow. Adjust if called differently.
+
+---
+
 ## Phase 1: Detect Completion Triggers
 
 ### Trigger Detection

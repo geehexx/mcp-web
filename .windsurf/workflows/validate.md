@@ -24,6 +24,27 @@ status: active
 
 ---
 
+## Stage 0: Create Task Plan
+
+🔄 **Entering /validate workflow**
+
+**Create task plan:**
+
+```typescript
+update_plan({
+  explanation: "✅ Starting /validate workflow",
+  plan: [
+    { step: "1. /validate - Run linting checks", status: "in_progress" },
+    { step: "2. /validate - Run fast tests", status: "pending" },
+    { step: "3. /validate - Run documentation validation", status: "pending" },
+    { step: "4. /validate - Run security checks", status: "pending" },
+    { step: "5. /validate - Generate validation report", status: "pending" }
+  ]
+})
+```
+
+---
+
 ## When to Run
 
 **Always run before:**
