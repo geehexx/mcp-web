@@ -9,6 +9,9 @@ Updated: 2025-10-19
 Completed: 2025-10-19
 ---
 
+> **⚠️ ARCHIVED:** This initiative was completed on 2025-10-19.
+> See [ADR-0021](../../adr/0021-initiative-system-lifecycle-improvements.md) for implemented decisions and [Initiative Lifecycle Guide](../../guides/INITIATIVE_LIFECYCLE.md) for comprehensive documentation.
+
 # Initiative: Initiative System Lifecycle and Dependency Management Improvements
 
 ---
