@@ -1,0 +1,7 @@
+# Default config for session summary scaffolding (non-interactive mode)
+# Usage: python scripts/scaffold.py --type summary --config scripts/templates/configs/summary-default.yaml
+
+type: "Feature Implementation"
+duration_minutes: 60
+objectives: []
+accomplishments: []

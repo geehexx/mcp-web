@@ -1,6 +1,6 @@
 ---
 created: "2025-10-15"
-updated: "2025-10-19"
+updated: "2025-10-20"
 trigger: always_on
 description: Core agent persona, guiding principles, operational mandate, and high-level directives. Highest-level rule applying globally.
 category: core
@@ -59,6 +59,52 @@ When making any implementation decision, prioritize the following principles in 
 
 ---
 
+## 2.1. Parallel Tool Call Efficiency (CRITICAL)
+
+**Principle:** Always batch independent tool calls into parallel operations for maximum efficiency.
+
+**Rules:**
+
+- **Batch size:** 3-8 parallel tool calls (optimal for most operations)
+- **Independence:** Only parallelize tool calls with NO dependencies between them
+- **Read operations:** Batch file reads using `mcp0_read_multiple_files` (3-10x faster)
+- **Sequential when needed:** Keep dependent operations sequential
+
+**Examples:**
+
+```typescript
+// ✅ GOOD: Parallel independent reads
+mcp0_read_multiple_files([
+  "/path/to/file1.md",
+  "/path/to/file2.md",
+  "/path/to/file3.md"
+])
+
+// ✅ GOOD: Parallel independent searches
+grep_search({ Query: "pattern1", SearchPath: "/path1" })
+grep_search({ Query: "pattern2", SearchPath: "/path2" })
+grep_search({ Query: "pattern3", SearchPath: "/path3" })
+
+// ❌ BAD: Sequential when could be parallel
+read_file("/path/to/file1.md")  // Wait
+read_file("/path/to/file2.md")  // Wait
+read_file("/path/to/file3.md")  // Wait
+
+// ❌ BAD: Parallel with dependencies
+edit({ file_path: "/path/file.md", ... })  // Modifies file
+read_file("/path/file.md")                 // Depends on edit completing
+```
+
+**Performance Impact:**
+
+- Reading 5 files sequentially: ~1000ms
+- Reading 5 files in parallel: ~300ms (3x faster)
+- Searching 8 patterns in parallel: 8x speedup
+
+**See:** [batch-operations.md](../docs/batch-operations.md) for detailed patterns
+
+---
+
 ## 3. Operational Mandate
 
 - **Rules are Law:** The `.windsurf/rules/` files are your constitution. Do not deviate without explicit user approval.
@@ -66,6 +112,7 @@ When making any implementation decision, prioritize the following principles in 
 - **Quality Gates:** All code must pass linting (ruff, mypy), security checks (bandit, semgrep), and tests before committing.
 - **Workflows Over Ad-hoc:** Use `.windsurf/workflows/` for common operations (commit, create ADR, etc.) to ensure consistency.
 - **Clarify Ambiguity:** If requirements are unclear, ask specific questions. If architectural guidance is missing, propose an ADR via workflow.
+- **Parallel Tool Calls:** Batch 3-8 independent tool calls whenever possible for efficiency.
 
 ---
 
@@ -83,28 +130,28 @@ When making any implementation decision, prioritize the following principles in 
 
 **Principle:** Always prefer automation over manual operations for repetitive tasks.
 
-**High-Impact Scripts:**
+**CRITICAL:** AI agents MUST use non-interactive modes. Never call interactive tasks like `task scaffold:initiative`.
 
-- **`task archive:initiative NAME=<name>`** - Archive initiative (90x faster, auto-updates refs)
-- **`task scaffold:initiative`** - Create initiative (97% token savings: 1500→50)
-- **`task scaffold:adr`** - Create ADR (96% token savings: 1200→50)
-- **`task move:file SRC=<src> DST=<dst>`** - Move file + update all repository references
-- **`task update:index`** - Regenerate initiative index
+**High-Impact Commands:**
 
-**When to use:**
+- `task archive:initiative NAME=<name>` - Archive (90x faster, auto-updates refs)
+- `task move:file SRC=<src> DST=<dst>` - Move + update all refs
+- `task update:index DIR=<dir>` - Regenerate index
+- `task validate:initiatives` - Validate all initiatives
 
-- ✅ Template generation (initiatives, ADRs, session summaries)
-- ✅ File archival with cross-reference updates
-- ✅ Index regeneration
-- ✅ Repetitive file operations
+**Scaffolding (Config Mode Only):**
 
-**When NOT to use:**
+```bash
+# ✅ CORRECT: Use config file
+python scripts/scaffold.py --type initiative --config /tmp/config.yaml
 
-- ❌ One-off edits
-- ❌ Context-heavy decisions
-- ❌ Content writing
+# ❌ WRONG: Never use interactive mode
+task scaffold:initiative  # This will hang waiting for input!
+```
 
-**See:** [automation-scripts.md](../docs/automation-scripts.md) for complete reference
+**Default configs:** `scripts/templates/configs/{initiative,adr,summary}-default.yaml`
+
+**See:** [automation-scripts.md](../docs/automation-scripts.md)
 
 ---
 

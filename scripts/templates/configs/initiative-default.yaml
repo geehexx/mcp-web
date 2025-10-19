@@ -1,0 +1,11 @@
+# Default config for initiative scaffolding (non-interactive mode)
+# Usage: python scripts/scaffold.py --type initiative --config scripts/templates/configs/initiative-default.yaml
+
+title: "Untitled Initiative"
+owner: "AI Agent Team"
+priority: "Medium"
+estimated_duration: "1 week"
+tags: []
+success_criteria: []
+phases: []
+deliverables: []

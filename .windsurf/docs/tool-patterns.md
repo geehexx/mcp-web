@@ -32,7 +32,7 @@ tags: ["mcp-tools", "patterns", "file-operations", "git", "commands"]
 | List directory | `mcp0_list_directory` | `mcp0_list_directory(path)` |
 | Git command | `run_command` | `run_command("git status", cwd)` |
 | Run tests | `run_command` | `run_command("task test", cwd)` |
-| Automation scripts | `run_command` | `run_command("task scaffold:initiative", cwd)` |
+| Automation scripts | `run_command` | `run_command("task archive:initiative NAME=x", cwd)` |
 
 ---
 
@@ -275,12 +275,12 @@ run_command({
   SafeToAutoRun: false  // Modifies files
 })
 
-// Create new initiative (97% token savings)
+// Create initiative (use config file, NOT interactive)
 run_command({
-  CommandLine: "task scaffold:initiative",
+  CommandLine: "python scripts/scaffold.py --type initiative --config /tmp/config.yaml",
   Cwd: "/home/gxx/projects/mcp-web",
   Blocking: true,
-  SafeToAutoRun: false  // Interactive prompt
+  SafeToAutoRun: false  // Creates files
 })
 
 // Move file with automatic reference updates
@@ -294,8 +294,8 @@ run_command({
 
 **Key scripts:**
 
-- `task scaffold:initiative` - Create initiative (1500→50 tokens)
-- `task scaffold:adr` - Create ADR (1200→50 tokens)
+- `python scripts/scaffold.py --type initiative --config <yaml>` - Create initiative
+- `python scripts/scaffold.py --type adr --config <yaml>` - Create ADR
 - `task archive:initiative NAME=<name>` - Archive (15 min→10 sec)
 - `task move:file SRC=<src> DST=<dst>` - Move + update refs
 - `task update:index` - Regenerate initiative index

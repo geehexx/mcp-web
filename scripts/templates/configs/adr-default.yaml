@@ -1,0 +1,9 @@
+# Default config for ADR scaffolding (non-interactive mode)
+# Usage: python scripts/scaffold.py --type adr --config scripts/templates/configs/adr-default.yaml
+
+title: "Untitled Decision"
+status: "Proposed"
+context: "Decision context needed"
+decision: "Decision statement needed"
+consequences: []
+alternatives: []
