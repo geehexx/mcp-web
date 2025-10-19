@@ -1,7 +1,7 @@
 # Initiative Lifecycle Management Guide
 
-**Version:** 1.0.0  
-**Last Updated:** 2025-10-19  
+**Version:** 1.0.0
+**Last Updated:** 2025-10-19
 **Related ADR:** ADR-0021 (Initiative System Improvements)
 
 ---

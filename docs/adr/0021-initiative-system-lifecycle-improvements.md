@@ -1,8 +1,8 @@
 # ADR-0021: Initiative System Lifecycle and Dependency Management Improvements
 
-**Status:** Accepted  
-**Date:** 2025-10-19  
-**Deciders:** Core Team  
+**Status:** Accepted
+**Date:** 2025-10-19
+**Deciders:** Core Team
 **Tags:** documentation, automation, governance, project-management
 
 ---
@@ -12,26 +12,31 @@
 The initiative system has been in use since ADR-0013 (Initiative Documentation Standards), providing a structured approach to tracking multi-session work. However, several pain points emerged through usage:
 
 ### Problem 1: Scaffolding Divergence
+
 - Manual `cp`/`mkdir` instructions coexisted with automated scaffolding
 - Inconsistent initiative structures (folder-based vs. flat-file choices made ad-hoc)
 - Token waste from duplicated guidance in documentation
 
 ### Problem 2: Phase Progression Integrity
+
 - No automated validation that phase markers match actual progress
 - Manual status updates could drift from reality
 - Example: Initiative marked "Active" but all tasks complete
 
 ### Problem 3: Dependency Blind Spots
+
 - Dependencies listed as text in frontmatter, no validation
 - No machine-readable dependency registry
 - Hidden blockers: Dependent initiative starts before prerequisite complete
 
 ### Problem 4: Blocker Propagation Gap
+
 - Blockers listed per-initiative, no automated cascade
 - Wasted effort when teams worked on dependent initiatives unaware of upstream blockers
 - Delayed discovery of blockers during merge/integration
 
 ### Problem 5: Archival Guardrails Missing
+
 - `/archive-initiative` workflow moved files but didn't validate completion
 - No check for unchecked success criteria or unresolved blockers
 - Incomplete initiatives could be archived without validation
@@ -77,7 +82,7 @@ def _check_phase_consistency(content):
     # Validates sequential phase numbering
     # Checks Phase N complete → phases 1..N-1 must be complete
     # Detects out-of-order phase completion
-    
+
 def _infer_status(post, file_path):
     # Suggests status based on task completion %
     # 0% → "Proposed", 1-99% → "Active", 100% → "Completed"
@@ -96,14 +101,14 @@ def _infer_status(post, file_path):
 class DependencyRegistry:
     def load_initiatives(self):
         # Parse frontmatter for dependencies
-        
+
     def build_dependency_graph(self):
         # Generate networkx-compatible graph
-        
+
     def validate_dependencies(self):
         # Check prerequisite initiatives not blocked/archived
         # Detect circular dependencies
-        
+
     def generate_dot_graph(self):
         # Visualize relationships
 ```
@@ -166,16 +171,16 @@ def propagate_blockers(self):
 class ArchivalValidator:
     def check_status_gate(self):
         # Status must be "Completed" or "✅ Completed"
-        
+
     def check_success_criteria_gate(self):
         # All checkboxes must be checked [x]
-        
+
     def check_blockers_gate(self):
         # All current blockers resolved
-        
+
     def check_dependencies_gate(self):
         # No initiatives depend on this one
-        
+
     def check_documentation_gate(self):
         # Updates section has completion entry
 ```
@@ -318,11 +323,13 @@ class ArchivalValidator:
 **Description:** Use Jira, Asana, or Linear for initiative tracking.
 
 **Pros:**
+
 - Mature UX and visualization
 - Built-in dependency management
 - Established governance workflows
 
 **Cons:**
+
 - External dependency and cost
 - Disconnected from codebase
 - Vendor lock-in
@@ -335,11 +342,13 @@ class ArchivalValidator:
 **Description:** Keep current system with no automated validation.
 
 **Pros:**
+
 - No complexity increase
 - No new scripts to maintain
 - Flexibility in process
 
 **Cons:**
+
 - Human error continues
 - Inconsistent metadata
 - No dependency visibility
@@ -352,11 +361,13 @@ class ArchivalValidator:
 **Description:** Implement full portfolio management system (e.g., ProjectManager.com, Teamhood).
 
 **Pros:**
+
 - Enterprise-grade features
 - Advanced reporting
 - Stakeholder dashboards
 
 **Cons:**
+
 - Overkill for project size (15-20 concurrent initiatives)
 - Significant overhead and cost
 - Complex onboarding
@@ -456,6 +467,6 @@ class ArchivalValidator:
 - [x] Archival gates functional
 - [x] ADR reviewed and accepted
 
-**Approved By:** Core Team  
-**Implementation Date:** 2025-10-19  
+**Approved By:** Core Team
+**Implementation Date:** 2025-10-19
 **Review Date:** 2026-01-19 (3 months)
