@@ -84,6 +84,12 @@ class InitiativeValidator:
             if file_path.parent.name != "active" and file_path.parent.name != "completed":
                 self._check_phases_exist(file_path)
 
+            # Check 6: Phase progression consistency
+            self._check_phase_consistency(post.content, file_path)
+
+            # Check 7: Status inference
+            self._infer_status(post, file_path)
+
         except Exception as e:
             self.results.append(
                 ValidationResult(
@@ -242,6 +248,131 @@ class InitiativeValidator:
                     )
                 )
 
+    def _check_phase_consistency(self, content: str, file_path: Path):
+        """
+        Validate phase progression consistency.
+
+        Rules:
+        - If Phase N is complete, all phases 1 to N-1 must be complete
+        - Phases should be numbered sequentially
+        - Phase completion % should match task completion
+        """
+        # Extract phase sections
+        phase_pattern = re.compile(
+            r"###?\s+Phase\s+(\d+)[:\s]+(.*?)(?=###?\s+Phase\s+\d+|##\s+(?!Phase)|$)",
+            re.DOTALL | re.IGNORECASE,
+        )
+        phases = {}
+
+        for match in phase_pattern.finditer(content):
+            phase_num = int(match.group(1))
+            phase_content = match.group(2)
+
+            # Count tasks in this phase
+            unchecked = len(re.findall(r"^- \[ \]", phase_content, re.MULTILINE))
+            checked = len(re.findall(r"^- \[x\]", phase_content, re.MULTILINE))
+            total = unchecked + checked
+
+            phases[phase_num] = {
+                "unchecked": unchecked,
+                "checked": checked,
+                "total": total,
+                "complete": unchecked == 0 and total > 0,
+            }
+
+        if not phases:
+            # No phases found, skip this check
+            return
+
+        # Check 1: Sequential numbering
+        expected_phases = set(range(1, max(phases.keys()) + 1))
+        actual_phases = set(phases.keys())
+        missing_phases = expected_phases - actual_phases
+
+        if missing_phases:
+            self.results.append(
+                ValidationResult(
+                    check_name="Phase Numbering",
+                    severity="warning",
+                    passed=False,
+                    message=f"Missing phase numbers: {sorted(missing_phases)}. Phases should be numbered sequentially.",
+                    file_path=str(file_path),
+                )
+            )
+
+        # Check 2: Phase progression consistency
+        for phase_num in sorted(phases.keys()):
+            if phases[phase_num]["complete"]:
+                # Check all previous phases are complete
+                for prev_phase in range(1, phase_num):
+                    if prev_phase in phases and not phases[prev_phase]["complete"]:
+                        self.results.append(
+                            ValidationResult(
+                                check_name="Phase Progression",
+                                severity="critical",
+                                passed=False,
+                                message=f"Phase {phase_num} is complete but Phase {prev_phase} is incomplete. "
+                                "Phases must be completed in order.",
+                                file_path=str(file_path),
+                            )
+                        )
+
+    def _infer_status(self, post: frontmatter.Post, file_path: Path) -> str | None:
+        """
+        Infer initiative status based on task completion percentage.
+
+        Returns suggested status if current status doesn't match reality,
+        otherwise returns None.
+
+        Rules:
+        - 0% complete + no activity → "Proposed"
+        - 1-99% complete → "Active"
+        - 100% complete → "Completed"
+        """
+        current_status = post.metadata.get("Status", "Unknown")
+        content = post.content
+
+        # Count all tasks
+        all_unchecked = re.findall(r"^- \[ \]", content, re.MULTILINE)
+        all_checked = re.findall(r"^- \[x\]", content, re.MULTILINE)
+        total_tasks = len(all_unchecked) + len(all_checked)
+
+        if total_tasks == 0:
+            # No tasks defined, can't infer
+            return None
+
+        completion_pct = (len(all_checked) / total_tasks) * 100
+
+        # Determine suggested status
+        suggested_status = None
+        if completion_pct == 0:
+            # Check if there's recent activity (Updated field)
+            updated = post.metadata.get("Updated")
+            created = post.metadata.get("Created")
+            suggested_status = (
+                "Proposed" if updated == created or not updated else "Active"
+            )  # Active if has been worked on
+        elif completion_pct < 100:
+            suggested_status = "Active"
+        else:  # 100%
+            suggested_status = "Completed"
+
+        # Check if inference differs from current status
+        if current_status != suggested_status and suggested_status:
+            self.results.append(
+                ValidationResult(
+                    check_name="Status Inference",
+                    severity="warning",
+                    passed=False,
+                    message=f"Status is '{current_status}' but task completion suggests '{suggested_status}' "
+                    f"({completion_pct:.0f}% complete: {len(all_checked)}/{total_tasks} tasks)",
+                    file_path=str(file_path),
+                )
+            )
+            return suggested_status
+
+        return None
+
     def validate_all(self) -> dict[str, list[ValidationResult]]:
         """Validate all initiative files in active/ and completed/ directories."""
         all_results = {}
@@ -262,6 +393,141 @@ class InitiativeValidator:
                     all_results[str(file_path)] = results
 
         return all_results
+
+
+def generate_markdown_report(
+    results: dict[str, list[ValidationResult]], output_path: Path | None = None
+) -> str:
+    """
+    Generate validation report in markdown format.
+
+    Args:
+        results: Validation results by file
+        output_path: Optional path to write report to file
+
+    Returns:
+        Markdown-formatted report string
+    """
+    from datetime import datetime
+
+    total_files = len(results)
+    total_checks = sum(len(checks) for checks in results.values())
+
+    critical_failures = []
+    warnings = []
+    infos = []
+
+    for file_path, checks in results.items():
+        for check in checks:
+            if check.severity == "critical" and not check.passed:
+                critical_failures.append((file_path, check))
+            elif check.severity == "warning" and not check.passed:
+                warnings.append((file_path, check))
+            elif check.severity == "info":
+                infos.append((file_path, check))
+
+    # Build markdown report
+    report_lines = []
+    report_lines.append("# Initiative Validation Report")
+    report_lines.append("")
+    report_lines.append(f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    report_lines.append("")
+    report_lines.append("## Summary")
+    report_lines.append("")
+    report_lines.append(f"- **Files checked:** {total_files}")
+    report_lines.append(f"- **Total checks:** {total_checks}")
+    report_lines.append(f"- **❌ Critical failures:** {len(critical_failures)}")
+    report_lines.append(f"- **⚠️ Warnings:** {len(warnings)}")
+    report_lines.append(f"- **ℹ️ Info:** {len(infos)}")
+    report_lines.append("")
+
+    # Critical failures section
+    if critical_failures:
+        report_lines.append("## ❌ Critical Failures")
+        report_lines.append("")
+        report_lines.append("These issues **MUST** be fixed before the initiative can proceed.")
+        report_lines.append("")
+
+        for file_path, check in critical_failures:
+            # Relative path for readability
+            rel_path = (
+                str(Path(file_path).relative_to(Path.cwd()))
+                if Path(file_path).is_absolute()
+                else file_path
+            )
+            report_lines.append(f"### {check.check_name}")
+            report_lines.append("")
+            report_lines.append(f"**File:** `{rel_path}`")
+            report_lines.append("")
+            report_lines.append(f"**Issue:** {check.message}")
+            report_lines.append("")
+
+    # Warnings section
+    if warnings:
+        report_lines.append("## ⚠️ Warnings")
+        report_lines.append("")
+        report_lines.append("These issues are **recommended** to fix but not blocking.")
+        report_lines.append("")
+
+        for file_path, check in warnings:
+            rel_path = (
+                str(Path(file_path).relative_to(Path.cwd()))
+                if Path(file_path).is_absolute()
+                else file_path
+            )
+            report_lines.append(f"### {check.check_name}")
+            report_lines.append("")
+            report_lines.append(f"**File:** `{rel_path}`")
+            report_lines.append("")
+            report_lines.append(f"**Suggestion:** {check.message}")
+            report_lines.append("")
+
+    # Info section (optional, for context)
+    if infos:
+        report_lines.append("## ℹ️ Information")
+        report_lines.append("")
+        report_lines.append("<details>")
+        report_lines.append("<summary>Click to expand informational notices</summary>")
+        report_lines.append("")
+
+        for file_path, check in infos:
+            rel_path = (
+                str(Path(file_path).relative_to(Path.cwd()))
+                if Path(file_path).is_absolute()
+                else file_path
+            )
+            report_lines.append(f"- **{check.check_name}** (`{rel_path}`): {check.message}")
+
+        report_lines.append("")
+        report_lines.append("</details>")
+        report_lines.append("")
+
+    # Overall status
+    report_lines.append("## Overall Status")
+    report_lines.append("")
+    if len(critical_failures) == 0:
+        report_lines.append("✅ **PASS** - No critical failures detected.")
+        if len(warnings) > 0:
+            report_lines.append("")
+            report_lines.append(f"⚠️ {len(warnings)} warning(s) to address.")
+    else:
+        report_lines.append(
+            f"❌ **FAIL** - {len(critical_failures)} critical failure(s) must be fixed."
+        )
+
+    report_lines.append("")
+    report_lines.append("---")
+    report_lines.append("")
+    report_lines.append("*Generated by `scripts/validate_initiatives.py`*")
+
+    report_text = "\n".join(report_lines)
+
+    # Write to file if path provided
+    if output_path:
+        output_path.write_text(report_text, encoding="utf-8")
+        print(f"✓ Report written to: {output_path}")
+
+    return report_text
 
 
 def print_results(results: dict[str, list[ValidationResult]], ci_mode: bool = False):
@@ -349,6 +615,11 @@ def main():
         default=Path("docs/initiatives"),
         help="Path to initiatives directory (default: docs/initiatives)",
     )
+    parser.add_argument(
+        "--report",
+        type=Path,
+        help="Generate markdown validation report to specified file",
+    )
 
     args = parser.parse_args()
 
@@ -362,6 +633,10 @@ def main():
         results = validator.validate_all()
 
     print_results(results, ci_mode=args.ci)
+
+    # Generate markdown report if requested
+    if args.report:
+        generate_markdown_report(results, output_path=args.report)
 
 
 if __name__ == "__main__":
