@@ -44,6 +44,7 @@ This directory contains **machine-readable** documentation that prioritizes:
 | [batch-operations.md](./batch-operations.md) | Batch operation optimization strategies | Medium | 2025-10-20 |
 | [common-patterns.md](./common-patterns.md) | Shared code examples and command templates | Low | 2025-10-20 |
 | [context-loading-patterns.md](./context-loading-patterns.md) | Efficient context loading strategies | Medium | 2025-10-20 |
+| [error-handling-patterns.md](./error-handling-patterns.md) | Error handling, validation, and retry patterns | Medium | 2025-10-20 |
 | [tool-patterns.md](./tool-patterns.md) | MCP tool usage patterns and best practices | Medium | 2025-10-20 |
 
 ### Quick References (Manual Maintenance)

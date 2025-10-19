@@ -1,7 +1,7 @@
 ---
 type: machine-readable-reference
 category: pattern-library
-purpose: Shared patterns for efficient context loading
+purpose: Efficient context loading strategies for AI agents
 token_budget: medium
 audience: ai-agent
 auto_generated: false
@@ -12,362 +12,280 @@ tags: ["context-loading", "performance", "mcp-tools", "batch-operations"]
 
 # Context Loading Patterns
 
-**Purpose:** Reusable patterns for loading files and context efficiently across workflows.
-
-**Used By:** Multiple workflows (consolidate-summaries, load-context, detect-context, etc.)
+**Purpose:** Quick-reference patterns for efficient context loading in workflows.
 
 ---
 
-## Overview
+## Loading Strategy Matrix
 
-Context loading is a frequent operation in workflows. These patterns optimize for speed and reliability.
-
-**Key Principles:**
-
-- Batch operations are 3-10x faster than sequential
-- MCP tools require absolute paths
-- Parallel operations for I/O-bound tasks
-- Graceful error handling
+| Scenario | Strategy | Tools | Batch Size |
+|----------|----------|-------|------------|
+| Initiative work | Targeted | `mcp0_read_multiple_files` | 5-10 files |
+| Full project scan | Hierarchical | `find_by_name` + batch read | 10-15 files |
+| Code exploration | Search-first | `grep_search` → targeted read | 3-5 files |
+| Documentation | Batch read | `mcp0_read_multiple_files` | 10-15 files |
+| Large codebase | Chunked | Iterate + batch | 10 files/chunk |
 
 ---
 
-## Pattern 1: Batch Reading
+## Pattern 1: Initiative Context
 
-### Basic Batch Read
-
-**Purpose:** Load multiple files in parallel
-
-**When to Use:** Loading 3+ files with known paths
-
-**Implementation:**
+**Use:** Load all files for an active initiative
 
 ```python
-mcp0_read_multiple_files(paths=[
-    "/home/gxx/projects/mcp-web/file1.md",
-    "/home/gxx/projects/mcp-web/file2.md",
-    "/home/gxx/projects/mcp-web/file3.md"
-])
+# 1. Identify initiative files
+initiative_dir = "docs/initiatives/active/feature-x/"
+core_files = [
+    f"{initiative_dir}initiative.md",
+    f"{initiative_dir}plan.md",
+    "src/feature_x.py",
+    "tests/test_feature_x.py"
+]
+
+# 2. Batch load
+mcp0_read_multiple_files(core_files)
 ```
 
-**Best Practices:**
-
-- Process 10-15 files per batch (optimal performance)
-- Use absolute paths for MCP tools
-- Handle missing files gracefully
-- See [Batch Operations](./batch-operations.md) for optimization strategies
-
-### Glob-Based Batch Read
-
-**Purpose:** Load all files matching pattern
-
-**When to Use:** Unknown number of files or wildcard patterns
-
-**Implementation:**
-
-```bash
-# Find files first
-files=$(find docs/initiatives/active -name "*.md")
-
-# Batch read
-mcp0_read_multiple_files(paths=files)
-```
-
-**Performance:**
-
-- 3-10x faster than sequential reads
-- Optimal batch size: 10-15 files
-- Use for I/O-bound operations
+**Performance:** 5-10x faster than sequential
 
 ---
 
-## Pattern 2: Priority-Based Loading
+## Pattern 2: Hierarchical Loading
 
-### Load Order Strategy
-
-**Purpose:** Load most important files first
-
-**When to Use:** Large context sets with priority levels
-
-**Implementation:**
+**Use:** Load project context progressively
 
 ```python
-# Priority 1: Essential context (load immediately)
-mcp0_read_multiple_files([
-    "/home/gxx/projects/mcp-web/PROJECT_SUMMARY.md",
-    "/home/gxx/projects/mcp-web/docs/initiatives/active/current-initiative.md"
-])
+# Phase 1: High-level overview
+overview_files = [
+    "README.md",
+    "docs/CONSTITUTION.md",
+    "docs/DOCUMENTATION_STRUCTURE.md"
+]
+mcp0_read_multiple_files(overview_files)
 
-# Priority 2: Related context (load if time permits)
-mcp0_read_multiple_files([
-    "/home/gxx/projects/mcp-web/docs/adr/relevant-adr.md",
-    "/home/gxx/projects/mcp-web/src/module.py"
-])
+# Phase 2: Relevant subsystem (based on Phase 1)
+subsystem_files = find_by_name(
+    SearchDirectory="src/subsystem/",
+    Pattern="*.py",
+    MaxDepth=2
+)
+mcp0_read_multiple_files(subsystem_files[:10])
 
-# Priority 3: Optional context (load on demand)
-# Skip unless explicitly needed
+# Phase 3: Deep dive (if needed)
+# Load specific files identified in Phase 2
 ```
 
-**Priority Levels:**
-
-1. **Essential:** Initiative, PROJECT_SUMMARY (always load)
-2. **Related:** Source files, tests, ADRs (load for implementation)
-3. **Optional:** Historical summaries, full docs (load on demand)
+**Benefits:** Minimal tokens, targeted loading, progressive refinement
 
 ---
 
-## Pattern 3: Incremental Loading
+## Pattern 3: Search-First Loading
 
-### Progressive Context Loading
-
-**Purpose:** Load context in stages as needed
-
-**When to Use:** Large codebases or complex initiatives
-
-**Implementation:**
+**Use:** Find relevant code before loading
 
 ```python
-# Stage 1: Core context (50-100 lines)
-read_file("initiative.md", limit=100)
+# 1. Search for relevant code
+results = grep_search(
+    Query="authentication",
+    SearchPath="src/",
+    Includes=["*.py"],
+    MatchPerLine=False  # Just find files
+)
 
-# If more detail needed: Stage 2
-read_file("initiative.md")  # Full file
+# 2. Extract file paths from results
+relevant_files = extract_file_paths(results)
 
-# If implementation needed: Stage 3
-mcp0_read_multiple_files([
-    source_files,
-    test_files
-])
+# 3. Batch load top matches
+mcp0_read_multiple_files(relevant_files[:5])
 ```
 
-**Benefits:**
-
-- Faster initial load
-- Reduced token usage
-- Load more only when needed
+**Performance:** Avoids loading irrelevant files
 
 ---
 
-## Pattern 4: Conditional Loading
+## Pattern 4: Chunked Loading
 
-### Decision-Based Loading
-
-**Purpose:** Load files based on runtime conditions
-
-**When to Use:** Context depends on detected signals
-
-**Implementation:**
+**Use:** Load large file sets without memory issues
 
 ```python
-if has_test_failures:
-    # Load test context
-    mcp0_read_multiple_files([test_files])
-elif has_active_initiative:
-    # Load initiative context
-    mcp0_read_multiple_files([initiative_files])
-elif needs_planning:
-    # Load full context
-    mcp0_read_multiple_files([all_files])
+def load_in_chunks(file_list, chunk_size=10):
+    for i in range(0, len(file_list), chunk_size):
+        chunk = file_list[i:i + chunk_size]
+        yield mcp0_read_multiple_files(chunk)
+
+# Process 50 files in chunks of 10
+all_files = get_all_python_files()
+for chunk_data in load_in_chunks(all_files, 10):
+    analyze(chunk_data)
 ```
-
-**Decision Factors:**
-
-- Detected signals (tests, initiatives, git status)
-- Workflow type (implement vs plan vs commit)
-- User request specificity
 
 ---
 
-## Pattern 5: Error Handling
+## Pattern 5: Lazy Loading
 
-### Graceful Failure
-
-**Purpose:** Handle missing or inaccessible files
-
-**When to Use:** Always (especially with glob patterns)
-
-**Implementation:**
+**Use:** Load only when needed
 
 ```python
-try:
-    mcp0_read_multiple_files(paths)
-except FileNotFoundError as e:
-    # Log and continue
-    print(f"Warning: File not found: {e.filename}")
-    # Load remaining files
-except PermissionError as e:
-    # Skip protected files
-    print(f"Skipping protected file: {e.filename}")
+# 1. Load index/manifest first
+manifest = read_file("docs/FILE_INDEX.md")
+
+# 2. Identify required files from manifest
+required_files = parse_manifest(manifest)
+
+# 3. Load only required files
+mcp0_read_multiple_files(required_files)
 ```
 
-**Error Strategies:**
-
-- **Critical files:** Fail fast, report to user
-- **Optional files:** Log warning, continue
-- **Missing globs:** Empty result is OK
+**Benefits:** Minimal initial load, on-demand expansion
 
 ---
 
-## Pattern 6: Scope-Based Loading
+## MCP Tool Selection
 
-### Context Scopes
+| Task | Tool | Reason |
+|------|------|--------|
+| Load known files | `mcp0_read_multiple_files` | Fastest for known paths |
+| Find files by name | `find_by_name` | Glob patterns, filtering |
+| Search file content | `grep_search` | Content-based discovery |
+| List directory | `mcp0_list_directory` | Explore structure |
+| Get file metadata | `mcp0_get_file_info` | Size, timestamps |
 
-**Purpose:** Load appropriate files for workflow type
+---
 
-**Scopes:**
+## Optimization Guidelines
 
-| Scope | Files to Load | Use Case |
-|-------|---------------|----------|
-| `initiative` | Initiative + related source + tests | Implementation work |
-| `module:tests` | Test files + module under test | Test fixes |
-| `module:src` | Source files + related tests | Code changes |
-| `full` | PROJECT_SUMMARY + all initiatives + ADRs | Planning |
-| `docs` | Documentation files only | Doc updates |
+### Batch Size Recommendations
 
-**Implementation:**
+| File Type | Optimal Batch | Reason |
+|-----------|---------------|--------|
+| Small (<10KB) | 15 files | Low memory impact |
+| Medium (10-100KB) | 10 files | Balance speed/memory |
+| Large (>100KB) | 5 files | Avoid memory issues |
+| Mixed sizes | 10 files | Safe default |
+
+### When to Use Each Pattern
+
+```text
+Do you know exact files needed?
+├─ Yes: Pattern 1 (Initiative Context)
+└─ No: ──────────────────────────────┐
+   │                                  │
+   Need full project view?            │
+   ├─ Yes: Pattern 2 (Hierarchical)   │
+   └─ No: ─────────────────────────┐  │
+      │                             │  │
+      Know what to search for?      │  │
+      ├─ Yes: Pattern 3 (Search)    │  │
+      └─ No: Pattern 2 (Hierarchical)│  │
+                                     │  │
+   Processing many files?            │  │
+   └─ Yes: Pattern 4 (Chunked)       │  │
+```
+
+---
+
+## Anti-Patterns
+
+### ❌ Loading Everything
 
 ```python
-if scope == "initiative":
-    files = [
-        initiative_file,
-        *related_source_files,
-        *related_test_files
-    ]
-elif scope == "full":
-    files = [
-        "PROJECT_SUMMARY.md",
-        *active_initiatives,
-        *recent_adrs
-    ]
+# Bad: Load entire codebase
+all_files = find_by_name(SearchDirectory=".", Pattern="*")
+mcp0_read_multiple_files(all_files)  # Thousands of files!
 
+# Good: Targeted loading
+relevant_files = find_by_name(
+    SearchDirectory="src/feature_x/",
+    Pattern="*.py",
+    MaxDepth=2
+)
+mcp0_read_multiple_files(relevant_files[:10])
+```
+
+### ❌ Sequential Loading
+
+```python
+# Bad: Load files one by one
+for file in files:
+    content = read_file(file)  # 10x slower
+
+# Good: Batch load
+contents = mcp0_read_multiple_files(files)
+```
+
+### ❌ Ignoring File Sizes
+
+```python
+# Bad: Batch large files
+large_files = ["10MB_file1.json", "20MB_file2.json", ...]
+mcp0_read_multiple_files(large_files)  # Memory explosion
+
+# Good: Check sizes first
+file_info = [mcp0_get_file_info(f) for f in files]
+small_files = [f for f, info in zip(files, file_info)
+               if info['size'] < 100_000]
+mcp0_read_multiple_files(small_files)
+```
+
+---
+
+## Performance Metrics
+
+| Pattern | Files Loaded | Time (est) | Memory |
+|---------|--------------|------------|--------|
+| Sequential | 10 | 10s | Low |
+| Batch (10) | 10 | 1-2s | Medium |
+| Hierarchical | 5 → 10 → 5 | 3-4s | Low-Medium |
+| Search-first | 3-5 | 1-2s | Low |
+| Chunked (50 files) | 50 | 5-8s | Medium |
+
+---
+
+## Quick Reference
+
+**Most Common Pattern:**
+
+```python
+# Initiative-focused loading
+files = [
+    "docs/initiatives/active/X/initiative.md",
+    "src/module.py",
+    "tests/test_module.py"
+]
 mcp0_read_multiple_files(files)
 ```
 
----
-
-## Pattern 7: Session History Loading
-
-### Recent Session Context
-
-**Purpose:** Load recent session summaries for continuity
-
-**When to Use:** Context detection, continuation
-
-**Implementation:**
-
-```bash
-# Get 2-3 most recent summaries
-recent_summaries=$(ls -t docs/archive/session-summaries/*.md | head -3)
-
-# Read for "Next Steps" and "Unresolved" sections
-mcp0_read_multiple_files(recent_summaries)
-```
-
-**Focus Areas:**
-
-- "Next Steps" section → continuation points
-- "Unresolved" section → blockers
-- "Key Learnings" section → context for decisions
-
----
-
-## Performance Tips
-
-### Optimization Strategies
-
-1. **Batch over Sequential:** 3-10x faster
-2. **Parallel I/O:** Use for independent operations
-3. **Limit File Sizes:** Read head/tail for large files
-4. **Cache Results:** Within session, avoid re-reads
-5. **Filter Early:** Reduce files before loading
-
-### Benchmarks
-
-| Operation | Sequential | Batch | Speedup |
-|-----------|-----------|-------|---------|
-| 5 files | ~5s | ~1s | 5x |
-| 10 files | ~10s | ~2s | 5x |
-| 20 files | ~20s | ~4s | 5x |
-
-**Note:** Benchmarks assume I/O-bound operations with typical network/disk latency.
-
----
-
-## Common Combinations
-
-### Initiative Work Pattern
+**Exploration Pattern:**
 
 ```python
-# Load initiative + context
-mcp0_read_multiple_files([
-    initiative_file,
-    *source_files_from_initiative,
-    *test_files_from_initiative,
-    *related_adrs
-])
+# 1. Search
+results = grep_search(Query="pattern", SearchPath="src/")
+
+# 2. Load matches
+files = extract_paths(results)[:5]
+mcp0_read_multiple_files(files)
 ```
 
-### Planning Pattern
+**Full Context Pattern:**
 
 ```python
-# Load full context for planning
-mcp0_read_multiple_files([
-    "PROJECT_SUMMARY.md",
-    *active_initiatives,
-    *recent_adrs,
-    *recent_session_summaries
-])
-```
+# 1. Overview
+mcp0_read_multiple_files(["README.md", "docs/CONSTITUTION.md"])
 
-### Test Fix Pattern
-
-```python
-# Load test context
-mcp0_read_multiple_files([
-    test_files_with_failures,
-    module_under_test,
-    related_fixtures
-])
-```
-
----
-
-## Tool Selection
-
-### MCP vs Standard Tools
-
-**MCP Tools (mcp0_*):**
-
-- Required for `.windsurf/` directory
-- Require absolute paths
-- Better error handling
-
-**Standard Tools:**
-
-- Work for regular files
-- Accept relative paths
-- Simpler API
-
-**Decision:**
-
-```python
-if file_path.startswith(".windsurf/"):
-    # Use MCP tool with absolute path
-    mcp0_read_text_file(f"/home/gxx/projects/mcp-web/{file_path}")
-else:
-    # Use standard tool
-    read_file(file_path)
+# 2. Targeted subsystem
+subsystem_files = find_by_name(SearchDirectory="src/X/", Pattern="*.py")
+mcp0_read_multiple_files(subsystem_files[:10])
 ```
 
 ---
 
 ## References
 
-- [Batch Operations](./batch-operations.md) - Optimization strategies
-- [load-context.md](../workflows/load-context.md) - Context loading workflow
-- [detect-context.md](../workflows/detect-context.md) - Context detection
-- Agent directives: [00_agent_directives.md](../rules/00_agent_directives.md) - Section 1.10
+- [batch-operations.md](./batch-operations.md) - Batch operation patterns
+- [tool-patterns.md](./tool-patterns.md) - MCP tool usage
+- [common-patterns.md](./common-patterns.md) - Code examples
 
 ---
 
-**Version:** 1.0.0 (Extracted from consolidate-summaries.md Phase 4 decomposition)
-**Last Updated:** 2025-10-18
+**Version:** 2.0.0 (Compressed for conciseness)
+**Maintained by:** mcp-web core team

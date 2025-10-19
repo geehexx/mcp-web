@@ -14,7 +14,24 @@ tags: ["mcp-tools", "patterns", "file-operations", "git", "commands"]
 
 **Purpose:** Quick reference for MCP tool selection and usage patterns.
 
-**Target Audience:** AI agents working in this repository
+---
+
+## Quick Lookup
+
+| Task | Tool | Example |
+|------|------|--------|
+| Read 1 file (.windsurf/) | `mcp0_read_text_file` | `mcp0_read_text_file("/abs/path")` |
+| Read 3+ files | `mcp0_read_multiple_files` | `mcp0_read_multiple_files([...])` |
+| Read 1 file (regular) | `read_file` | `read_file("/abs/path")` |
+| Write file (.windsurf/) | `mcp0_write_file` | `mcp0_write_file(path, content)` |
+| Write file (regular) | `write_to_file` | `write_to_file(path, content)` |
+| Edit file (.windsurf/) | `mcp0_edit_file` | `mcp0_edit_file(path, edits)` |
+| Edit file (regular) | `edit` or `multi_edit` | `edit(path, old, new)` |
+| Find files | `find_by_name` | `find_by_name(dir, pattern)` |
+| Search content | `grep_search` | `grep_search(query, path)` |
+| List directory | `mcp0_list_directory` | `mcp0_list_directory(path)` |
+| Git command | `run_command` | `run_command("git status", cwd)` |
+| Run tests | `run_command` | `run_command("task test", cwd)` |
 
 ---
 
