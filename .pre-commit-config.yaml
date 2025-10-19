@@ -109,6 +109,13 @@ repos:
         files: ^\.(windsurf/workflows|docs/archive/session-summaries)/.*\.md$
         args: [--skip-non-md]
 
+      - id: validate-rules-frontmatter
+        name: "📋 rules · Validate Windsurf rules front-matter"
+        entry: uv run python scripts/validate_rules_frontmatter.py
+        language: system
+        files: ^\.windsurf/rules/.*\.md$
+        pass_filenames: false
+
   # Local - Fast Tests (Optional, can be slow)
   # Uncomment to run fast tests on every commit
   # - repo: local

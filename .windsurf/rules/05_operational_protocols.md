@@ -1,7 +1,7 @@
 ---
 created: "2025-10-18"
 updated: "2025-10-19"
-trigger: session_management
+trigger: always
 description: Session end protocol, normative core enforcement, progress communication, and operational efficiency
 category: operations
 tokens: 1400

@@ -1,7 +1,7 @@
 ---
 created: "2025-10-15"
 updated: "2025-10-19"
-trigger: always_on
+trigger: always
 description: Meta-rules defining agent persona, core principles, operational directives, and quality gate enforcement. Highest-level rule applying globally.
 category: core
 tokens: 3200

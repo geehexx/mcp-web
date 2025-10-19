@@ -1,7 +1,7 @@
 ---
 created: "2025-10-18"
 updated: "2025-10-19"
-trigger: file_operations
+trigger: always
 description: File operations, git operations, context management, and .windsurf/ directory structure enforcement
 category: operations
 tokens: 2100
