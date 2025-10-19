@@ -4,7 +4,7 @@
   ],
   "ignores": [
     "docs/archive/**",
-    "docs/initiatives/completed/**/artifacts/**",
+    "docs/initiatives/completed/**",
     "**/.pytest_cache/**",
     "node_modules/**",
     ".venv/**",

@@ -215,23 +215,23 @@ update_plan({
 
 **Format Options:**
 
-**Option A: Arrow Chain (Compact)**
+#### Option A: Arrow Chain (Compact)
 
-```
+```text
 3.1. /plan → /research - Gather best practices (status: completed)
 3.2. /plan → /generate-plan - Structure implementation (status: in_progress)
 ```
 
-**Option B: Breadcrumb Style**
+#### Option B: Breadcrumb Style
 
-```
+```text
 3.1. /plan ▸ /research - Gather best practices
 3.2. /plan ▸ /generate-plan - Structure implementation
 ```
 
-**Option C: Indentation Only (Current Standard)**
+#### Option C: Indentation Only (Current Standard)
 
-```
+```text
 3. /plan - Create implementation plan
   3.1. /research - Gather best practices
   3.2. /generate-plan - Structure implementation
@@ -284,11 +284,10 @@ update_plan({
 
 **Goal:** Codify transparency requirements in `.windsurf/rules/00_agent_directives.md`.
 
-**New Section: 1.11.5 Progress Transparency Requirements**
+#### New Section: 1.11.5 Progress Transparency Requirements
 
 Add after Section 1.11.4 (Session End Protocol Integration):
 
-```markdown
 ### 1.11.5 Progress Transparency Requirements
 
 **MANDATORY:** All workflows MUST provide visible progress through:
@@ -300,6 +299,7 @@ Add after Section 1.11.4 (Session End Protocol Integration):
 **Progress Announcement Standards:**
 
 Print at these transition points:
+
 - Workflow entry: `🔄 **Entering /workflow:** Purpose`
 - Stage complete: `📋 **Stage N Complete:** What finished`
 - Sub-workflow call: `↪️ **Delegating to /sub-workflow:** Reason`
@@ -315,6 +315,7 @@ Print at these transition points:
 **Sub-Workflow Task Pattern:**
 
 When workflow calls sub-workflow:
+
 1. Update plan BEFORE calling (add sub-workflow task as N.1)
 2. Print delegation message: `↪️ **Delegating to /sub-workflow**`
 3. Execute sub-workflow
@@ -358,8 +359,6 @@ Users trust agents that show their work. Visibility enables:
 - **Better debugging:** Identify where workflows stall
 - **Learning:** Understand workflow execution patterns
 
-```
-
 ---
 
 ## Implementation Phases
@@ -369,6 +368,7 @@ Users trust agents that show their work. Visibility enables:
 **Duration:** 4-6 hours
 
 **Tasks:**
+
 1. Create this initiative document
 2. Add progress announcements to key workflows:
    - `/work` (minimal, mostly delegates)
@@ -382,6 +382,7 @@ Users trust agents that show their work. Visibility enables:
 6. Commit improvements
 
 **Success Criteria:**
+
 - All orchestrator workflows print entry/exit messages
 - All sub-workflow calls create task entries
 - Agent directives document transparency requirements
@@ -392,6 +393,7 @@ Users trust agents that show their work. Visibility enables:
 **Duration:** 2-4 hours
 
 **Tasks:**
+
 1. Increase task granularity in complex workflows:
    - `/generate-plan` (currently too coarse)
    - `/research` (add observable stages)
@@ -401,6 +403,7 @@ Users trust agents that show their work. Visibility enables:
 4. Gather user feedback
 
 **Success Criteria:**
+
 - No workflow silent for >2 minutes
 - Average task completion time: 30-90 seconds
 - User can see what's happening at any moment
@@ -410,12 +413,14 @@ Users trust agents that show their work. Visibility enables:
 **Duration:** 2 hours
 
 **Tasks:**
+
 1. Create workflow transparency validation script
 2. Document transparency patterns in workflows README
 3. Update workflow templates with transparency requirements
 4. Add pre-commit hook to verify progress announcements
 
 **Success Criteria:**
+
 - Automated validation catches missing announcements
 - All future workflows follow transparency standards
 - Documentation guides new workflow creation
@@ -446,6 +451,7 @@ Users trust agents that show their work. Visibility enables:
 ### ❌ Don't: Over-Announce
 
 **Bad:**
+
 ```typescript
 console.log("Reading file...")
 console.log("File read complete")

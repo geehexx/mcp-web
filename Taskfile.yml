@@ -245,6 +245,7 @@ tasks:
       - task: docs:lint:names
       - task: docs:validate:agents
       - task: docs:validate:links
+      - task: docs:validate:consistency
 
   docs:lint:markdown:
     desc: Lint markdown structure
@@ -367,6 +368,11 @@ tasks:
           exit 1
         fi
         echo "✓ Cross-reference validation passed"
+
+  docs:validate:consistency:
+    desc: Validate documentation file counts and consistency
+    cmds:
+      - "{{.UV}} run python scripts/validate_documentation.py"
 
   docs:fix:
     desc: Auto-fix markdown issues

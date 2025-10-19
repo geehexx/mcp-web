@@ -26,7 +26,7 @@ docs/
 │   ├── 0001-use-httpx-playwright-fallback.md
 │   ├── 0002-adopt-windsurf-workflow-system.md
 │   ├── 0018-workflow-architecture-v3.md
-│   ├── ... (17 ADRs total)
+│   ├── ... (19 ADRs total)
 │   └── template.md
 │
 ├── initiatives/                   # Strategic projects and roadmap
@@ -122,14 +122,15 @@ docs/
 │   ├── work-routing.md            # Sub-workflow: Routing logic
 │   └── work-session-protocol.md   # Sub-workflow: Session end protocol
 │
-├── rules/                         # Agent behavior rules (7 rules)
+├── rules/                         # Agent behavior rules (8 rules)
 │   ├── 00_agent_directives.md     # Core principles and persona
 │   ├── 01_testing_and_tooling.md  # Testing standards
 │   ├── 02_python_standards.md     # Code standards
 │   ├── 03_documentation_lifecycle.md  # Documentation rules
 │   ├── 04_security.md             # Security patterns
 │   ├── 05_operational_protocols.md    # Session end, progress communication
-│   └── 06_context_engineering.md  # File ops, git ops, context management
+│   ├── 06_context_engineering.md  # File ops, git ops, context management
+│   └── 07_task_system.md          # Task system and progress tracking
 │
 ├── docs/                          # Machine-readable quick-reference documentation
 │   ├── README.md                  # Index and guide for machine-readable docs
