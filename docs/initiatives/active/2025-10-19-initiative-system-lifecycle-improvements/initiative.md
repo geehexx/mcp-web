@@ -1,11 +1,14 @@
-# Initiative: Initiative System Lifecycle and Dependency Management Improvements
+---
+Status: Active
+Created: 2025-10-19
+Owner: AI Agent
+Priority: High
+Estimated Duration: 20-28 hours
+Target Completion: 2025-11-09
+Updated: 2025-10-19
+---
 
-**Status:** Active
-**Created:** 2025-10-19
-**Owner:** AI Agent
-**Priority:** High
-**Estimated Duration:** 20-28 hours
-**Target Completion:** 2025-11-09
+# Initiative: Initiative System Lifecycle and Dependency Management Improvements
 
 ---
 
@@ -30,6 +33,7 @@ Transform the initiative system from a documentation-centric approach to a fully
 #### 1. **Scaffolding Divergence** (HIGH)
 
 **Evidence:**
+
 - `docs/initiatives/README.md` lines 95-105: Manual `cp`/`mkdir` instructions
 - `scripts/scaffold.py`: Automated scaffolding exists but coexists with manual guidance
 - **Codemap Trace 1c**: Template scaffolding system present but documentation promotes manual
@@ -37,6 +41,7 @@ Transform the initiative system from a documentation-centric approach to a fully
  approach
 
 **Impact:**
+
 - Inconsistent initiative structures (some use folder-based, some flat-file)
 - Token waste: Manual scaffolding guidance duplicates automated tooling
 - Confusion: New initiatives may use outdated manual method
@@ -44,11 +49,13 @@ Transform the initiative system from a documentation-centric approach to a fully
 #### 2. **Phase Progression Integrity** (HIGH)
 
 **Evidence:**
+
 - No automated checks that phase markers match actual progress
 - Manual status updates in initiative files (can drift from reality)
 - **Codemap Trace 2b**: Phase progression tracking relies on human updating frontmatter
 
 **Impact:**
+
 - Status drift: Initiative marked "Active" but all tasks complete
 - Phase inconsistency: Phase 3 complete but Phase 2 still has open tasks
 - No validation that success criteria match current phase
@@ -56,12 +63,14 @@ Transform the initiative system from a documentation-centric approach to a fully
 #### 3. **Dependency Blind Spots** (CRITICAL)
 
 **Evidence:**
+
 - Dependencies listed in frontmatter (text-only, no validation)
 - No machine-readable dependency registry
 - **Codemap Trace 3a**: Inter-initiative dependencies exist but not enforced
 - Example: Initiative A depends on Initiative B, but no check if B is blocked/stalled
 
 **Impact:**
+
 - Hidden blockers: Dependent initiative starts before prerequisite complete
 - No cascade visibility: Blocker in Initiative A doesn't surface to dependents
 - Manual coordination required (email/Slack to discover dependencies)
@@ -69,11 +78,13 @@ Transform the initiative system from a documentation-centric approach to a fully
 #### 4. **Blocker Propagation Gap** (CRITICAL)
 
 **Evidence:**
+
 - Blockers listed per-initiative in "Blockers" section
 - No automated propagation to dependent initiatives
 - **Codemap Trace 3a**: Cross-initiative relationships parsed but not leveraged for blocker alerts
 
 **Impact:**
+
 - Wasted effort: Team works on dependent initiative unaware of upstream blocker
 - Delayed discovery: Find blocker only when attempting merge/integration
 - Coordination friction: 70%+ of blocker impact could be avoided with early visibility
@@ -81,11 +92,13 @@ Transform the initiative system from a documentation-centric approach to a fully
 #### 5. **Archival Guardrails Missing** (MEDIUM)
 
 **Evidence:**
+
 - `/archive-initiative` workflow moves files but doesn't validate completion
 - No check for unchecked success criteria
 - **Codemap Trace 5a**: Completion process exists but lacks validation gates
 
 **Impact:**
+
 - Incomplete initiatives archived (success criteria not met)
 - Dependencies not checked (archiving initiative that blocks others)
 - No verification blockers resolved before archival
@@ -97,6 +110,7 @@ Transform the initiative system from a documentation-centric approach to a fully
 ### Research-Backed Improvements
 
 **Sources:**
+
 1. **Portfolio Management Best Practices** (ITONICS, 2025): Standardized governance, real-time dashboards, automated reviews
 2. **Requirements Traceability Matrix** (6Sigma, 2025): Bidirectional tracking, change impact analysis, validation lifecycle
 3. **Quality Gates** (PMI/DTU ProjectLab, 2025): Go/kill/recycle/waiver decisions, criteria benchmarks, automated assessment
@@ -122,6 +136,7 @@ This initiative is organized into 6 phases based on industry lifecycle managemen
 **Goal:** Eliminate manual scaffolding, enforce automated tooling
 
 **Tasks:**
+
 - [ ] Deprecate manual instructions in `docs/initiatives/README.md`
 - [ ] Add lint check: Reject initiatives without required frontmatter fields
 - [ ] Enhance `scripts/scaffold.py` to validate folder-based vs flat-file decision
@@ -130,11 +145,13 @@ This initiative is organized into 6 phases based on industry lifecycle managemen
 - [ ] Document decision criteria (when to use folder vs flat-file)
 
 **Success Criteria:**
+
 - Zero manual `cp`/`mkdir` references in documentation
 - 100% of new initiatives use `task scaffold:*`
 - Lint catches all missing required fields
 
 **External Reference:**
+
 - Backstage.io scaffolder templates (YAML metadata, automated validation)
 - ITONICS standardized portfolio processes
 
@@ -143,7 +160,9 @@ This initiative is organized into 6 phases based on industry lifecycle managemen
 **Goal:** Machine-readable dependency tracking with automated validation
 
 **Tasks:**
+
 - [ ] Design dependency registry schema (YAML/JSON)
+
   ```yaml
   dependencies:
     initiatives:
@@ -155,6 +174,7 @@ This initiative is organized into 6 phases based on industry lifecycle managemen
       - name: "Python 3.10+ support"
         status: "met"
   ```
+
 - [ ] Implement parser: Extract dependencies from initiative frontmatter
 - [ ] Build validator: Check prerequisite initiatives not blocked/archived
 - [ ] Add pre-commit hook: Prevent commits if prerequisites unsatisfied
@@ -162,11 +182,13 @@ This initiative is organized into 6 phases based on industry lifecycle managemen
 - [ ] Integrate with `/detect-context` workflow (surface dependency issues)
 
 **Success Criteria:**
+
 - Dependency registry auto-generated from frontmatter
 - Pre-commit blocks if prerequisite blocked/incomplete
 - Dependency graph visualizes all relationships
 
 **External Reference:**
+
 - Requirements Traceability Matrix (6Sigma) - bidirectional tracking
 - Dependency management tools (Teamhood, Asana) - automated validation
 
@@ -175,6 +197,7 @@ This initiative is organized into 6 phases based on industry lifecycle managemen
 **Goal:** Ensure initiative phase markers match actual progress
 
 **Tasks:**
+
 - [ ] Implement phase consistency validator:
   - Check: If Phase 3 complete → Phase 1-2 must be complete
   - Check: If status="Completed" → all success criteria checked
@@ -185,11 +208,13 @@ This initiative is organized into 6 phases based on industry lifecycle managemen
 - [ ] Add to `/work-session-protocol` (validate before archival)
 
 **Success Criteria:**
+
 - 100% detection of phase inconsistencies
 - Automated status suggestions (accuracy >90%)
 - Weekly validation reports generated
 
 **External Reference:**
+
 - Quality Gates (PMI/DTU) - criteria benchmarks, automated assessment
 - Phase-gate process (ProjectManager.com) - gate validation checklist
 
@@ -198,6 +223,7 @@ This initiative is organized into 6 phases based on industry lifecycle managemen
 **Goal:** Cascade blocker alerts to all dependent initiatives
 
 **Tasks:**
+
 - [ ] Implement blocker classifier (technical, people, logistical, time)
 - [ ] Build propagation engine:
   - Detect blocker added to Initiative A
@@ -209,11 +235,13 @@ This initiative is organized into 6 phases based on industry lifecycle managemen
 - [ ] Create blocker dashboard (markdown table in PROJECT_SUMMARY.md)
 
 **Success Criteria:**
+
 - Blockers auto-propagate to dependents within 1 commit
 - Resolution auto-removes blocker from dependents
 - Portfolio-wide blocker dashboard generated
 
 **External Reference:**
+
 - Blocker management (Devot Team) - classification, prioritization, cascade analysis
 - Agile blocker handling (daily stand-ups, sprint retrospectives)
 
@@ -222,7 +250,9 @@ This initiative is organized into 6 phases based on industry lifecycle managemen
 **Goal:** Multi-gate validation before moving initiatives to `completed/`
 
 **Tasks:**
+
 - [ ] Design archival validation gates:
+
   ```yaml
   gates:
     - name: "Success Criteria"
@@ -238,17 +268,20 @@ This initiative is organized into 6 phases based on industry lifecycle managemen
       check: "Updates section has completion entry"
       severity: "warning"
   ```
+
 - [ ] Implement gate validator script
 - [ ] Update `/archive-initiative` workflow with gate checks
 - [ ] Add bypass mechanism (`--force-archive` with justification required)
 - [ ] Generate archival report (gate pass/fail status)
 
 **Success Criteria:**
+
 - Zero incomplete initiatives archived (without `--force`)
 - All archival gates enforced
 - Archival reports document completion status
 
 **External Reference:**
+
 - Quality Gates (DTU ProjectLab) - go/kill/recycle/waiver decisions
 - Stage-gate governance (ITONICS) - gate criteria, performance standards
 
@@ -257,6 +290,7 @@ This initiative is organized into 6 phases based on industry lifecycle managemen
 **Goal:** Integrate all improvements, update documentation
 
 **Tasks:**
+
 - [ ] Update `docs/initiatives/README.md` with new automation
 - [ ] Create `docs/guides/INITIATIVE_LIFECYCLE.md` (comprehensive guide)
 - [ ] Update `.windsurf/workflows/archive-initiative.md` (include validation gates)
@@ -266,6 +300,7 @@ This initiative is organized into 6 phases based on industry lifecycle managemen
 - [ ] Update `DOCUMENTATION_STRUCTURE.md` if needed
 
 **Success Criteria:**
+
 - Documentation reflects automated workflows
 - All workflows reference new validation
 - ADR documents decision rationale
@@ -297,9 +332,11 @@ This initiative is organized into 6 phases based on industry lifecycle managemen
 ## Blockers
 
 **Current Blockers:**
+
 - None (can start immediately)
 
 **Potential Blockers:**
+
 - Complexity of dependency graph generation (mitigate: use existing libraries like `networkx`)
 - Performance of pre-commit hooks (mitigate: optimize validators, cache results)
 
@@ -308,18 +345,22 @@ This initiative is organized into 6 phases based on industry lifecycle managemen
 ## Dependencies
 
 **Internal Dependencies:**
+
 - **Initiative System** (Documentation): Status: Active, stable foundation
 - **Scaffolding Scripts** (scripts/scaffold.py): Status: Complete, ready to enhance
 - **Archive Workflow** (.windsurf/workflows/archive-initiative.md): Status: Active, ready to enhance
 
 **External Dependencies:**
+
 - **Python libraries**: pyyaml, python-frontmatter (already installed)
 - **Git hooks**: pre-commit framework (already configured)
 
 **Prerequisite Initiatives:**
+
 - None (builds on existing initiative system)
 
 **Blocks These Initiatives:**
+
 - None (nice-to-have improvements, not blocking other work)
 
 ---
@@ -327,6 +368,7 @@ This initiative is organized into 6 phases based on industry lifecycle managemen
 ## Related Initiatives
 
 **Synergistic:**
+
 - [Workflow Automation Enhancement](../2025-10-18-workflow-automation-enhancement/initiative.md) - Phase 1-6 automation patterns apply
 - [Task System Validation](../2025-10-19-task-system-validation-enforcement/initiative.md) - Similar validation philosophy
 - [Windsurf Workflows V2](../2025-10-17-windsurf-workflows-v2-optimization/initiative.md) - Quality automation (Phase 8)
@@ -381,11 +423,13 @@ This initiative is organized into 6 phases based on industry lifecycle managemen
 Initiative created after comprehensive research and gap analysis.
 
 **Research Conducted:**
+
 - Analyzed 10+ external sources on portfolio management, dependency tracking, quality gates
 - Compared current initiative system against industry best practices
 - Identified 5 critical gaps (scaffolding divergence, dependency blindness, blocker propagation, phase integrity, archival validation)
 
 **Codemap Analysis:**
+
 - Trace 1c: Scaffolding system exists but coexists with manual guidance
 - Trace 2b: Phase progression tracking manual, no automated validation
 - Trace 3a: Dependencies documented but not machine-validated or enforced

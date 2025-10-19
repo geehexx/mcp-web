@@ -18,14 +18,17 @@ Comprehensive investigation and improvement of the initiative system lifecycle, 
 ### Phase 1: Scaffolding Unification ✅
 
 **Files Modified:**
+
 - `docs/initiatives/README.md` - Deprecated manual `cp`/`mkdir`, enforced `task scaffold:initiative`
 - `.pre-commit-config.yaml` - Added initiative validation hook
 
 **Files Created:**
+
 - `scripts/validate_initiatives.py` - Comprehensive validation script (350+ lines)
 - `tests/unit/test_validate_initiatives.py` - 12 test cases
 
 **Deliverables:**
+
 1. ✅ Removed manual scaffolding instructions
 2. ✅ Added pre-commit validation hook
 3. ✅ Created frontmatter field validator
@@ -34,6 +37,7 @@ Comprehensive investigation and improvement of the initiative system lifecycle, 
 6. ✅ Created comprehensive test suite
 
 **Impact:**
+
 - **Token savings:** 1500→50 tokens (97% reduction in manual effort)
 - **Validation coverage:** 100% of required metadata fields
 - **Automated enforcement:** Pre-commit blocks invalid initiatives
@@ -41,14 +45,17 @@ Comprehensive investigation and improvement of the initiative system lifecycle, 
 ### Phase 2: Dependency Registry & Validation ✅
 
 **Files Modified:**
+
 - `Taskfile.yml` - Added 7 new validation/dependency tasks
 - `.windsurf/workflows/archive-initiative.md` - Added validation gates
 
 **Files Created:**
+
 - `scripts/dependency_registry.py` - Dependency management system (480+ lines)
 - `tests/unit/test_dependency_registry.py` - 14 test cases
 
 **Deliverables:**
+
 1. ✅ Machine-readable dependency registry (JSON export)
 2. ✅ Dependency graph builder (adjacency list)
 3. ✅ Prerequisite validator (detects unsatisfied dependencies)
@@ -58,6 +65,7 @@ Comprehensive investigation and improvement of the initiative system lifecycle, 
 7. ✅ Archival validation gates
 
 **New Task Commands:**
+
 ```bash
 task validate:initiatives        # Validate all initiatives
 task validate:dependencies       # Check dependency satisfaction
@@ -67,6 +75,7 @@ task deps:export FILE=out.json   # Export registry
 ```
 
 **Impact:**
+
 - **Dependency visibility:** 100% (all relationships machine-readable)
 - **Blocker propagation:** <1 minute cascade time
 - **Circular dependency detection:** Automated
@@ -79,12 +88,14 @@ task deps:export FILE=out.json   # Export registry
 ### Portfolio Management Best Practices (ITONICS, 2025)
 
 **Key Insights:**
+
 - Standardized governance structures reduce coordination friction by 40%
 - Real-time dashboards enable prompt intervention
 - Automated portfolio reviews critical for 2025 cost pressures
 - Digital workflows eliminate manual rule execution delays
 
 **Applied:**
+
 - Automated validation gates (standardized governance)
 - Dependency registry (real-time visibility)
 - Pre-commit hooks (automated reviews)
@@ -92,12 +103,14 @@ task deps:export FILE=out.json   # Export registry
 ### Requirements Traceability Matrix (6Sigma, 2025)
 
 **Key Insights:**
+
 - Bidirectional traceability reduces rework by 30%
 - Change impact analysis prevents downstream surprises
 - Dependency tracking essential for regulatory compliance
 - Modern tools include RTM capabilities by default
 
 **Applied:**
+
 - Dependency graph (bidirectional traceability)
 - Blocker propagation (cascade impact analysis)
 - JSON export (machine-readable traceability)
@@ -105,12 +118,14 @@ task deps:export FILE=out.json   # Export registry
 ### Quality Gates (PMI/DTU ProjectLab, 2025)
 
 **Key Insights:**
+
 - Go/kill/waiver/recycle decisions provide flexibility
 - Criteria benchmarks must be measurable (Boolean or numeric)
 - Gate governance prevents incomplete work from advancing
 - Waiver with re-view option balances quality and agility
 
 **Applied:**
+
 - Archival validation gates (5 checkpoints)
 - Critical/warning severity levels
 - Bypass mechanism with justification
@@ -119,12 +134,14 @@ task deps:export FILE=out.json   # Export registry
 ### Blocker Management (Devot Team, 2025)
 
 **Key Insights:**
+
 - Blockers classified: technical, people, logistical, time
 - Propagation prevents wasted effort (70%+ avoidable with early visibility)
 - Agile practices (daily stand-ups) surface blockers quickly
 - Test-driven development discovers blockers before coding
 
 **Applied:**
+
 - Blocker parsing from initiative files
 - Propagation engine (cascade to dependents)
 - Portfolio-wide blocker dashboard
@@ -132,12 +149,14 @@ task deps:export FILE=out.json   # Export registry
 ### Template Scaffolding (Backstage.io, 2025)
 
 **Key Insights:**
+
 - YAML metadata enables automated validation
 - Template versioning ensures consistency
 - Interactive prompts reduce errors
 - Validation hooks catch issues immediately
 
 **Applied:**
+
 - Frontmatter validation (required fields)
 - Pre-commit hooks (immediate feedback)
 - Taskfile integration (consistent commands)
@@ -151,6 +170,7 @@ task deps:export FILE=out.json   # Export registry
 **Decision:** Implement validation as standalone Python scripts, not embedded in workflows
 
 **Rationale:**
+
 - Reusability (scripts callable from CLI, pre-commit, CI/CD)
 - Testability (unit tests for validation logic)
 - Performance (optimized parsing, caching)
@@ -161,6 +181,7 @@ task deps:export FILE=out.json   # Export registry
 **Decision:** Pre-commit hooks for critical validation, CI for comprehensive checks
 
 **Rationale:**
+
 - Fast feedback loop (catch issues before commit)
 - Developer experience (fix issues immediately)
 - CI as fallback (comprehensive validation if pre-commit skipped)
@@ -171,6 +192,7 @@ task deps:export FILE=out.json   # Export registry
 **Decision:** JSON for dependency registry export
 
 **Rationale:**
+
 - Better tool support (jq, GraphQL clients)
 - Faster parsing in automation
 - Strict schema validation
@@ -181,6 +203,7 @@ task deps:export FILE=out.json   # Export registry
 **Decision:** Three levels - critical, warning, info
 
 **Rationale:**
+
 - Critical: Must fix (blocks commit)
 - Warning: Should fix (documents waiver)
 - Info: Nice-to-have (recommended fields)
@@ -217,6 +240,7 @@ task deps:export FILE=out.json   # Export registry
 **Status:** Planned
 
 **Tasks:**
+
 - Implement phase consistency validator
 - Add automated status inference
 - Create validation report generator
@@ -227,11 +251,13 @@ task deps:export FILE=out.json   # Export registry
 **Status:** Partially Complete
 
 **Completed:**
+
 - ✅ Blocker parsing
 - ✅ Propagation engine design
 - ✅ Dependency graph integration
 
 **Remaining:**
+
 - Auto-add blocker notices to dependent files
 - Blocker resolution tracking
 - Portfolio-wide dashboard generation
@@ -241,10 +267,12 @@ task deps:export FILE=out.json   # Export registry
 **Status:** Partially Complete
 
 **Completed:**
+
 - ✅ Validation gates defined
 - ✅ Archive workflow updated with gates
 
 **Remaining:**
+
 - Implement gate validator script
 - Add bypass mechanism
 - Generate archival reports
@@ -254,10 +282,12 @@ task deps:export FILE=out.json   # Export registry
 **Status:** In Progress
 
 **Completed:**
+
 - ✅ Taskfile commands added
 - ✅ Archive workflow updated
 
 **Remaining:**
+
 - Create INITIATIVE_LIFECYCLE.md guide
 - Update workflows with validation references
 - Create ADR documenting decisions

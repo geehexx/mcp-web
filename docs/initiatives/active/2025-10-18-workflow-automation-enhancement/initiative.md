@@ -1,11 +1,14 @@
-# Initiative: Workflow Automation Enhancement
+---
+Status: Active
+Created: 2025-10-18
+Owner: AI Agent
+Priority: High
+Estimated Duration: 4-5 weeks
+Target Completion: 2025-11-22
+Updated: 2025-10-18
+---
 
-**Status:** Proposed
-**Created:** 2025-10-18
-**Owner:** @ai-agent
-**Priority:** High
-**Estimated Duration:** 4-5 weeks (20-25 hours)
-**Target Completion:** 2025-11-22
+# Initiative: Workflow Automation Enhancement
 
 ---
 

@@ -1,10 +1,14 @@
-# Initiative: Windsurf Workflows & Rules Improvements
+---
+Status: Completed
+Created: 2025-10-16
+Owner: AI Agent
+Priority: High
+Estimated Duration: 8 hours
+Target Completion: 2025-10-17
+Updated: 2025-10-17
+---
 
-**Status:** Completed
-**Created:** 2025-10-16
-**Target Completion:** 2025-10-17
-**Owner:** AI Agent
-**Priority:** High
+# Initiative: Windsurf Workflows & Rules Improvements
 
 ---
 

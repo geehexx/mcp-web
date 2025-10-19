@@ -1,11 +1,14 @@
-# Initiative: MCP Server File System Support
+---
+Status: Active
+Created: 2025-10-19
+Owner: AI Agent
+Priority: Medium
+Estimated Duration: 6-8 hours
+Target Completion: 2025-11-10
+Updated: 2025-10-19
+---
 
-**Status:** Active
-**Created:** 2025-10-19
-**Owner:** AI Agent
-**Priority:** Medium
-**Estimated Duration:** 6-8 hours
-**Target Completion:** 2025-11-10
+# Initiative: MCP Server File System Support
 
 ---
 

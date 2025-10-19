@@ -1,11 +1,14 @@
-# Initiative: Session Summary Mining - Advanced Automation
+---
+Status: Active
+Created: 2025-10-19
+Owner: AI Agent
+Priority: Medium
+Estimated Duration: 12-15 hours
+Target Completion: 2025-12-01
+Updated: 2025-10-19
+---
 
-**Status:** Active (Blocked)
-**Created:** 2025-10-19
-**Owner:** AI Agent
-**Priority:** Medium
-**Estimated Duration:** 12-15 hours
-**Target Completion:** 2025-12-01
+# Initiative: Session Summary Mining - Advanced Automation
 
 ---
 

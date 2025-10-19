@@ -1,11 +1,14 @@
-# Initiative: Quality Automation and Monitoring
+---
+Status: Active
+Created: 2025-10-19
+Owner: AI Agent
+Priority: High
+Estimated Duration: 8-10 hours
+Target Completion: 2025-11-15
+Updated: 2025-10-19
+---
 
-**Status:** Active
-**Created:** 2025-10-19
-**Owner:** AI Agent
-**Priority:** High
-**Estimated Duration:** 8-10 hours
-**Target Completion:** 2025-11-15
+# Initiative: Quality Automation and Monitoring
 
 ---
 

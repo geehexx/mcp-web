@@ -1,10 +1,14 @@
-# Initiative: Fix Security Unit Tests
+---
+Status: Completed
+Created: 2025-10-15
+Owner: AI Agent
+Priority: Medium
+Estimated Duration: 2-3 hours
+Target Completion: 2025-10-16
+Updated: 2025-10-16
+---
 
-**Status:** Active
-**Created:** 2025-10-15
-**Owner:** TBD
-**Priority:** Medium
-**Estimated Duration:** 2-3 hours
+# Initiative: Fix Security Unit Tests
 
 ---
 

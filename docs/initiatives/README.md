@@ -142,6 +142,7 @@ task scaffold:initiative NAME="your-initiative-name" TYPE="folder" PRIORITY="hig
 ```
 
 **The scaffolding system will:**
+
 - ✅ Create proper directory structure (folder-based or flat-file)
 - ✅ Generate initiative file with required frontmatter fields
 - ✅ Use correct `YYYY-MM-DD` date format automatically
@@ -150,10 +151,12 @@ task scaffold:initiative NAME="your-initiative-name" TYPE="folder" PRIORITY="hig
 - ✅ Initialize with template content
 
 **Decision criteria (scaffolding will prompt):**
+
 - **Flat file (`.md`)**: Small (<1000 words), single phase, no artifacts
 - **Folder-based**: Large (>1000 words), multiple phases, or supporting artifacts
 
 **Examples of generated names:**
+
 - `2025-10-15-quality-foundation/` (folder-based)
 - `2025-10-18-new-feature.md` (flat-file)
 - `2025-10-20-documentation-infrastructure/` (folder-based)

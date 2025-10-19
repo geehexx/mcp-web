@@ -1,11 +1,14 @@
-# Initiative: Task System Validation and Enforcement
+---
+Status: Active
+Created: 2025-10-19
+Owner: AI Agent
+Priority: Critical
+Estimated Duration: 6-8 hours
+Target Completion: 2025-10-26
+Updated: 2025-10-19
+---
 
-**Status:** Active
-**Created:** 2025-10-19
-**Owner:** AI Agent
-**Priority:** Critical
-**Estimated Duration:** 6-8 hours
-**Target Completion:** 2025-10-26
+# Initiative: Task System Validation and Enforcement
 
 ---
 

@@ -1,12 +1,14 @@
-# Initiative: Convert Legacy Decisions to ADR Format
+---
+Status: Completed
+Created: 2025-10-15
+Owner: AI Agent
+Priority: High
+Estimated Duration: 2 hours
+Target Completion: 2025-10-15
+Updated: 2025-10-15
+---
 
-**Status:** Complete
-**Created:** 2025-10-15
-**Completed:** 2025-10-15
-**Priority:** High
-**Owner:** AI Agent
-**Completed:** 2025-10-15
-**Actual Duration:** 1.5 hours
+# Initiative: Convert Legacy Decisions to ADR Format
 
 ---
 

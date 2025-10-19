@@ -1,12 +1,14 @@
-# Initiative: Windsurf Workflows v2 Optimization
+---
+Status: Active
+Created: 2025-10-17
+Owner: AI Agent Team
+Priority: High
+Estimated Duration: 46-69 hours
+Target Completion: 2025-11-25
+Updated: 2025-10-18
+---
 
-**Status:** Active
-**Priority:** High
-**Owner:** AI Agent Team
-**Created:** 2025-10-17
-**Updated:** 2025-10-18
-**Target Completion:** 2025-11-25
-**Estimated Effort:** 46-69 hours (expanded from 29-41)
+# Initiative: Windsurf Workflows v2 Optimization
 
 ---
 
