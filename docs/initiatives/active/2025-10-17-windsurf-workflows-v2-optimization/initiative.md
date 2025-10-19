@@ -136,6 +136,14 @@ This initiative is organized into 9 phases (expanded from 7 based on gap analysi
 - Token savings: 18,760 bytes (~4,690 tokens, 40% reduction)
 - All success metrics exceeded
 
+**Known Issues to Address in Future Phases:**
+
+- **Pre-existing markdown lint warnings** (detected 2025-10-19)
+  - `.windsurf/workflows/detect-context.md`: 5 x MD036 (emphasis used as heading)
+  - Lines 79, 86, 95, 103, 110 use **bold** instead of proper heading syntax
+  - Priority: LOW (cosmetic, doesn't affect functionality)
+  - Recommend: Fix during Phase 8 (Quality Automation)
+
 **Phase 4: Complete** ✅ (2025-10-18)
 
 - Decomposed work.md into 3 files (32% reduction)
