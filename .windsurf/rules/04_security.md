@@ -3,7 +3,7 @@ created: "2025-10-15"
 updated: "2025-10-19"
 trigger: model_decision
 description: Apply when dealing with security-sensitive code including API calls, user input, LLM interactions, file operations, or authentication
-globs: ["**/*.py", "**/*.ini", "**/*.yml", "**/*.yaml"]
+globs: "**/*.py, **/*.ini, **/*.yml, **/*.yaml"
 category: security
 tokens: 1385
 applyTo:

@@ -71,8 +71,9 @@ def validate_rule_file(file_path: Path) -> list[str]:
         globs = frontmatter.get("globs")
         if not globs:
             errors.append(f"{file_path}: 'glob' trigger requires 'globs' field")
+        # Accept both YAML array and comma-separated string
         elif not isinstance(globs, list | str):
-            errors.append(f"{file_path}: 'globs' field must be a YAML array or string")
+            errors.append(f"{file_path}: 'globs' field must be a list or string")
 
     # Validate created/updated fields (recommended but not required)
     created = frontmatter.get("created")

@@ -35,7 +35,7 @@ status: active
 
 **Examples in this project:**
 
-- `00_agent_directives.md` - Core agent behavior
+- `00_agent_directives.md` - Core agent persona and principles
 
 ---
 
@@ -79,6 +79,7 @@ status: active
 - `04_security.md` - Security-sensitive operations
 - `05_operational_protocols.md` - Session management protocols
 - `06_context_engineering.md` - File and git operations
+- `07_task_system.md` - Task planning and orchestration
 
 ---
 
@@ -118,16 +119,16 @@ status: active
 - `02_python_standards.md` - Python source files
 - `03_documentation_lifecycle.md` - Markdown documentation
 
-**Important:** The `globs` field must be a proper YAML array:
+**Important:** The `globs` field accepts both YAML array and comma-separated string:
 
 ```yaml
-# ✅ CORRECT
+# ✅ CORRECT (YAML array)
 globs:
   - "**/*.py"
   - tests/**/*.py
   - "*.md"
 
-# ❌ WRONG
+# ✅ ALSO CORRECT (comma-separated string)
 globs: **/*.py, tests/**/*.py, *.md
 ```
 

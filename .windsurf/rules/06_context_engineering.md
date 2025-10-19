@@ -1,4 +1,6 @@
 ---
+created: "2025-10-18"
+updated: "2025-10-19"
 trigger: model_decision
 description: File operations, git operations, context management, and .windsurf/ directory structure enforcement
 category: operations

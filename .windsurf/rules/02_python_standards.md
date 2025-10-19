@@ -3,8 +3,7 @@ created: "2025-10-15"
 updated: "2025-10-18"
 trigger: glob
 description: Python code style, type hints, async patterns, and best practices.
-globs:
-  - "**/*.py"
+globs: "**/*.py"
 category: language
 tokens: 1549
 applyTo:
