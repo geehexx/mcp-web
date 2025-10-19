@@ -376,3 +376,28 @@ This comprehensive guide covers:
 
 **Last Updated:** 2025-10-18
 **Maintained By:** Core Team
+
+## Initiative Directory Index
+<!-- AUTO:INITIATIVE-INDEX:START -->
+### Active Initiatives
+
+- [`2025-10-15-performance-optimization-pipeline/`](docs/initiatives/active/2025-10-15-performance-optimization-pipeline)
+- [`2025-10-17-windsurf-workflows-v2-optimization/`](docs/initiatives/active/2025-10-17-windsurf-workflows-v2-optimization)
+- [`2025-10-19-mcp-file-system-support/`](docs/initiatives/active/2025-10-19-mcp-file-system-support)
+- [`2025-10-19-quality-automation-and-monitoring/`](docs/initiatives/active/2025-10-19-quality-automation-and-monitoring)
+- [`2025-10-19-session-summary-mining-advanced/`](docs/initiatives/active/2025-10-19-session-summary-mining-advanced)
+- [`2025-10-19-task-system-validation-enforcement/`](docs/initiatives/active/2025-10-19-task-system-validation-enforcement)
+
+### Completed Initiatives
+
+- [`2025-10-15-quality-foundation/`](docs/initiatives/completed/2025-10-15-quality-foundation)
+- [`2025-10-16-convert-decisions-to-adrs.md`](docs/initiatives/completed/2025-10-16-convert-decisions-to-adrs.md)
+- [`2025-10-16-fix-security-unit-tests.md`](docs/initiatives/completed/2025-10-16-fix-security-unit-tests.md)
+- [`2025-10-16-windsurf-workflow-rules-improvements.md`](docs/initiatives/completed/2025-10-16-windsurf-workflow-rules-improvements.md)
+- [`2025-10-18-markdown-quality-comprehensive-fix/`](docs/initiatives/completed/2025-10-18-markdown-quality-comprehensive-fix)
+- [`2025-10-18-workflow-architecture/`](docs/initiatives/completed/2025-10-18-workflow-architecture)
+- [`2025-10-18-workflow-artifacts-and-transparency/`](docs/initiatives/completed/2025-10-18-workflow-artifacts-and-transparency)
+- [`2025-10-18-workflow-automation-enhancement/`](docs/initiatives/completed/2025-10-18-workflow-automation-enhancement)
+- [`2025-10-19-initiative-system-lifecycle-improvements/`](docs/initiatives/completed/2025-10-19-initiative-system-lifecycle-improvements)
+- [`2025-10-19-session-summary-consolidation-workflow/`](docs/initiatives/completed/2025-10-19-session-summary-consolidation-workflow)
+<!-- AUTO:INITIATIVE-INDEX:END -->

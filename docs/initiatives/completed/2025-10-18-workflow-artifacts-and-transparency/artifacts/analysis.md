@@ -28,8 +28,8 @@ Multiple systemic issues discovered affecting workflow outputs, task transparenc
 
 In commit `487eae7` (2025-10-18), created both:
 
-- `docs/initiatives/active/2025-10-18-workflow-automation-enhancement.md` (flat file)
-- `docs/initiatives/active/2025-10-18-workflow-automation-enhancement/` (folder with subdocs)
+- `docs/initiatives/completed/2025-10-18-workflow-automation-enhancement.md` (flat file)
+- `docs/initiatives/completed/2025-10-18-workflow-automation-enhancement/` (folder with subdocs)
 
 This violates ADR-0013 hybrid structure rules:
 

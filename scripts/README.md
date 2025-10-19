@@ -218,6 +218,6 @@ task validate:initiatives:ci
 
 ## References
 
-- Initiative: [2025-10-18-workflow-automation-enhancement.md](../docs/initiatives/active/2025-10-18-workflow-automation-enhancement.md)
-- Technical Design: [technical-design.md](../docs/initiatives/active/2025-10-18-workflow-automation-enhancement/technical-design.md)
+- Initiative: [2025-10-18-workflow-automation-enhancement.md](../docs/initiatives/completed/2025-10-18-workflow-automation-enhancement.md)
+- Technical Design: [technical-design.md](../docs/initiatives/completed/2025-10-18-workflow-automation-enhancement/technical-design.md)
 - ADR-0013: [Initiative Documentation Standards](../docs/adr/0013-initiative-documentation-standards.md)
