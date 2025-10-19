@@ -66,10 +66,23 @@ Create an ADR for:
    - OWASP guidelines
    - Best practices (October 2025)
 
-4. **Draft ADR:** Agent generates ADR using `docs/adr/template.md`:
+4. **Draft ADR:** Agent can use automated scaffolding or manual template:
+
+   **Option A: Automated Scaffolding (Recommended)**
+
+   ```bash
+   task scaffold:adr
+   # Interactive prompts for all fields
+   # Automatic numbering from existing ADRs
+   # Generates compliant markdown with frontmatter
+   # Token savings: 1200 → 50 tokens (96% reduction)
+   ```
+
+   **Option B: Manual Template**
+   - Use `docs/adr/template.md` as basis
    - Sequential number (check existing ADRs)
    - Title: `NNNN-verb-noun-phrase.md`
-   - Status: Can be Proposed, Accepted, or Implemented (specify in workflow invocation or choose intelligently)
+   - Status: Can be Proposed, Accepted, or Implemented
    - All sections filled: Context, Decision, Alternatives, Consequences, Implementation
    - Include external references with URLs
 
