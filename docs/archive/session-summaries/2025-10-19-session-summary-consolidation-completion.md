@@ -54,7 +54,7 @@ Completed entire Session Summary Consolidation Workflow initiative (all 3 phases
 
 #### A. Task System Validation and Enforcement (CRITICAL)
 
-**Path:** `docs/initiatives/active/2025-10-19-task-system-validation-enforcement/`
+**Path:** `docs/initiatives/completed/2025-10-19-task-system-validation-enforcement/`
 **Duration:** 6-8 hours
 **Priority:** Critical
 
@@ -161,7 +161,7 @@ Both new initiatives use enhanced template with:
 
 ## Files Created
 
-1. `docs/initiatives/active/2025-10-19-task-system-validation-enforcement/initiative.md` (202 lines)
+1. `docs/initiatives/completed/2025-10-19-task-system-validation-enforcement/initiative.md` (202 lines)
 2. `docs/initiatives/active/2025-10-19-quality-automation-and-monitoring/initiative.md` (227 lines)
 3. `docs/initiatives/completed/2025-10-19-session-summary-consolidation-workflow/artifacts/original-comprehensive-plan/README.md` (93 lines)
 

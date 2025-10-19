@@ -10,6 +10,8 @@ Target Completion: 2025-10-26
 Updated: 2025-10-19
 ---
 
+> **⚠️ ARCHIVED:** This initiative was completed on 2025-10-19.
+
 # Initiative: Task System Validation and Enforcement
 
 ---
