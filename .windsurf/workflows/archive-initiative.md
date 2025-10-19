@@ -1,13 +1,14 @@
 ---
 created: "2025-10-17"
-updated: "2025-10-18"
-description: Archive completed initiative
+updated: "2025-10-19"
+description: Archive completed initiative or handle superseded initiatives
 auto_execution_mode: 3
 category: Documentation
-complexity: 40
-tokens: 409
+complexity: 45
+tokens: 550
 dependencies: []
 status: active
+version: 1.1.0
 ---
 
 # Archive Initiative Workflow
@@ -60,6 +61,71 @@ update_plan({
 3. **Update index:** Update `docs/initiatives/README.md` or tracking documents.
 
 4. **Update cross-references:** Adjust any documentation pointing to the initiative's old location.
+
+## Special Case: Superseded Initiatives
+
+**When to Use:** Initiative was not completed but replaced/split into other initiatives.
+
+### Difference from Archival
+
+- **Completed:** Work finished, move to `completed/`, add archived notice
+- **Superseded:** Work replaced, move as artifact to superseding initiative
+
+### Process for Superseded Initiatives
+
+1. **Identify superseding initiative(s):**
+   - If split into multiple: Choose the primary/NOW initiative
+   - If replaced by one: Use that initiative
+
+2. **Move as artifact:**
+
+   ```bash
+   # Create artifacts directory if needed
+   mkdir -p docs/initiatives/active/[superseding-initiative]/artifacts
+
+   # Move superseded initiative
+   mv docs/initiatives/active/[superseded-name] \
+      docs/initiatives/active/[superseding-initiative]/artifacts/[descriptive-name]
+   ```
+
+3. **Create README explaining supersession:**
+   Create `artifacts/[descriptive-name]/README.md` with:
+   - What happened (why superseded)
+   - What replaced it (links to new initiatives)
+   - What was preserved (research, analysis)
+   - Lessons learned
+
+4. **Update superseding initiative:**
+   Add reference in initiative.md Updates section:
+
+   ```markdown
+   ### YYYY-MM-DD (Supersedes Previous Plan)
+
+   This initiative supersedes [original-name].
+   Original research preserved in artifacts/[name]/.
+   ```
+
+5. **Update cross-references:**
+   - Update any external links to point to new initiative(s)
+   - Add forwarding notice if needed
+
+### Example
+
+```markdown
+# Superseded Initiative (in artifacts/original-plan/README.md)
+
+**Status:** Superseded by pragmatic split
+**Date:** 2025-10-19
+
+## What Replaced It
+- [Initiative A](../../initiative.md) - NOW work
+- [Initiative B](../../../other-initiative/initiative.md) - Future work
+
+## What Was Preserved
+Original research in artifacts/ directory...
+```
+
+---
 
 ## Phase 3: Validation
 
@@ -121,3 +187,15 @@ mv docs/initiatives/active/2025-10-15-quality-foundation/ \
 # Commit
 git commit -m "chore(docs): archive Q4 2024 quality foundation initiative"
 ```
+
+---
+
+## References
+
+- [ADR-0013: Initiative Documentation Standards](../../docs/adr/0013-initiative-documentation-standards.md)
+- [DOCUMENTATION_STRUCTURE.md](../../docs/DOCUMENTATION_STRUCTURE.md)
+
+---
+
+**Version:** 1.1 (Added superseded initiative handling)
+**Last Updated:** 2025-10-19
