@@ -89,6 +89,7 @@ python scripts/scaffold.py --type initiative --config /tmp/init-config.yaml
 ```
 
 **Available templates:**
+
 - `initiative` - Flat-file initiative
 - `initiative-folder` - Folder-based initiative
 - `adr` - Architecture Decision Record

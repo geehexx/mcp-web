@@ -566,7 +566,7 @@ tasks:
 
   # Scaffolding tasks (automation)
   # NOTE: Interactive tasks below are for HUMAN use only. AI agents should use config mode.
-  
+
   scaffold:initiative:
     desc: Create new flat-file initiative from template (interactive - humans only)
     cmds:
