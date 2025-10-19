@@ -49,7 +49,13 @@ Do NOT plan for:
 
 ## Stage 0: Create Planning Task Plan
 
-🔄 **Entering /plan workflow**
+🔄 **Entering Stage 0: Create Planning Task Plan**
+
+**Print workflow entry announcement:**
+
+```markdown
+🔄 **Entering /plan:** Research-driven comprehensive planning workflow
+```
 
 **MANDATORY:** Create task list before planning.
 
@@ -65,8 +71,8 @@ update_plan({
   explanation: "🔄 Starting /plan workflow",
   plan: [
     { step: "1. /plan - Define problem and requirements", status: "in_progress" },
-    { step: "2. /research - Research best practices and patterns", status: "pending" },
-    { step: "3. /generate-plan - Generate structured implementation plan", status: "pending" },
+    { step: "2. /plan - Research best practices", status: "pending" },
+    { step: "3. /plan - Generate structured plan", status: "pending" },
     { step: "4. /plan - Create initiative document", status: "pending" },
     { step: "5. /plan - Create ADR (if needed)", status: "pending" },
     { step: "6. /plan - Present plan to user", status: "pending" }
@@ -74,7 +80,7 @@ update_plan({
 })
 ```
 
-**Note:** Steps 2-3 use child workflow prefixes because those workflows execute the work. Steps 1, 4-6 use `/plan` prefix for orchestration tasks performed by this workflow.
+**Note:** Steps 2-3 are orchestration steps that will delegate to `/research` and `/generate-plan` sub-workflows. Those sub-workflows will be added as subtasks when called.
 
 ✓ Task plan created
 
@@ -124,9 +130,51 @@ update_plan({
 **Estimated Effort:** [N-M hours]
 ```
 
+**Print stage completion:**
+
+```markdown
+📋 **Stage 1 Complete:** Requirements and success criteria defined
+```
+
+**Update task plan:**
+
+```typescript
+update_plan({
+  explanation: "Requirements defined, proceeding to research",
+  plan: [
+    { step: "1. /plan - Define problem and requirements", status: "completed" },
+    { step: "2. /plan - Research best practices", status: "in_progress" },
+    // ... rest of tasks
+  ]
+})
+```
+
 ---
 
 ## Stage 2: Research & Discovery
+
+🔄 **Entering Stage 2: Research & Discovery**
+
+**Before calling `/research`, add sub-workflow task:**
+
+```typescript
+update_plan({
+  explanation: "↪️ Delegating to /research for best practices",
+  plan: [
+    { step: "1. /plan - Define problem and requirements", status: "completed" },
+    { step: "2. /plan - Research best practices", status: "in_progress" },
+    { step: "  2.1. /research - Gather research findings", status: "in_progress" },
+    { step: "3. /plan - Generate structured plan", status: "pending" },
+    // ... rest of tasks
+  ]
+})
+```
+
+**Print delegation announcement:**
+
+```markdown
+↪️ **Delegating to /research:** Gathering best practices and patterns
+```
 
 **Call `/research` workflow:**
 
@@ -141,9 +189,53 @@ update_plan({
 
 **See:** `.windsurf/workflows/research.md`
 
+**After `/research` returns, print completion and update tasks:**
+
+```markdown
+📋 **Research Complete:** [N] sources analyzed, recommendation documented
+```
+
+```typescript
+update_plan({
+  explanation: "Research complete, proceeding to plan generation",
+  plan: [
+    { step: "1. /plan - Define problem and requirements", status: "completed" },
+    { step: "2. /plan - Research best practices", status: "completed" },
+    { step: "  2.1. /research - Gather research findings", status: "completed" },
+    { step: "3. /plan - Generate structured plan", status: "in_progress" },
+    // ... rest of tasks
+  ]
+})
+```
+
 ---
 
 ## Stage 3: Generate Implementation Plan
+
+🔄 **Entering Stage 3: Generate Implementation Plan**
+
+**Before calling `/generate-plan`, add sub-workflow task:**
+
+```typescript
+update_plan({
+  explanation: "↪️ Delegating to /generate-plan for structured planning",
+  plan: [
+    { step: "1. /plan - Define problem and requirements", status: "completed" },
+    { step: "2. /plan - Research best practices", status: "completed" },
+    { step: "  2.1. /research - Gather research findings", status: "completed" },
+    { step: "3. /plan - Generate structured plan", status: "in_progress" },
+    { step: "  3.1. /generate-plan - Create implementation roadmap", status: "in_progress" },
+    { step: "4. /plan - Create initiative document", status: "pending" },
+    // ... rest of tasks
+  ]
+})
+```
+
+**Print delegation announcement:**
+
+```markdown
+↪️ **Delegating to /generate-plan:** Creating structured implementation roadmap
+```
 
 **Call `/generate-plan` workflow:**
 
@@ -162,9 +254,33 @@ update_plan({
 
 **See:** `.windsurf/workflows/generate-plan.md`
 
+**After `/generate-plan` returns, print completion and update tasks:**
+
+```markdown
+📋 **Plan Generation Complete:** Initiative document created with [N] phases
+```
+
+```typescript
+update_plan({
+  explanation: "Plan generated, proceeding to ADR assessment",
+  plan: [
+    { step: "1. /plan - Define problem and requirements", status: "completed" },
+    { step: "2. /plan - Research best practices", status: "completed" },
+    { step: "  2.1. /research - Gather research findings", status: "completed" },
+    { step: "3. /plan - Generate structured plan", status: "completed" },
+    { step: "  3.1. /generate-plan - Create implementation roadmap", status: "completed" },
+    { step: "4. /plan - Create initiative document", status: "completed" },
+    { step: "5. /plan - Create ADR (if needed)", status: "in_progress" },
+    // ... rest of tasks
+  ]
+})
+```
+
 ---
 
 ## Stage 4: Create ADR (If Needed)
+
+🔄 **Entering Stage 4: Create ADR (If Needed)**
 
 ### 4.1 Assess ADR Requirement
 
@@ -236,9 +352,17 @@ If ANY checked → ADR required
 **Related ADRs:** [ADR-00XX: Decision Title](../../adr/00XX-decision-title.md)
 ```
 
+**Print stage completion:**
+
+```markdown
+📋 **Stage 4 Complete:** ADR assessment finished
+```
+
 ---
 
 ## Stage 5: Present and Validate
+
+🔄 **Entering Stage 5: Present and Validate**
 
 ### 5.1 Present to User
 
@@ -287,9 +411,17 @@ If ANY checked → ADR required
 
 - Proceed to Stage 6
 
+**Print stage completion:**
+
+```markdown
+📋 **Stage 5 Complete:** Plan approved by user
+```
+
 ---
 
 ## Stage 6: Handoff to Implementation
+
+🔄 **Entering Stage 6: Handoff to Implementation**
 
 ### 6.1 Load Full Context
 
@@ -314,6 +446,12 @@ If ANY checked → ADR required
 
 ```text
 /plan → /research → /generate-plan → /implement → /validate → /commit
+```
+
+**Print workflow exit:**
+
+```markdown
+✅ **Completed /plan:** Planning complete, implementation ready to begin
 ```
 
 ---

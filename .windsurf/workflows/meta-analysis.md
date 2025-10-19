@@ -24,7 +24,13 @@ status: active
 
 ## Stage 0: Create Task Plan
 
-🔄 **Entering /meta-analysis workflow**
+🔄 **Entering Stage 0: Create Task Plan**
+
+**Print workflow entry announcement:**
+
+```markdown
+🔄 **Entering /meta-analysis:** Systematic session review and summary generation
+```
 
 **Create task plan:**
 
@@ -33,13 +39,14 @@ update_plan({
   explanation: "📊 Starting /meta-analysis workflow",
   plan: [
     { step: "1. /meta-analysis - Check protocol and update timestamp", status: "in_progress" },
-    { step: "2. /extract-session - Extract session data", status: "pending" },
-    { step: "3. /summarize-session - Generate session summary", status: "pending" },
-    { step: "4. /meta-analysis - Check living documentation", status: "pending" },
-    { step: "5. /commit - Commit session summary", status: "pending" }
+    { step: "2. /meta-analysis - Extract and summarize session", status: "pending" },
+    { step: "3. /meta-analysis - Check living documentation", status: "pending" },
+    { step: "4. /meta-analysis - Commit session summary", status: "pending" }
   ]
 })
 ```
+
+✓ Task plan created
 
 ---
 
@@ -63,9 +70,53 @@ date -u +"%Y-%m-%dT%H:%M:%SZ" > .windsurf/.last-meta-analysis
 
 **Purpose:** Track protocol adherence and detect violations
 
+**Print stage completion:**
+
+```markdown
+📋 **Stage 1 Complete:** Protocol timestamp updated
+```
+
+**Update task plan:**
+
+```typescript
+update_plan({
+  explanation: "Protocol check complete",
+  plan: [
+    { step: "1. /meta-analysis - Check protocol and update timestamp", status: "completed" },
+    { step: "2. /meta-analysis - Extract and summarize session", status: "in_progress" },
+    { step: "3. /meta-analysis - Check living documentation", status: "pending" },
+    { step: "4. /meta-analysis - Commit session summary", status: "pending" }
+  ]
+})
+```
+
 ---
 
 ## Stage 2: Extract Session Data
+
+🔄 **Entering Stage 2: Extract Session Data**
+
+**Before calling `/extract-session`, add sub-workflow task:**
+
+```typescript
+update_plan({
+  explanation: "↪️ Delegating to /extract-session",
+  plan: [
+    { step: "1. /meta-analysis - Check protocol and update timestamp", status: "completed" },
+    { step: "2. /meta-analysis - Extract and summarize session", status: "in_progress" },
+    { step: "  2.1. /extract-session - Extract session data", status: "in_progress" },
+    { step: "  2.2. /summarize-session - Generate formatted summary", status: "pending" },
+    { step: "3. /meta-analysis - Check living documentation", status: "pending" },
+    { step: "4. /meta-analysis - Commit session summary", status: "pending" }
+  ]
+})
+```
+
+**Print delegation announcement:**
+
+```markdown
+↪️ **Delegating to /extract-session:** Analyzing git history and session artifacts
+```
 
 **Call `/extract-session` workflow:**
 
@@ -77,9 +128,39 @@ date -u +"%Y-%m-%dT%H:%M:%SZ" > .windsurf/.last-meta-analysis
 
 **See:** `.windsurf/workflows/extract-session.md`
 
+**After `/extract-session` returns, print completion:**
+
+```markdown
+📋 **Extraction Complete:** Session data structured for summary generation
+```
+
 ---
 
 ## Stage 3: Generate Session Summary
+
+🔄 **Entering Stage 3: Generate Session Summary**
+
+**Before calling `/summarize-session`, update task:**
+
+```typescript
+update_plan({
+  explanation: "↪️ Delegating to /summarize-session",
+  plan: [
+    { step: "1. /meta-analysis - Check protocol and update timestamp", status: "completed" },
+    { step: "2. /meta-analysis - Extract and summarize session", status: "in_progress" },
+    { step: "  2.1. /extract-session - Extract session data", status: "completed" },
+    { step: "  2.2. /summarize-session - Generate formatted summary", status: "in_progress" },
+    { step: "3. /meta-analysis - Check living documentation", status: "pending" },
+    { step: "4. /meta-analysis - Commit session summary", status: "pending" }
+  ]
+})
+```
+
+**Print delegation announcement:**
+
+```markdown
+↪️ **Delegating to /summarize-session:** Creating formatted session summary
+```
 
 **Call `/summarize-session` workflow:**
 
@@ -92,9 +173,33 @@ date -u +"%Y-%m-%dT%H:%M:%SZ" > .windsurf/.last-meta-analysis
 
 **See:** `.windsurf/workflows/summarize-session.md`
 
+**After `/summarize-session` returns, print completion:**
+
+```markdown
+📋 **Summary Complete:** Session summary created in docs/archive/session-summaries/
+```
+
+**Update task plan:**
+
+```typescript
+update_plan({
+  explanation: "Session summary generated",
+  plan: [
+    { step: "1. /meta-analysis - Check protocol and update timestamp", status: "completed" },
+    { step: "2. /meta-analysis - Extract and summarize session", status: "completed" },
+    { step: "  2.1. /extract-session - Extract session data", status: "completed" },
+    { step: "  2.2. /summarize-session - Generate formatted summary", status: "completed" },
+    { step: "3. /meta-analysis - Check living documentation", status: "in_progress" },
+    { step: "4. /meta-analysis - Commit session summary", status: "pending" }
+  ]
+})
+```
+
 ---
 
 ## Stage 4: Living Documentation Check
+
+🔄 **Entering Stage 4: Living Documentation Check**
 
 ### 4.1 PROJECT_SUMMARY.md Update Triggers
 
@@ -135,13 +240,47 @@ date -u +"%Y-%m-%dT%H:%M:%SZ" > .windsurf/.last-meta-analysis
 
 **If triggers met:**
 
+**Print delegation announcement:**
+
+```markdown
+↪️ **Delegating to /update-docs:** Updating PROJECT_SUMMARY and CHANGELOG
+```
+
+**Add sub-workflow task before calling:**
+
+```typescript
+update_plan({
+  explanation: "↪️ Delegating to /update-docs",
+  plan: [
+    // ... completed tasks ...
+    { step: "3. /meta-analysis - Check living documentation", status: "in_progress" },
+    { step: "  3.1. /update-docs - Update living documents", status: "in_progress" },
+    { step: "4. /meta-analysis - Commit session summary", status: "pending" }
+  ]
+})
+```
+
 Call `/update-docs` workflow to apply changes
 
 **See:** `.windsurf/workflows/update-docs.md`
 
+**After `/update-docs` returns (if called):**
+
+```markdown
+📋 **Documentation Updates Complete:** Living documents synchronized
+```
+
+**Print stage completion:**
+
+```markdown
+📋 **Stage 4 Complete:** Living documentation status verified
+```
+
 ---
 
 ## Stage 5: Commit Session Summary
+
+🔄 **Entering Stage 5: Commit Session Summary**
 
 ### 5.1 Stage Files
 
@@ -159,6 +298,12 @@ git commit -m "docs(session): add YYYY-MM-DD [focus] session summary
 - Duration: ~N hours
 - Focus: [Primary focus]
 - Key accomplishments: [highlights]"
+```
+
+**Print workflow exit:**
+
+```markdown
+✅ **Completed /meta-analysis:** Session summary created and committed
 ```
 
 ---

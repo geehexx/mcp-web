@@ -450,7 +450,88 @@ update_plan({
 
 **Update as each protocol step completes.**
 
-### 1.11.5 Anti-Patterns
+### 1.11.5 Progress Transparency Requirements
+
+**MANDATORY:** All workflows MUST provide visible progress through:
+
+1. **Progress Announcements** - Print workflow entry/exit/stage messages
+2. **Task Updates** - Update task status after each significant step
+3. **Sub-Workflow Visibility** - Show sub-workflow calls in task list
+
+**Progress Announcement Standards:**
+
+Print at these transition points:
+
+- Workflow entry: `🔄 **Entering /workflow:** Purpose`
+- Stage complete: `📋 **Stage N Complete:** What finished`
+- Sub-workflow call: `↪️ **Delegating to /sub-workflow:** Reason`
+- Workflow exit: `✅ **Completed /workflow:** Summary`
+- Long operations: Every 2-3 minutes
+
+**Emoji Standards:**
+
+- 🔄 = Workflow entry
+- 📋 = Stage complete / progress update
+- ✅ = Workflow complete (success)
+- ⚠️ = Warning / non-critical issue
+- ❌ = Error / failure
+- ↪️ = Delegation to sub-workflow
+- ℹ️ = Informational message
+
+**Task Update Frequency:**
+
+- **Minimum:** After each stage completion
+- **Recommended:** Every 30-90 seconds for long workflows
+- **Maximum gap:** 3 minutes without update (print progress message)
+
+**Sub-Workflow Task Pattern:**
+
+When workflow calls sub-workflow:
+
+1. Update plan BEFORE calling (add sub-workflow task as N.1)
+2. Print delegation message: `↪️ **Delegating to /sub-workflow**`
+3. Execute sub-workflow
+4. Update plan AFTER returning (mark N.1 completed)
+5. Print completion message
+
+**Example:**
+
+```typescript
+// Before calling /research
+update_plan({
+  explanation: "↪️ Delegating to /research for best practices",
+  plan: [
+    { step: "2. /plan - Create implementation plan", status: "in_progress" },
+    { step: "  2.1. /research - Gather requirements", status: "in_progress" }
+  ]
+})
+console.log("↪️ **Delegating to /research:** Gathering best practices")
+
+// Call /research
+call_workflow("/research", ...)
+
+// After /research returns
+console.log("📋 **Research Complete:** 5 sources analyzed")
+update_plan({
+  explanation: "Research complete, proceeding to plan generation",
+  plan: [
+    { step: "2. /plan - Create implementation plan", status: "in_progress" },
+    { step: "  2.1. /research - Gather requirements", status: "completed" },
+    { step: "  2.2. /generate-plan - Structure plan", status: "in_progress" }
+  ]
+})
+```
+
+**Rationale:**
+
+Users trust agents that show their work. Visibility enables:
+
+- **User confidence:** See progress happening
+- **Early intervention:** Spot wrong direction before completion
+- **Better debugging:** Identify where workflows stall
+- **Learning:** Understand workflow execution patterns
+
+### 1.11.6 Anti-Patterns
 
 **❌ DON'T:**
 
@@ -468,7 +549,7 @@ update_plan({
 - Decompose large tasks into subtasks
 - Track session end protocol as tasks
 
-### 1.11.6 Enforcement
+### 1.11.7 Enforcement
 
 **Per user directive (2025-10-18):**
 
@@ -485,7 +566,7 @@ update_plan({
 
 **For complete specification, see:** `docs/architecture/TASK_SYSTEM_INTEGRATION.md`
 
-### 1.11.7 Automated Validation
+### 1.11.8 Automated Validation
 
 **Available tools (2025-10-19):**
 
