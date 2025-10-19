@@ -40,6 +40,18 @@ status: active
 
 ---
 
+## Stage 0: Workflow Entry
+
+🔄 **Entering /implement:** Test-driven implementation workflow
+
+**Print workflow entry announcement:**
+
+```markdown
+🔄 **Entering /implement:** Focused implementation with test-first approach
+```
+
+---
+
 ## Stage 1: Create Implementation Task Plan
 
 🔄 **Entering Stage 1: Create Implementation Task Plan**
@@ -131,9 +143,17 @@ git status
 task test:fast
 ```
 
+**Print stage completion:**
+
+```markdown
+📋 **Stage 2 Complete:** Context loaded, baseline established
+```
+
 ---
 
 ## Stage 2.5: Check ADR Requirement (Conditional)
+
+🔄 **Entering Stage 2.5: Check ADR Requirement (Conditional)**
 
 ### 2.5.1 Assess Implementation Approach
 
@@ -168,8 +188,26 @@ If ANY checked → Pause and assess ADR need
 
 **If ADR needed:**
 
+**Before calling `/new-adr`, add sub-workflow task:**
+
+```typescript
+update_plan({
+  explanation: "↪️ Delegating to /new-adr for architecture decision",
+  plan: [
+    // ... previous tasks ...
+    { step: "  3.2. /implement - Check ADR requirement", status: "in_progress" },
+    { step: "    3.2.1. /new-adr - Document architectural decision", status: "in_progress" },
+    { step: "  3.3. /implement - Design test cases (TDD)", status: "pending" },
+    // ... rest of tasks
+  ]
+})
+```
+
+**Print delegation announcement:**
+
 ```markdown
-🏗️ **Architectural decision detected during implementation** - calling `/new-adr` workflow
+🏗️ **Architectural decision detected** - calling `/new-adr` workflow
+↪️ **Delegating to /new-adr:** Document decision before implementing
 ```
 
 **Call `/new-adr` workflow:**
@@ -181,17 +219,37 @@ If ANY checked → Pause and assess ADR need
 
 **See:** `.windsurf/workflows/new-adr.md`
 
-**Report result:**
+**After `/new-adr` returns, print completion:**
 
 ```markdown
-✅ ADR created: ADR-00XX - [Decision Title]
-📄 Proceeding with approved approach
+📋 **ADR Complete:** ADR-00XX created, proceeding with approved approach
+```
+
+**Update task plan:**
+
+```typescript
+update_plan({
+  explanation: "ADR documented, proceeding to implementation",
+  plan: [
+    // ... previous tasks ...
+    { step: "  3.2. /implement - Check ADR requirement", status: "completed" },
+    { step: "    3.2.1. /new-adr - Document architectural decision", status: "completed" },
+    { step: "  3.3. /implement - Design test cases (TDD)", status: "in_progress" },
+    // ... rest of tasks
+  ]
+})
 ```
 
 **If no ADR needed:**
 
 ```markdown
 ℹ️ No ADR required - proceeding with implementation
+```
+
+**Print stage completion:**
+
+```markdown
+📋 **Stage 2.5 Complete:** ADR assessment finished
 ```
 
 **IMPORTANT:** Create ADR BEFORE implementing, not after. Decisions should be documented before they're coded.
@@ -396,11 +454,19 @@ task security
 # Specific scans
 task security:bandit
 task security:semgrep
-```text
+```
+
+**Print stage completion:**
+
+```markdown
+📋 **Stage 6 Complete:** All quality gates passed
+```
 
 ---
 
 ## Stage 7: Commit Strategy
+
+🔄 **Entering Stage 7: Commit Strategy**
 
 ### 7.1 Atomic Commits
 
@@ -431,6 +497,27 @@ git commit -m "wip"
 
 **For guided commits:**
 
+**Before calling `/commit`, add sub-workflow task:**
+
+```typescript
+update_plan({
+  explanation: "↪️ Delegating to /commit for guided commit",
+  plan: [
+    // ... previous tasks ...
+    { step: "  3.7. /implement - Commit changes", status: "in_progress" },
+    { step: "    3.7.1. /commit - Create conventional commit", status: "in_progress" },
+  ]
+})
+```
+
+**Print delegation announcement:**
+
+```markdown
+↪️ **Delegating to /commit:** Creating conventional commit with validation
+```
+
+**Call `/commit` workflow:**
+
 ```bash
 # Review changes
 /commit
@@ -440,7 +527,19 @@ git commit -m "wip"
 # 2. Verify ownership
 # 3. Guide commit message
 # 4. Run pre-commit hooks
-```text
+```
+
+**After `/commit` returns:**
+
+```markdown
+📋 **Commit Complete:** Changes committed successfully
+```
+
+**Print stage completion:**
+
+```markdown
+📋 **Stage 7 Complete:** Implementation committed
+```
 
 ---
 
@@ -643,6 +742,12 @@ $ git commit
 - `/new-adr` - If architectural decision during implementation (Stage 2.5, conditional)
 - `/test-before-commit` - After each change
 - `/commit` - When ready to commit (Stage 7)
+
+**Print workflow exit:**
+
+```markdown
+✅ **Completed /implement:** Implementation finished, all tests passing, changes committed
+```
 
 ---
 

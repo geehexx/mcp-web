@@ -21,7 +21,19 @@ status: active
 
 ---
 
-## Stage 0: Task Integration
+## Stage 0: Workflow Entry
+
+🔄 **Entering /summarize-session:** Generate formatted session summary
+
+**Print workflow entry announcement:**
+
+```markdown
+🔄 **Entering /summarize-session:** Creating structured LLM-agnostic session summary
+```
+
+---
+
+## Stage 1: Task Integration
 
 **Note:** This workflow is called by `/meta-analysis` as a subtask. Parent workflow handles task tracking.
 
@@ -346,6 +358,12 @@ docs/archive/session-summaries/2025-10-18-workflow-optimization.md
 
 - Formatted session summary file
 - Filename for git commit
+
+**Print workflow exit:**
+
+```markdown
+✅ **Completed /summarize-session:** Session summary created at [filepath]
+```
 
 ---
 

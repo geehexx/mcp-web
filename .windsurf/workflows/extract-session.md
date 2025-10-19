@@ -20,7 +20,19 @@ status: active
 
 ---
 
-## Stage 0: Task Integration
+## Stage 0: Workflow Entry
+
+🔄 **Entering /extract-session:** Structured session data extraction
+
+**Print workflow entry announcement:**
+
+```markdown
+🔄 **Entering /extract-session:** Analyzing git history and extracting session artifacts
+```
+
+---
+
+## Stage 1: Task Integration
 
 **Note:** This workflow is called by `/meta-analysis` as a subtask. Parent workflow handles task tracking.
 
@@ -332,6 +344,12 @@ protocol_compliance:
 
 - Git commands - History analysis
 - File system scans - Context gathering
+
+**Print workflow exit:**
+
+```markdown
+✅ **Completed /extract-session:** Session data extracted and structured
+```
 
 ---
 

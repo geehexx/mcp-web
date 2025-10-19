@@ -18,9 +18,21 @@ status: active
 
 ---
 
-## Stage 0: Create Task Plan (If Called Directly)
+## Stage 0: Workflow Entry
 
-🔄 **Entering Stage 0: Create Task Plan**
+🔄 **Entering /detect-context:** Intelligent project context detection
+
+**Print workflow entry announcement:**
+
+```markdown
+🔄 **Entering /detect-context:** Analyzing project state and determining next steps
+```
+
+---
+
+## Stage 1: Create Task Plan (If Called Directly)
+
+🔄 **Entering Stage 1: Create Task Plan**
 
 **If called directly by user** (not by `/work`), create task plan:
 

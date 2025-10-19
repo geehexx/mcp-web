@@ -30,6 +30,18 @@ status: active
 
 ---
 
+## Stage 0: Workflow Entry
+
+🔄 **Entering /work:** Central work orchestration
+
+**Print workflow entry announcement:**
+
+```markdown
+🔄 **Entering /work:** Intelligent work orchestration and routing
+```
+
+---
+
 ## Stage 1: Create Initial Task Plan
 
 **MANDATORY:** Create task list before any actions.
@@ -246,6 +258,12 @@ If 80%+ confident, auto-route. User can redirect if wrong.
 
 - User (direct)
 - Other workflows (when orchestration needed)
+
+**Print workflow exit:**
+
+```markdown
+✅ **Completed /work:** Work orchestration finished
+```
 
 ---
 

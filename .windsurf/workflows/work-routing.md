@@ -22,6 +22,18 @@ status: active
 
 ---
 
+## Stage 0: Workflow Entry
+
+🔄 **Entering /work-routing:** Routing decision logic
+
+**Print workflow entry announcement:**
+
+```markdown
+🔄 **Entering /work-routing:** Determining optimal workflow route based on context
+```
+
+---
+
 ## Confidence-Based Routing
 
 ### High Confidence (80%+)

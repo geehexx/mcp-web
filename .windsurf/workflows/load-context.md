@@ -20,9 +20,21 @@ status: active
 
 ---
 
-## Stage 0: Create Task Plan (If Called Directly)
+## Stage 0: Workflow Entry
 
-🔄 **Entering Stage 0: Create Task Plan**
+🔄 **Entering /load-context:** Efficient batch context loading
+
+**Print workflow entry announcement:**
+
+```markdown
+🔄 **Entering /load-context:** Loading project context with batch operations
+```
+
+---
+
+## Stage 1: Create Task Plan (If Called Directly)
+
+🔄 **Entering Stage 1: Create Task Plan**
 
 **If called directly by user** (not by parent workflow), create task plan:
 
@@ -588,6 +600,18 @@ implement_feature()
 - MCP filesystem tools (batch reads)
 - Git commands (log, status)
 - Directory listing (for file discovery)
+
+**Print workflow entry:**
+
+```markdown
+✅ **Starting /load-context:** Loading context for task...
+```
+
+**Print workflow exit:**
+
+```markdown
+✅ **Completed /load-context:** Context loaded successfully ([N] files in [N] batches)
+```
 
 ---
 
