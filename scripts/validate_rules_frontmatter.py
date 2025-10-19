@@ -4,10 +4,9 @@
 Ensures all .windsurf/rules/*.md files have valid trigger types.
 
 Valid trigger types (per Windsurf documentation):
-- always: Rule always applied
+- always_on: Rule always applied
 - model_decision: Model decides based on description (requires description field)
-- glob: Applied to files matching patterns (requires globs field)
-- manual: Activated via @mention
+- glob: Applied to files matching patterns (requires globs field as YAML array)
 
 Reference: https://docs.windsurf.com/windsurf/cascade/memories
 """
@@ -17,7 +16,7 @@ from pathlib import Path
 
 import yaml
 
-VALID_TRIGGERS = {"always", "model_decision", "glob", "manual"}
+VALID_TRIGGERS = {"always_on", "model_decision", "glob"}
 RULES_DIR = Path(".windsurf/rules")
 
 
@@ -72,8 +71,16 @@ def validate_rule_file(file_path: Path) -> list[str]:
         globs = frontmatter.get("globs")
         if not globs:
             errors.append(f"{file_path}: 'glob' trigger requires 'globs' field")
-        elif not isinstance(globs, list):
-            errors.append(f"{file_path}: 'globs' field must be a list")
+        elif not isinstance(globs, list | str):
+            errors.append(f"{file_path}: 'globs' field must be a YAML array or string")
+
+    # Validate created/updated fields (recommended but not required)
+    created = frontmatter.get("created")
+    updated = frontmatter.get("updated")
+    if created and not isinstance(created, str):
+        errors.append(f"{file_path}: 'created' field must be a string (YYYY-MM-DD format)")
+    if updated and not isinstance(updated, str):
+        errors.append(f"{file_path}: 'updated' field must be a string (YYYY-MM-DD format)")
 
     return errors
 

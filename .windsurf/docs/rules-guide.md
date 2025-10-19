@@ -8,9 +8,9 @@
 
 ## Valid Trigger Types
 
-Windsurf rules support **4 trigger types** (per [official documentation](https://docs.windsurf.com/windsurf/cascade/memories)):
+Windsurf rules support **3 trigger types** (verified through IDE implementation):
 
-### 1. `always`
+### 1. `always_on`
 
 **Description:** Rule is always applied to all conversations.
 
@@ -20,17 +20,22 @@ Windsurf rules support **4 trigger types** (per [official documentation](https:/
 
 ```yaml
 ---
-trigger: always
+created: "2025-10-15"
+updated: "2025-10-19"
+trigger: always_on
 description: Core agent directives and principles
 category: core
+tokens: 3200
+applyTo:
+  - all
+priority: high
+status: active
 ---
 ```
 
 **Examples in this project:**
 
 - `00_agent_directives.md` - Core agent behavior
-- `05_operational_protocols.md` - Session management protocols
-- `06_context_engineering.md` - File and git operations
 
 ---
 
@@ -48,15 +53,32 @@ category: core
 
 ```yaml
 ---
+created: "2025-10-15"
+updated: "2025-10-19"
 trigger: model_decision
 description: Apply when dealing with security-sensitive code including API calls, user input, LLM interactions, file operations, or authentication
 category: security
+globs:
+  - "**/*.py"
+  - "**/*.ini"
+  - "**/*.yml"
+  - "**/*.yaml"
+tokens: 1385
+applyTo:
+  - security
+  - api
+  - llm
+  - authentication
+priority: high
+status: active
 ---
 ```
 
 **Examples in this project:**
 
 - `04_security.md` - Security-sensitive operations
+- `05_operational_protocols.md` - Session management protocols
+- `06_context_engineering.md` - File and git operations
 
 ---
 
@@ -68,16 +90,25 @@ category: security
 
 **Required Fields:**
 
-- `globs` - List of glob patterns (e.g., `["**/*.py", "tests/**/*.py"]`)
+- `globs` - YAML array of glob patterns
 
 **Front-matter Example:**
 
 ```yaml
 ---
+created: "2025-10-15"
+updated: "2025-10-18"
 trigger: glob
 description: Python code style and best practices
-globs: ["**/*.py"]
+globs:
+  - "**/*.py"
 category: language
+tokens: 1549
+applyTo:
+  - python
+  - implementation
+priority: high
+status: active
 ---
 ```
 
@@ -87,25 +118,18 @@ category: language
 - `02_python_standards.md` - Python source files
 - `03_documentation_lifecycle.md` - Markdown documentation
 
----
-
-### 4. `manual`
-
-**Description:** Rule is activated manually via `@mention` in Cascade.
-
-**Use Case:** Optional rules, specialized workflows, context-specific guidance.
-
-**Front-matter Example:**
+**Important:** The `globs` field must be a proper YAML array:
 
 ```yaml
----
-trigger: manual
-description: Advanced debugging techniques
-category: debugging
----
-```
+# ✅ CORRECT
+globs:
+  - "**/*.py"
+  - tests/**/*.py
+  - "*.md"
 
-**Usage:** Type `@rule-name` in Cascade to activate.
+# ❌ WRONG
+globs: **/*.py, tests/**/*.py, *.md
+```
 
 ---
 
@@ -115,6 +139,8 @@ category: debugging
 
 These are **NOT** valid trigger types:
 
+- `always` ❌ (use `always_on`)
+- `manual` ❌ (not supported in current version)
 - `session_management` ❌
 - `file_operations` ❌
 - `security_sensitive` ❌
@@ -130,10 +156,58 @@ Instead of inventing trigger types, use the valid ones:
 
 | Invalid | Correct |
 |---------|---------|
-| `trigger: session_management` | `trigger: always` |
-| `trigger: file_operations` | `trigger: always` |
+| `trigger: always` | `trigger: always_on` |
+| `trigger: session_management` | `trigger: always_on` or `model_decision` |
+| `trigger: file_operations` | `trigger: always_on` or `model_decision` |
 | `trigger: python_files` | `trigger: glob` + `globs: ["**/*.py"]` |
 | `trigger: security_sensitive` | `trigger: model_decision` + description |
+
+---
+
+## Frontmatter Fields
+
+### Required Fields
+
+- `trigger` - One of: `always_on`, `model_decision`, `glob`
+- `description` - Clear description of rule purpose
+
+### Recommended Fields
+
+- `created` - Creation date in "YYYY-MM-DD" format
+- `updated` - Last update date in "YYYY-MM-DD" format
+- `category` - Rule category (core, testing, language, documentation, security, operations)
+- `tokens` - Estimated token count
+- `priority` - Priority level (high, medium, low)
+- `status` - Status (active, deprecated, experimental)
+
+### Conditional Fields
+
+- `globs` - Required for `glob` trigger (YAML array of patterns)
+- `applyTo` - Optional semantic tags for rule application
+
+### Example Complete Frontmatter
+
+```yaml
+---
+created: "2025-10-15"
+updated: "2025-10-19"
+trigger: glob
+description: Enforces testing standards, tool usage, and development environment practices.
+globs:
+  - tests/**/*.py
+  - src/**/*.py
+  - "*.toml"
+  - "*.ini"
+  - Taskfile.yml
+category: testing
+tokens: 989
+applyTo:
+  - testing
+  - implementation
+priority: high
+status: active
+---
+```
 
 ---
 
@@ -157,19 +231,21 @@ uv run python scripts/validate_rules_frontmatter.py
 
 **Checks:**
 
-- ✅ Valid trigger type (`always`, `model_decision`, `glob`, `manual`)
+- ✅ Valid trigger type (`always_on`, `model_decision`, `glob`)
 - ✅ Required fields for each trigger type
 - ✅ YAML front-matter syntax
 - ✅ Front-matter structure
+- ✅ Glob format (YAML array for `glob` trigger)
+- ✅ Created/updated field format
 
 **Example Output:**
 
 ```bash
 ❌ Rules front-matter validation failed:
 
-  • .windsurf/rules/05_operational_protocols.md: Invalid trigger 'session_management'. Must be one of: always, glob, manual, model_decision
+  • .windsurf/rules/05_operational_protocols.md: Invalid trigger 'session_management'. Must be one of: always_on, glob, model_decision
 
-📖 Valid trigger types: always, glob, manual, model_decision
+📖 Valid trigger types: always_on, glob, model_decision
 📚 Reference: https://docs.windsurf.com/windsurf/cascade/memories
 ```
 
@@ -188,10 +264,9 @@ Each rule should have a single, clear purpose:
 
 Choose the most specific trigger type:
 
-- **Global behavior?** → `always`
+- **Global behavior?** → `always_on`
 - **File-type specific?** → `glob`
 - **Context-dependent?** → `model_decision`
-- **Optional/specialized?** → `manual`
 
 ### 3. Provide Clear Descriptions
 
@@ -200,7 +275,15 @@ For `model_decision` triggers, be explicit:
 - ✅ **Good:** "Apply when dealing with security-sensitive code including API calls, user input, LLM interactions"
 - ❌ **Bad:** "Security stuff"
 
-### 4. Test Your Rules
+### 4. Maintain Frontmatter Consistency
+
+Always include `created` and `updated` dates:
+
+- Update `updated` field when modifying rules
+- Keep `created` field unchanged
+- Use "YYYY-MM-DD" format
+
+### 5. Test Your Rules
 
 After creating/modifying rules:
 
@@ -220,14 +303,18 @@ uv run python scripts/validate_rules_frontmatter.py
 ---
 created: "YYYY-MM-DD"
 updated: "YYYY-MM-DD"
-trigger: [always|model_decision|glob|manual]
+trigger: [always_on|model_decision|glob]
 description: Clear description of when/why this rule applies
+globs:  # Only for glob trigger
+  - "**/*.ext"
+  - path/to/files/**
 category: [core|testing|language|documentation|security|operations]
-globs: ["**/*.ext"]  # Only for glob trigger
-tokens: XXXX  # Optional: estimated token count
-applyTo: [context1, context2]  # Optional: semantic tags
-priority: [high|medium|low]  # Optional
-status: active  # Optional
+tokens: XXXX
+applyTo:
+  - context1
+  - context2
+priority: [high|medium|low]
+status: active
 ---
 
 # Rule: [Name]
@@ -249,7 +336,7 @@ Detailed rule content...
 
 **Cause:** Using a custom trigger type not supported by Windsurf.
 
-**Solution:** Use one of the 4 valid trigger types: `always`, `model_decision`, `glob`, `manual`.
+**Solution:** Use one of the 3 valid trigger types: `always_on`, `model_decision`, `glob`.
 
 ### Issue: "Missing required field" error
 
@@ -259,6 +346,22 @@ Detailed rule content...
 - `glob` requires `globs` array
 
 **Solution:** Add the required field to front-matter.
+
+### Issue: "globs field must be a YAML array" error
+
+**Cause:** Globs specified as comma-separated string instead of YAML array.
+
+**Solution:**
+
+```yaml
+# ❌ WRONG
+globs: **/*.py, tests/**/*.py
+
+# ✅ CORRECT
+globs:
+  - "**/*.py"
+  - tests/**/*.py
+```
 
 ### Issue: Rule not loading in Cascade
 
@@ -274,7 +377,6 @@ Detailed rule content...
 
 ## References
 
-- **Official Documentation:** [Windsurf Memories & Rules](https://docs.windsurf.com/windsurf/cascade/memories)
 - **Validation Script:** `scripts/validate_rules_frontmatter.py`
 - **Pre-commit Hook:** `.pre-commit-config.yaml` (line 112-117)
 - **Example Rules:** `.windsurf/rules/*.md`
@@ -282,5 +384,5 @@ Detailed rule content...
 ---
 
 **Maintained By:** mcp-web core team
-**Version:** 1.0.0
+**Version:** 2.0.0
 **Last Validated:** 2025-10-19
