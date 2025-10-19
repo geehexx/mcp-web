@@ -1,6 +1,6 @@
 ---
 created: "2025-10-17"
-updated: "2025-10-18"
+updated: "2025-10-19"
 description: Intelligent context detection for work continuation
 auto_execution_mode: 3
 category: Operations
@@ -44,14 +44,35 @@ update_plan({
 
 ### 1.1 Load Essential Context
 
-Batch read key files (MUST use absolute paths for MCP tools):
+#### Step 1: List active initiatives
 
-```python
+```typescript
+// Use MCP list_dir to find all active initiatives
+mcp0_list_directory("/home/gxx/projects/mcp-web/docs/initiatives/active")
+// Returns: [DIR] 2025-10-19-initiative-name/, [FILE] 2025-10-18-flat.md, etc.
+```
+
+#### Step 2: Build initiative file paths
+
+```typescript
+// For each item in active/:
+// - If [DIR], read: {dir}/initiative.md
+// - If [FILE], read: {file}
+// Build array of absolute paths
+```
+
+#### Step 3: Batch read files
+
+```typescript
+// Read PROJECT_SUMMARY + all initiative files
 mcp0_read_multiple_files([
     "/home/gxx/projects/mcp-web/PROJECT_SUMMARY.md",
-    "/home/gxx/projects/mcp-web/docs/initiatives/active/*.md"
+    "/home/gxx/projects/mcp-web/docs/initiatives/active/2025-10-19-initiative-name/initiative.md",
+    // ... all other initiative paths from step 2
 ])
 ```
+
+**⚠️ CRITICAL:** MCP tools do NOT support glob patterns. MUST list directory first, then read explicit paths.
 
 ### 1.2 Check Session Summaries
 
@@ -76,23 +97,78 @@ git diff --name-only
 
 ### 2.1 Search for Continuation Signals
 
-**Priority 1: Session Summary**
+#### Priority 0: User Explicit Context (HIGHEST)
+
+```typescript
+// Check if user provided explicit context via:
+// - @mention of initiative folder/file
+// - Direct reference to initiative name
+// - Request to "continue with X initiative"
+
+if (user_context.initiative_mentioned) {
+    // Extract initiative identifier
+    initiative_id = extract_initiative_id(user_context)
+
+    // Validate it exists in active/
+    if (initiative_exists(initiative_id)) {
+        return {
+            confidence: 100,
+            route: "/implement",
+            initiative: initiative_id,
+            source: "User explicit mention"
+        }
+    }
+}
+```
+
+**⚠️ CRITICAL:** User explicit mentions ALWAYS take precedence. Never route to different initiative than user specified.
+
+#### Priority 1: Session Summary
 
 ```bash
 recent_summary=$(ls -t docs/archive/session-summaries/*.md | head -1)
 # Look for: "Next Steps", "Unresolved" issues, "Key Learnings"
 ```
 
-**Priority 2: Active Initiatives**
+#### Priority 2: Active Initiatives
 
 ```python
-for initiative in active_initiatives:
-    unchecked_tasks = find_pattern(r"- \[ \]", initiative)
-    status = extract_field("Status:", initiative)
-    next_steps = extract_section("Next Steps", initiative)
+# Read all initiative files (from step 1.1)
+for initiative_path in initiative_files:
+    initiative_content = read_file(initiative_path)
+
+    # Extract metadata
+    frontmatter = extract_frontmatter(initiative_content)  # YAML header
+    status = frontmatter.get("Status", "Unknown")
+    created = frontmatter.get("Created", "Unknown")
+    updated = frontmatter.get("Updated", "Unknown")
+
+    # Extract signals
+    unchecked_tasks = find_pattern(r"- \[ \]", initiative_content)
+    next_steps = extract_section("Next Steps", initiative_content)
+
+    # Score initiative relevance
+    relevance_score = 0
+    if status == "Active": relevance_score += 30
+    if unchecked_tasks: relevance_score += 25
+    if next_steps: relevance_score += 20
+    if updated == today(): relevance_score += 25  # Recently updated
+
+    # Store for routing decision
+    initiatives_ranked.append({
+        "path": initiative_path,
+        "name": extract_title(initiative_content),
+        "score": relevance_score,
+        "unchecked_count": len(unchecked_tasks)
+    })
+
+# Sort by relevance score
+initiatives_ranked.sort(key=lambda x: x["score"], reverse=True)
 ```
 
-**Priority 3: Git Signals**
+**⚠️ CRITICAL:** Always use **initiative file path** or **title from frontmatter** to identify initiative. NEVER assume based on partial name match.
+
+#### Priority 3: Git Signals
 
 ```bash
 git diff --name-only  # Unstaged changes
@@ -100,14 +176,14 @@ git diff --staged --name-only  # Staged but uncommitted
 git log --pretty=format:"%s" -5 | grep -E "^(feat|fix|test):"
 ```
 
-**Priority 4: Test Signals**
+#### Priority 4: Test Signals
 
 ```bash
 task test:fast 2>&1 | tail -20 | grep -E "(FAILED|ERROR)"
 grep -r "pytest.mark.skip" tests/
 ```
 
-**Priority 5: Documentation Signals**
+#### Priority 5: Documentation Signals
 
 ```bash
 grep -r "TODO\|FIXME\|XXX" docs/ --include="*.md"
@@ -117,6 +193,7 @@ grep -r "TODO\|FIXME\|XXX" docs/ --include="*.md"
 
 | Signal Type | Strength | Example |
 |-------------|----------|---------|
+| User explicit mention | 🔴 ABSOLUTE | "@initiative-folder" or "Continue with X initiative" |
 | Session summary "Next Steps" | ⭐⭐⭐ High | "Next: Add CLI commands" |
 | Unchecked initiative tasks | ⭐⭐⭐ High | "[ ] Implement validation" |
 | Test failures | ⭐⭐⭐ High | 5 tests failing in test_auth.py |
@@ -124,6 +201,8 @@ grep -r "TODO\|FIXME\|XXX" docs/ --include="*.md"
 | Recent commit pattern | ⭐ Low | Last 5 commits all "feat(auth)" |
 | TODO markers | ⭐ Low | "TODO: Add error handling" |
 | Clean state | ⚪ None | No signals, prompt user |
+
+**Priority Rule:** User explicit mentions (🔴) override ALL other signals.
 
 ---
 
@@ -384,6 +463,18 @@ What would you like?
 ---
 
 ## Anti-Patterns
+
+### ❌ Don't: Ignore User Explicit Context
+
+- **Bad:** User says "Continue with Initiative X", you route to Initiative Y
+- **Good:** User explicit mention → 100% confidence → Route to exactly what they specified
+- **Critical:** This was a real bug that caused routing to wrong initiative
+
+### ❌ Don't: Use Glob Patterns with MCP Tools
+
+- **Bad:** `mcp0_read_multiple_files(["path/*.md"])` (globs don't work!)
+- **Good:** List directory first, then read explicit file paths
+- **Critical:** This was a real bug that broke initiative loading
 
 ### ❌ Don't: Ignore Session Summaries
 
