@@ -1,8 +1,18 @@
+---
+type: machine-readable-reference
+category: enforcement
+purpose: Define canonical directory structure for Windsurf AI agent configuration
+token_budget: low
+audience: ai-agent
+auto_generated: false
+maintenance: manual
+last_updated: "2025-10-20"
+tags: ["directory-structure", "enforcement", "validation", "ls-lint"]
+---
+
 # .windsurf Directory Structure
 
 **Purpose:** Define the canonical directory structure for Windsurf AI agent configuration.
-
-**Last Updated:** 2025-10-19
 
 ---
 

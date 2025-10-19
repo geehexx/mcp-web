@@ -1,6 +1,13 @@
 ---
-description: Shared patterns for efficient context loading
-category: Reference Guide
+type: machine-readable-reference
+category: pattern-library
+purpose: Shared patterns for efficient context loading
+token_budget: medium
+audience: ai-agent
+auto_generated: false
+maintenance: manual
+last_updated: "2025-10-20"
+tags: ["context-loading", "performance", "mcp-tools", "batch-operations"]
 ---
 
 # Context Loading Patterns

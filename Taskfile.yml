@@ -373,6 +373,11 @@ tasks:
     cmds:
       - npx markdownlint-cli2 --fix "**/*.md" "#node_modules" "#.venv"
 
+  docs:windsurf:update:
+    desc: Update auto-generated .windsurf/docs/ indexes
+    cmds:
+      - python scripts/generate_indexes.py
+
   docs:clean:
     desc: Remove double-spaces and LLM artifacts
     cmds:

@@ -1,3 +1,15 @@
+---
+type: machine-readable-reference
+category: auto-generated
+purpose: Auto-generated index of all workflows with metadata
+token_budget: low
+audience: ai-agent
+auto_generated: true
+maintenance: auto
+last_updated: "2025-10-20"
+tags: ["workflows", "index", "auto-generated"]
+---
+
 # Workflow Index
 
 **Generated:** Auto-generated from frontmatter
@@ -6,9 +18,9 @@
 
 | Workflow | Complexity | Tokens | Dependencies | Status |
 |----------|------------|--------|--------------|--------|
-| [consolidate-summaries](consolidate-summaries.md) | 65 | 1942 | extract-session, summarize-session | active |
+| [consolidate-summaries](consolidate-summaries.md) | 70 | 2850 | extract-session, summarize-session | active |
 | [extract-session](extract-session.md) | 55 | 1196 | - | active |
-| [meta-analysis](meta-analysis.md) | 50 | 766 | extract-session, summarize-session | active |
+| [meta-analysis](meta-analysis.md) | 60 | 1200 | extract-session, summarize-session, consolidate-summaries | active |
 | [summarize-session](summarize-session.md) | 55 | 1430 | extract-session | active |
 
 ## Automation Workflows
@@ -22,7 +34,7 @@
 
 | Workflow | Complexity | Tokens | Dependencies | Status |
 |----------|------------|--------|--------------|--------|
-| [archive-initiative](archive-initiative.md) | 40 | 409 | - | active |
+| [archive-initiative](archive-initiative.md) | 50 | 800 | scripts/validate_archival.py, scripts/dependency_registry.py | active |
 | [new-adr](new-adr.md) | 45 | 482 | - | active |
 
 ## Implementation Workflows
@@ -64,4 +76,4 @@
 | Workflow | Complexity | Tokens | Dependencies | Status |
 |----------|------------|--------|--------------|--------|
 | [commit](commit.md) | 55 | 1058 | validate | active |
-| [validate](validate.md) | 60 | 1884 | - | active |
+| [validate](validate.md) | 62 | 1920 | - | active |

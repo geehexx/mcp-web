@@ -1,3 +1,15 @@
+---
+type: machine-readable-reference
+category: pattern-library
+purpose: Shared code examples and command templates for workflows
+token_budget: low
+audience: ai-agent
+auto_generated: false
+maintenance: manual
+last_updated: "2025-10-20"
+tags: ["patterns", "templates", "git", "task-commands"]
+---
+
 # Common Patterns Library
 
 **Purpose:** Shared code examples referenced across workflows to reduce duplication.

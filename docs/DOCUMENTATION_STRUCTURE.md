@@ -128,10 +128,18 @@ docs/
 │   ├── 05_operational_protocols.md    # Session end, progress communication
 │   └── 06_context_engineering.md  # File ops, git ops, context management
 │
-├── docs/                          # AI-specific reference documentation
+├── docs/                          # Machine-readable quick-reference documentation
+│   ├── README.md                  # Index and guide for machine-readable docs
 │   ├── context-loading-patterns.md # Context loading strategies
 │   ├── batch-operations.md        # Batch operation optimization
-│   └── [other reference guides]
+│   ├── common-patterns.md         # Shared code examples and templates
+│   ├── tool-patterns.md           # MCP tool usage patterns
+│   ├── task-system-reference.md   # Task format specification
+│   ├── workflow-routing-matrix.md # Routing decision matrix
+│   ├── directory-structure.md     # Directory structure enforcement
+│   ├── workflow-index.md          # Auto-generated workflow index
+│   ├── rules-index.md             # Auto-generated rule index
+│   └── workflow-dependencies.md   # Auto-generated dependency graph
 │
 ├── schemas/                       # Validation schemas
 │   └── frontmatter-schema.json    # YAML frontmatter schema

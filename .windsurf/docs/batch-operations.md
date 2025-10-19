@@ -1,6 +1,13 @@
 ---
-description: Optimization strategies for batch and parallel operations
-category: Reference Guide
+type: machine-readable-reference
+category: pattern-library
+purpose: Optimization strategies for batch and parallel operations
+token_budget: medium
+audience: ai-agent
+auto_generated: false
+maintenance: manual
+last_updated: "2025-10-20"
+tags: ["batch-operations", "performance", "optimization", "parallelization"]
 ---
 
 # Batch Operations Guide

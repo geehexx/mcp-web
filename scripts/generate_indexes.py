@@ -2,6 +2,7 @@
 """Generate documentation indexes from YAML frontmatter."""
 
 import sys
+from datetime import datetime
 from pathlib import Path
 
 import yaml
@@ -36,8 +37,25 @@ def generate_workflow_index() -> str:
             workflows_by_category[category] = []
         workflows_by_category[category].append((file_path.name, frontmatter))
 
-    # Generate markdown
-    lines = ["# Workflow Index", "", "**Generated:** Auto-generated from frontmatter", ""]
+    # Generate markdown with frontmatter
+    lines = [
+        "---",
+        "type: machine-readable-reference",
+        "category: auto-generated",
+        "purpose: Auto-generated index of all workflows with metadata",
+        "token_budget: low",
+        "audience: ai-agent",
+        "auto_generated: true",
+        "maintenance: auto",
+        f'last_updated: "{datetime.now().strftime("%Y-%m-%d")}"',
+        'tags: ["workflows", "index", "auto-generated"]',
+        "---",
+        "",
+        "# Workflow Index",
+        "",
+        "**Generated:** Auto-generated from frontmatter",
+        "",
+    ]
 
     for category in sorted(workflows_by_category.keys()):
         lines.append(f"## {category} Workflows")
@@ -73,8 +91,25 @@ def generate_rule_index() -> str:
             rules_by_priority[priority] = []
         rules_by_priority[priority].append((file_path.name, frontmatter))
 
-    # Generate markdown
-    lines = ["# Rule Index", "", "**Generated:** Auto-generated from frontmatter", ""]
+    # Generate markdown with frontmatter
+    lines = [
+        "---",
+        "type: machine-readable-reference",
+        "category: auto-generated",
+        "purpose: Auto-generated index of all agent rules with metadata",
+        "token_budget: low",
+        "audience: ai-agent",
+        "auto_generated: true",
+        "maintenance: auto",
+        f'last_updated: "{datetime.now().strftime("%Y-%m-%d")}"',
+        'tags: ["rules", "index", "auto-generated"]',
+        "---",
+        "",
+        "# Rule Index",
+        "",
+        "**Generated:** Auto-generated from frontmatter",
+        "",
+    ]
 
     priority_order = ["high", "medium", "low"]
     for priority in priority_order:
@@ -110,8 +145,20 @@ def generate_dependency_graph() -> str:
         if frontmatter:
             workflows[file_path.stem] = frontmatter
 
-    # Generate Mermaid diagram
+    # Generate Mermaid diagram with frontmatter
     lines = [
+        "---",
+        "type: machine-readable-reference",
+        "category: auto-generated",
+        "purpose: Auto-generated dependency graph of all workflows",
+        "token_budget: low",
+        "audience: ai-agent",
+        "auto_generated: true",
+        "maintenance: auto",
+        f'last_updated: "{datetime.now().strftime("%Y-%m-%d")}"',
+        'tags: ["workflows", "dependencies", "graph", "auto-generated"]',
+        "---",
+        "",
         "# Workflow Dependencies",
         "",
         "**Generated:** Auto-generated from frontmatter",

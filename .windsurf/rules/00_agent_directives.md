@@ -33,8 +33,8 @@ status: active
 
 - Context Loading: [context-loading-patterns.md](../docs/context-loading-patterns.md)
 - Batch Operations: [batch-operations.md](../docs/batch-operations.md)
-- Workflow Guide: [workflow-guide.md](../docs/workflow-guide.md)
-- Rules Guide: [rules-guide.md](../docs/rules-guide.md)
+- Workflow Guide: [WORKFLOW_GUIDE.md](../../docs/guides/WORKFLOW_GUIDE.md)
+- Rules Guide: [RULES_GUIDE.md](../../docs/guides/RULES_GUIDE.md)
 
 ---
 
@@ -106,7 +106,7 @@ When making any implementation decision, prioritize the following principles in 
 
 ❌ **FORBIDDEN FILES:**
 
-- `.windsurf/workflows/README.md` (use `.windsurf/docs/workflow-guide.md`)
+- `.windsurf/workflows/README.md` (use `docs/guides/WORKFLOW_GUIDE.md`)
 - `.windsurf/rules/README.md` (use `.windsurf/docs/rules-index.md`)
 - Any non-workflow documentation in `workflows/`
 - Any non-rule documentation in `rules/`

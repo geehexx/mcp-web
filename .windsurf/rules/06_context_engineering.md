@@ -70,7 +70,7 @@ status: active
 - Pattern libraries, best practices, guides
 - Maintained with same rigor as regular documentation
 - Provide reference points for AI agents
-- Examples: `workflow-guide.md`, `context-loading-patterns.md`, `batch-operations.md`
+- Examples: `context-loading-patterns.md`, `batch-operations.md`, `tool-patterns.md`
 - **ALLOWED:** README.md, INDEX.md, comprehensive guides
 
 **rules/** - Agent behavior rules ONLY:
@@ -83,7 +83,7 @@ status: active
 
 ❌ **NEVER create these files:**
 
-- `.windsurf/workflows/README.md` → Use `.windsurf/docs/workflow-guide.md`
+- `.windsurf/workflows/README.md` → Use `docs/guides/WORKFLOW_GUIDE.md`
 - `.windsurf/rules/README.md` → Use `.windsurf/docs/rules-index.md`
 - Any non-workflow file in `workflows/`
 - Any non-rule file in `rules/`
