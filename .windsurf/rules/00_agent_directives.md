@@ -1,10 +1,10 @@
 ---
 created: "2025-10-15"
-updated: "2025-10-18"
+updated: "2025-10-19"
 trigger: always_on
-description: Meta-rules defining agent persona, core principles, and operational directives. Highest-level rule applying globally.
+description: Meta-rules defining agent persona, core principles, operational directives, and quality gate enforcement. Highest-level rule applying globally.
 category: core
-tokens: 3074
+tokens: 3200
 applyTo:
   - all
 priority: high
@@ -90,6 +90,23 @@ When making any implementation decision, prioritize the following principles in 
 - **Initiative structure:** Use scaffolding system (`task scaffold:initiative`)
 - **Flat vs folder:** Folder for complex (>1000 words, multiple phases), flat for simple
 
+**CRITICAL - .windsurf/ Directory Structure:**
+
+❌ **FORBIDDEN FILES:**
+
+- `.windsurf/workflows/README.md` (use `.windsurf/docs/workflow-guide.md`)
+- `.windsurf/rules/README.md` (use `.windsurf/docs/rules-index.md`)
+- Any non-workflow documentation in `workflows/`
+- Any non-rule documentation in `rules/`
+
+✅ **CORRECT USAGE:**
+
+- `workflows/` = Executable workflows ONLY (invokable via `/workflow-name`)
+- `docs/` = Reference documentation, guides, indices
+- `rules/` = Agent behavior rules ONLY
+
+**Enforcement:** Pre-commit hooks validate structure. Never bypass with `--no-verify` for structural violations.
+
 ## 1.7 Git Operations
 
 **See:** [06_context_engineering.md](./06_context_engineering.md) for complete git operations documentation.
@@ -100,6 +117,39 @@ When making any implementation decision, prioritize the following principles in 
 - Check `git status` before and after major changes
 - Review diffs before committing (`git diff` or `git diff --cached`)
 - Use conventional commits: `type(scope): description`
+
+**Quality Gate Bypassing (`--no-verify`):**
+
+❌ **NEVER bypass for:**
+
+- Structural violations (wrong file locations, forbidden files)
+- Security issues (bandit, semgrep failures)
+- Breaking changes without justification
+- Linting errors that can be auto-fixed
+
+⚠️ **MAY bypass ONLY when:**
+
+- False positives in validators (document in commit message)
+- Urgent hotfixes (must create follow-up issue)
+- Validator bugs (must report and fix)
+
+**When bypassing:**
+
+1. Document reason in commit message
+2. Create follow-up task if issue needs fixing
+3. Never ignore real problems
+4. Prefer fixing the issue over bypassing
+
+**Example acceptable bypass:**
+
+```bash
+git commit --no-verify -m "fix: urgent security patch
+
+Bypassing pre-commit due to validator false positive on line 42.
+Validator incorrectly flags legitimate orchestration task.
+
+Follow-up: Issue #123 to fix validator"
+```
 
 ## 1.8 Session End Protocol
 

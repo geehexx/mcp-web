@@ -1,8 +1,18 @@
-# Windsurf Workflows
+# Windsurf Workflow Guide
 
 **Purpose:** Comprehensive guide to Windsurf workflow system architecture, transparency standards, and best practices for creating new workflows.
 
+**Location:** `.windsurf/docs/workflow-guide.md` (reference documentation)
+
+**Workflows Location:** `..workflows/` (executable workflows only)
+
 **Last Updated:** 2025-10-19
+
+**Related:**
+
+- [Workflow Index](./workflow-index.md) - Auto-generated workflow catalog
+- [Agent Directives](../rules/00_agent_directives.md) - Core agent behavior rules
+- [Context Engineering](../rules/06_context_engineering.md) - File operations and structure
 
 ---
 
@@ -27,12 +37,14 @@ This directory contains **modular, reusable workflows** that orchestrate AI agen
 **Purpose:** Coordinate and delegate to specialized workflows.
 
 **Characteristics:**
+
 - Call multiple sub-workflows
 - Manage overall execution flow
 - Provide routing/decision logic
 - Light on actual implementation
 
 **Examples:**
+
 - `/work` - Central orchestration and routing
 - `/plan` - Research-driven planning coordination
 - `/meta-analysis` - Session review and summary generation
@@ -42,12 +54,14 @@ This directory contains **modular, reusable workflows** that orchestrate AI agen
 **Purpose:** Perform specific, focused tasks.
 
 **Characteristics:**
+
 - Execute concrete actions
 - May call utilities but not other executors
 - Provide detailed progress during execution
 - Return structured results
 
 **Examples:**
+
 - `/implement` - Test-driven implementation
 - `/research` - Comprehensive research gathering
 - `/validate` - Quality checks and testing
@@ -58,12 +72,14 @@ This directory contains **modular, reusable workflows** that orchestrate AI agen
 **Purpose:** Provide reusable, focused operations.
 
 **Characteristics:**
+
 - Single, well-defined purpose
 - No sub-workflow calls
 - Fast execution (<30 seconds typical)
 - Minimal task overhead
 
 **Examples:**
+
 - `/load-context` - Efficient context loading
 - `/detect-context` - Project state analysis
 - `/work-routing` - Routing decision logic
@@ -84,8 +100,8 @@ All workflows MUST print announcements at these points:
 🔄 **Entering /workflow:** Purpose description
 ```
 
-**When:** Immediately upon workflow invocation, before any work  
-**Why:** Users know workflow has started  
+**When:** Immediately upon workflow invocation, before any work
+**Why:** Users know workflow has started
 **Example:**
 
 ```markdown
@@ -98,8 +114,8 @@ All workflows MUST print announcements at these points:
 📋 **Stage N Complete:** What finished
 ```
 
-**When:** After each major stage completes  
-**Why:** Users see incremental progress  
+**When:** After each major stage completes
+**Why:** Users see incremental progress
 **Example:**
 
 ```markdown
@@ -112,8 +128,8 @@ All workflows MUST print announcements at these points:
 ↪️ **Delegating to /sub-workflow:** Reason
 ```
 
-**When:** Before calling any sub-workflow  
-**Why:** Users see execution flow  
+**When:** Before calling any sub-workflow
+**Why:** Users see execution flow
 **Example:**
 
 ```markdown
@@ -126,8 +142,8 @@ All workflows MUST print announcements at these points:
 ✅ **Completed /workflow:** Summary of results
 ```
 
-**When:** After all work complete, before returning  
-**Why:** Confirms successful completion  
+**When:** After all work complete, before returning
+**Why:** Confirms successful completion
 **Example:**
 
 ```markdown
@@ -149,6 +165,7 @@ All workflows MUST print announcements at these points:
 ### Task Update Requirements
 
 **Frequency:**
+
 - **Minimum:** After each stage completion
 - **Recommended:** Every 30-90 seconds for long workflows
 - **Maximum gap:** 3 minutes without update
@@ -198,12 +215,14 @@ update_plan({
 ### When to Create Task Plans
 
 **REQUIRED:**
+
 - Any work requiring 3+ distinct steps
 - Work expected to take >5 minutes
 - All orchestrator workflow invocations
 - Any multi-phase implementation
 
 **OPTIONAL (may skip):**
+
 - Single-step request (e.g., "format this file")
 - Quick question/answer in Chat mode
 - User explicitly requests no planning overhead
@@ -213,6 +232,7 @@ update_plan({
 **MANDATORY FORMAT:** `<number>. /<workflow> - <description>`
 
 **Rules:**
+
 1. Include hierarchical number (e.g., `3.1.2`)
 2. Period after number (`.`)
 3. Workflow prefix (`/workflow-name`)
@@ -220,9 +240,10 @@ update_plan({
 5. Deliverable-focused description
 
 **Hierarchy:**
+
 - **Level 0:** `1. /workflow - Task` (no indent)
-- **Level 1:** `  3.1. /workflow - Subtask` (2-space indent)
-- **Level 2:** `    3.1.2. /workflow - Sub-subtask` (4-space indent)
+- **Level 1:** `3.1. /workflow - Subtask` (2-space indent)
+- **Level 2:** `3.1.2. /workflow - Sub-subtask` (4-space indent)
 
 **Good Examples:**
 
@@ -284,6 +305,7 @@ update_plan({
 #### 1. Define Workflow Purpose
 
 **Questions to answer:**
+
 - What problem does this workflow solve?
 - Is this an orchestrator, executor, or utility?
 - What workflows will it call?
@@ -292,6 +314,7 @@ update_plan({
 #### 2. Choose Category and Template
 
 **Templates:**
+
 - `scripts/templates/workflow_orchestrator.md.j2` - For orchestrators
 - `scripts/templates/workflow_executor.md.j2` - For executors
 - `scripts/templates/workflow_utility.md.j2` - For utilities
@@ -299,6 +322,7 @@ update_plan({
 #### 3. Define Task Granularity
 
 **Guidelines:**
+
 - **Short workflow (<2 min):** 2-3 tasks acceptable
 - **Medium workflow (2-5 min):** 4-6 tasks recommended
 - **Long workflow (>5 min):** 6-15 tasks (update every 30-60s)
@@ -308,6 +332,7 @@ update_plan({
 #### 4. Add Progress Announcements
 
 **Checklist:**
+
 - [ ] Workflow entry message (🔄)
 - [ ] Stage entry messages for each stage
 - [ ] Stage completion messages (📋)
@@ -317,6 +342,7 @@ update_plan({
 #### 5. Document Sub-Workflow Calls
 
 For each sub-workflow call, document:
+
 - When it's called
 - What it returns
 - How to handle its output
@@ -343,6 +369,7 @@ status: [active|deprecated|experimental]
 #### 7. Validate
 
 **Checklist:**
+
 - [ ] Markdown linting passes (`npx markdownlint-cli2 <file>`)
 - [ ] Task format valid (if using examples)
 - [ ] All stages have entry/completion messages
@@ -356,11 +383,13 @@ status: [active|deprecated|experimental]
 ### Granularity
 
 **DO:**
+
 - ✅ Break complex stages into observable substeps
 - ✅ Update tasks every 30-90 seconds
 - ✅ Print progress messages for long operations
 
 **DON'T:**
+
 - ❌ Have stages that take >2 minutes with no updates
 - ❌ Create task plans with <3 steps for multi-minute work
 - ❌ Update tasks too frequently (<15 seconds per task)
@@ -368,11 +397,13 @@ status: [active|deprecated|experimental]
 ### Announcements
 
 **DO:**
+
 - ✅ Use consistent emoji standards
 - ✅ Include specific details in messages ("5 sources analyzed")
 - ✅ Print before AND after sub-workflow calls
 
 **DON'T:**
+
 - ❌ Over-announce every tiny operation
 - ❌ Duplicate information (tasks already show status)
 - ❌ Skip delegation announcements
@@ -380,11 +411,13 @@ status: [active|deprecated|experimental]
 ### Task Descriptions
 
 **DO:**
+
 - ✅ Focus on deliverables ("Create ADR document")
 - ✅ Include context in parentheses ("Update Section 1.11")
 - ✅ Use action verbs (Create, Update, Analyze, Implement)
 
 **DON'T:**
+
 - ❌ Describe process ("Read file and write changes")
 - ❌ Be vague ("Do Phase 2")
 - ❌ Use wrong workflow attribution
@@ -425,7 +458,8 @@ status: [active|deprecated|experimental]
 ```markdown
 ✅ **Completed /load-context:** Context loaded (5 files in 2 batches)
 ```
-```
+
+---
 
 ### Example 2: Complex Orchestrator Workflow
 
@@ -500,6 +534,7 @@ update_plan({
 
 ## Workflow Exit
 
+```markdown
 ✅ **Completed /plan:** Planning complete, implementation ready
 ```
 
@@ -540,6 +575,7 @@ python scripts/validate_task_format.py --file <workflow>.md
 ### Automated Validation
 
 Pre-commit hooks automatically validate:
+
 - Markdown linting (markdownlint-cli2)
 - Task format compliance (validate_task_format.py)
 
@@ -569,11 +605,13 @@ Pre-commit hooks automatically validate:
 ### Q: When should I create a new workflow vs extending existing?
 
 **A:** Create new if:
+
 - Distinct purpose not covered by existing workflows
 - Would require significant changes to existing workflow
 - Reusability across multiple scenarios
 
 Extend existing if:
+
 - Adding a new stage to current flow
 - Enhancing granularity of existing stages
 - Minor feature addition
@@ -585,6 +623,7 @@ Extend existing if:
 ### Q: Should I add progress announcements to utility workflows?
 
 **A:** Yes, but minimal:
+
 - Entry message (always)
 - Exit message (always)
 - Skip stage messages if <30 seconds total
@@ -596,6 +635,7 @@ Extend existing if:
 ### Q: Can I skip the task system for quick operations?
 
 **A:** Yes, for:
+
 - Single-step operations (<1 minute)
 - Direct tool calls with no logic
 - User explicitly requests no planning
@@ -606,6 +646,6 @@ Extend existing if:
 
 ---
 
-**Version:** 1.0.0  
-**Last Updated:** 2025-10-19  
+**Version:** 1.0.0
+**Last Updated:** 2025-10-19
 **Maintained By:** mcp-web core team

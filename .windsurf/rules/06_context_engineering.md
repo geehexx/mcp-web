@@ -1,15 +1,16 @@
 ---
 created: "2025-10-18"
-updated: "2025-10-18"
+updated: "2025-10-19"
 trigger: file_operations
-description: File operations, git operations, and context management strategies
+description: File operations, git operations, context management, and .windsurf/ directory structure enforcement
 category: operations
-tokens: 1680
+tokens: 2100
 applyTo:
   - file_operations
   - git
   - context_loading
-priority: medium
+  - windsurf_directory_structure
+priority: high
 status: active
 ---
 
@@ -47,16 +48,51 @@ status: active
 └── templates/         # Code/document templates (deprecated - use docs/)
 ```
 
-### Critical: .windsurf/docs/ vs .windsurf/workflows/
+### Critical: .windsurf/docs/ vs .windsurf/workflows/ vs .windsurf/rules/
 
-- **workflows/**: Executable workflows ONLY (invokable via `/workflow-name`)
-- **docs/**: Reference documentation, pattern libraries, guides (NOT executable)
-  - These are machine-readable documentation for AI agents
-  - Maintained with same rigor as regular documentation
-  - Provide improved reference points over harder-to-find context in docs/
-  - Examples: context-loading-patterns.md, batch-operations.md
+**STRICT SEPARATION ENFORCED:**
 
-**Rule:** Never put non-workflow reference documentation in workflows/ directory. Use docs/ for pattern libraries, guides, and AI-specific references.
+| Directory | Purpose | Allowed Files | Forbidden |
+|-----------|---------|---------------|----------|
+| **workflows/** | Executable workflows ONLY | `*.md` files invokable via `/workflow-name` | README.md, guides, documentation, indices |
+| **docs/** | Reference documentation | Pattern guides, best practices, indices | Executable workflows |
+| **rules/** | Agent behavior rules | `*.md` rule files | README.md, guides, documentation |
+
+**workflows/** - Executable workflows ONLY:
+
+- Each `.md` file is invokable via `/workflow-name`
+- Contains procedural steps for agent execution
+- YAML frontmatter with workflow metadata
+- **FORBIDDEN:** README.md, INDEX.md, GUIDE.md, or any non-executable documentation
+
+**docs/** - Reference documentation (machine-readable):
+
+- Pattern libraries, best practices, guides
+- Maintained with same rigor as regular documentation
+- Provide reference points for AI agents
+- Examples: `workflow-guide.md`, `context-loading-patterns.md`, `batch-operations.md`
+- **ALLOWED:** README.md, INDEX.md, comprehensive guides
+
+**rules/** - Agent behavior rules ONLY:
+
+- Behavioral directives and constraints
+- Conditional rules triggered by context
+- **FORBIDDEN:** README.md, guides, documentation
+
+**CRITICAL VIOLATIONS:**
+
+❌ **NEVER create these files:**
+
+- `.windsurf/workflows/README.md` → Use `.windsurf/docs/workflow-guide.md`
+- `.windsurf/rules/README.md` → Use `.windsurf/docs/rules-index.md`
+- Any non-workflow file in `workflows/`
+- Any non-rule file in `rules/`
+
+**Enforcement:**
+
+- Pre-commit hooks validate directory structure
+- `ls-lint` enforces kebab-case for workflow/rule files
+- Manual review required for any `.windsurf/` changes
 
 ---
 
