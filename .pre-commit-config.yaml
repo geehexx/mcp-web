@@ -123,6 +123,21 @@ repos:
         files: ^\.windsurf/(workflows|rules)/.*\.md$
         pass_filenames: false
 
+      - id: validate-workflows
+        name: "🔄 workflows · Validate workflow and rule files"
+        entry: uv run python scripts/validate_workflows.py
+        language: system
+        files: ^\.windsurf/(workflows|rules)/.*\.md$
+        pass_filenames: false
+
+      - id: check-workflow-tokens
+        name: "📊 workflows · Check token count thresholds"
+        entry: uv run python scripts/check_workflow_tokens.py
+        language: system
+        files: ^\.windsurf/(workflows|rules)/.*\.md$
+        pass_filenames: false
+        args: [--threshold, "60000"]
+
   # Local - Fast Tests (Optional, can be slow)
   # Uncomment to run fast tests on every commit
   # - repo: local

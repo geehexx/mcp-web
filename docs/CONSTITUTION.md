@@ -1,7 +1,8 @@
 # mcp-web Project Constitution
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 **Effective Date:** 2025-10-15
+**Last Updated:** 2025-10-20
 **Status:** Active
 
 This document establishes the principles, standards, and processes that govern the mcp-web project. It serves as the foundational reference for all contributors, especially AI agents working on the codebase.
@@ -408,6 +409,8 @@ References: #123, ADR-0005
 - Tests with coverage (`task test:coverage:min`)
 - Security checks (`task security`)
 - Documentation linting (`task docs:lint`)
+- **Workflow validation** (`scripts/validate_workflows.py`)
+- **Token count checks** (`scripts/check_workflow_tokens.py`)
 
 **On merge to main:**
 
@@ -415,6 +418,17 @@ References: #123, ADR-0005
 - Generate API documentation
 - Update CHANGELOG
 - Tag release if applicable
+
+#### 4.1 Workflow Quality Gates
+
+**All .windsurf/ workflow and rule changes must:**
+
+- Pass YAML frontmatter schema validation
+- Have no broken cross-references
+- Stay within token budget (60,000 tokens total)
+- Maintain complexity scores (<75/100)
+- Update machine-readable documentation indices
+- Pass pre-commit hooks automatically
 
 ---
 
@@ -535,6 +549,18 @@ References: #123, ADR-0005
 ---
 
 ## Changelog
+
+### Version 1.1.0 (2025-10-20)
+
+**Workflow quality automation:**
+
+- Added workflow validation requirements (CI/CD section 4.1)
+- Token budget monitoring (60,000 token threshold)
+- Complexity score enforcement (<75/100)
+- YAML frontmatter schema validation
+- Cross-reference validation
+- Pre-commit hooks for automated checks
+- GitHub Actions workflow for PR validation
 
 ### Version 1.0.0 (2025-10-15)
 

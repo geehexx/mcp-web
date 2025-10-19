@@ -1,11 +1,14 @@
 # Documentation Structure
 
-**Version:** 1.1.0
-**Last Updated:** 2025-10-18
+**Version:** 1.2.0
+**Last Updated:** 2025-10-20
 
 This document defines the organization and lifecycle of all documentation in the mcp-web project.
 
-**Related:** [ADR-0018: Workflow Architecture V3](adr/0018-workflow-architecture-v3.md) - Workflow taxonomy and guides vs workflows distinction
+**Related:**
+
+- [ADR-0018: Workflow Architecture V3](adr/0018-workflow-architecture-v3.md) - Workflow taxonomy and guides vs workflows distinction
+- [CONSTITUTION.md v1.1.0](CONSTITUTION.md) - Workflow quality gates and automation requirements
 
 ---
 
@@ -145,9 +148,16 @@ docs/
 │   └── frontmatter-schema.json    # YAML frontmatter schema
 │
 └── templates/                     # Code/document templates
+
+scripts/                           # Automation and validation scripts
+├── validate_workflows.py          # Workflow validation (YAML, cross-refs, complexity)
+├── check_workflow_tokens.py       # Token count monitoring and thresholds
+└── update_machine_readable_docs.py # Auto-generate workflow/rule indices
 ```
 
 **Key Distinction:** Workflows (`.windsurf/workflows/`) are **executable**, Guides (`docs/guides/`) are **reference documentation**. See [ADR-0018](adr/0018-workflow-architecture-v3.md) for taxonomy.
+
+**Quality Automation:** All workflows and rules are validated via pre-commit hooks and CI/CD. See [CONSTITUTION.md Section 4.1](CONSTITUTION.md#41-workflow-quality-gates).
 
 ---
 

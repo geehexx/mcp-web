@@ -1,0 +1,94 @@
+name: Workflow Quality
+
+on:
+  pull_request:
+    paths:
+      - '.windsurf/workflows/**'
+      - '.windsurf/rules/**'
+      - '.windsurf/schemas/**'
+  push:
+    branches: [main]
+    paths:
+      - '.windsurf/workflows/**'
+      - '.windsurf/rules/**'
+      - '.windsurf/schemas/**'
+
+jobs:
+  validate:
+    name: Validate Workflows & Rules
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for token comparison
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: |
+          uv sync --frozen
+          uv pip install pyyaml jsonschema
+
+      - name: Validate workflow files
+        run: |
+          uv run python scripts/validate_workflows.py
+
+      - name: Check token counts
+        run: |
+          uv run python scripts/check_workflow_tokens.py --threshold 60000
+
+      - name: Upload token metrics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: token-metrics
+          path: .benchmarks/workflow-tokens-*.json*
+          retention-days: 90
+
+  report:
+    name: Generate Report
+    needs: validate
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Generate metrics
+        run: |
+          uv sync --frozen
+          uv pip install pyyaml
+          uv run python scripts/check_workflow_tokens.py > metrics.txt
+
+      - name: Comment on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const metrics = fs.readFileSync('metrics.txt', 'utf8');
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## 📊 Workflow Quality Report\n\n\`\`\`\n${metrics}\n\`\`\``
+            });
