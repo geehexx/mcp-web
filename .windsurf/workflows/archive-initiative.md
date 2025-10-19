@@ -71,12 +71,13 @@ python scripts/validate_archival.py docs/initiatives/active/[initiative-name]/in
 ### Step 2: Interpret Results
 
 **Exit codes:**
+
 - `0` = All gates passed (or force bypass used)
 - `1` = Gate failures, archival blocked
 
 **Example output:**
 
-```
+```text
 📋 Archival Validation: initiative.md
 ============================================================
 
@@ -126,6 +127,7 @@ python scripts/validate_archival.py \
 ```
 
 **Use report for:**
+
 - Documentation of archival decision
 - Waiver justification records
 - Portfolio governance audits
@@ -142,6 +144,7 @@ Based on Quality Gates (PMI/DTU ProjectLab):
 | **Kill/Recycle** | Critical failures | Return to active, fix issues |
 
 **Waiver documentation must include:**
+
 - Which gates failed
 - Business justification for bypass
 - Mitigation plan (if applicable)

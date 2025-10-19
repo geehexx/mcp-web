@@ -104,7 +104,9 @@ class ArchivalValidator:
         section_start = success_section_match.end()
         next_section_match = re.search(r"\n##\s+", self.content[section_start:])
         if next_section_match:
-            section_content = self.content[section_start : section_start + next_section_match.start()]
+            section_content = self.content[
+                section_start : section_start + next_section_match.start()
+            ]
         else:
             section_content = self.content[section_start:]
 
@@ -115,13 +117,13 @@ class ArchivalValidator:
 
         passed = unchecked == 0 and total > 0
         message = f"{checked}/{total} success criteria met"
-        details = None
 
-        if not passed:
-            if total == 0:
-                details = "No checkboxes found in Success Criteria section"
-            else:
-                details = f"{unchecked} criteria remain unchecked"
+        if not passed and total == 0:
+            details = "No checkboxes found in Success Criteria section"
+        elif not passed:
+            details = f"{unchecked} criteria remain unchecked"
+        else:
+            details = None
 
         return GateResult(
             gate_name="Success Criteria",
@@ -133,10 +135,7 @@ class ArchivalValidator:
 
     def check_blockers_gate(self) -> GateResult:
         """Gate 3: All blockers must be resolved."""
-        # Check frontmatter for blockers field
-        blockers = self.frontmatter_data.get("Blockers", [])
-
-        # Also check for Blockers section in content
+        # Check for Blockers section in content
         blockers_section_match = re.search(r"##\s+Blockers", self.content, re.IGNORECASE)
 
         if not blockers_section_match:
@@ -152,37 +151,47 @@ class ArchivalValidator:
         section_start = blockers_section_match.end()
         next_section_match = re.search(r"\n##\s+", self.content[section_start:])
         if next_section_match:
-            section_content = self.content[section_start : section_start + next_section_match.start()]
+            section_content = self.content[
+                section_start : section_start + next_section_match.start()
+            ]
         else:
             section_content = self.content[section_start:]
 
         # Look for "Current Blockers" subsection
-        current_blockers_match = re.search(r"(?:Current|Active)\s+Blockers", section_content, re.IGNORECASE)
+        current_blockers_match = re.search(
+            r"(?:Current|Active)\s+Blockers", section_content, re.IGNORECASE
+        )
 
-        if not current_blockers_match:
-            # Check if section says "None"
-            if re.search(r"(?:None|No blockers)", section_content, re.IGNORECASE):
-                return GateResult(
-                    gate_name="Blockers",
-                    severity="warning",
-                    passed=True,
-                    message="No active blockers",
-                    details="Blockers section indicates no current blockers",
-                )
+        # Check if section says "None"
+        if not current_blockers_match and re.search(
+            r"(?:None|No blockers)", section_content, re.IGNORECASE
+        ):
+            return GateResult(
+                gate_name="Blockers",
+                severity="warning",
+                passed=True,
+                message="No active blockers",
+                details="Blockers section indicates no current blockers",
+            )
 
         # Look for list items in Current Blockers
         current_start = current_blockers_match.end() if current_blockers_match else 0
         current_section = section_content[current_start:200]  # First 200 chars after heading
 
         active_blockers = re.findall(r"- .+", current_section)
-        active_blockers = [b for b in active_blockers if not re.search(r"None|No blockers", b, re.IGNORECASE)]
+        active_blockers = [
+            b for b in active_blockers if not re.search(r"None|No blockers", b, re.IGNORECASE)
+        ]
 
         passed = len(active_blockers) == 0
-        message = f"{len(active_blockers)} active blocker(s)" if active_blockers else "No active blockers"
-        details = None
+        message = (
+            f"{len(active_blockers)} active blocker(s)" if active_blockers else "No active blockers"
+        )
 
         if not passed:
             details = f"Resolve these blockers before archival: {', '.join(active_blockers[:3])}"
+        else:
+            details = "No blockers found"
 
         return GateResult(
             gate_name="Blockers",
@@ -216,7 +225,9 @@ class ArchivalValidator:
                         dependents.append(init_id)
 
             passed = len(dependents) == 0
-            message = f"{len(dependents)} dependent initiative(s)" if dependents else "No dependents"
+            message = (
+                f"{len(dependents)} dependent initiative(s)" if dependents else "No dependents"
+            )
             details = None
 
             if not passed:
@@ -265,7 +276,9 @@ class ArchivalValidator:
         section_start = updates_match.end()
         next_section_match = re.search(r"\n##\s+", self.content[section_start:])
         if next_section_match:
-            section_content = self.content[section_start : section_start + next_section_match.start()]
+            section_content = self.content[
+                section_start : section_start + next_section_match.start()
+            ]
         else:
             section_content = self.content[section_start:]
 
@@ -275,7 +288,9 @@ class ArchivalValidator:
 
         passed = has_completion
         message = "Completion documented" if passed else "No completion entry found"
-        details = None if passed else "Add completion entry with date and summary to Updates section"
+        details = (
+            None if passed else "Add completion entry with date and summary to Updates section"
+        )
 
         return GateResult(
             gate_name="Documentation",
@@ -344,7 +359,9 @@ class ArchivalValidator:
 
         for gate in self.gates:
             status = "✅ PASS" if gate.passed else "❌ FAIL"
-            lines.append(f"| {gate.gate_name} | {gate.severity.upper()} | {status} | {gate.message} |")
+            lines.append(
+                f"| {gate.gate_name} | {gate.severity.upper()} | {status} | {gate.message} |"
+            )
 
         lines.append("")
 
@@ -400,9 +417,7 @@ class ArchivalValidator:
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Validate initiative for archival readiness"
-    )
+    parser = argparse.ArgumentParser(description="Validate initiative for archival readiness")
     parser.add_argument(
         "initiative_file",
         type=Path,
@@ -467,7 +482,7 @@ def main():
         else:
             print("❌ ARCHIVAL BLOCKED")
             if not args.force:
-                print("\nResolve critical failures or use --force --reason \"justification\"")
+                print('\nResolve critical failures or use --force --reason "justification"')
 
     # Generate report if requested
     if args.report:
