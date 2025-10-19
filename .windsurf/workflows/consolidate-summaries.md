@@ -36,7 +36,7 @@ update_plan({
     { step: "2.5. /consolidate-summaries - Extract action items (optional)", status: "pending" },
     { step: "3. /consolidate-summaries - Apply consolidation rules", status: "pending" },
     { step: "4. /consolidate-summaries - Validate and create consolidated summary", status: "pending" },
-    { step: "5. /consolidate-summaries - Archive originals and commit", status: "pending" }
+    { step: "5. /consolidate-summaries - Delete originals and commit", status: "pending" }
   ]
 })
 ```
@@ -680,7 +680,7 @@ For EACH original summary:
 
 ---
 
-## Stage 5: Implementation
+## Stage 5: Implementation and Cleanup
 
 ### 5.1 Create Consolidated Summary
 
@@ -699,9 +699,13 @@ docs/archive/session-summaries/YYYY-MM-DD-daily-summary.md
 
 Run validation checklist (Stage 4.1) line by line
 
-### 5.4 Remove Original Files
+### 5.4 Delete Original Files
 
 ⚠️ **CRITICAL SAFETY:** Do NOT delete consolidated summary.
+
+**Rationale:** Per industry best practices, consolidation = compress data + purge/delete originals. The consolidated summary preserves all critical information in compressed format. Originals are redundant and should be deleted, not archived.
+
+**Reference:** [Database consolidation best practices](https://www.sedatasolutions.io/whats-the-difference-between-purging-deleting-and-archiving-in-a-database/) - "Purging keeps a copy of the data... more beneficial when removing large amounts of records."
 
 **After validation:**
 
@@ -709,11 +713,18 @@ Run validation checklist (Stage 4.1) line by line
 # List files to be deleted (verify before running)
 ls -1 docs/archive/session-summaries/YYYY-MM-DD-*.md | grep -v "daily-summary"
 
-# Remove originals (EXCLUDES daily-summary.md)
+# Delete originals (EXCLUDES daily-summary.md)
 find docs/archive/session-summaries -name "YYYY-MM-DD-*.md" ! -name "*daily-summary.md" -delete
 ```
 
 **Validation:** Ensure consolidated summary exists and is complete before deletion.
+
+**DO NOT:**
+
+- ❌ Create `consolidated/` subdirectories
+- ❌ Move files to archive subdirectories
+- ❌ Use `git mv` to "archive" originals
+- ✅ Use `git rm` or `find ... -delete` to purge originals
 
 See [Error Handling Pattern](../docs/batch-operations.md#pattern-4-error-handling-in-batches) for safe file operations.
 
@@ -766,10 +777,10 @@ markdown-link-check docs/archive/session-summaries/YYYY-MM-DD-daily-summary.md
 git add docs/archive/session-summaries/YYYY-MM-DD-daily-summary.md
 git commit -m "docs(archive): consolidate YYYY-MM-DD session summaries
 
-- Created comprehensive daily summary
-- Archived N individual summaries
+- Created comprehensive daily summary consolidating N sessions
+- Deleted N individual summaries (information preserved in daily summary)
 - Updated references
-- Preserved all critical information"
+- All critical information preserved in compressed format"
 ```
 
 ---
@@ -799,8 +810,9 @@ git commit -m "docs(archive): consolidate YYYY-MM-DD session summaries
 
 - [ ] Single consolidated summary created
 - [ ] All unique information preserved
-- [ ] Original summaries removed after verification
+- [ ] Original summaries deleted after verification (not archived)
 - [ ] All references updated
+- [ ] No `consolidated/` subdirectories created
 - [ ] Markdown linting passes
 - [ ] Git commit completed
 

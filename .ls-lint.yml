@@ -38,7 +38,8 @@ ls:
     .md: regex:[A-Z_]+|README
     .dir: kebab-case
 
-  # Session summaries - dated format
+  # Session summaries - dated format ONLY
+  # NOTE: Subdirectories (e.g., consolidated/) are anti-pattern per consolidate-summaries workflow
   docs/archive/session-summaries:
     .md: regex:\d{4}-\d{2}-\d{2}-[a-z0-9-]+  # 2025-10-18-workflow-refactor.md
 
