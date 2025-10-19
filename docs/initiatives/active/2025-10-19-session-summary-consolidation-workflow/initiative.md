@@ -1,0 +1,203 @@
+# Initiative: Session Summary Consolidation Workflow (Manual)
+
+**Status:** Active
+**Created:** 2025-10-19
+**Owner:** AI Agent
+**Priority:** High
+**Estimated Duration:** 3-4 hours
+**Target Completion:** 2025-10-22
+
+---
+
+## Objective
+
+Create a practical, good-enough workflow for consolidating and extracting action items from session summaries using manual analysis, enabling immediate progress on Oct 15-19 summary mining while deferring advanced automation until MCP server file system support is available.
+
+## Success Criteria
+
+- [ ] Enhanced `/consolidate-summaries` workflow with action item extraction
+- [ ] Manual process documented for extracting action items
+- [ ] 21 session summaries from Oct 15-19 analyzed
+- [ ] Action items extracted and categorized (manual YAML)
+- [ ] Cross-reference validation against current initiatives
+- [ ] New initiatives created from validated gaps
+- [ ] Workflow tested on Oct 18 summaries (13 files)
+
+---
+
+## Motivation
+
+**Problem:**
+
+- Original mining plan requires complex LLM extraction pipeline (Phase 2-6, 15-20 hours)
+- Would duplicate MCP server's summarization capabilities (reinventing wheel)
+- Cannot leverage internal MCP tools until file system support added
+- Need to act NOW on Oct 15-19 summaries before insights go stale
+
+**Impact:**
+
+- **Without this:** 3-4 week delay waiting for MCP file system + automation
+- **With this:** Immediate progress with manual workflow, upgrade later
+- **Quick wins:** Consolidate Oct 18 (13 files!), extract action items this week
+
+**Value:**
+
+- **Immediate:** Process 21 summaries this week with manual workflow
+- **Pragmatic:** 80/20 rule - good-enough now, perfect later
+- **Foundation:** Manual process validates automation requirements
+- **No waste:** Work done now feeds into future automation design
+
+---
+
+## Scope
+
+### In Scope
+
+- Enhance `/consolidate-summaries` workflow with action item extraction section
+- Document manual process for action item extraction
+- Analyze Oct 15-19 summaries (21 files)
+- Extract action items to simple YAML format (manual)
+- Cross-reference against current 3 active initiatives
+- Create 2-3 missing initiatives identified in summary analysis
+- Test workflow on Oct 18 summaries (13 file consolidation)
+
+### Out of Scope
+
+- LLM-based extraction pipeline (deferred to future initiative)
+- Pydantic schemas and validation (deferred)
+- Automated deduplication (manual for now)
+- SQLite logging (deferred)
+- Instructor pattern implementation (deferred)
+
+---
+
+## Tasks
+
+### Phase 1: Workflow Enhancement (1 hour)
+
+- [ ] Read current `/consolidate-summaries` workflow
+- [ ] Add "Action Item Extraction" section to workflow
+- [ ] Document manual extraction process:
+  - [ ] Read each summary section by section
+  - [ ] Identify pain points, missing features, regressions
+  - [ ] Categorize by theme (workflow, testing, docs, etc.)
+  - [ ] Note source (file, section, quote)
+  - [ ] Assign impact/confidence based on frequency + explicitness
+- [ ] Add cross-reference validation step
+- [ ] Update workflow with examples
+
+### Phase 2: Process Oct 15-19 Summaries (2-3 hours)
+
+- [ ] Consolidate Oct 18 summaries (13 files → 1 daily)
+- [ ] Extract action items from all 21 summaries (manual YAML)
+- [ ] Deduplicate action items (manual comparison)
+- [ ] Validate against current initiatives:
+  - [ ] Performance Optimization
+  - [ ] Windsurf Workflows V2
+  - [ ] Workflow Automation Enhancement
+- [ ] Identify gaps not covered by active initiatives
+
+### Phase 3: Create Missing Initiatives (0.5-1 hour)
+
+- [ ] Create "Task System Validation" initiative (identified as CRITICAL)
+- [ ] Create "Quality Automation" initiative (expand Windsurf V2 Phase 8)
+- [ ] Update initiatives with new template fields (blockers, dependencies, related)
+
+---
+
+## Blockers
+
+**Current Blockers:**
+
+- None
+
+**Resolved Blockers:**
+
+- None
+
+---
+
+## Dependencies
+
+**Internal Dependencies:**
+
+- **Workflow Automation Enhancement** (Initiative)
+  - Status: Phase 1 complete
+  - Critical Path: No (scaffolding tools useful but not required)
+  - Notes: Can use manual templates if needed
+
+**External Dependencies:**
+
+- None
+
+**Prerequisite Initiatives:**
+
+- None (can start immediately)
+
+**Blocks These Initiatives:**
+
+- [Session Summary Mining - Advanced Automation](../2025-10-19-session-summary-mining-advanced/initiative.md) - Blocked until MCP file system support available
+
+---
+
+## Related Initiatives
+
+**Synergistic:**
+
+- [Workflow Automation Enhancement](../2025-10-18-workflow-automation-enhancement/initiative.md) - Scaffolding tools reduce manual overhead
+- [Windsurf Workflows V2 Optimization](../2025-10-17-windsurf-workflows-v2-optimization/initiative.md) - Phase 8 (Quality Automation) expands from findings here
+
+**Sequential Work:**
+
+- This initiative → [MCP File System Support](../2025-10-19-mcp-file-system-support/initiative.md) → [Session Summary Mining - Advanced](../2025-10-19-session-summary-mining-advanced/initiative.md)
+
+---
+
+## Risks and Mitigation
+
+| Risk | Impact | Likelihood | Mitigation |
+|------|--------|------------|------------|
+| Manual process too slow | Medium | Low | Focus on high-value summaries first, defer low-impact |
+| Extraction bias (manual) | Medium | Medium | Use structured checklist, compare against research |
+| Duplicate action items | Low | High | Cross-reference spreadsheet, merge similar items |
+| Manual errors | Low | Medium | Review extraction before creating initiatives |
+
+---
+
+## Timeline
+
+- **Day 1 (1h):** Enhance `/consolidate-summaries` workflow
+- **Day 2-3 (2-3h):** Extract from 21 summaries, consolidate Oct 18
+- **Day 4 (0.5-1h):** Create missing initiatives
+
+**Total:** 3.5-5 hours across 4 days
+
+---
+
+## Related Documentation
+
+- [consolidate-summaries.md](../../../.windsurf/workflows/consolidate-summaries.md) - Base workflow to enhance
+- [Summary Analysis Artifact](../2025-10-19-session-summary-mining-system/artifacts/summary-analysis.md) - Detailed findings from 21 summaries
+- [Research Summary](../2025-10-19-session-summary-mining-system/artifacts/research-summary.md) - Extraction best practices (for future reference)
+
+---
+
+## Updates
+
+### 2025-10-19 (Creation)
+
+Initiative created as "NOW" split from original comprehensive mining system.
+
+**Key Decisions:**
+
+- Manual process acceptable for 21 summaries (vs 100s)
+- Defer LLM automation until MCP file system support available
+- Focus on immediate value: consolidate Oct 18, create missing initiatives
+- Use manual extraction to validate future automation requirements
+
+**Next:** Enhance `/consolidate-summaries` workflow with action item extraction section
+
+---
+
+**Last Updated:** 2025-10-19
+**Status:** Active (Ready to Start)

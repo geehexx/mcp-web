@@ -120,6 +120,57 @@ This initiative is organized into 9 phases (expanded from 7 based on gap analysi
 
 ---
 
+## Blockers
+
+**Current Blockers:**
+
+- None
+
+**Resolved Blockers:**
+
+- **Phase 4 completion timing** (Resolved 2025-10-18)
+  - Initially worried decomposition would break existing workflows
+  - Resolution: Comprehensive testing validated all decomposed workflows
+
+## Dependencies
+
+**Internal Dependencies:**
+
+- **Agent Directives** (Rules)
+  - Status: Active, must stay synchronized
+  - Critical Path: Yes
+  - Notes: Rules and workflows must be consistent
+
+- **Common Patterns Template** (Documentation)
+  - Status: Complete (Phase 3)
+  - Critical Path: No
+  - Notes: Reduces duplication across workflows
+
+**External Dependencies:**
+
+- None
+
+**Prerequisite Initiatives:**
+
+- None
+
+**Blocks These Initiatives:**
+
+- None (improvements don't block other work)
+
+## Related Initiatives
+
+**Synergistic:**
+
+- [Workflow Automation Enhancement](../2025-10-18-workflow-automation-enhancement/initiative.md) - Phase 8 (Quality Automation) expands automation capabilities
+- [Performance Optimization](../2025-10-15-performance-optimization-pipeline/initiative.md) - Token optimization philosophy applies to both
+- [Session Summary Consolidation](../2025-10-19-session-summary-consolidation-workflow/initiative.md) - Enhances `/consolidate-summaries` workflow
+
+**Sequential Work:**
+
+- Phase 1-4 complete → Phase 5-9 planned
+- Phase 8 will feed into Quality Automation initiative
+
 ## Current Status
 
 **Phase 1-2: Complete** ✅

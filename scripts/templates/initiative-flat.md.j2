@@ -54,11 +54,98 @@
 
 {% endfor -%}
 
+## Blockers
+
+**Current Blockers:**
+{% if blockers and blockers.current -%}
+{% for blocker in blockers.current -%}
+- **{{ blocker.type }}:** {{ blocker.description }}
+  - Impact: {{ blocker.impact }}
+  - Resolution: {{ blocker.resolution_strategy }}
+{% endfor -%}
+{% else -%}
+- None
+{% endif -%}
+
+**Resolved Blockers:**
+{% if blockers and blockers.resolved -%}
+{% for blocker in blockers.resolved -%}
+- **{{ blocker.description }}** (Resolved {{ blocker.resolved_date }})
+{% endfor -%}
+{% else -%}
+- None
+{% endif -%}
+
 ## Dependencies
 
-{% for dep in dependencies -%}
-- {{ dep }}
+**Internal Dependencies:**
+{% if dependencies and dependencies.internal -%}
+{% for dep in dependencies.internal -%}
+- **{{ dep.name }}** ({{ dep.type }})
+  - Status: {{ dep.status }}
+  - Critical Path: {{ dep.critical | default('No') }}
+  {% if dep.notes -%}- Notes: {{ dep.notes }}{% endif %}
 {% endfor -%}
+{% else -%}
+- None
+{% endif -%}
+
+**External Dependencies:**
+{% if dependencies and dependencies.external -%}
+{% for dep in dependencies.external -%}
+- **{{ dep.name }}** - {{ dep.description }}
+  - Availability: {{ dep.availability }}
+  {% if dep.contingency -%}- Contingency: {{ dep.contingency }}{% endif %}
+{% endfor -%}
+{% else -%}
+- None
+{% endif -%}
+
+**Prerequisite Initiatives:**
+{% if dependencies and dependencies.prerequisites -%}
+{% for prereq in dependencies.prerequisites -%}
+- [{{ prereq.name }}]({{ prereq.path }}){% if prereq.phase %} ({{ prereq.phase }} must complete){% endif %}
+{% endfor -%}
+{% else -%}
+- None
+{% endif -%}
+
+**Blocks These Initiatives:**
+{% if dependencies and dependencies.blocks -%}
+{% for blocked in dependencies.blocks -%}
+- [{{ blocked.name }}]({{ blocked.path }}){% if blocked.reason %} - {{ blocked.reason }}{% endif %}
+{% endfor -%}
+{% else -%}
+- None (this initiative is not blocking other work)
+{% endif -%}
+
+## Related Initiatives
+
+{% if related_initiatives -%}
+{% if related_initiatives.synergistic -%}
+**Synergistic:**
+{% for related in related_initiatives.synergistic -%}
+- [{{ related.name }}]({{ related.path }}) - {{ related.relationship }}
+{% endfor -%}
+{% endif -%}
+
+{% if related_initiatives.conflicting -%}
+**Potential Conflicts:**
+{% for conflict in related_initiatives.conflicting -%}
+- [{{ conflict.name }}]({{ conflict.path }}) - {{ conflict.issue }}
+  - Resolution: {{ conflict.resolution }}
+{% endfor -%}
+{% endif -%}
+
+{% if related_initiatives.sequential -%}
+**Sequential Work:**
+{% for seq in related_initiatives.sequential -%}
+- [{{ seq.name }}]({{ seq.path }}) - {{ seq.order }}
+{% endfor -%}
+{% endif -%}
+{% else -%}
+- None identified
+{% endif -%}
 
 ## Risks and Mitigation
 

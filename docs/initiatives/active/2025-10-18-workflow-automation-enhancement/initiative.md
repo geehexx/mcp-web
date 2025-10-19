@@ -353,22 +353,61 @@ This wastes tokens on tasks that require minimal intelligence and maximal precis
 - Zero linting failures
 - All success criteria met
 
+## Blockers
+
+**Current Blockers:**
+
+- None
+
+**Resolved Blockers:**
+
+- **Folder vs Flat Structure Decision** (Resolved 2025-10-18)
+  - Was uncertain whether to support both formats
+  - Resolution: Support both, default to folder for complex initiatives
+
 ## Dependencies
 
-**Internal:**
+**Internal Dependencies:**
 
-- PROPOSAL-folder-based-structure.md must be resolved (flat vs folder)
-- ADR-0013 (Initiative Documentation Standards) - informs templates
-- docs/DOCUMENTATION_STRUCTURE.md - defines frontmatter schema
-- Existing uv/Taskfile infrastructure
+- **ADR-0013** (Documentation)
+  - Status: Complete
+  - Critical Path: Yes
+  - Notes: Defines initiative standards that templates must follow
 
-**External:**
+- **DOCUMENTATION_STRUCTURE.md** (Documentation)
+  - Status: Complete
+  - Critical Path: Yes
+  - Notes: Defines frontmatter schema for validation
 
-- None (all dependencies already installed or Python stdlib)
+- **uv + Taskfile Infrastructure** (Tooling)
+  - Status: Active, stable
+  - Critical Path: Yes
+  - Notes: All scripts invoked via Taskfile commands
 
-**Blockers:**
+**External Dependencies:**
 
-- None identified
+- **Python stdlib** - No additional dependencies for Phase 1
+- **jinja2, python-frontmatter, pyyaml** - Added in Phase 1
+
+**Prerequisite Initiatives:**
+
+- None
+
+**Blocks These Initiatives:**
+
+- None (automation is nice-to-have, not blocking)
+
+## Related Initiatives
+
+**Synergistic:**
+
+- [Windsurf Workflows V2 Optimization](../2025-10-17-windsurf-workflows-v2-optimization/initiative.md) - Phase 8 (Quality Automation) will use these tools
+- [Session Summary Consolidation](../2025-10-19-session-summary-consolidation-workflow/initiative.md) - Uses scaffolding tools for initiative creation
+
+**Sequential Work:**
+
+- Phase 1 complete → Phase 2-6 planned
+- Phase 4-5 (Frontmatter + Consolidation) feed into consolidation workflow
 
 ## Risks and Mitigation
 

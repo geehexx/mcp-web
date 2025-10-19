@@ -92,6 +92,47 @@ This initiative is organized into distinct optimization phases:
 
 ---
 
+## Blockers
+
+**Current Blockers:**
+
+- None
+
+**Resolved Blockers:**
+
+- None
+
+## Dependencies
+
+**Internal Dependencies:**
+
+- **httpx + Playwright fallback** (Code)
+  - Status: Complete
+  - Critical Path: Yes
+  - Notes: Foundation for fetch performance optimizations
+
+**External Dependencies:**
+
+- None
+
+**Prerequisite Initiatives:**
+
+- None
+
+**Blocks These Initiatives:**
+
+- None (this initiative is not blocking other work)
+
+## Related Initiatives
+
+**Synergistic:**
+
+- [Windsurf Workflows V2 Optimization](../2025-10-17-windsurf-workflows-v2-optimization/initiative.md) - Token optimization principles apply to both code and workflows
+
+**Sequential Work:**
+
+- Phase 1 complete → Phase 2-4 planned sequentially
+
 ## Timeline
 
 - **Phase 1**: 2025-10-15 to 2025-10-16 ✅ Complete
