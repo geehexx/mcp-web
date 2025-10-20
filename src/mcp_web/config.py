@@ -43,6 +43,17 @@ class FetcherSettings(BaseSettings):
     max_retries: int = Field(default=3, description="Max retry attempts")
     retry_delay: float = Field(default=1.0, description="Delay between retries (seconds)")
 
+    # File system settings
+    enable_file_system: bool = Field(default=True, description="Enable file:// URL support")
+    allowed_directories: list[str] = Field(
+        default_factory=lambda: ["."],
+        description="Whitelist of directories for file:// access (absolute or relative to cwd)",
+    )
+    max_file_size: int = Field(
+        default=10 * 1024 * 1024,  # 10MB
+        description="Maximum file size in bytes for file:// URLs",
+    )
+
     model_config = SettingsConfigDict(env_prefix="MCP_WEB_FETCHER_")
 
 

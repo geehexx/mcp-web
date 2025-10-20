@@ -147,6 +147,32 @@ class ContentExtractor:
 
             if "pdf" in content_type or fetch_result.url.endswith(".pdf"):
                 result = await self._extract_pdf(fetch_result)
+            elif any(
+                ct in content_type
+                for ct in [
+                    "text/plain",
+                    "text/markdown",
+                    "text/x-python",
+                    "text/x-",
+                    "application/json",
+                ]
+            ) or any(
+                fetch_result.url.endswith(ext)
+                for ext in [
+                    ".txt",
+                    ".md",
+                    ".py",
+                    ".js",
+                    ".json",
+                    ".yaml",
+                    ".yml",
+                    ".toml",
+                    ".rst",
+                    ".csv",
+                ]
+            ):
+                # Plain text, markdown, code files - use direct extraction
+                result = await self._extract_text(fetch_result)
             else:
                 result = await self._extract_html(fetch_result)
 
@@ -321,6 +347,84 @@ class ContentExtractor:
                 content="",
                 metadata={"error": str(e)},
             )
+
+    async def _extract_text(self, fetch_result: FetchResult) -> ExtractedContent:
+        """Extract content from plain text, markdown, or code files.
+
+        Args:
+            fetch_result: Fetch result with text content
+
+        Returns:
+            ExtractedContent
+        """
+        url = fetch_result.url
+
+        try:
+            # Decode text content
+            content = fetch_result.content.decode("utf-8", errors="ignore")
+
+            # Extract title from first line or filename
+            title = self._extract_title_from_text(content, url)
+
+            # Determine file type for metadata
+            content_type = fetch_result.content_type.lower()
+            metadata = {
+                "content_type": content_type,
+                "size": len(fetch_result.content),
+            }
+
+            # Extract code snippets if it's markdown
+            code_snippets = []
+            if "markdown" in content_type or url.endswith(".md"):
+                code_snippets = self._extract_code_snippets(content)
+
+            return ExtractedContent(
+                url=url,
+                title=title,
+                content=content,
+                metadata=metadata,
+                links=[],
+                code_snippets=code_snippets,
+            )
+
+        except Exception as e:
+            _get_logger().error("text_extraction_failed", url=url, error=str(e))
+            return ExtractedContent(
+                url=url,
+                title=self._extract_title_from_url(url),
+                content="",
+                metadata={"error": str(e)},
+            )
+
+    def _extract_title_from_text(self, content: str, url: str) -> str:
+        """Extract title from text content.
+
+        Args:
+            content: Text content
+            url: URL/path of the file
+
+        Returns:
+            Extracted title
+        """
+        lines = content.strip().split("\n")
+
+        if not lines:
+            return self._extract_title_from_url(url)
+
+        # For markdown, look for first heading
+        for line in lines:
+            line = line.strip()
+            if line.startswith("# "):
+                return line[2:].strip()
+
+        # Use first non-empty line (truncated)
+        for line in lines:
+            line = line.strip()
+            if line:
+                return line[:100] if len(line) > 100 else line
+
+        # Fallback to filename
+        return self._extract_title_from_url(url)
 
     def _extract_title(self, html: str, fallback: str | None = None) -> str:
         """Extract page title from HTML.
