@@ -525,7 +525,7 @@ Follow [Semantic Versioning](https://semver.org/):
 ### Release Checklist
 
 1. Update version in `pyproject.toml`
-2. Update `CHANGELOG.md`
+2. Update `docs/reference/CHANGELOG.md`
 3. Create release branch: `release/v0.x.0`
 4. Run full test suite
 5. Update documentation

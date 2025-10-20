@@ -440,7 +440,7 @@ if missing:
 ```python
 # Batch 1: Core docs (4 files)
 - PROJECT_SUMMARY.md
-- CHANGELOG.md
+- docs/reference/CHANGELOG.md
 - ARCHITECTURE.md
 - CONSTITUTION.md
 
@@ -508,9 +508,9 @@ git status --short
 **Bad:**
 
 ```python
-read_file("PROJECT_SUMMARY.md")      # Tool call 1
-read_file("CHANGELOG.md")             # Tool call 2
-read_file("docs/initiatives/active/initiative1.md")  # Tool call 3
+read_file("PROJECT_SUMMARY.md")  # Tool call 1
+read_file("docs/reference/CHANGELOG.md")             # Tool call 2
+read_file("ARCHITECTURE.md")          # Tool call 3
 # 3 calls → ~1.5 seconds
 ```
 
@@ -519,8 +519,8 @@ read_file("docs/initiatives/active/initiative1.md")  # Tool call 3
 ```python
 mcp0_read_multiple_files([
     "PROJECT_SUMMARY.md",
-    "CHANGELOG.md",
-    "docs/initiatives/active/initiative1.md"
+    "docs/reference/CHANGELOG.md",
+    "ARCHITECTURE.md"
 ])
 # 1 call → ~0.5 seconds
 ```
