@@ -362,6 +362,16 @@ tasks:
         find docs/ README.md -type f -name "*.md" -exec sed -i 's/  \+/ /g' {} \;
         echo "Cleaned double-spaces from documentation"
 
+  docs:coverage:
+    desc: Check documentation coverage (≥80% threshold)
+    cmds:
+      - "{{.UV}} run python scripts/doc_coverage.py --threshold 80"
+
+  docs:coverage:report:
+    desc: Generate documentation coverage JSON report
+    cmds:
+      - "{{.UV}} run python scripts/doc_coverage.py --threshold 80 --output doc-coverage.json"
+
   # Development tasks
   dev:setup:
     desc: Complete development environment setup
