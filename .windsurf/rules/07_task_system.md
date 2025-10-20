@@ -121,7 +121,7 @@ update_plan({
 
 **Decision Tree:**
 
-```
+```text
 Is work multi-phase (>3 phases)? → YES → Use Adaptive
                                  ↓ NO
 Can scope change based on findings? → YES → Use Adaptive
@@ -589,8 +589,7 @@ if [ $? -eq 0 ]; then
 else
   # Fix issues before proceeding
 fi
-```
-
+```text
 ```
 
 ### 8.2 Intelligent Commit Strategy
@@ -598,6 +597,7 @@ fi
 **Commits happen automatically when "stable state" reached:**
 
 **Stable State Criteria:**
+
 1. ✅ All tests passing for current scope
 2. ✅ Linting clean (no errors)
 3. ✅ Security scans pass (if relevant)
@@ -605,6 +605,7 @@ fi
 5. ✅ No explicit "don't commit yet" from user
 
 **Commit Decision Algorithm:**
+
 ```python
 def should_commit_automatically() -> bool:
     """Decide if automatic commit appropriate."""
@@ -642,9 +643,10 @@ def should_commit_automatically() -> bool:
 - Session ending (all work committed)
 
 **Industry Support:**
+
 > "Use checkpoint features available in your SDK to help recover from interrupted orchestration... Implement timeout and retry mechanisms."
 > — Microsoft Azure (2025), _AI Agent Orchestration Patterns_
-
+>
 > "A workflow chains multiple operations together... with checkpoints at each stage. Progress saved automatically."
 > — Patronus AI (2025), _Agentic Workflows_
 

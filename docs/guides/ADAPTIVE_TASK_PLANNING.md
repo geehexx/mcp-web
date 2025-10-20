@@ -13,6 +13,7 @@
 **What changed:** Task system now supports **adaptive dynamic planning** where tasks are added as work progresses, rather than predicted upfront.
 
 **Why it matters:**
+
 - **60-80% fewer task plan updates** (fewer prediction errors)
 - **Clearer current focus** for users (see what's happening now)
 - **More resilient** to scope changes mid-work
@@ -38,12 +39,14 @@
 ### Decision Framework
 
 **Use ADAPTIVE planning when:**
+
 - ✅ Multi-phase implementation (3+ phases)
 - ✅ Scope may change based on discoveries
 - ✅ Work duration >1 hour
 - ✅ Next steps depend on intermediate results
 
 **Use STATIC planning when:**
+
 - ⚠️ Well-defined sequence with no branches (rare)
 - ⚠️ Very short tasks (<30 min total)
 - ⚠️ Template-driven work with fixed steps
@@ -201,6 +204,7 @@ update_plan({
 ```
 
 **Problems:**
+
 - Task list cluttered with process steps
 - Commits pre-planned (what if tests fail?)
 - Manual management overhead
@@ -479,6 +483,7 @@ update_plan({
 ### Problem: Agent still listing all tasks upfront
 
 **Symptoms:**
+
 - Task plan has 10+ tasks immediately
 - Tasks like "Phase 5" listed when starting Phase 1
 - Frequent task plan corrections
@@ -518,6 +523,7 @@ update_plan({
 ### Problem: Commits still listed as tasks
 
 **Symptoms:**
+
 - Tasks like "3.6. /commit - Commit Phase 2"
 - Validation tasks listed separately
 - Cluttered task list
@@ -547,6 +553,7 @@ if (should_auto_commit()) {
 ### Problem: Parent predicting child tasks
 
 **Symptoms:**
+
 - `/work` listing `/implement` subtasks
 - Parent task plan has detailed breakdown
 - Child workflow redundant
@@ -595,16 +602,19 @@ update_plan({  // In /implement when invoked
 ### Industry Standards
 
 **Adaptive Orchestration:**
+
 - [Dynamiq (2025): Agent Orchestration Patterns](https://www.getdynamiq.ai/post/agent-orchestration-patterns-in-multi-agent-systems-linear-and-adaptive-approaches-with-dynamiq)
   - "Adaptive Orchestrator excels at dynamic decision-making... makes decisions on the fly based on current context."
 - [MarkTechPost (2025): 9 Agentic AI Workflow Patterns](https://www.marktechpost.com/2025/08/09/9-agentic-ai-workflow-patterns-transforming-ai-agents-in-2025/)
   - "Plan-execute pattern: Agents autonomously plan multi-step workflows, execute each stage sequentially, review outcomes, and adjust as needed."
 
 **Checkpoint Automation:**
+
 - [Microsoft Azure (2025): AI Agent Orchestration Patterns](https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/ai-agent-design-patterns)
   - "Use checkpoint features available in your SDK to help recover from interrupted orchestration."
 
 **Workflow Autonomy:**
+
 - V7 Labs (2025): Multi-Agent AI Systems
   - "Breaking tasks into smaller, specialized agents with clear responsibilities. Each agent manages its own subtasks autonomously."
 
