@@ -259,50 +259,121 @@ Advanced automation deferred to Session Summary Mining Advanced (blocked on MCP 
 
 ---
 
-### Active Initiatives (Q4 2024-2025)
+### Active Initiatives (Q4 2024 - Q1 2025)
 
-#### 1. Performance Optimization Pipeline (Phase 1 Complete)
+#### 1. Phase 0: Security Hardening (DEPLOYMENT BLOCKER)
 
-**Status:** Planning Phase 2
+**Status:** Ready to Start
 **Owner:** Core Team
-**Target:** Q1 2025
+**Priority:** Critical (P0)
+**Target:** 2025-11-03 (2 weeks)
+**Initiative:** `docs/initiatives/active/2025-10-20-phase-0-security-hardening.md`
 
-**Phase 1 Achievements (✅ Complete):**
+**Objective:** Eliminate P0 security vulnerabilities to achieve minimal security posture for production deployment.
 
-- Parallel map-reduce implementation (1.17x speedup measured)
-- Profiling infrastructure and benchmark suite
-- Mock LLM fixtures for deterministic testing
-- Prompt optimization (45-60% reduction)
-- Adaptive `max_tokens` based on input size
-- Stop sequences support
-- Adaptive chunking enabled by default
+**Critical Security Issues:**
 
-**Phase 2 Planned:**
+- **Prompt Injection (OWASP LLM-01)**: Scraped web content flows directly to LLM without sanitization
+- **Missing Authentication**: No auth/authz controls for MCP tools
+- **Command Injection Risk**: Audit and secure all subprocess calls
 
-- Batch API integration (50% cost savings)
-- Chunk-level caching and semantic deduplication
-- Concurrency tuning and rate limiting
-- Live performance validation
+**Success Criteria:**
 
-#### 2. Windsurf Workflows V2 Optimization (20% Complete)
+- Prompt injection detection ≥90% rate with adversarial test suite
+- API key authentication implemented (OAuth optional)
+- Zero RCE vulnerabilities in security scans
+- Security test suite passing in CI
+- SECURITY.md and threat model documented
+
+**Estimated:** 88 hours (2 weeks, 2 people)
+
+#### 2. Phase 1: Resource Stability (PRODUCTION READINESS)
+
+**Status:** Blocked by Phase 0
+**Owner:** Core Team
+**Priority:** Critical (P0-P1)
+**Target:** 2025-11-17 (1.5 weeks)
+**Initiative:** `docs/initiatives/active/2025-10-20-phase-1-resource-stability.md`
+
+**Objective:** Eliminate resource leaks (Playwright browser contexts, httpx connection pools) to enable reliable 24/7 operation.
+
+**Critical Stability Issues:**
+
+- **Playwright Context Leak**: FD exhaustion after ~100 failures → complete service failure (MTBF: 6-24h)
+- **httpx Pool Leak**: Gradual memory growth → eventual connection refusal (MTBF: 24-72h)
+
+**Success Criteria:**
+
+- FD count stable after 1000+ requests
+- Memory growth <10% over 72-hour stability test
+- Browser pool with automatic lifecycle management
+- Health check endpoint (`/health`) operational
+- 72-hour stability test passing
+
+**Estimated:** 68 hours (1.5 weeks, 2 people)
+
+#### 3. Phase 2: Data Integrity (QUALITY ASSURANCE)
+
+**Status:** Blocked by Phase 1
+**Owner:** Core Team
+**Priority:** High (P1)
+**Target:** 2025-12-01 (1.5 weeks)
+**Initiative:** `docs/initiatives/active/2025-10-20-phase-2-data-integrity.md`
+
+**Objective:** Eliminate silent data corruption via correct token counting and cache coherency for MCP protocol compliance.
+
+**Critical Data Issues:**
+
+- **Token Counting Mismatch**: tiktoken for all providers causes 10-20% errors → 12.5% content loss (Python asyncio docs)
+- **Cache Coherency**: Partial streaming responses cached as complete → MCP idempotency violation
+
+**Success Criteria:**
+
+- Token count variance <2% across providers
+- Zero context overflow errors (1000+ doc corpus)
+- Chunk boundary overlap: 100% verification
+- Cache consistency: 100% (no partial responses)
+- Provider-specific tokenizers implemented
+
+**Estimated:** 68 hours (1.5 weeks, 2 people)
+
+#### 4. Phase 3: Performance Optimization (USER EXPERIENCE)
+
+**Status:** Blocked by Phase 2
+**Owner:** Core Team
+**Priority:** Medium (P2)
+**Target:** 2025-12-22 (2 weeks)
+**Initiative:** `docs/initiatives/active/2025-10-20-phase-3-performance-optimization.md`
+
+**Objective:** Improve user experience and reduce costs through linear-time chunking, cache deduplication, and extraction optimization.
+
+**Critical Performance Issues:**
+
+- **Chunking O(n²)**: 15-25s for 20k token docs (Python asyncio) - 9.3x slower than linear
+- **Cache Races**: 5-10% wasted resources from duplicate fetches
+- **Extraction Latency**: 1-3s per page (20-40% of pipeline time)
+
+**Success Criteria:**
+
+- Large doc (20k tokens) processing <10s (current: 30-60s)
+- Duplicate fetch rate <1% (current: 5-10%)
+- P95 latency improvement >30%
+- Cloud LLM cost reduction >10%
+
+**Estimated:** 86 hours (2 weeks, 2 people)
+
+#### 5. Windsurf Workflows V2 Optimization (20% Complete)
 
 **Status:** Phases 1-2 complete, Phase 3 in progress
 **Owner:** Core Team
 **Target:** 2025-10-25
+**Initiative:** (existing workflow optimization work)
 
-**Phase 1 Achievements (✅ Complete):**
+**Phase 1-2 Achievements (✅ Complete):**
 
-- 5 new sub-workflow primitives (update-docs, bump-version, validate, load-context, detect-context)
-- YAML frontmatter schema for all documentation types
+- 9 new sub-workflow primitives and decomposed workflows
 - Token baseline metrics established (32,876 tokens)
-- Versioning tool research (chose custom workflow over external tools)
-
-**Phase 2 Achievements (✅ Complete):**
-
-- Decomposed 3 major workflows into orchestrator pattern (work, meta-analysis, plan)
-- 4 new focused sub-workflows (extract-session, summarize-session, research, generate-plan)
 - Large workflows reduced 52-83% individually
-- 9 total new workflows created
 
 **Phase 3 In Progress:**
 
@@ -310,46 +381,20 @@ Advanced automation deferred to Session Summary Mining Advanced (blocked on MCP 
 - Workflow decomposition planning
 - YAML frontmatter standardization
 
-#### 3. Workflow & Task System V3 - Dynamic Planning (Phase 1 Complete)
+#### 6. Workflow & Task System V3 - Dynamic Planning (Phase 1 Complete)
 
 **Status:** Phase 1 complete, Phase 2-7 pending
 **Owner:** AI Agent
 **Target:** 2025-11-01
 **Initiative:** `docs/initiatives/completed/2025-10-20-workflow-task-system-v3.md`
 
-**Objective:** Transition from static upfront planning to adaptive dynamic task planning with automatic validation checkpoints and intelligent commit strategies.
-
 **Phase 1 Achievements (✅ Complete - 2025-10-20):**
 
 - Research & design complete (~3 hours)
-- 5 critical issues identified from Quality Automation session
-- 5 industry sources researched (Dynamiq, Microsoft Azure, GitHub, V7 Labs, Patronus AI)
+- 5 critical issues identified and documented
 - 7-phase implementation plan designed
-- Comprehensive 553-line initiative document created
 
-**Key Issues Addressed:**
-
-1. **Static Task Planning Brittleness** - Can't adapt to dynamic work
-2. **Manual Checkpoint Tasks** - Should be automatic, not pre-planned
-3. **Task Attribution Confusion** - Orchestrator vs executor unclear
-4. **Missing Sub-Workflow Autonomy** - Sub-workflows can't self-manage
-5. **Archive Script Path Error** - Undocumented path resolution bug
-
-**Expected Impact:**
-
-- 60-80% reduction in task plan updates
-- Zero pre-planned commit/validate tasks
-- 100% correct task attribution
-- Workflow autonomy (self-managing sub-workflows)
-
-**Phases 2-7 Planned:**
-
-- Phase 2: Core Task System Improvements (4-5h)
-- Phase 3: Workflow Enhancements (3-4h)
-- Phase 4: Commit & Validation Automation (2-3h)
-- Phase 5: Fix Archive Script (1h)
-- Phase 6: Documentation & Examples (2-3h)
-- Phase 7: Validation & Testing (1-2h)
+**Phases 2-7 Planned:** 13-18 hours remaining
 
 ---
 
@@ -628,4 +673,4 @@ task docs:lint
 
 ---
 
-_This document is maintained continuously as a living snapshot of project status. Last updated: 2025-10-18 by Cascade AI._
+_This document is maintained continuously as a living snapshot of project status. Last updated: 2025-10-20 by Cascade AI._
