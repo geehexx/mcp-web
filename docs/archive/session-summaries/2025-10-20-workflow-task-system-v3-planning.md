@@ -18,7 +18,7 @@ Created comprehensive initiative document for Workflow & Task System V3, address
 
 ### 1. Initiative Creation
 
-**Created:** `docs/initiatives/active/2025-10-20-workflow-task-system-v3.md` (553 lines)
+**Created:** `docs/initiatives/completed/2025-10-20-workflow-task-system-v3.md` (553 lines)
 
 **Initiative Details:**
 - **Target:** Fix workflow/task system brittleness
@@ -166,7 +166,7 @@ Created comprehensive initiative document for Workflow & Task System V3, address
 ## Files Modified
 
 ### Created
-- `docs/initiatives/active/2025-10-20-workflow-task-system-v3.md` (+553 lines)
+- `docs/initiatives/completed/2025-10-20-workflow-task-system-v3.md` (+553 lines)
   - Comprehensive initiative document
   - 5 problem areas identified
   - 7-phase solution approach
@@ -297,7 +297,7 @@ All planned work completed successfully. No blockers or open issues.
 - Ready to begin implementation
 
 ### Key Files to Review
-- `docs/initiatives/active/2025-10-20-workflow-task-system-v3.md` - Full initiative details
+- `docs/initiatives/completed/2025-10-20-workflow-task-system-v3.md` - Full initiative details
 - `.windsurf/rules/07_task_system.md` - Current task system rules (to be updated)
 - `.windsurf/workflows/implement.md` - Workflow to enhance
 - `.windsurf/workflows/work.md` - Workflow to enhance

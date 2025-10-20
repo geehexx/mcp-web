@@ -3,7 +3,7 @@
 **Purpose:** Comprehensive guide for implementing adaptive dynamic planning in workflows.
 
 **Created:** 2025-10-20  
-**Related Initiative:** docs/initiatives/active/2025-10-20-workflow-task-system-v3.md  
+**Related Initiative:** docs/initiatives/completed/2025-10-20-workflow-task-system-v3.md  
 **Related Rules:** .windsurf/rules/07_task_system.md
 
 ---

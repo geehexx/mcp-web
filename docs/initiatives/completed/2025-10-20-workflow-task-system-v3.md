@@ -9,6 +9,8 @@ Updated: 2025-10-20
 Progress: 4/7 phases complete (57%)
 ---
 
+> **⚠️ ARCHIVED:** This initiative was completed on 2025-10-20.
+
 # Initiative: Workflow & Task System V3 - Dynamic Planning and Intelligent Checkpoints
 
 ---

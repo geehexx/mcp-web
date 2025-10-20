@@ -382,10 +382,8 @@ This comprehensive guide covers:
 ### Active Initiatives
 
 - [`2025-10-15-performance-optimization-pipeline/`](docs/initiatives/active/2025-10-15-performance-optimization-pipeline)
-- [`2025-10-17-windsurf-workflows-v2-optimization/`](docs/initiatives/active/2025-10-17-windsurf-workflows-v2-optimization)
-- [`2025-10-19-mcp-file-system-support/`](docs/initiatives/active/2025-10-19-mcp-file-system-support)
-- [`2025-10-19-quality-automation-and-monitoring/`](docs/initiatives/active/2025-10-19-quality-automation-and-monitoring)
-- [`2025-10-19-session-summary-mining-advanced/`](docs/initiatives/active/2025-10-19-session-summary-mining-advanced)
+- [`2025-10-19-mcp-file-system-support.md`](docs/initiatives/active/2025-10-19-mcp-file-system-support.md)
+- [`2025-10-19-session-summary-mining-advanced.md`](docs/initiatives/active/2025-10-19-session-summary-mining-advanced.md)
 
 ### Completed Initiatives
 
@@ -393,11 +391,16 @@ This comprehensive guide covers:
 - [`2025-10-16-convert-decisions-to-adrs.md`](docs/initiatives/completed/2025-10-16-convert-decisions-to-adrs.md)
 - [`2025-10-16-fix-security-unit-tests.md`](docs/initiatives/completed/2025-10-16-fix-security-unit-tests.md)
 - [`2025-10-16-windsurf-workflow-rules-improvements.md`](docs/initiatives/completed/2025-10-16-windsurf-workflow-rules-improvements.md)
+- [`2025-10-17-windsurf-workflows-v2-optimization/`](docs/initiatives/completed/2025-10-17-windsurf-workflows-v2-optimization)
 - [`2025-10-18-markdown-quality-comprehensive-fix/`](docs/initiatives/completed/2025-10-18-markdown-quality-comprehensive-fix)
 - [`2025-10-18-workflow-architecture/`](docs/initiatives/completed/2025-10-18-workflow-architecture)
 - [`2025-10-18-workflow-artifacts-and-transparency/`](docs/initiatives/completed/2025-10-18-workflow-artifacts-and-transparency)
 - [`2025-10-18-workflow-automation-enhancement/`](docs/initiatives/completed/2025-10-18-workflow-automation-enhancement)
+- [`2025-10-18-workflow-automation-enhancement.md`](docs/initiatives/completed/2025-10-18-workflow-automation-enhancement.md)
 - [`2025-10-19-initiative-system-lifecycle-improvements/`](docs/initiatives/completed/2025-10-19-initiative-system-lifecycle-improvements)
+- [`2025-10-19-quality-automation-and-monitoring.md`](docs/initiatives/completed/2025-10-19-quality-automation-and-monitoring.md)
 - [`2025-10-19-session-summary-consolidation-workflow/`](docs/initiatives/completed/2025-10-19-session-summary-consolidation-workflow)
-- [`2025-10-19-task-system-validation-enforcement/`](docs/initiatives/completed/2025-10-19-task-system-validation-enforcement)
+- [`2025-10-19-task-system-validation-enforcement.md`](docs/initiatives/completed/2025-10-19-task-system-validation-enforcement.md)
+- [`2025-10-19-workflow-transparency-improvements.md`](docs/initiatives/completed/2025-10-19-workflow-transparency-improvements.md)
+- [`2025-10-20-workflow-task-system-v3.md`](docs/initiatives/completed/2025-10-20-workflow-task-system-v3.md)
 <!-- AUTO:INITIATIVE-INDEX:END -->

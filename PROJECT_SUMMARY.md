@@ -255,7 +255,7 @@ Advanced automation deferred to Session Summary Mining Advanced (blocked on MCP 
 **Status:** Phase 1 complete, Phase 2-7 pending
 **Owner:** AI Agent
 **Target:** 2025-11-01
-**Initiative:** `docs/initiatives/active/2025-10-20-workflow-task-system-v3.md`
+**Initiative:** `docs/initiatives/completed/2025-10-20-workflow-task-system-v3.md`
 
 **Objective:** Transition from static upfront planning to adaptive dynamic task planning with automatic validation checkpoints and intelligent commit strategies.
 

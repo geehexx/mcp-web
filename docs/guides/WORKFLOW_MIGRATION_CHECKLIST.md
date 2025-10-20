@@ -3,7 +3,7 @@
 **Purpose:** Implementation checklist for updating workflows to use adaptive planning patterns.
 
 **Created:** 2025-10-20  
-**Initiative:** docs/initiatives/active/2025-10-20-workflow-task-system-v3.md  
+**Initiative:** docs/initiatives/completed/2025-10-20-workflow-task-system-v3.md  
 **Related:** docs/guides/ADAPTIVE_TASK_PLANNING.md
 
 ---
