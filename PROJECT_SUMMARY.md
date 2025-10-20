@@ -1,6 +1,6 @@
 # mcp-web: Project Summary
 
-**Version:** 0.1.0
+**Version:** 0.2.0
 **Status:** Active Development
 **Last Updated:** 2025-10-20
 **License:** MIT
@@ -34,6 +34,7 @@
 | **ADRs** | 18 decisions | N/A | ✅ Active |
 | **Source Modules** | 13 Python files | N/A | ✅ Stable |
 | **Test Modules** | 26 test files | N/A | ✅ Comprehensive |
+| **Test Count** | 302 tests | N/A | ✅ Passing 100% |
 
 ### Recently Completed Initiatives
 
@@ -196,6 +197,65 @@ Advanced automation deferred to Session Summary Mining Advanced (blocked on MCP 
 - CI/CD quality gates prevent degradation
 
 **Outcome:** Comprehensive quality automation infrastructure. Performance, security, and documentation metrics automated with CI enforcement and developer-friendly local testing.
+
+#### MCP Server File System Support (✅ Completed 2025-10-20)
+
+**Duration:** 2025-10-19 to 2025-10-20 (~4 hours, estimated 6.5-8 hours)
+**Owner:** AI Agent
+
+**Objective:** Extend MCP server to support local file system paths (file:// URLs and direct file paths) in addition to HTTP/HTTPS URLs.
+
+**Achievements:**
+
+- ✅ **Phase 1:** Research & Design (Complete)
+  - Researched Python file:// URL handling and path validation
+  - Designed directory whitelist security model
+  - Planned path traversal prevention strategy
+
+- ✅ **Phase 2:** Implementation (Complete)
+  - Created `FileSystemFetcher` integrated with `URLFetcher`
+  - Implemented file:// URL parsing and absolute path support
+  - Added directory whitelist validation with path resolution
+  - Integrated with existing content extraction pipeline
+  - Full security: path validation, traversal prevention, size limits
+
+- ✅ **Phase 3:** Testing (Complete)
+  - 22 unit tests: URL parsing, path validation, security
+  - 11 integration tests: End-to-end file summarization
+  - Security validation: Path traversal blocked, symlink escape prevented
+  - All 302 tests passing (including 33 new file system tests)
+
+- ✅ **Phase 4:** Documentation (Complete)
+  - API.md: 230+ line comprehensive file system section
+  - README.md: File system features and examples
+  - SECURITY_ARCHITECTURE.md: Path validation security component
+  - 4 usage examples (sessions, docs, code, mixed sources)
+
+**Deliverables:**
+
+- **Core Feature:** file:// URL and absolute path support
+- **Configuration:** `enable_file_system`, `allowed_directories`, `max_file_size`
+- **Security:** Path validation, directory whitelisting, traversal prevention
+- **Tests:** 33 comprehensive tests (22 unit + 11 integration)
+- **Documentation:** Production-ready API docs and security guidelines
+
+**Impact:**
+
+- **File system support:** Summarize local files (markdown, code, docs) alongside web URLs
+- **Security first:** Comprehensive path validation with attack scenario documentation
+- **Use cases:** Session summaries, documentation review, code analysis
+- **Unblocks:** Advanced session summary mining automation
+- **Quality:** All 8 success criteria met, delivered ahead of schedule
+
+**Key Features:**
+
+- Supports `file:///absolute/path`, `/absolute/path`, and mixed URL/file sources
+- Same summarization quality as HTTP/HTTPS URLs
+- Whitelist-based directory access (default: current directory)
+- 10MB file size limit (configurable)
+- Comprehensive error handling and security validation
+
+**Outcome:** Production-ready file system support fully implemented, tested, and documented. Enables dogfooding of MCP summarization for internal project files. Foundation for future file-based workflows.
 
 ---
 

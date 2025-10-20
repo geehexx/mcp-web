@@ -19,7 +19,7 @@ A powerful Model Context Protocol (MCP) server that provides intelligent URL sum
 - 📝 **Markdown Output**: Well-formatted summaries with citations and metadata
 - 🧪 **Comprehensive Testing**: Unit, integration, security, golden, and benchmark tests
 
-**Status:** Active Development | **Version:** 0.1.0 | **Test Coverage:** ~85% | **License:** MIT
+**Status:** Active Development | **Version:** 0.2.0 | **Test Coverage:** ~85% | **License:** MIT
 
 ## Real-World Example
 

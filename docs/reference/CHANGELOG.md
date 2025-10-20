@@ -91,6 +91,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Comprehensive security test coverage (OWASP LLM Top 10)
 - Bandit and semgrep integration in CI pipeline
 
+## [0.2.0] - 2025-10-20
+
+### Added
+
+- **File System Support** - Major new feature enabling local file summarization
+  - Support for `file://` URLs (RFC 8089 format)
+  - Support for absolute file paths (cross-platform)
+  - Mixed source summarization (web URLs + local files in single request)
+  - Directory whitelisting for security (configurable via `allowed_directories`)
+  - Path traversal prevention with symlink resolution
+  - File size limits (default: 10MB, configurable)
+  - Support for markdown, text, code, and configuration files
+  - 33 comprehensive tests (22 unit + 11 integration)
+  - Comprehensive API documentation (230+ lines)
+  - Security architecture documentation with attack scenarios
+  - Usage examples for session summaries, docs, code review
+
+### Security
+
+- Added path validation system with directory whitelisting
+- Path traversal attack prevention
+- Symlink escape detection and blocking
+- File size limits to prevent memory exhaustion
+- Documented security model in SECURITY_ARCHITECTURE.md Section 6
+
+### Documentation
+
+- Added comprehensive File System Support section to API.md
+- Updated README.md with file system features and examples
+- Updated SECURITY_ARCHITECTURE.md with File System Path Validation component
+- Added 4 usage examples (sessions, docs, code, mixed sources)
+- Documented configuration options and environment variables
+- Added security best practices and attack scenario documentation
+
+### Changed
+
+- Updated `URLFetcher` to support file system fetching
+- Updated `ContentExtractor` to handle text file extraction
+- Enhanced configuration with `enable_file_system`, `allowed_directories`, `max_file_size`
+
+### Performance
+
+- File reads are asynchronous (non-blocking)
+- Multiple files can be fetched concurrently
+- Same caching mechanism as HTTP URLs
+- No network latency for local file access
+
 ## [0.1.0] - 2025-10-15
 
 ### Added
