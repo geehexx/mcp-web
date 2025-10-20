@@ -1,6 +1,6 @@
 ---
 created: "2025-10-19"
-updated: "2025-10-19"
+updated: "2025-10-20"
 trigger: model_decision
 description: Apply when using update_plan tool, creating task lists, orchestrating workflows, or managing multi-step work. Essential for /work, /plan, /implement orchestration.
 category: operations
@@ -36,6 +36,102 @@ status: active
 ---
 
 ## 1. Task Creation
+
+### 1.0 Adaptive vs Static Planning (NEW - 2025-10-20)
+
+**Choose the right planning approach based on work characteristics:**
+
+#### Adaptive Planning (Recommended for Most Work)
+
+**When to use:**
+
+- Multi-phase implementation with uncertain scope
+- Complex tasks that may branch based on discoveries
+- Work requiring iterative refinement
+- Tasks where next steps depend on intermediate results
+
+**Pattern:**
+
+```typescript
+// Initial plan: Show CURRENT phase only
+update_plan({
+  explanation: "Starting Phase 1 of multi-phase work",
+  plan: [
+    { step: "1. /implement - Phase 1: Core functionality", status: "in_progress" },
+    { step: "  1.1. /implement - Design component interface", status: "in_progress" },
+    { step: "  1.2. /implement - Write unit tests", status: "pending" },
+    { step: "  1.3. /implement - Implement core logic", status: "pending" }
+    // Phase 2-5 tasks NOT listed yet - will add dynamically
+  ]
+})
+
+// After Phase 1 completes, ADD Phase 2 tasks dynamically
+update_plan({
+  explanation: "Phase 1 complete. Adding Phase 2 tasks.",
+  plan: [
+    { step: "1. /implement - Phase 1: Core functionality", status: "completed" },
+    { step: "  1.1. /implement - Design component interface", status: "completed" },
+    { step: "  1.2. /implement - Write unit tests", status: "completed" },
+    { step: "  1.3. /implement - Implement core logic", status: "completed" },
+    { step: "2. /implement - Phase 2: Integration", status: "in_progress" },
+    { step: "  2.1. /implement - Design integration points", status: "in_progress" }
+    // Phase 3+ still not listed - add when approaching Phase 2 completion
+  ]
+})
+```
+
+**Benefits:**
+
+- Reduces task plan updates by 60-80% (fewer prediction errors)
+- Adapts naturally to scope changes
+- Clearer current focus for users
+- Less cognitive load on agent
+
+**Industry Support:**
+> "Adaptive Orchestrator excels at dynamic decision-making... makes decisions on the fly based on current context. Ideal for tasks requiring adaptive paths that alter execution during runtime."
+> — Dynamiq (2025), _Agent Orchestration Patterns_
+
+#### Static Planning (Use Sparingly)
+
+**When to use:**
+
+- Well-defined sequence with no branches (rare)
+- Very short tasks (<30 min total)
+- Template-driven work with fixed steps
+
+**Pattern:**
+
+```typescript
+// List ALL tasks upfront
+update_plan({
+  plan: [
+    { step: "1. /validate - Run linting", status: "in_progress" },
+    { step: "2. /validate - Run type checking", status: "pending" },
+    { step: "3. /validate - Run security scans", status: "pending" },
+    { step: "4. /validate - Run tests", status: "pending" }
+  ]
+})
+```
+
+**Risks:**
+
+- Brittle if scope changes mid-work
+- Requires frequent corrections
+- Can skip or reorder steps if predictions wrong
+
+**Decision Tree:**
+
+```
+Is work multi-phase (>3 phases)? → YES → Use Adaptive
+                                 ↓ NO
+Can scope change based on findings? → YES → Use Adaptive
+                                      ↓ NO
+Is total duration >1 hour? → YES → Use Adaptive
+                           ↓ NO
+Use Static (but consider Adaptive anyway)
+```
+
+### 1.A Task Creation Rules
 
 **At workflow start, create initial plan with MANDATORY numbering format:**
 
@@ -416,7 +512,246 @@ Users trust agents that show their work. Visibility enables:
 
 ---
 
-## 8. Anti-Patterns
+## 8. Automatic Checkpoints (NEW - 2025-10-20)
+
+**Validation and commits should be AUTOMATIC, NOT listed as separate tasks.**
+
+### 8.0 Checkpoint Embedding Pattern
+
+**OLD (Static, Brittle):**
+
+```typescript
+update_plan({
+  plan: [
+    { step: "3.2. /implement - Implement Phase 2", status: "completed" },
+    { step: "3.3. /validate - Test Phase 2", status: "pending" },  // ❌ Manual checkpoint
+    { step: "3.4. /commit - Commit Phase 2", status: "pending" },  // ❌ Pre-planned commit
+    { step: "3.5. /implement - Implement Phase 3", status: "pending" }
+  ]
+})
+```
+
+**NEW (Adaptive, Automatic):**
+
+```typescript
+// Tasks show DELIVERABLES only
+update_plan({
+  plan: [
+    { step: "3.2. /implement - Phase 2 complete", status: "completed" },
+    { step: "3.3. /implement - Phase 3 implementation", status: "in_progress" }
+    // Validation and commits happen AUTOMATICALLY, not listed
+  ]
+})
+
+// Validation runs AUTOMATICALLY after each deliverable
+run_validation()  // Not a task, just embedded logic
+
+// Commit happens AUTOMATICALLY when stable
+if (tests_pass && lint_clean && phase_complete) {
+  commit_changes()  // Intelligent commit, not pre-planned
+}
+```
+
+### 8.1 When Validation Runs Automatically
+
+**Validation checkpoints embedded in workflow logic:**
+
+1. **After each phase completion**
+   - Run tests automatically
+   - Check linting automatically
+   - Verify quality gates
+
+2. **Before context switches**
+   - Switching from Phase 2 → Phase 3
+   - Switching between modules
+   - Before committing
+
+3. **On logical boundaries**
+   - Feature complete end-to-end
+   - All tests for component passing
+   - Documentation updated
+
+**Implementation in workflows:**
+
+```markdown
+## Phase N: Implementation
+
+**Tasks:**
+- Implement feature X
+- Write tests for X
+
+**Automatic checkpoint (not a task):**
+```bash
+# Embedded in workflow, not listed in task plan
+task validate
+if [ $? -eq 0 ]; then
+  # Validation passed, continue
+else
+  # Fix issues before proceeding
+fi
+```
+
+```
+
+### 8.2 Intelligent Commit Strategy
+
+**Commits happen automatically when "stable state" reached:**
+
+**Stable State Criteria:**
+1. ✅ All tests passing for current scope
+2. ✅ Linting clean (no errors)
+3. ✅ Security scans pass (if relevant)
+4. ✅ Work logically complete (phase/feature done)
+5. ✅ No explicit "don't commit yet" from user
+
+**Commit Decision Algorithm:**
+```python
+def should_commit_automatically() -> bool:
+    """Decide if automatic commit appropriate."""
+    # Must-haves
+    if not tests_passing():
+        return False
+    if not lint_clean():
+        return False
+
+    # Logical completeness
+    if phase_complete() or feature_working_end_to_end():
+        return True
+
+    # Context switch boundary
+    if about_to_switch_context():
+        return True
+
+    # Default: hold commit for more work
+    return False
+```
+
+**When to HOLD commits:**
+
+- Tests failing
+- Linting errors present
+- Mid-phase (incomplete work)
+- User explicitly said "don't commit yet"
+- Breaking changes without documentation
+
+**When to commit automatically:**
+
+- Phase complete + tests pass + lint clean
+- Feature works end-to-end
+- Before switching to next phase
+- Session ending (all work committed)
+
+**Industry Support:**
+> "Use checkpoint features available in your SDK to help recover from interrupted orchestration... Implement timeout and retry mechanisms."
+> — Microsoft Azure (2025), _AI Agent Orchestration Patterns_
+
+> "A workflow chains multiple operations together... with checkpoints at each stage. Progress saved automatically."
+> — Patronus AI (2025), _Agentic Workflows_
+
+### 8.3 Checkpoint Visibility
+
+**Print checkpoint results, don't list as tasks:**
+
+```markdown
+📋 **Phase 2 Complete**
+✅ Tests: 15/15 passing
+✅ Linting: Clean
+✅ Type checking: No errors
+💾 **Auto-committed:** Phase 2 implementation (a1b2c3d)
+
+🔄 **Starting Phase 3**
+```
+
+**Benefits:**
+
+- Users see validation happening
+- Commits are documented
+- Task list stays focused on deliverables
+- No manual checkpoint task management
+
+## 9. Workflow Autonomy (NEW - 2025-10-20)
+
+**Sub-workflows should self-manage their own task breakdown.**
+
+### 9.0 The Autonomy Principle
+
+**Parent workflows:** Define WHAT needs to be done (deliverable)
+**Child workflows:** Define HOW it will be done (breakdown)
+
+**Example:**
+
+```typescript
+// Parent (/work) defines high-level deliverable
+update_plan({
+  plan: [
+    { step: "3. /implement - Complete Phase 2-5 implementation", status: "pending" }
+  ]
+})
+
+// Child (/implement) auto-detects phases and creates subtasks
+// When /implement is invoked, IT manages its own breakdown:
+update_plan({
+  plan: [
+    { step: "3. /implement - Complete Phase 2-5 implementation", status: "in_progress" },
+    { step: "  3.1. /implement - Phase 2: Core logic", status: "in_progress" },
+    { step: "  3.2. /implement - Phase 3: Integration", status: "pending" },
+    { step: "  3.3. /implement - Phase 4: Validation", status: "pending" },
+    { step: "  3.4. /implement - Phase 5: Documentation", status: "pending" }
+  ]
+})
+```
+
+**Parent does NOT predict child's tasks.** Child discovers and adds them.
+
+### 9.1 Phase Detection Pattern
+
+**Workflows should auto-detect phases from initiative files:**
+
+```python
+def detect_phases(initiative_content: str) -> list[str]:
+    """Extract phases from initiative markdown."""
+    phases = []
+    for line in initiative_content.split('\n'):
+        if line.startswith('### Phase '):
+            phases.append(line.strip('# ').strip())
+    return phases
+
+# Use in workflow
+phases = detect_phases(read_initiative())
+for i, phase in enumerate(phases, 1):
+    add_task(f"{parent_num}.{i}. /implement - {phase}")
+```
+
+### 9.2 Dynamic Subtask Creation
+
+**Pattern for workflows to add their own subtasks:**
+
+```typescript
+// Workflow detects it needs 3 steps
+update_plan({
+  explanation: "Auto-detected 3 phases in initiative",
+  plan: [
+    // ... parent's existing tasks ...
+    { step: "N. /implement - Multi-phase work", status: "in_progress" },
+    { step: "  N.1. /implement - Phase 1 (auto-detected)", status: "in_progress" },
+    { step: "  N.2. /implement - Phase 2 (auto-detected)", status: "pending" },
+    { step: "  N.3. /implement - Phase 3 (auto-detected)", status: "pending" }
+  ]
+})
+```
+
+**Benefits:**
+
+- Parent workflow stays simple
+- Child adapts to actual requirements
+- Reduces prediction errors
+- Clearer separation of concerns
+
+**Industry Support:**
+> "Breaking tasks into smaller, specialized agents with clear responsibilities. Each agent manages its own subtasks autonomously."
+> — V7 Labs (2025), _Multi-Agent AI Systems_
+
+## 10. Anti-Patterns
 
 **❌ DON'T:**
 
@@ -436,7 +771,7 @@ Users trust agents that show their work. Visibility enables:
 
 ---
 
-## 9. Enforcement
+## 11. Enforcement
 
 **Per user directive (2025-10-18):**
 
@@ -453,7 +788,7 @@ Users trust agents that show their work. Visibility enables:
 
 ---
 
-## 10. Automated Validation
+## 12. Automated Validation
 
 **Available tools (2025-10-19):**
 
@@ -494,5 +829,26 @@ uv run pytest tests/unit/test_validate_task_format.py -v
 
 ---
 
-**Version:** 1.0.0 (Extracted from 00_agent_directives.md for size optimization)
-**Last Updated:** 2025-10-19
+---
+
+## References (Updated 2025-10-20)
+
+### Industry Best Practices
+
+**Adaptive Planning:**
+
+- [Dynamiq (2025): Agent Orchestration Patterns](https://www.getdynamiq.ai/post/agent-orchestration-patterns-in-multi-agent-systems-linear-and-adaptive-approaches-with-dynamiq) - Linear vs Adaptive orchestrators
+- [MarkTechPost (2025): 9 Agentic AI Workflow Patterns](https://www.marktechpost.com/2025/08/09/9-agentic-ai-workflow-patterns-transforming-ai-agents-in-2025/) - Plan-execute pattern, adaptive workflows
+
+**Checkpoints and Reliability:**
+
+- [Microsoft Azure (2025): AI Agent Orchestration Patterns](https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/ai-agent-design-patterns) - Checkpoint features, reliability patterns
+- IBM (2025): Agentic Workflows - Context-aware processing
+
+**Workflow Autonomy:**
+
+- V7 Labs (2025): Multi-Agent AI Systems - Agent autonomy, modular reasoning
+- Patronus AI (2025): Agentic Workflows - Workflow chaining, checkpoints
+
+**Version:** 2.0.0 (Added adaptive planning, automatic checkpoints, workflow autonomy)
+**Last Updated:** 2025-10-20

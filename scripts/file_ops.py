@@ -226,12 +226,86 @@ def archive_initiative(
     completed_on: str | None = None,
     dry_run: bool = False,
 ) -> dict[str, Sequence[str]]:
-    """Archive an initiative (file or folder) into completed/ and update references."""
+    """Archive an initiative (file or folder) into completed/ and update references.
+
+    Args:
+        initiative_path: Can be:
+            - Just the name: "2025-10-19-quality-automation"
+            - Relative path: "docs/initiatives/active/2025-10-19-quality-automation.md"
+            - Absolute path: "/home/user/project/docs/initiatives/active/..."
+        root: Repository root (defaults to REPO_ROOT)
+        completed_on: ISO date string for completion (defaults to today)
+        dry_run: If True, only show what would be done
+
+    Returns:
+        Dictionary with keys: 'moved', 'references', 'changed'
+
+    Raises:
+        FileNotFoundError: If initiative doesn't exist
+        ValueError: If initiative not in active/ directory
+    """
 
     base = Path(root) if root else REPO_ROOT
     completed_on = completed_on or date.today().isoformat()
 
-    src = resolve_repo_path(initiative_path, root=base)
+    # Try multiple path resolution strategies
+    initiative_str = str(initiative_path)
+    src = None
+
+    # Strategy 1: Try as relative path with active/ prefix (most common)
+    if not Path(initiative_str).is_absolute():
+        # Remove .md extension if present for consistent handling
+        name_base = initiative_str.removesuffix(".md")
+
+        # Try with docs/initiatives/active/ prefix
+        for pattern in [
+            f"docs/initiatives/active/{name_base}.md",  # File
+            f"docs/initiatives/active/{name_base}",  # Folder
+        ]:
+            try:
+                candidate = resolve_repo_path(pattern, root=base, must_exist=True)
+                src = candidate
+                break
+            except FileNotFoundError:
+                continue
+
+    # Strategy 2: Try as provided (full relative or absolute path)
+    if src is None:
+        try:
+            src = resolve_repo_path(initiative_path, root=base, must_exist=True)
+        except FileNotFoundError:
+            pass
+
+    # Strategy 3: Failed - provide helpful error
+    if src is None or not src.exists():
+        # List available initiatives for error message
+        active_dir = base / "docs/initiatives/active"
+        if active_dir.exists():
+            available = []
+            for item in sorted(active_dir.iterdir()):
+                if item.name.startswith("."):
+                    continue
+                if item.is_file() and item.suffix == ".md":
+                    available.append(item.stem)
+                elif item.is_dir() and (item / "initiative.md").exists():
+                    available.append(item.name)
+
+            available_str = "\n    - ".join(available[:10])  # Show max 10
+            if len(available) > 10:
+                available_str += f"\n    ... and {len(available) - 10} more"
+        else:
+            available_str = "(active/ directory not found)"
+
+        raise FileNotFoundError(
+            f"Initiative not found: {initiative_path}\n\n"
+            f"Usage: task archive:initiative NAME=<name>\n"
+            f"  NAME can be:\n"
+            f"    - Just the name: 2025-10-19-quality-automation\n"
+            f"    - Relative path: docs/initiatives/active/2025-10-19-quality-automation.md\n"
+            f"    - Absolute path: {base}/docs/initiatives/active/...\n\n"
+            f"Available initiatives in active/:\n"
+            f"    - {available_str}"
+        )
     try:
         relative = src.relative_to(base)
     except ValueError as exc:  # pragma: no cover - safety guard
