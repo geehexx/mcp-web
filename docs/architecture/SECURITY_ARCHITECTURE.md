@@ -63,8 +63,9 @@
 1. **LLM API Credentials**: OpenAI/Anthropic API keys
 2. **System Prompts**: Internal instructions for summarization
 3. **User Data**: URLs and queries provided by users
-4. **Infrastructure**: Server resources, cache storage
-5. **Cached Content**: Previously fetched web content
+4. **File System**: Local files and directories (path traversal protection)
+5. **Infrastructure**: Server resources, cache storage
+6. **Cached Content**: Previously fetched web content
 
 ### Attack Vectors
 
@@ -72,6 +73,7 @@
 |------------|--------|--------|-----------|
 | **Prompt Injection** | Malicious content in fetched URLs | LLM behavior manipulation | Input sanitization, structured prompts |
 | **SSRF** | User-provided URLs to internal services | Internal network access | URL validation, blocked private IPs |
+| **Path Traversal** | file:// URLs to sensitive system files | Unauthorized file access | Path validation, directory whitelisting |
 | **DoS** | Excessive concurrent requests | Resource exhaustion | Rate limiting, consumption limits |
 | **API Key Exposure** | LLM output leakage | Credential theft | Output validation, pattern filtering |
 | **System Prompt Leakage** | Injection attempts to reveal prompts | System intelligence exposure | Output validation, security rules |
@@ -359,7 +361,7 @@ async with limits:
 
 **Capabilities**:
 
-- **Protocol Validation**: Only `http://` and `https://` allowed
+- **Protocol Validation**: Only `http://`, `https://`, and `file://` allowed
 - **SSRF Prevention**: Blocks localhost, 127.0.0.1, ::1, private IPs
 - **IPv6 Support**: Handles `[::1]` notation
 - **Domain Requirement**: Must have valid netloc
@@ -378,7 +380,83 @@ blocked = {
 
 ---
 
-### 6. Structured Prompts
+### 6. File System Path Validation
+
+**Location**: `src/mcp_web/fetcher.py`
+
+**Capabilities**:
+
+- **Path Resolution**: Resolves symlinks and `..` to absolute paths
+- **Directory Whitelisting**: Only allows access to configured directories
+- **Path Traversal Prevention**: Blocks attempts to escape allowed directories
+- **File Size Limits**: Enforces maximum file size (default: 10MB)
+- **Supported Formats**: file:// URLs and absolute paths
+
+**Security Controls**:
+
+```python
+# Path validation logic
+def _validate_file_path(path: Path, allowed_dirs: list[Path]) -> tuple[bool, str]:
+    # Resolve to absolute path (follows symlinks, resolves ..)
+    resolved = path.resolve()
+
+    # Check if path is within any allowed directory
+    for allowed_dir in allowed_dirs:
+        try:
+            resolved.relative_to(allowed_dir)
+            return True, ""  # Path is within allowed directory
+        except ValueError:
+            continue
+
+    return False, f"Path outside allowed directories: {resolved}"
+```
+
+**Configuration**:
+
+```python
+config = FetcherSettings(
+    enable_file_system=True,  # Enable/disable file:// support
+    allowed_directories=["."],  # Whitelist of allowed directories
+    max_file_size=10 * 1024 * 1024,  # 10MB limit per file
+)
+```
+
+**Security Best Practices**:
+
+1. **Principle of Least Privilege**: Only whitelist directories that need summarization
+2. **Absolute Paths**: Always use absolute paths in `allowed_directories`
+3. **Avoid Root Access**: Never whitelist `/` or system directories
+4. **Project-Scoped**: Default to current working directory (`.`) for project files
+5. **File Size Limits**: Enforce `max_file_size` to prevent memory issues
+
+**Attack Scenarios Blocked**:
+
+```python
+# Configuration
+allowed_directories = ["/home/user/docs"]
+
+# ✅ Allowed
+"/home/user/docs/file.md"                  # Direct access
+"/home/user/docs/subdir/../file.md"        # Resolves to allowed path
+"/home/user/docs/link.md"                  # Symlink within allowed dir
+
+# ❌ Blocked
+"/etc/passwd"                              # Outside allowed directories
+"/home/user/other/file.md"                 # Not in whitelist
+"/home/user/docs/../../../etc/passwd"      # Path traversal attempt
+"file:///etc/shadow"                       # System file access
+```
+
+**Test Coverage**: 33+ test scenarios (22 unit tests + 11 integration tests)
+
+**References**:
+
+- [CWE-22: Path Traversal](https://cwe.mitre.org/data/definitions/22.html)
+- [OWASP Path Traversal](https://owasp.org/www-community/attacks/Path_Traversal)
+
+---
+
+### 7. Structured Prompts
 
 **Location**: `src/mcp_web/security.py` (`create_structured_prompt`)
 

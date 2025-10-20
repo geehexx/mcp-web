@@ -382,7 +382,6 @@ This comprehensive guide covers:
 ### Active Initiatives
 
 - [`2025-10-15-performance-optimization-pipeline/`](docs/initiatives/active/2025-10-15-performance-optimization-pipeline)
-- [`2025-10-19-mcp-file-system-support.md`](docs/initiatives/active/2025-10-19-mcp-file-system-support.md)
 - [`2025-10-19-session-summary-mining-advanced.md`](docs/initiatives/active/2025-10-19-session-summary-mining-advanced.md)
 
 ### Completed Initiatives
@@ -398,6 +397,7 @@ This comprehensive guide covers:
 - [`2025-10-18-workflow-automation-enhancement/`](docs/initiatives/completed/2025-10-18-workflow-automation-enhancement)
 - [`2025-10-18-workflow-automation-enhancement.md`](docs/initiatives/completed/2025-10-18-workflow-automation-enhancement.md)
 - [`2025-10-19-initiative-system-lifecycle-improvements/`](docs/initiatives/completed/2025-10-19-initiative-system-lifecycle-improvements)
+- [`2025-10-19-mcp-file-system-support.md`](docs/initiatives/completed/2025-10-19-mcp-file-system-support.md)
 - [`2025-10-19-quality-automation-and-monitoring.md`](docs/initiatives/completed/2025-10-19-quality-automation-and-monitoring.md)
 - [`2025-10-19-session-summary-consolidation-workflow/`](docs/initiatives/completed/2025-10-19-session-summary-consolidation-workflow)
 - [`2025-10-19-task-system-validation-enforcement.md`](docs/initiatives/completed/2025-10-19-task-system-validation-enforcement.md)

@@ -8,13 +8,14 @@
 
 1. [MCP Server](#mcp-server)
 2. [Fetcher](#fetcher)
-3. [Extractor](#extractor)
-4. [Chunker](#chunker)
-5. [Summarizer](#summarizer)
-6. [Cache](#cache)
-7. [Configuration](#configuration)
-8. [Utils](#utils)
-9. [Metrics](#metrics)
+3. [File System Support](#file-system-support)
+4. [Extractor](#extractor)
+5. [Chunker](#chunker)
+6. [Summarizer](#summarizer)
+7. [Cache](#cache)
+8. [Configuration](#configuration)
+9. [Utils](#utils)
+10. [Metrics](#metrics)
 
 ---
 
@@ -57,11 +58,14 @@ async def summarize_urls(
 ```
 
 **Description:**
-Summarize content from one or more URLs with optional query focus and link following.
+Summarize content from one or more URLs (HTTP/HTTPS or file://) with optional query focus and link following.
 
 **Parameters:**
 
-- `urls` (List[str], required): List of URLs to fetch and summarize
+- `urls` (List[str], required): List of URLs or file paths to fetch and summarize
+  - HTTP/HTTPS URLs: `https://example.com/page.html`
+  - File URLs: `file:///absolute/path/to/file.md`
+  - Absolute paths: `/absolute/path/to/file.md`
 - `query` (str, optional): Question or topic to focus the summary on
 - `follow_links` (bool, default=False): Whether to follow relevant outbound links
 - `max_depth` (int, default=1): Maximum link following depth
@@ -70,14 +74,37 @@ Summarize content from one or more URLs with optional query focus and link follo
 
 - `str`: Markdown-formatted summary with sources and metadata
 
-**Example:**
+**Examples:**
 
 ```python
+# HTTP URL
 result = await summarize_urls(
  urls=["https://docs.python.org/3/library/asyncio.html"],
  query="How do I create async tasks?",
  follow_links=True,
  max_depth=1
+)
+
+# Local file (file:// URL)
+result = await summarize_urls(
+ urls=["file:///home/user/docs/session-summary.md"],
+ query="What were the key decisions?"
+)
+
+# Local file (absolute path)
+result = await summarize_urls(
+ urls=["/home/user/docs/architecture.md"],
+ query="Explain the system architecture"
+)
+
+# Mixed URLs and files
+result = await summarize_urls(
+ urls=[
+     "https://example.com/page.html",
+     "file:///home/user/local-notes.md",
+     "/home/user/code-review.md"
+ ],
+ query="Summarize all sources"
 )
 ```
 
@@ -210,6 +237,229 @@ Dataclass representing fetch result.
 - `status_code` (int): HTTP status code
 - `fetch_method` (str): Method used ('httpx', 'playwright', or 'cache')
 - `from_cache` (bool): Whether result was from cache
+
+---
+
+## File System Support
+
+**mcp-web** supports local file system access in addition to HTTP/HTTPS URLs, enabling summarization of local documentation, code files, session summaries, and other text content.
+
+### Supported Input Formats
+
+#### 1. file:// URLs
+
+```python
+urls = ["file:///home/user/docs/architecture.md"]
+```
+
+- Standard RFC 8089 file URI format
+- Must use absolute paths (three slashes: `file:///`)
+- URL-encoded characters are supported (e.g., `file:///path/with%20spaces.md`)
+
+#### 2. Absolute Paths
+
+```python
+urls = ["/home/user/docs/architecture.md"]
+```
+
+- Direct absolute file paths
+- Simpler syntax than file:// URLs
+- Cross-platform: works on Linux, macOS, Windows (`C:\\path\\to\\file.md`)
+
+#### 3. Mixed Sources
+
+```python
+urls = [
+    "https://example.com/api-docs.html",      # Web
+    "file:///home/user/local-notes.md",       # File URL
+    "/home/user/project/README.md"            # Absolute path
+]
+```
+
+### Supported File Types
+
+- **Markdown**: `.md`, `.markdown`
+- **Text**: `.txt`, `.text`
+- **Code**: `.py`, `.js`, `.java`, `.c`, `.cpp`, `.rs`, `.go`, etc.
+- **Configuration**: `.yaml`, `.yml`, `.json`, `.toml`, `.ini`
+- **Documentation**: `.rst`, `.adoc`
+
+All files are processed as UTF-8 text with the same summarization quality as web content.
+
+### Configuration
+
+File system support is controlled by configuration settings:
+
+```python
+from mcp_web import Config, FetcherSettings
+
+config = Config(
+    fetcher=FetcherSettings(
+        enable_file_system=True,  # Enable/disable file:// support
+        allowed_directories=["."],  # Whitelist of allowed directories
+        max_file_size=10 * 1024 * 1024,  # 10MB limit per file
+    )
+)
+```
+
+**Environment Variables:**
+
+```bash
+# Enable file system support (default: true)
+export MCP_WEB_FETCHER_ENABLE_FILE_SYSTEM=true
+
+# Allowed directories (comma-separated, default: current directory)
+export MCP_WEB_FETCHER_ALLOWED_DIRECTORIES="/home/user/docs,/home/user/projects"
+
+# Maximum file size in bytes (default: 10MB)
+export MCP_WEB_FETCHER_MAX_FILE_SIZE=10485760
+```
+
+### Security Considerations
+
+**Path Validation:**
+
+- All file paths are resolved to absolute paths (symlinks followed, `..` resolved)
+- Paths are validated against `allowed_directories` whitelist
+- Access to files outside allowed directories is **blocked**
+- Path traversal attacks are prevented
+
+**Example:**
+
+```python
+# Configuration
+allowed_directories = ["/home/user/docs"]
+
+# ✅ Allowed
+"/home/user/docs/file.md"                  # Direct access
+"/home/user/docs/subdir/../file.md"        # Resolves to allowed path
+"/home/user/docs/link.md"                  # Symlink within allowed dir
+
+# ❌ Blocked
+"/etc/passwd"                              # Outside allowed directories
+"/home/user/other/file.md"                 # Not in whitelist
+"/home/user/docs/../../../etc/passwd"      # Path traversal attempt
+```
+
+**Best Practices:**
+
+1. **Principle of Least Privilege**: Only whitelist directories that need summarization
+2. **Absolute Paths**: Always use absolute paths in `allowed_directories`
+3. **Avoid Root Access**: Never whitelist `/` or system directories
+4. **Project-Scoped**: Default to current working directory (`.`) for project files
+5. **File Size Limits**: Enforce `max_file_size` to prevent memory issues
+
+**Error Handling:**
+
+```python
+# File not found
+result = await summarize_urls(urls=["/nonexistent/file.md"])
+# Returns: Error summary with details
+
+# Access denied (outside allowed directories)
+result = await summarize_urls(urls=["/etc/passwd"])
+# Returns: "Path outside allowed directories" error
+
+# File too large
+result = await summarize_urls(urls=["/huge-file.md"])
+# Returns: "File exceeds maximum size" error
+```
+
+### Usage Examples
+
+#### Example 1: Session Summary Analysis
+
+```python
+from mcp_web import create_server, load_config
+
+config = load_config()
+config.fetcher.allowed_directories = ["./docs/archive/session-summaries"]
+
+mcp = create_server(config)
+
+result = await mcp.summarize_urls(
+    urls=["file:///path/to/docs/archive/session-summaries/2025-10-20-summary.md"],
+    query="What were the key decisions and next steps?"
+)
+```
+
+#### Example 2: Documentation Review
+
+```python
+# Summarize multiple documentation files
+result = await mcp.summarize_urls(
+    urls=[
+        "/home/user/project/README.md",
+        "/home/user/project/docs/ARCHITECTURE.md",
+        "/home/user/project/docs/CONTRIBUTING.md"
+    ],
+    query="Explain the project structure and contribution guidelines"
+)
+```
+
+#### Example 3: Code Review
+
+```python
+# Summarize code files for review
+result = await mcp.summarize_urls(
+    urls=[
+        "/home/user/project/src/main.py",
+        "/home/user/project/src/utils.py",
+        "/home/user/project/tests/test_main.py"
+    ],
+    query="Summarize the implementation and test coverage"
+)
+```
+
+#### Example 4: Mixed Sources (Web + Local)
+
+```python
+# Combine web documentation with local notes
+result = await mcp.summarize_urls(
+    urls=[
+        "https://docs.python.org/3/library/asyncio.html",
+        "/home/user/notes/asyncio-learnings.md",
+        "/home/user/project/async-implementation.py"
+    ],
+    query="How is asyncio used in this project?"
+)
+```
+
+### Implementation Details
+
+**Fetch Method:**
+
+File system fetching is handled by `URLFetcher._fetch_file()`:
+
+- Detects file:// URLs or absolute paths
+- Validates path against `allowed_directories` whitelist
+- Checks file size against `max_file_size` limit
+- Reads file content as bytes
+- Detects MIME type using mimetypes module
+- Returns `FetchResult` with `fetch_method='filesystem'`
+
+**Content Extraction:**
+
+Text extraction is handled by `ContentExtractor._extract_text()`:
+
+- Decodes UTF-8 content (with error handling)
+- Extracts title from first heading or filename
+- Preserves original formatting (markdown, code, etc.)
+- Extracts code snippets from markdown fenced blocks
+- Returns `ExtractedContent` with metadata
+
+**Performance:**
+
+- File reads are asynchronous (non-blocking)
+- Multiple files can be fetched concurrently
+- Same caching mechanism as HTTP URLs
+- No network latency (instant local access)
+
+### Related Documentation
+
+- [Security Architecture](../architecture/SECURITY_ARCHITECTURE.md) - Security design and threat model
+- [ADR-0001: httpx/Playwright Fallback](../adr/0001-use-httpx-playwright-fallback.md) - Fetching strategy
+- [Configuration Guide](../reference/ENVIRONMENT_VARIABLES.md) - Environment variables
 
 ---
 

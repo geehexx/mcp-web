@@ -7,11 +7,13 @@ A powerful Model Context Protocol (MCP) server that provides intelligent URL sum
 ## Features
 
 - 🚀 **Fast & Robust Fetching**: httpx primary with Playwright fallback for JS-heavy sites
+- 📁 **File System Support**: Summarize local files (markdown, code, docs) alongside web URLs
 - 🎯 **Intelligent Content Extraction**: trafilatura-powered main content extraction
 - 📊 **Smart Chunking**: Hierarchical and semantic text splitting with configurable overlap
 - 🤖 **LLM Summarization**: Map-reduce strategy for long documents with streaming output
 - 🏠 **Local LLM Support**: Ollama, LM Studio, LocalAI, or cloud providers (OpenAI, Anthropic)
 - 💾 **Persistent Caching**: Disk-based cache with TTL and LRU eviction
+- 🔒 **Security First**: Path validation, directory whitelisting, and OWASP LLM Top 10 compliance
 - 📈 **Metrics & Logging**: Comprehensive observability with structured logging
 - 🔗 **Link Following**: Optional recursive link following for deeper context
 - 📝 **Markdown Output**: Well-formatted summaries with citations and metadata
@@ -65,6 +67,50 @@ result = await summarize_urls(
 > _Summary generated with llama3.2:3b via Ollama | Extraction: trafilatura | Chunking: adaptive (512 tokens)_
 
 **Why this matters:** Instead of reading 15,000+ words of documentation, you get focused, actionable answers in seconds.
+
+### File System Support Example
+
+**Input:** Summarize local project documentation
+
+```python
+result = await summarize_urls(
+    urls=[
+        "file:///home/user/project/README.md",
+        "/home/user/project/docs/ARCHITECTURE.md",
+        "/home/user/project/CONTRIBUTING.md"
+    ],
+    query="How do I contribute to this project?"
+)
+```
+
+**Output:**
+
+> ## Summary: Project Contribution Guide
+>
+> **Sources:** README.md, ARCHITECTURE.md, CONTRIBUTING.md
+>
+> ### Getting Started
+>
+> - Fork the repository and clone locally
+> - Install dependencies with `uv sync` (Python 3.10+)
+> - Use dev containers for consistent environment
+>
+> ### Development Workflow
+>
+> - Follow conventional commits format
+> - Run `task test` before submitting PR
+> - Ensure linting passes with `task lint`
+> - Add tests for new features (≥85% coverage required)
+>
+> ### Architecture Overview
+>
+> - Modular pipeline: Fetcher → Extractor → Chunker → Summarizer
+> - Security-first design with path validation and whitelisting
+> - Supports local LLMs (Ollama) and cloud providers
+>
+> _Summary generated from local files | Same quality as web URLs_
+
+**Why this matters:** Quickly understand project structure, contribution guidelines, and architecture from local documentation without manual reading.
 
 ---
 
