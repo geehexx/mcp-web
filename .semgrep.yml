@@ -3,9 +3,9 @@ rules:
   - id: potential-prompt-injection-risk
     patterns:
       - pattern-either:
-          - pattern: $LLM.chat.completions.create(..., messages=[..., {"role": "user", "content": $USER_INPUT}, ...], ...)
+          - pattern: '$LLM.chat.completions.create(..., messages=[..., {"role": "user", "content": $USER_INPUT}, ...], ...)'
           - pattern: $LLM.completions.create(..., prompt=$USER_INPUT, ...)
-      - pattern-not: $LLM.chat.completions.create(..., messages=[..., {"role": "user", "content": sanitize_input($USER_INPUT)}, ...], ...)
+      - pattern-not: '$LLM.chat.completions.create(..., messages=[..., {"role": "user", "content": sanitize_input($USER_INPUT)}, ...], ...)'
     message: |
       Potential prompt injection vulnerability: User input is directly passed to LLM without sanitization.
       Consider:
@@ -27,7 +27,7 @@ rules:
       - pattern-either:
           - pattern: $CONTENT = requests.get($URL).text
           - pattern: $CONTENT = httpx.get($URL).text
-      - pattern: $LLM.chat.completions.create(..., messages=[..., {"role": "user", "content": $CONTENT}, ...], ...)
+      - pattern: '$LLM.chat.completions.create(..., messages=[..., {"role": "user", "content": $CONTENT}, ...], ...)'
     message: |
       External content fetched from URL is directly passed to LLM without validation.
       This could enable indirect prompt injection attacks.
@@ -171,7 +171,7 @@ rules:
       - pattern-inside: |
           $SYSTEM_PROMPT = "..."
           ...
-          $RESPONSE = $LLM.chat.completions.create(..., messages=[{"role": "system", "content": $SYSTEM_PROMPT}, ...], ...)
+          $RESPONSE = '$LLM.chat.completions.create(..., messages=[{"role": "system", "content": $SYSTEM_PROMPT}, ...], ...)'
     message: |
       Ensure system prompts are not leaked in responses.
       Implement output filtering to prevent system prompt disclosure.
@@ -185,7 +185,7 @@ rules:
     patterns:
       - pattern-either:
           - pattern: redirect($USER_INPUT)
-          - pattern: Response(..., headers={"Location": $USER_INPUT})
+          - pattern: 'Response(..., headers={"Location": $USER_INPUT})'
     message: |
       Unvalidated redirect vulnerability: user input used in redirect location.
       Validate redirect URLs against an allowlist.

@@ -1,0 +1,206 @@
+name: Security Scanning
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'scripts/**'
+      - '.bandit'
+      - '.semgrep.yml'
+      - '.github/workflows/security-scanning.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'scripts/**'
+  schedule:
+    # Run weekly security scan on Mondays at 00:00 UTC
+    - cron: '0 0 * * 1'
+
+jobs:
+  bandit:
+    name: Bandit Security Scan
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write  # For uploading SARIF results
+      actions: read
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Bandit
+        run: |
+          pip install bandit[toml]
+
+      - name: Run Bandit security scan
+        run: |
+          bandit -r src/ scripts/ -c .bandit -f json -o bandit-report.json
+        continue-on-error: true
+
+      - name: Run Bandit for SARIF output
+        run: |
+          bandit -r src/ scripts/ -c .bandit -f sarif -o bandit-results.sarif
+        continue-on-error: true
+
+      - name: Upload Bandit results to GitHub Security
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: bandit-results.sarif
+          category: bandit
+
+      - name: Parse Bandit results and fail on HIGH severity
+        if: always()
+        run: |
+          python - <<'EOF'
+          import json
+          import sys
+
+          with open('bandit-report.json') as f:
+              report = json.load(f)
+
+          high_issues = [r for r in report['results'] if r['issue_severity'] == 'HIGH']
+          medium_issues = [r for r in report['results'] if r['issue_severity'] == 'MEDIUM']
+          low_issues = [r for r in report['results'] if r['issue_severity'] == 'LOW']
+
+          print(f"🔍 Bandit Security Scan Results:")
+          print(f"  HIGH severity issues: {len(high_issues)}")
+          print(f"  MEDIUM severity issues: {len(medium_issues)}")
+          print(f"  LOW severity issues: {len(low_issues)}")
+          print()
+
+          if high_issues:
+              print("❌ HIGH severity security issues found:\n")
+              for issue in high_issues[:10]:  # Show first 10
+                  print(f"  - {issue['test_id']}: {issue['issue_text']}")
+                  print(f"    File: {issue['filename']}:{issue['line_number']}")
+                  print(f"    Confidence: {issue['issue_confidence']}")
+                  print()
+              print("\n❌ FAIL: HIGH severity issues must be fixed before merging.")
+              sys.exit(1)
+          elif medium_issues:
+              print("⚠️  MEDIUM severity issues found (review recommended):\n")
+              for issue in medium_issues[:5]:  # Show first 5
+                  print(f"  - {issue['test_id']}: {issue['issue_text']}")
+                  print(f"    File: {issue['filename']}:{issue['line_number']}")
+                  print()
+              print("\n⚠️  WARNING: Consider addressing MEDIUM severity issues.")
+          else:
+              print("✅ No HIGH or MEDIUM severity issues found!")
+          EOF
+
+      - name: Upload Bandit report as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bandit-security-report
+          path: bandit-report.json
+          retention-days: 90
+
+  semgrep:
+    name: Semgrep Security Scan
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write  # For uploading SARIF results
+      actions: read
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Semgrep scan
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: >-
+            .semgrep.yml
+            p/python
+            p/owasp-top-ten
+            p/security-audit
+          generateSarif: true
+
+      - name: Upload Semgrep results to GitHub Security
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: semgrep.sarif
+          category: semgrep
+
+      - name: Upload Semgrep report as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: semgrep-security-report
+          path: semgrep.sarif
+          retention-days: 90
+
+  security-summary:
+    name: Security Scan Summary
+    needs: [bandit, semgrep]
+    if: always()
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Bandit results
+        uses: actions/download-artifact@v4
+        with:
+          name: bandit-security-report
+        continue-on-error: true
+
+      - name: Download Semgrep results
+        uses: actions/download-artifact@v4
+        with:
+          name: semgrep-security-report
+        continue-on-error: true
+
+      - name: Generate security summary
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+
+            let comment = '## 🔒 Security Scan Results\n\n';
+
+            // Parse Bandit results
+            try {
+              const banditData = JSON.parse(fs.readFileSync('bandit-report.json', 'utf8'));
+              const high = banditData.results.filter(r => r.issue_severity === 'HIGH').length;
+              const medium = banditData.results.filter(r => r.issue_severity === 'MEDIUM').length;
+              const low = banditData.results.filter(r => r.issue_severity === 'LOW').length;
+
+              comment += '### Bandit Results\n\n';
+              comment += `- **HIGH severity:** ${high} ${high > 0 ? '❌' : '✅'}\n`;
+              comment += `- **MEDIUM severity:** ${medium} ${medium > 0 ? '⚠️' : '✅'}\n`;
+              comment += `- **LOW severity:** ${low}\n\n`;
+            } catch (e) {
+              comment += '### Bandit Results\n\n_No Bandit results available_\n\n';
+            }
+
+            // Parse Semgrep results
+            try {
+              const semgrepData = fs.readFileSync('semgrep.sarif', 'utf8');
+              const lines = semgrepData.split('\n').length;
+              comment += `### Semgrep Results\n\n`;
+              comment += `Scan completed. Check Security tab for detailed findings.\n\n`;
+            } catch (e) {
+              comment += '### Semgrep Results\n\n_No Semgrep results available_\n\n';
+            }
+
+            comment += '> **Policy:** HIGH severity issues block merging. MEDIUM severity issues should be reviewed.\n';
+            comment += '> **View detailed results:** Check the Security tab or download artifacts.\n';
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
