@@ -166,9 +166,45 @@ grep -l "Status.*Completed\|Status.*✅" docs/initiatives/active/*md
 
 ### 4.1 Run Meta-Analysis Workflow
 
-```bash
+**CRITICAL:** Meta-analysis is a **workflow**, not a Python script.
+
+**Correct invocation:**
+
+```markdown
 /meta-analysis
 ```
+
+**NEVER attempt:**
+
+```bash
+python scripts/meta_analysis.py  # This script doesn't exist!
+```
+
+**If agent cannot directly invoke workflow:**
+
+Follow manual session summary creation:
+
+1. **Extract session data:**
+   ```bash
+   # Get commits since last analysis
+   git log --oneline --since="$(cat .windsurf/.last-meta-analysis 2>/dev/null || echo '24 hours ago')"
+   ```
+
+2. **Create session summary:**
+   - File: `docs/archive/session-summaries/YYYY-MM-DD-description.md`
+   - Use template from `docs/DOCUMENTATION_STRUCTURE.md`
+   - Document: accomplishments, decisions, files modified, lessons learned
+
+3. **Update timestamp:**
+   ```bash
+   date -u +"%Y-%m-%dT%H:%M:%SZ" > .windsurf/.last-meta-analysis
+   ```
+
+4. **Commit:**
+   ```bash
+   git add docs/archive/session-summaries/*.md .windsurf/.last-meta-analysis
+   git commit -m "docs(session): add YYYY-MM-DD session summary"
+   ```
 
 **This workflow creates:**
 
