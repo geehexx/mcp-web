@@ -304,8 +304,8 @@ Context loading is one of the most frequent operations. Optimize for speed and e
 
 **See detailed patterns:**
 
-- [Context Loading Patterns](../workflows/context-loading-patterns.md) - Complete pattern library
-- [Batch Operations](../workflows/batch-operations.md) - Optimization techniques
+- [Context Loading Patterns](../docs/context-loading-patterns.md) - Complete pattern library
+- [Batch Operations](../docs/batch-operations.md) - Optimization techniques
 
 ### 3.2 Quick Reference
 
@@ -382,8 +382,8 @@ docs/initiatives/active/YYYY-MM-DD-name.md
 
 - Core directives: [00_agent_directives.md](./00_agent_directives.md)
 - Operational protocols: [05_operational_protocols.md](./05_operational_protocols.md)
-- Context loading: [context-loading-patterns.md](../workflows/context-loading-patterns.md)
-- Batch operations: [batch-operations.md](../workflows/batch-operations.md)
+- Context loading: [context-loading-patterns.md](../docs/context-loading-patterns.md)
+- Batch operations: [batch-operations.md](../docs/batch-operations.md)
 
 ---
 

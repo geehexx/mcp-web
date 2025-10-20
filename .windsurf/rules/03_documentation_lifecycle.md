@@ -254,7 +254,7 @@ task docs:clean
 
 ### Cross-References
 
-- **Internal links:** Use relative paths: `[ADR-0001](../adr/0001-decision.md)`
+- **Internal links:** Use relative paths: `[ADR-0001](../../docs/adr/0001-use-httpx-playwright-fallback.md)`
 - **External links:** Full URLs with context
 - **Code references:** Use backticks: `config.py`, `MCPWebConfig`
 - **Check links:** Use automated link checker in CI

@@ -185,6 +185,7 @@ python scripts/meta_analysis.py  # This script doesn't exist!
 Follow manual session summary creation:
 
 1. **Extract session data:**
+
    ```bash
    # Get commits since last analysis
    git log --oneline --since="$(cat .windsurf/.last-meta-analysis 2>/dev/null || echo '24 hours ago')"
@@ -196,11 +197,13 @@ Follow manual session summary creation:
    - Document: accomplishments, decisions, files modified, lessons learned
 
 3. **Update timestamp:**
+
    ```bash
    date -u +"%Y-%m-%dT%H:%M:%SZ" > .windsurf/.last-meta-analysis
    ```
 
 4. **Commit:**
+
    ```bash
    git add docs/archive/session-summaries/*.md .windsurf/.last-meta-analysis
    git commit -m "docs(session): add YYYY-MM-DD session summary"
@@ -424,7 +427,7 @@ Continuing...
 - Parent workflow: [work.md](./work.md)
 - Meta-analysis workflow: [meta-analysis.md](./meta-analysis.md)
 - Archive workflow: [archive-initiative.md](./archive-initiative.md)
-- Agent directives: [00_agent_directives.md](../.windsurf/rules/00_agent_directives.md) (Section 1.8)
+- Agent directives: [00_agent_directives.md](../rules/00_agent_directives.md) (Section 1.8)
 
 ---
 

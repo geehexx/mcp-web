@@ -38,7 +38,7 @@ status: active
 # Example: Archive initiative
 /archive-initiative initiative-name
 
-# Example: Meta-analysis 
+# Example: Meta-analysis
 /meta-analysis
 
 # Example: Validate work
@@ -50,18 +50,20 @@ status: active
 ```bash
 # Workflows are NOT scripts in scripts/
 python scripts/meta_analysis.py  # WRONG - doesn't exist
-python scripts/archive.py  # WRONG - doesn't exist  
+python scripts/archive.py  # WRONG - doesn't exist
 python scripts/validate.py  # WRONG - doesn't exist
 ```
 
 ### 0.2 Automation Scripts vs Workflows
 
 **Automation Scripts (`scripts/`):**
+
 - Python files that CAN be executed directly
 - Invoked via `task` commands or `python scripts/...`
 - Examples: `scripts/file_ops.py`, `scripts/validate_task_format.py`
 
 **Workflows (`.windsurf/workflows/`):**
+
 - Markdown files defining agent orchestration
 - Invoked via workflow names (e.g., `/meta-analysis`)
 - NOT executable as Python scripts
@@ -72,22 +74,25 @@ python scripts/validate.py  # WRONG - doesn't exist
 **When agent cannot directly invoke workflow:**
 
 1. **Indicate workflow should be invoked:**
+
    ```markdown
    🔄 **Next step:** Invoke `/meta-analysis` workflow
-   
+
    (Workflow invocation requires Windsurf orchestration capability)
    ```
 
 2. **Execute equivalent via automation scripts:**
+
    ```bash
    # Archive via automation script
    task archive:initiative NAME=initiative-name
-   
+
    # Manual session summary creation
    # (Follow fallback procedure in workflow)
    ```
 
 3. **Never attempt:**
+
    ```bash
    python scripts/meta_analysis.py  # Script doesn't exist!
    ```
@@ -272,8 +277,8 @@ Architecture Decision → Review ADR → Implement
 
 **For detailed implementation examples and patterns, see:**
 
-- [Context Loading Patterns](../workflows/context-loading-patterns.md) - File loading strategies
-- [Batch Operations](../workflows/batch-operations.md) - Optimization techniques
+- [Context Loading Patterns](../docs/context-loading-patterns.md) - File loading strategies
+- [Batch Operations](../docs/batch-operations.md) - Optimization techniques
 - `/work` workflow - Batch operation examples and context loading patterns
 - Section 1.6 File Operations - MCP vs standard tool selection
 - Section 1.7 Git Operations - MCP git tool patterns
