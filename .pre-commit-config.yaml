@@ -138,6 +138,17 @@ repos:
         pass_filenames: false
         args: [--threshold, "60000"]
 
+      - id: validate-references
+        name: "🔗 docs · Validate internal markdown links"
+        entry: uv run python scripts/validate_references.py
+        language: system
+        files: ^(docs|README|AGENTS|CONSTITUTION).*\.md$
+        pass_filenames: false
+        args: [--ci]
+        # Note: Currently has 150+ broken links - run manually until fixed
+        # Enable by removing this line when links are fixed
+        stages: [manual]
+
   # Local - Fast Tests (Optional, can be slow)
   # Uncomment to run fast tests on every commit
   # - repo: local

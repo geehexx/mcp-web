@@ -314,60 +314,9 @@ tasks:
         echo "✓ AGENTS.md validation passed"
 
   docs:validate:links:
-    desc: Validate workflow and documentation cross-references
+    desc: Validate internal markdown links across all documentation
     cmds:
-      - |
-        echo "Validating workflow cross-references..."
-        broken_workflow_links=0
-        # Check workflow internal links
-        for file in .windsurf/workflows/*.md; do
-          if [ -f "$file" ]; then
-            while IFS= read -r link; do
-              # Skip external links
-              if [[ "$link" =~ ^https?:// ]]; then
-                continue
-              fi
-              # Skip anchor-only links
-              if [[ "$link" =~ ^# ]]; then
-                continue
-              fi
-              # Check relative workflow links
-              if [[ "$link" =~ ^\.\/ ]]; then
-                target="${link#./}"
-                if [ ! -f ".windsurf/workflows/$target" ]; then
-                  echo "  ✗ Broken link in $file: $link"
-                  broken_workflow_links=$((broken_workflow_links + 1))
-                fi
-              fi
-            done < <(grep -oP '\[.*?\]\(\K[^)]+' "$file" 2>/dev/null || true)
-          fi
-        done
-
-        echo "Validating ADR references..."
-        broken_adr_refs=0
-        # Check ADR references in workflows and rules (skip placeholders like ADR-00XX)
-        while IFS= read -r adr_num; do
-          # Skip placeholder references (00XX pattern or XX pattern)
-          if [[ "$adr_num" =~ ^00?X+$ ]]; then
-            continue
-          fi
-          # Only check 4-digit ADR numbers (0001-9999)
-          if [[ ${#adr_num} -ne 4 ]]; then
-            continue
-          fi
-          # Find matching ADR file
-          if ! ls docs/adr/${adr_num}-*.md 1>/dev/null 2>&1; then
-            echo "  ✗ Referenced ADR not found: ADR-$adr_num"
-            broken_adr_refs=$((broken_adr_refs + 1))
-          fi
-        done < <(grep -rh "ADR-[0-9]" .windsurf/ docs/ 2>/dev/null | grep -oP 'ADR-\K[0-9X]+' | sort -u || true)
-
-        total_broken=$((broken_workflow_links + broken_adr_refs))
-        if [ $total_broken -gt 0 ]; then
-          echo "ERROR: Found $total_broken broken reference(s)"
-          exit 1
-        fi
-        echo "✓ Cross-reference validation passed"
+      - "{{.UV}} run python scripts/validate_references.py"
 
   docs:validate:consistency:
     desc: Validate documentation file counts and consistency
