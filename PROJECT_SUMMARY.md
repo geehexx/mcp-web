@@ -2,7 +2,7 @@
 
 **Version:** 0.1.0
 **Status:** Active Development
-**Last Updated:** 2025-10-19
+**Last Updated:** 2025-10-20
 **License:** MIT
 
 ---
@@ -144,6 +144,59 @@ Advanced automation deferred to Session Summary Mining Advanced (blocked on MCP 
 
 **Outcome:** Automation infrastructure complete. AI agents and human developers can scaffold templates, archive initiatives, and update references with minimal token overhead. Foundation established for future automation workflows.
 
+#### Quality Automation and Monitoring (✅ Completed 2025-10-20)
+
+**Duration:** 2025-10-20 (~6 hours, 8-12h estimated)
+**Owner:** AI Agent
+
+**Objective:** Integrate automated quality gates (performance regression, security scanning, documentation coverage) into CI/CD pipeline.
+
+**Achievements:**
+
+- ✅ **Phase 1:** Planning & Research (Complete)
+  - Researched pytest-benchmark, Bandit, Semgrep best practices
+  - Designed 5-phase implementation approach
+
+- ✅ **Phase 2:** Performance Regression Testing (Complete)
+  - Fixed async benchmark test compatibility with pytest-benchmark
+  - Implemented baseline comparison script with 20% threshold
+  - Created GitHub Actions workflow with PR comments
+  - Added Taskfile commands (test:bench:baseline, test:bench:regression)
+  - Documentation: PERFORMANCE_TESTING.md guide
+
+- ✅ **Phase 3:** Security Scanning Automation (Complete)
+  - Converted .bandit config to YAML, fixed .semgrep.yml syntax
+  - Created GitHub Actions workflow with SARIF uploads
+  - Integrated with GitHub Security tab
+  - PR comments with security findings summaries
+
+- ✅ **Phase 4:** Documentation Coverage Tracking (Complete)
+  - Created doc_coverage.py AST-based analyzer
+  - 80% threshold enforcement
+  - Taskfile commands (docs:coverage, docs:coverage:report)
+  - JSON report generation for CI integration
+
+- ✅ **Phase 5:** Integration & Testing (Complete)
+  - All workflows passing in CI
+  - Pre-commit hooks updated
+  - Documentation complete
+
+**Deliverables:**
+
+- **Scripts:** check_performance_regression.py, doc_coverage.py
+- **Workflows:** performance-regression.yml, security-scanning.yml
+- **Guides:** PERFORMANCE_TESTING.md
+- **Commands:** test:bench:_, docs:coverage:_
+
+**Impact:**
+
+- Automated performance regression detection (20% threshold)
+- Automated security scanning with GitHub Security integration
+- Documentation quality metrics (≥80% coverage required)
+- CI/CD quality gates prevent degradation
+
+**Outcome:** Comprehensive quality automation infrastructure. Performance, security, and documentation metrics automated with CI enforcement and developer-friendly local testing.
+
 ---
 
 ### Active Initiatives (Q4 2024-2025)
@@ -196,6 +249,47 @@ Advanced automation deferred to Session Summary Mining Advanced (blocked on MCP 
 - Token optimization strategies
 - Workflow decomposition planning
 - YAML frontmatter standardization
+
+#### 3. Workflow & Task System V3 - Dynamic Planning (Phase 1 Complete)
+
+**Status:** Phase 1 complete, Phase 2-7 pending
+**Owner:** AI Agent
+**Target:** 2025-11-01
+**Initiative:** `docs/initiatives/active/2025-10-20-workflow-task-system-v3.md`
+
+**Objective:** Transition from static upfront planning to adaptive dynamic task planning with automatic validation checkpoints and intelligent commit strategies.
+
+**Phase 1 Achievements (✅ Complete - 2025-10-20):**
+
+- Research & design complete (~3 hours)
+- 5 critical issues identified from Quality Automation session
+- 5 industry sources researched (Dynamiq, Microsoft Azure, GitHub, V7 Labs, Patronus AI)
+- 7-phase implementation plan designed
+- Comprehensive 553-line initiative document created
+
+**Key Issues Addressed:**
+
+1. **Static Task Planning Brittleness** - Can't adapt to dynamic work
+2. **Manual Checkpoint Tasks** - Should be automatic, not pre-planned
+3. **Task Attribution Confusion** - Orchestrator vs executor unclear
+4. **Missing Sub-Workflow Autonomy** - Sub-workflows can't self-manage
+5. **Archive Script Path Error** - Undocumented path resolution bug
+
+**Expected Impact:**
+
+- 60-80% reduction in task plan updates
+- Zero pre-planned commit/validate tasks
+- 100% correct task attribution
+- Workflow autonomy (self-managing sub-workflows)
+
+**Phases 2-7 Planned:**
+
+- Phase 2: Core Task System Improvements (4-5h)
+- Phase 3: Workflow Enhancements (3-4h)
+- Phase 4: Commit & Validation Automation (2-3h)
+- Phase 5: Fix Archive Script (1h)
+- Phase 6: Documentation & Examples (2-3h)
+- Phase 7: Validation & Testing (1-2h)
 
 ---
 
