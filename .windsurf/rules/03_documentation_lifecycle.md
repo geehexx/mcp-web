@@ -1,17 +1,5 @@
 ---
-created: "2025-10-15"
-updated: "2025-10-18"
-trigger: glob
 description: Governs documentation creation, maintenance, and archival. Meta-rule about the development process.
-globs: "docs/**/*.md, *.md"
-category: documentation
-tokens: 1313
-applyTo:
-  - documentation
-  - adr
-  - initiatives
-priority: medium
-status: active
 ---
 
 # Rule: Documentation Lifecycle & Management
@@ -198,36 +186,36 @@ task test:parallel
 
 ### Rules
 
-- **Format:** YAML frontmatter + Markdown content
+- **Format:** Minimal YAML frontmatter + Markdown content
 - **Naming:** `NN_descriptive_name.md` (numbered for priority)
-- **Metadata:**
+- **Metadata (UPDATED 2025-10-20):**
 
   ```yaml
   ---
-  trigger: always_on | glob | model_decision
-  description: Brief description without apostrophes
-  globs: ["**/*.py"]  # Optional, for glob trigger
+  description: Brief description without apostrophes or quotes
   ---
-  ```text
+  ```
 
 - **Content:** Clear, actionable instructions
-- **Validation:** After changes, verify Windsurf IDE loads artifact correctly
+- **Validation:** After changes, run `python scripts/validate_frontmatter.py`
+- **Spec:** See `.windsurf/docs/frontmatter-specification.md` for details
+- **Note:** Activation modes (always_on, glob, model_decision) are set via Windsurf UI, not frontmatter
 
 ### Workflows
 
-- **Format:** YAML frontmatter + Markdown steps
+- **Format:** Minimal YAML frontmatter + Markdown steps
 - **Naming:** `descriptive-name.md` (kebab-case)
-- **Metadata:**
+- **Metadata (UPDATED 2025-10-20):**
 
   ```yaml
   ---
-  description: Brief workflow description
-  auto_execution_mode: 3  # Checkpoints at key steps
+  description: Brief workflow summary without apostrophes or quotes
   ---
-  ```text
+  ```
 
 - **Content:** Numbered steps with clear instructions
 - **Invocation:** `/workflow-name` in Cascade
+- **Spec:** See `.windsurf/docs/frontmatter-specification.md` for details
 
 ## 3.7 Documentation Maintenance
 

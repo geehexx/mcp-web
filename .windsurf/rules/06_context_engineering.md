@@ -1,17 +1,5 @@
 ---
-created: "2025-10-18"
-updated: "2025-10-19"
-trigger: model_decision
 description: File operations, git operations, context management, and .windsurf/ directory structure enforcement
-category: operations
-tokens: 2100
-applyTo:
-  - file_operations
-  - git
-  - context_loading
-  - windsurf_directory_structure
-priority: high
-status: active
 ---
 
 # Rule: Context Engineering

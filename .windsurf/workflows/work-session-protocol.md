@@ -1,16 +1,5 @@
 ---
-created: "2025-10-18"
-updated: "2025-10-18"
 description: /work-session-protocol - Session end protocol and completion detection
-auto_execution_mode: 3
-category: Sub-workflow
-parent: work.md
-complexity: 75
-tokens: 1372
-dependencies:
-  - archive-initiative
-  - meta-analysis
-status: active
 ---
 
 # Work Session End Protocol

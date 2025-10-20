@@ -1,17 +1,5 @@
 ---
-created: "2025-10-17"
-updated: "2025-10-19"
 description: Systematic session review with intelligent consolidation detection
-auto_execution_mode: 3
-category: Analysis
-complexity: 60
-tokens: 1200
-dependencies:
-  - extract-session
-  - summarize-session
-  - consolidate-summaries
-status: active
-version: 2.0.0
 ---
 
 # Meta-Analysis Workflow

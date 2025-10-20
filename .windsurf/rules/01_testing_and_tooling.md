@@ -1,16 +1,5 @@
 ---
-created: "2025-10-15"
-updated: "2025-10-18"
-trigger: glob
 description: Enforces testing standards, tool usage, and development environment practices.
-globs: "tests/**/*.py, src/**/*.py, *.toml, *.ini, Taskfile.yml"
-category: testing
-tokens: 989
-applyTo:
-  - testing
-  - implementation
-priority: high
-status: active
 ---
 
 # Rule: Testing, Tooling, and Development Environment

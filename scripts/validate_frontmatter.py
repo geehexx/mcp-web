@@ -1,19 +1,15 @@
 #!/usr/bin/env python3
-"""Validate YAML frontmatter in workflow and rule files."""
+"""
+Validate YAML frontmatter in workflow and rule files.
 
-import json
+Updated 2025-10-20: Validates minimal Windsurf-compatible format.
+See: .windsurf/docs/frontmatter-specification.md
+"""
+
 import sys
 from pathlib import Path
 
 import yaml
-from jsonschema import ValidationError, validate
-
-
-def load_schema() -> dict:
-    """Load JSON schema for frontmatter."""
-    schema_path = Path(".windsurf/schemas/frontmatter-schema.json")
-    with open(schema_path) as f:
-        return json.load(f)
 
 
 def extract_frontmatter(file_path: Path) -> dict | None:
@@ -32,30 +28,63 @@ def extract_frontmatter(file_path: Path) -> dict | None:
         return None
 
 
-def validate_file(file_path: Path, schema: dict) -> tuple[bool, str]:
+def validate_minimal_format(frontmatter: dict) -> tuple[bool, str]:
+    """
+    Validate Windsurf-compatible minimal frontmatter format.
+    
+    Required:
+    - Must have 'description' field
+    - Description must be string
+    - Description must not contain apostrophes (causes YAML parse issues)
+    - Description should be <= 200 characters
+    """
+    # Check required field
+    if "description" not in frontmatter:
+        return False, "Missing required field: description"
+    
+    description = frontmatter["description"]
+    
+    # Check type
+    if not isinstance(description, str):
+        return False, f"description must be string, got {type(description).__name__}"
+    
+    # Check for problematic characters
+    if "'" in description or '"' in description:
+        return False, "description contains apostrophes or quotes (not Windsurf-compatible)"
+    
+    # Check length
+    if len(description) > 200:
+        return False, f"description too long ({len(description)} chars, max 200)"
+    
+    # Warn about extra fields (not an error, just informational)
+    extra_fields = set(frontmatter.keys()) - {"description"}
+    if extra_fields:
+        return True, f"Valid (note: extra fields ignored by Windsurf: {', '.join(extra_fields)})"
+    
+    return True, "Valid"
+
+
+def validate_file(file_path: Path) -> tuple[bool, str]:
     """Validate single file's frontmatter."""
     frontmatter = extract_frontmatter(file_path)
     if not frontmatter:
         return False, "No frontmatter found"
-
-    try:
-        validate(instance=frontmatter, schema=schema)
-        return True, "Valid"
-    except ValidationError as e:
-        return False, f"{e.message} at {'.'.join(str(p) for p in e.path)}"
+    
+    return validate_minimal_format(frontmatter)
 
 
 def main() -> int:
     """Main validation function."""
-    schema = load_schema()
     workflow_dir = Path(".windsurf/workflows")
     rules_dir = Path(".windsurf/rules")
 
     errors = []
+    warnings = []
     valid_count = 0
     total_count = 0
 
-    print("🔍 Validating YAML frontmatter...")
+    print("🔍 Validating YAML frontmatter (Windsurf minimal format)...")
+    print("   Spec: .windsurf/docs/frontmatter-specification.md")
     print()
 
     # Validate workflows
@@ -65,10 +94,14 @@ def main() -> int:
         if file_path.name in ("INDEX.md", "DEPENDENCIES.md"):
             continue
         total_count += 1
-        valid, msg = validate_file(file_path, schema)
+        valid, msg = validate_file(file_path)
         if valid:
             valid_count += 1
-            print(f"  ✅ {file_path.name}")
+            if "extra fields" in msg.lower():
+                warnings.append(f"{file_path.name}: {msg}")
+                print(f"  ⚠️  {file_path.name}: {msg}")
+            else:
+                print(f"  ✅ {file_path.name}")
         else:
             errors.append(f"{file_path}: {msg}")
             print(f"  ❌ {file_path.name}: {msg}")
@@ -82,16 +115,23 @@ def main() -> int:
         if file_path.name in ("INDEX.md",):
             continue
         total_count += 1
-        valid, msg = validate_file(file_path, schema)
+        valid, msg = validate_file(file_path)
         if valid:
             valid_count += 1
-            print(f"  ✅ {file_path.name}")
+            if "extra fields" in msg.lower():
+                warnings.append(f"{file_path.name}: {msg}")
+                print(f"  ⚠️  {file_path.name}: {msg}")
+            else:
+                print(f"  ✅ {file_path.name}")
         else:
             errors.append(f"{file_path}: {msg}")
             print(f"  ❌ {file_path.name}: {msg}")
 
     print()
     print(f"**Summary:** {valid_count}/{total_count} files valid")
+    
+    if warnings:
+        print(f"**Warnings:** {len(warnings)} files with extra fields (will be ignored by Windsurf)")
 
     if errors:
         print()
@@ -100,7 +140,7 @@ def main() -> int:
             print(f"  - {error}")
         return 1
     else:
-        print("✅ All frontmatter valid")
+        print("✅ All frontmatter valid and Windsurf-compatible")
         return 0
 
 

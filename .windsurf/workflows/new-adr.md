@@ -1,13 +1,5 @@
 ---
-created: "2025-10-17"
-updated: "2025-10-18"
 description: Create New Architecture Decision Record
-auto_execution_mode: 3
-category: Documentation
-complexity: 45
-tokens: 482
-dependencies: []
-status: active
 ---
 
 # New ADR Workflow

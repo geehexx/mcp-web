@@ -1,14 +1,5 @@
 ---
-created: "2025-10-17"
-updated: "2025-10-18"
 description: Generate structured implementation plan from research
-auto_execution_mode: 3
-category: Planning
-complexity: 60
-tokens: 1585
-dependencies:
-  - research
-status: active
 ---
 
 # Generate Plan Workflow

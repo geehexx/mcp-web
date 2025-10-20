@@ -1,0 +1,6 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DEPRECATED - Workflow and Rule Frontmatter Schema",
+  "description": "This schema is DEPRECATED as of 2025-10-20. See ../.windsurf/docs/frontmatter-specification.md for the correct minimal format. This extensive schema was NOT compatible with Windsurf's actual requirements and caused rules/workflows to not load properly.",
+  "deprecationNotice": "Windsurf only recognizes minimal frontmatter with just 'description' field. All other fields in this schema are custom metadata not processed by Windsurf."
+}

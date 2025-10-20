@@ -1,16 +1,5 @@
 ---
-created: "2025-10-17"
-updated: "2025-10-19"
 description: Consolidate historical session summaries into daily comprehensive files
-auto_execution_mode: 3
-category: Analysis
-complexity: 70
-tokens: 2850
-dependencies:
-  - extract-session
-  - summarize-session
-status: active
-version: 2.3.0
 ---
 
 # Consolidate Session Summaries Workflow

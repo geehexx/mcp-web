@@ -1,14 +1,5 @@
 ---
-created: "2025-10-17"
-updated: "2025-10-20"
 description: Archive completed initiative or handle superseded initiatives
-auto_execution_mode: 3
-category: Documentation
-complexity: 50
-tokens: 800
-dependencies: ["scripts/validate_archival.py", "scripts/dependency_registry.py"]
-status: active
-version: 1.3.0
 ---
 
 # Archive Initiative Workflow

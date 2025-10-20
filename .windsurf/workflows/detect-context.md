@@ -1,13 +1,5 @@
 ---
-created: "2025-10-17"
-updated: "2025-10-19"
 description: Intelligent context detection for work continuation
-auto_execution_mode: 3
-category: Operations
-complexity: 80
-tokens: 1617
-dependencies: []
-status: active
 ---
 
 # Detect Context Workflow

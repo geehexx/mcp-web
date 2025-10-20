@@ -1,14 +1,5 @@
 ---
-created: "2025-10-15"
-updated: "2025-10-20"
-trigger: always_on
 description: Core agent persona, guiding principles, operational mandate, and high-level directives. Highest-level rule applying globally.
-category: core
-tokens: 1200
-applyTo:
-  - all
-priority: high
-status: active
 ---
 
 # Rule: Agent Persona & Core Directives
