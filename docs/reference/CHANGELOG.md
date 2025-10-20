@@ -7,90 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-
-- Session consolidation workflow (`/consolidate-summaries`) for managing historical summaries
-- ls-lint integration for file naming convention enforcement
-- ls-lint pre-commit hook and Taskfile commands
-- Agent operational efficiency patterns (batch operations, absolute paths)
-- Real-world example in README demonstrating asyncio summarization
-- Adaptive chunking enabled by default with content heuristics
-- Prompt optimization reducing verbosity by 45-60%
-- Adaptive `max_tokens` based on input size with configurable ratio
-- Stop sequences support for LLM calls
-- Parallel map-reduce optimization for 1.17x speedup
-- Mock LLM fixtures for deterministic benchmarks
-- Comprehensive benchmark suite for performance testing
-- Profiling infrastructure with timing utilities
-- CLI testing endpoints (`test-summarize`, `test-robots`)
-- Query-aware summarization tests (11 scenarios)
-- Playwright fallback tests (18 test cases)
-- robots.txt handling tests (25 test cases)
-- Documentation linting infrastructure (markdownlint)
-- Pre-commit hooks for documentation quality
-- GitHub Actions workflow for CI documentation checks
-- Comprehensive ADR framework (16 architecture decisions)
-- Project constitution and AI agent directives
-- Initiative tracking system (active/completed)
-- Meta-analysis workflow for session review
-- Session summary standardization
-- Windsurf workflow system integration (ADR-0002)
-- Documentation structure standards (ADR-0003)
-- Meta-analysis workflow overhaul with LLM-agnostic template, validation checklist, and length constraints
-- Session End Protocol updates enforcing PROJECT_SUMMARY / CHANGELOG maintenance triggers
-- 9 new Windsurf workflows for improved AI agent orchestration:
-  - `/update-docs`: Intelligent PROJECT_SUMMARY and CHANGELOG updates
-  - `/bump-version`: Auto-version bumping from conventional commits
-  - `/validate`: Comprehensive quality gate (linting, tests, security)
-  - `/load-context`: Efficient batch context loading with MCP optimization
-  - `/detect-context`: Intelligent project state analysis
-  - `/extract-session`: Git history analysis and structured data extraction
-  - `/summarize-session`: LLM-agnostic session summary generation
-  - `/research`: Best practices discovery with mandatory web search
-  - `/generate-plan`: Structured plan generation with phases and risks
-
-### Changed
-
-- Decomposed 3 major workflows into orchestrator pattern (52-83% size reduction per workflow):
-  - `/work`: Now calls focused sub-workflows for context detection and loading
-  - `/meta-analysis`: Orchestrator for extract-session and summarize-session
-  - `/plan`: Orchestrator for research and generate-plan
-- Consolidated `/commit` workflow to use standard git commands (removed deprecated mcp2_git_* references)
-- Consolidated `/run-tests` to focused quick reference (removed overlap with /validate)
-
-- Default chunking strategy now uses adaptive approach
-- LLM prompts optimized for reduced latency
-- Test performance improved with pytest-xdist parallelization
-- Type coverage increased to ~90% (64 errors fixed, 96 → 32)
-- Improved logger return type annotations (52 errors fixed)
-- Dict type parameters added across 5 modules (12 errors fixed)
-
-### Fixed
-
-- Date inconsistencies (2024 → 2025) across 21 documentation files
-- PROJECT_SUMMARY.md location references (root vs docs/)
-- Broken documentation links (WORKFLOW_OPTIMIZATION, META_ANALYSIS_TRACKING)
-- MCP tool relative path issues (now require absolute paths)
-- Workflow examples now show correct absolute path patterns
-- Quick start guide broken reference links
-- Security test failures (6 tests) with async context manager protocol
-- CLI import errors (TextChunker, Config, CacheManager)
-- Cache eviction policy name mapping (short to full names)
-- Test timeout issues and reliability improvements
-- Integration test failures with chunking optimization
-- Cache bytes serialization with dotenv loading
-- Mock LLM fixtures now fully intercept API calls
-- Docker-based markdownlint-cli2 to avoid nodeenv issues
-- Workflow auto-fix diff checking to prevent uncommitted changes
-- Injection pattern detection in security module
-
-### Security
-
-- Enhanced prompt injection detection patterns
-- Implemented async context manager protocol for security validation
-- Comprehensive security test coverage (OWASP LLM Top 10)
-- Bandit and semgrep integration in CI pipeline
-
 ## [0.2.0] - 2025-10-20
 
 ### Added
@@ -163,18 +79,85 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rate limiting support
 - Concurrent URL fetching
 - Content validation and sanitization
+- Session consolidation workflow (`/consolidate-summaries`) for managing historical summaries
+- ls-lint integration for file naming convention enforcement
+- ls-lint pre-commit hook and Taskfile commands
+- Agent operational efficiency patterns (batch operations, absolute paths)
+- Real-world example in README demonstrating asyncio summarization
+- Adaptive chunking enabled by default with content heuristics
+- Prompt optimization reducing verbosity by 45-60%
+- Adaptive `max_tokens` based on input size with configurable ratio
+- Stop sequences support for LLM calls
+- Parallel map-reduce optimization for 1.17x speedup
+- Mock LLM fixtures for deterministic benchmarks
+- Comprehensive benchmark suite for performance testing
+- Profiling infrastructure with timing utilities
+- CLI testing endpoints (`test-summarize`, `test-robots`)
+- Query-aware summarization tests (11 scenarios)
+- Playwright fallback tests (18 test cases)
+- robots.txt handling tests (25 test cases)
+- Documentation linting infrastructure (markdownlint)
+- Pre-commit hooks for documentation quality
+- GitHub Actions workflow for CI documentation checks
+- Comprehensive ADR framework (18 architecture decisions)
+- Project constitution and AI agent directives
+- Initiative tracking system (active/completed)
+- Meta-analysis workflow for session review
+- Session summary standardization
+- Windsurf workflow system integration (ADR-0002)
+- Documentation structure standards (ADR-0003)
+- Meta-analysis workflow overhaul with LLM-agnostic template, validation checklist, and length constraints
+- Session End Protocol updates enforcing PROJECT_SUMMARY / CHANGELOG maintenance triggers
+- 9 new Windsurf workflows for improved AI agent orchestration:
+  - `/update-docs`: Intelligent PROJECT_SUMMARY and CHANGELOG updates
+  - `/bump-version`: Auto-version bumping from conventional commits
+  - `/validate`: Comprehensive quality gate (linting, tests, security)
+  - `/load-context`: Efficient batch context loading with MCP optimization
+  - `/detect-context`: Intelligent project state analysis
+  - `/extract-session`: Git history analysis and structured data extraction
+  - `/summarize-session`: LLM-agnostic session summary generation
+  - `/research`: Best practices discovery with mandatory web search
+  - `/generate-plan`: Structured plan generation with phases and risks
 
 ### Changed
 
 - Project structure reorganized for maintainability
 - Configuration management via environment variables
 - LLM provider abstraction for multi-provider support
+- Decomposed 3 major workflows into orchestrator pattern (52-83% size reduction per workflow):
+  - `/work`: Now calls focused sub-workflows for context detection and loading
+  - `/meta-analysis`: Orchestrator for extract-session and summarize-session
+  - `/plan`: Orchestrator for research and generate-plan
+- Consolidated `/commit` workflow to use standard git commands (removed deprecated mcp2_git_* references)
+- Consolidated `/run-tests` to focused quick reference (removed overlap with /validate)
+- Default chunking strategy now uses adaptive approach
+- LLM prompts optimized for reduced latency
+- Test performance improved with pytest-xdist parallelization
+- Type coverage increased to ~90% (64 errors fixed, 96 → 32)
+- Improved logger return type annotations (52 errors fixed)
+- Dict type parameters added across 5 modules (12 errors fixed)
 
 ### Fixed
 
 - Various bug fixes during initial development
 - Test stability improvements
 - Error handling edge cases
+- Date inconsistencies (2024 → 2025) across 21 documentation files
+- PROJECT_SUMMARY.md location references (root vs docs/)
+- Broken documentation links (WORKFLOW_OPTIMIZATION, META_ANALYSIS_TRACKING)
+- MCP tool relative path issues (now require absolute paths)
+- Workflow examples now show correct absolute path patterns
+- Quick start guide broken reference links
+- Security test failures (6 tests) with async context manager protocol
+- CLI import errors (TextChunker, Config, CacheManager)
+- Cache eviction policy name mapping (short to full names)
+- Test timeout issues and reliability improvements
+- Integration test failures with chunking optimization
+- Cache bytes serialization with dotenv loading
+- Mock LLM fixtures now fully intercept API calls
+- Docker-based markdownlint-cli2 to avoid nodeenv issues
+- Workflow auto-fix diff checking to prevent uncommitted changes
+- Injection pattern detection in security module
 
 ### Security
 
@@ -183,40 +166,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Content sanitization
 - robots.txt respect by default
 - Secure credential handling
-
-## Release Notes
-
-### [Unreleased] - October 16, 2025
-
-**Highlights:**
-
-- **Performance**: 1.17x speedup with parallel map-reduce, optimized prompts
-- **Quality**: 85% test coverage, comprehensive security testing
-- **Documentation**: Complete ADR framework, linting infrastructure
-- **Developer Experience**: Windsurf workflows, Taskfile automation
-
-**Breaking Changes:**
-
-- None (backward compatible)
-
-**Migration Guide:**
-
-- No migration required
-- New adaptive chunking enabled by default (opt-out via `MCP_WEB_CHUNKER_ADAPTIVE_CHUNKING=false`)
-- New configuration options available but optional
-
-### [0.1.0] - October 15, 2025
-
-**Highlights:**
-
-- Initial release
-- Full MCP server implementation
-- Local and cloud LLM support
-- Comprehensive testing infrastructure
-
-**Breaking Changes:**
-
-- Initial release, no breaking changes
+- Enhanced prompt injection detection patterns
+- Implemented async context manager protocol for security validation
+- Comprehensive security test coverage (OWASP LLM Top 10)
+- Bandit and semgrep integration in CI pipeline
 
 ## Development
 
