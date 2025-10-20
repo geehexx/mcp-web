@@ -99,8 +99,29 @@ class WebSummarizationPipeline:
         )
 
         try:
-            # Step 1: Validate URLs
-            valid_urls = [url for url in urls if validate_url(url)]
+            # Step 1: Validate and normalize URLs
+            valid_urls = []
+            for url in urls:
+                # Check if it's a valid HTTP/HTTPS URL
+                if validate_url(url):
+                    valid_urls.append(url)
+                # Check if it's a file:// URL or absolute path (when file system enabled)
+                elif self.config.fetcher.enable_file_system:
+                    from pathlib import Path
+
+                    # Handle file:// URLs
+                    if url.startswith("file://"):
+                        valid_urls.append(url)
+                    # Handle absolute paths (convert to file:// URLs)
+                    elif Path(url).is_absolute():
+                        valid_urls.append(f"file://{url}")
+                    else:
+                        # Relative path or invalid
+                        continue
+                else:
+                    # File system disabled, skip non-HTTP URLs
+                    continue
+
             if not valid_urls:
                 yield "**Error:** No valid URLs provided.\n"
                 return
