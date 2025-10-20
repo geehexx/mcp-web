@@ -27,8 +27,7 @@ import yaml
 # Project root
 ROOT = Path(__file__).parent.parent
 WINDSURF_DIR = ROOT / ".windsurf"
-# DEPRECATED: Schema file removed 2025-10-20 (migrated to minimal Windsurf format)
-# SCHEMA_FILE = WINDSURF_DIR / "schemas" / "frontmatter-schema.json.backup"
+SCHEMA_FILE = WINDSURF_DIR / "schemas" / "frontmatter-schema.json"
 
 
 class ValidationError(Exception):
@@ -51,10 +50,9 @@ class WorkflowValidator:
         self.warnings: list[str] = []
         self.fixes: list[str] = []
 
-        # Schema validation deprecated 2025-10-20 (migrated to minimal Windsurf format)
-        # Frontmatter now validated by scripts/validate_frontmatter.py
-        # and scripts/validate_rules_frontmatter.py
-        self.schema = None
+        # Load schema
+        with open(SCHEMA_FILE) as f:
+            self.schema = json.load(f)
 
     def validate_all(self) -> int:
         """Validate all workflows and rules.
@@ -95,8 +93,8 @@ class WorkflowValidator:
             # 1. Validate frontmatter exists and is valid YAML
             frontmatter = self._extract_frontmatter(content, rel_path)
 
-            # 2. Schema validation deprecated (use validate_frontmatter.py instead)
-            # self._validate_schema(frontmatter, rel_path)
+            # 2. Validate against JSON schema
+            self._validate_schema(frontmatter, rel_path)
 
             # 3. Check for outdated tool references
             self._check_outdated_tools(content, rel_path)

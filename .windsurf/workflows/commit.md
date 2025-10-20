@@ -1,5 +1,14 @@
 ---
+created: "2025-10-17"
+updated: "2025-10-19"
 description: Git commit workflow with validation and review
+auto_execution_mode: 3
+category: Validation
+complexity: 55
+tokens: 1058
+dependencies:
+  - validate
+status: active
 ---
 
 # Git Commit Workflow

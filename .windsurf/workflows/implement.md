@@ -1,5 +1,16 @@
 ---
+created: "2025-10-17"
+updated: "2025-10-18"
 description: Focused implementation with test-first approach
+auto_execution_mode: 3
+category: Implementation
+complexity: 75
+tokens: 2384
+dependencies:
+  - load-context
+  - validate
+  - commit
+status: active
 ---
 
 # Implementation Workflow

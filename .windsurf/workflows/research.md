@@ -1,5 +1,13 @@
 ---
+created: "2025-10-17"
+updated: "2025-10-18"
 description: Research best practices and existing patterns
+auto_execution_mode: 3
+category: Planning
+complexity: 50
+tokens: 1300
+dependencies: []
+status: active
 ---
 
 # Research Workflow

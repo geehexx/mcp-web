@@ -1,5 +1,14 @@
 ---
+created: "2025-10-17"
+updated: "2025-10-18"
 description: Generate formatted session summary from extracted data
+auto_execution_mode: 3
+category: Analysis
+complexity: 55
+tokens: 1430
+dependencies:
+  - extract-session
+status: active
 ---
 
 # Summarize Session Workflow

@@ -1,5 +1,16 @@
 ---
+created: "2025-10-17"
+updated: "2025-10-18"
 description: Research-driven comprehensive project planning
+auto_execution_mode: 2
+category: Planning
+complexity: 70
+tokens: 1729
+dependencies:
+  - research
+  - generate-plan
+  - load-context
+status: active
 ---
 
 # Planning Workflow

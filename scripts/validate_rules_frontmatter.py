@@ -1,16 +1,14 @@
 #!/usr/bin/env python3
-"""
-Validate Windsurf rules front-matter (minimal format).
+"""Validate Windsurf rules front-matter.
 
-UPDATED 2025-10-20: Validates minimal Windsurf-compatible format.
-Activation modes (always_on, glob, model_decision) are now set via Windsurf UI, not frontmatter.
+Ensures all .windsurf/rules/*.md files have valid trigger types.
 
-Required frontmatter:
-- description: Brief summary (no apostrophes, max 200 chars)
+Valid trigger types (per Windsurf documentation):
+- always_on: Rule always applied
+- model_decision: Model decides based on description (requires description field)
+- glob: Applied to files matching patterns (requires globs field as YAML array)
 
-Reference:
-- https://docs.windsurf.com/windsurf/cascade/memories
-- .windsurf/docs/frontmatter-specification.md
+Reference: https://docs.windsurf.com/windsurf/cascade/memories
 """
 
 import sys
@@ -18,11 +16,12 @@ from pathlib import Path
 
 import yaml
 
+VALID_TRIGGERS = {"always_on", "model_decision", "glob"}
 RULES_DIR = Path(".windsurf/rules")
 
 
 def validate_rule_file(file_path: Path) -> list[str]:
-    """Validate a single rule file's front-matter (minimal format).
+    """Validate a single rule file's front-matter.
 
     Args:
         file_path: Path to the rule file
@@ -54,19 +53,35 @@ def validate_rule_file(file_path: Path) -> list[str]:
     if not isinstance(frontmatter, dict):
         return [f"{file_path}: Front-matter must be a YAML dictionary"]
 
-    # Validate required field: description
-    description = frontmatter.get("description")
-    if not description:
-        errors.append(f"{file_path.name}: Missing required 'description' field")
-    elif not isinstance(description, str):
-        errors.append(f"{file_path.name}: 'description' must be a string")
-    else:
-        # Check for problematic characters
-        if "'" in description or '"' in description:
-            errors.append(f"{file_path.name}: 'description' contains apostrophes/quotes (not Windsurf-compatible)")
-        # Check length
-        if len(description) > 200:
-            errors.append(f"{file_path.name}: 'description' too long ({len(description)} chars, max 200)")
+    # Validate trigger field
+    trigger = frontmatter.get("trigger")
+    if not trigger:
+        errors.append(f"{file_path}: Missing 'trigger' field")
+    elif trigger not in VALID_TRIGGERS:
+        errors.append(
+            f"{file_path}: Invalid trigger '{trigger}'. "
+            f"Must be one of: {', '.join(sorted(VALID_TRIGGERS))}"
+        )
+
+    # Validate trigger-specific requirements
+    if trigger == "model_decision":
+        if not frontmatter.get("description"):
+            errors.append(f"{file_path}: 'model_decision' trigger requires 'description' field")
+    elif trigger == "glob":
+        globs = frontmatter.get("globs")
+        if not globs:
+            errors.append(f"{file_path}: 'glob' trigger requires 'globs' field")
+        # Accept both YAML array and comma-separated string
+        elif not isinstance(globs, list | str):
+            errors.append(f"{file_path}: 'globs' field must be a list or string")
+
+    # Validate created/updated fields (recommended but not required)
+    created = frontmatter.get("created")
+    updated = frontmatter.get("updated")
+    if created and not isinstance(created, str):
+        errors.append(f"{file_path}: 'created' field must be a string (YYYY-MM-DD format)")
+    if updated and not isinstance(updated, str):
+        errors.append(f"{file_path}: 'updated' field must be a string (YYYY-MM-DD format)")
 
     return errors
 
@@ -95,11 +110,11 @@ def main() -> int:
         print("❌ Rules front-matter validation failed:\n")
         for error in all_errors:
             print(f"  • {error}")
-        print("\n📖 Required format: minimal frontmatter with 'description' field only")
-        print("📚 Reference: .windsurf/docs/frontmatter-specification.md")
+        print(f"\n📖 Valid trigger types: {', '.join(sorted(VALID_TRIGGERS))}")
+        print("📚 Reference: https://docs.windsurf.com/windsurf/cascade/memories")
         return 1
 
-    print(f"✅ All {len(rule_files)} rule files have valid minimal front-matter")
+    print(f"✅ All {len(rule_files)} rule files have valid front-matter")
     return 0
 
 

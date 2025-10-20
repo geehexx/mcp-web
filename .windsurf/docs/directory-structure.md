@@ -101,7 +101,7 @@ Only the following directories are allowed in `.windsurf/`:
 
 **Examples:**
 
-- ✅ `frontmatter-specification.md` - Frontmatter validation schema
+- ✅ `frontmatter-schema.json` - Frontmatter validation schema
 - ❌ `config.yaml` - Config file (doesn't belong here)
 
 ---

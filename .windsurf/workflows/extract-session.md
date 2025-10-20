@@ -1,5 +1,13 @@
 ---
+created: "2025-10-17"
+updated: "2025-10-18"
 description: Extract structured information from current session
+auto_execution_mode: 3
+category: Analysis
+complexity: 55
+tokens: 1196
+dependencies: []
+status: active
 ---
 
 # Extract Session Workflow

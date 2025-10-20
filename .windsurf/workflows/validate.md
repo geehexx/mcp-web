@@ -1,5 +1,13 @@
 ---
+created: "2025-10-17"
+updated: "2025-10-19"
 description: Run linting, tests, security checks, cross-reference validation, normative core enforcement
+auto_execution_mode: 3
+category: Validation
+complexity: 62
+tokens: 1920
+dependencies: []
+status: active
 ---
 
 # Validate Workflow

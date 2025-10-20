@@ -1,5 +1,17 @@
 ---
+created: "2025-10-19"
+updated: "2025-10-20"
+trigger: model_decision
 description: Apply when using update_plan tool, creating task lists, orchestrating workflows, or managing multi-step work. Essential for /work, /plan, /implement orchestration.
+category: operations
+tokens: 2800
+applyTo:
+  - planning
+  - orchestration
+  - workflow_execution
+  - task_tracking
+priority: high
+status: active
 ---
 
 # Rule: Task System Usage

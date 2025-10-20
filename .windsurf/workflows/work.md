@@ -1,5 +1,21 @@
 ---
+created: "2025-10-17"
+updated: "2025-10-18"
 description: Intelligent work orchestration and context detection
+auto_execution_mode: 3
+category: Orchestrator
+complexity: 85
+tokens: 1313
+dependencies:
+  - detect-context
+  - load-context
+  - implement
+  - plan
+  - validate
+  - commit
+  - archive-initiative
+  - meta-analysis
+status: active
 ---
 
 # Work Orchestration Workflow

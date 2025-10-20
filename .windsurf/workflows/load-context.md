@@ -1,5 +1,13 @@
 ---
+created: "2025-10-17"
+updated: "2025-10-18"
 description: Batch load project context efficiently
+auto_execution_mode: 3
+category: Operations
+complexity: 65
+tokens: 1908
+dependencies: []
+status: active
 ---
 
 # Load Context Workflow

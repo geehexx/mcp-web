@@ -1,5 +1,13 @@
 ---
+created: "2025-10-17"
+updated: "2025-10-18"
 description: Update PROJECT_SUMMARY.md and CHANGELOG.md
+auto_execution_mode: 3
+category: Automation
+complexity: 55
+tokens: 1533
+dependencies: []
+status: active
 ---
 
 # Update Documentation Workflow

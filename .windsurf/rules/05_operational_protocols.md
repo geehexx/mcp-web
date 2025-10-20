@@ -1,5 +1,15 @@
 ---
+created: "2025-10-18"
+updated: "2025-10-19"
+trigger: model_decision
 description: Session end protocol, normative core enforcement, progress communication, and operational efficiency
+category: operations
+tokens: 1400
+applyTo:
+  - all
+  - session_management
+priority: high
+status: active
 ---
 
 # Rule: Operational Protocols
