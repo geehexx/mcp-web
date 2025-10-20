@@ -1,0 +1,125 @@
+name: Performance Regression Testing
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'tests/benchmarks/**'
+      - '.github/workflows/performance-regression.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'tests/benchmarks/**'
+
+jobs:
+  benchmark:
+    name: Run Performance Benchmarks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for comparison
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: |
+          uv sync --frozen
+
+      - name: Clear previous benchmark cache (on main push)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh cache delete ${{ runner.os }}-benchmark --repo ${{ github.repository }} || true
+        continue-on-error: true
+
+      - name: Download previous benchmark results
+        uses: actions/cache@v4
+        with:
+          path: ./cache
+          key: ${{ runner.os }}-benchmark
+
+      - name: Run performance benchmarks
+        run: |
+          uv run pytest -m benchmark --benchmark-only --benchmark-json=output.json -v -o addopts=''
+
+      - name: Store benchmark result (compare with cache)
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          tool: 'pytest'
+          output-file-path: output.json
+          external-data-json-path: ./cache/benchmark-data.json
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          comment-always: true
+          fail-on-alert: true
+          alert-threshold: '120%'  # Fail if >20% slower
+          summary-always: true
+
+      - name: Upload benchmark results as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results
+          path: |
+            output.json
+            ./cache/benchmark-data.json
+          retention-days: 90
+
+  benchmark-comment:
+    name: Performance Summary Comment
+    needs: benchmark
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download benchmark results
+        uses: actions/download-artifact@v4
+        with:
+          name: benchmark-results
+
+      - name: Comment benchmark summary on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const data = JSON.parse(fs.readFileSync('output.json', 'utf8'));
+
+            const benchmarks = data.benchmarks;
+            const slowest = benchmarks
+              .sort((a, b) => b.stats.mean - a.stats.mean)
+              .slice(0, 5);
+
+            let comment = '## 📊 Performance Benchmark Results\n\n';
+            comment += '### Slowest 5 Tests\n\n';
+            comment += '| Test | Mean Time | Std Dev |\n';
+            comment += '|------|-----------|----------|\n';
+
+            slowest.forEach(b => {
+              const name = b.name.replace('test_', '');
+              const mean = (b.stats.mean * 1000).toFixed(2);
+              const stddev = (b.stats.stddev * 1000).toFixed(2);
+              comment += `| ${name} | ${mean}ms | ±${stddev}ms |\n`;
+            });
+
+            comment += '\n> **Alert Threshold:** 120% (fails if >20% slower than baseline)\n';
+            comment += `> **Total Tests:** ${benchmarks.length}\n`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });

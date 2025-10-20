@@ -113,8 +113,7 @@ class TestCachePerformance:
     Grouped to avoid cache contention between parallel workers.
     """
 
-    @pytest.mark.asyncio
-    async def test_cache_write_speed(self, benchmark, test_config):
+    def test_cache_write_speed(self, benchmark, test_config):
         """Benchmark cache write performance."""
         from mcp_web.cache import CacheManager
 
@@ -129,6 +128,10 @@ class TestCachePerformance:
             for i in range(10):
                 await cache.set(f"bench_key_{i}", test_data)
 
+        async def cleanup():
+            for i in range(10):
+                await cache.delete(f"bench_key_{i}")
+
         # Benchmark async function
         benchmark.pedantic(
             lambda: asyncio.run(write_cache()),
@@ -137,11 +140,9 @@ class TestCachePerformance:
         )
 
         # Cleanup
-        for i in range(10):
-            await cache.delete(f"bench_key_{i}")
+        asyncio.run(cleanup())
 
-    @pytest.mark.asyncio
-    async def test_cache_read_speed(self, benchmark, test_config):
+    def test_cache_read_speed(self, benchmark, test_config):
         """Benchmark cache read performance."""
         from mcp_web.cache import CacheManager
 
@@ -152,7 +153,7 @@ class TestCachePerformance:
 
         # Prepare data
         test_data = {"key": "value", "data": "x" * 1000}
-        await cache.set("bench_read_key", test_data)
+        asyncio.run(cache.set("bench_read_key", test_data))
 
         async def read_cache():
             for _ in range(10):
@@ -165,15 +166,14 @@ class TestCachePerformance:
         )
 
         # Cleanup
-        await cache.delete("bench_read_key")
+        asyncio.run(cache.delete("bench_read_key"))
 
 
 @pytest.mark.benchmark
-@pytest.mark.asyncio
 class TestExtractionPerformance:
     """Benchmark content extraction."""
 
-    async def test_extraction_speed(self, benchmark, test_config, sample_html):
+    def test_extraction_speed(self, benchmark, test_config, sample_html):
         """Benchmark HTML extraction."""
         from mcp_web.extractor import ContentExtractor
         from mcp_web.fetcher import FetchResult

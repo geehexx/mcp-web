@@ -49,6 +49,7 @@ repos:
       - id: check-added-large-files
         name: "📁 files · Prevent large files (>500KB)"
         args: [--maxkb=500]
+        exclude: ^\.benchmarks/
       - id: trailing-whitespace
         name: "📁 files · Remove trailing whitespace"
       - id: end-of-file-fixer

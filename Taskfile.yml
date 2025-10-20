@@ -99,6 +99,18 @@ tasks:
     cmds:
       - "{{.UV}} run pytest -m benchmark --benchmark-only --benchmark-autosave -v -o addopts=''"
 
+  test:bench:regression:
+    desc: Run benchmarks and compare against baseline (fails if >20% slower)
+    cmds:
+      - "{{.UV}} run pytest -m benchmark --benchmark-only --benchmark-json=output.json -v -o addopts=''"
+      - "{{.UV}} run python scripts/check_performance_regression.py output.json .benchmarks/baseline.json --threshold 1.2"
+
+  test:bench:baseline:
+    desc: Generate new performance baseline
+    cmds:
+      - "{{.UV}} run pytest -m benchmark --benchmark-only --benchmark-json=.benchmarks/baseline.json -v -o addopts=''"
+      - echo "✓ Baseline saved to .benchmarks/baseline.json"
+
   test:all:
     desc: Run all tests including live tests (requires API keys)
     cmds:
