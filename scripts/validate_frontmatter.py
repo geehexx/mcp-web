@@ -10,10 +10,14 @@ from jsonschema import ValidationError, validate
 
 
 def load_schema() -> dict:
-    """Load JSON schema for frontmatter."""
-    schema_path = Path(".windsurf/schemas/frontmatter-schema.json")
-    with open(schema_path) as f:
-        return json.load(f)
+    """Schema removed - frontmatter now uses minimal Windsurf format.
+    
+    Validation rules:
+    - trigger: Required (always_on, manual, model_decision, glob)
+    - description: Required for model_decision and glob triggers
+    - globs: Required for glob trigger (quoted, comma-separated)
+    """
+    return {}
 
 
 def extract_frontmatter(file_path: Path) -> dict | None:

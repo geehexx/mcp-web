@@ -379,32 +379,34 @@ When creating/updating documentation:
 - ✅ Review for clarity and accuracy
 - ✅ For machine-readable docs: verify token budget and frontmatter
 
-
 ---
 
 ## Rule Metadata
 
-**File:** `03_documentation.md`  
-**Trigger:** glob  
-**Estimated Tokens:** ~2,000  
-**Last Updated:** 2025-10-21  
+**File:** `03_documentation.md`
+**Trigger:** glob
+**Estimated Tokens:** ~2,000
+**Last Updated:** 2025-10-21
 **Status:** Active
 
 **Can be @mentioned:** Yes (hybrid loading)
 
-
 **Topics Covered:**
+
 - Markdown standards
 - ADR creation
 - Initiative structure
 - Documentation lifecycle
 
 **Workflow References:**
+
 - /plan - Creating initiatives/ADRs
 - /new-adr - ADR workflow
 
 **Dependencies:**
+
 - Source: 03_documentation_lifecycle.md
 
 **Changelog:**
+
 - 2025-10-21: Created from 03_documentation_lifecycle.md

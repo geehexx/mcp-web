@@ -1,6 +1,6 @@
 # Windsurf Rules System Analysis
 
-**Date:** 2025-10-21  
+**Date:** 2025-10-21
 **Purpose:** Complete inventory for comprehensive revamp
 
 ---
@@ -21,6 +21,7 @@
 **Total:** 101.7KB, 24,868 tokens
 
 **Critical Issues:**
+
 1. All rules have excessive frontmatter: `created`, `updated`, `category`, `tokens`, `applyTo`, `priority`, `status`
 2. `globs` fields are quoted strings instead of comma-separated unquoted values
 3. `04_security.md` has `model_decision` trigger but also has `globs` field (mutually exclusive)
@@ -49,6 +50,7 @@
 | `workflow-routing-matrix.md` | 7.8KB | Routing decisions | **YES** | Critical for `/work` |
 
 **Elevation candidates (9 docs → rules):**
+
 1. `automation-scripts.md` → Rule (manual or model_decision)
 2. `batch-operations.md` → Merge into `06_context_engineering.md`
 3. `context-loading-patterns.md` → Merge into `06_context_engineering.md`
@@ -59,6 +61,7 @@
 8. `workflow-routing-matrix.md` → Merge into `/work` workflow or new rule
 
 **Auto-generated (4 docs → regenerate):**
+
 - `index.md`, `rules-index.md`, `workflow-dependencies.md`, `workflow-index.md`
 
 ---
@@ -68,6 +71,7 @@
 ### Issue 1: Excessive Fields
 
 **Current format (WRONG):**
+
 ```yaml
 ---
 created: "2025-10-15"
@@ -84,6 +88,7 @@ status: active
 ```
 
 **Should be:**
+
 ```yaml
 ---
 trigger: always_on
@@ -97,11 +102,13 @@ trigger: always_on
 ### Issue 2: Globs Format
 
 **Current (WRONG):**
+
 ```yaml
 globs: "**/*.py, **/*.ini, **/*.yml, **/*.yaml"
 ```
 
 **Should be:**
+
 ```yaml
 globs: **/*.py, **/*.ini, **/*.yml, **/*.yaml
 ```
@@ -111,6 +118,7 @@ globs: **/*.py, **/*.ini, **/*.yml, **/*.yaml
 ### Issue 3: Model Decision + Globs
 
 **Current (WRONG):**
+
 ```yaml
 trigger: model_decision
 description: Apply when dealing with security-sensitive code...
@@ -120,6 +128,7 @@ globs: "**/*.py, **/*.ini, **/*.yml, **/*.yaml"
 **Should be (pick ONE):**
 
 Option A - Model decision:
+
 ```yaml
 trigger: model_decision
 description: Apply when dealing with security-sensitive code including API calls, user input, LLM interactions, file operations, or authentication
@@ -127,6 +136,7 @@ description: Apply when dealing with security-sensitive code including API calls
 ```
 
 Option B - Glob:
+
 ```yaml
 trigger: glob
 globs: **/*.py, **/*.ini, **/*.yml, **/*.yaml
@@ -142,11 +152,13 @@ globs: **/*.py, **/*.ini, **/*.yml, **/*.yaml
 ### Manual Analysis Required
 
 Need to search workflows for:
+
 - References to `.windsurf/rules/` files
 - References to `.windsurf/docs/` files
 - Implicit dependencies (topics mentioned)
 
 **Method:**
+
 ```bash
 grep -r "\.windsurf/rules/" .windsurf/workflows/
 grep -r "\.windsurf/docs/" .windsurf/workflows/
@@ -174,6 +186,7 @@ grep -r "\.windsurf/docs/" .windsurf/workflows/
 **Windsurf limit:** 12,000 characters per rule
 
 **Violations:**
+
 - `00_agent_directives.md` - 12,867 bytes (**OVER LIMIT by 867 bytes**)
 - `07_task_system.md` - 29,056 bytes (**OVER LIMIT by 17,056 bytes**)
 
@@ -184,9 +197,11 @@ grep -r "\.windsurf/docs/" .windsurf/workflows/
 ### Always-On Rules (Core)
 
 **Current:**
+
 - `00_agent_directives.md` (always_on) - **KEEP**, but trim to <12KB
 
 **Candidates:**
+
 - None currently
 
 **Recommendation:** Keep `00_agent_directives.md` as sole `always_on`, trim to essentials
@@ -194,17 +209,20 @@ grep -r "\.windsurf/docs/" .windsurf/workflows/
 ### Model Decision Rules (Conditional)
 
 **Current:**
+
 - `04_security.md` - Security-sensitive code
 - `05_operational_protocols.md` - Session end, progress
 - `06_context_engineering.md` - File/git operations
 
 **Candidates from docs:**
+
 - `error-handling-patterns.md` - Error handling scenarios
 - `workflow-routing-matrix.md` - Routing decisions
 
 ### Glob Rules (File-Type)
 
 **Current:**
+
 - `01_testing_and_tooling.md` - Test/source files, configs
 - `02_python_standards.md` - Python files
 - `03_documentation_lifecycle.md` - Markdown docs
@@ -214,9 +232,11 @@ grep -r "\.windsurf/docs/" .windsurf/workflows/
 ### Manual Rules (Reference)
 
 **Current:**
+
 - `07_task_system.md` - Task system reference
 
 **Candidates from docs:**
+
 - `automation-scripts.md` - Automation reference
 - `batch-operations.md` - Optimization reference
 - `context-loading-patterns.md` - Loading strategies
@@ -254,6 +274,7 @@ grep -r "\.windsurf/docs/" .windsurf/workflows/
 **Target:** Optimize for ≤30,000 tokens total
 
 **Always-loaded context:**
+
 - `always_on` rules: ~3,175 tokens (00_agent_directives.md)
 - Python glob rules when editing .py: ~4,000 tokens (01, 02)
 - Doc glob rules when editing .md: ~2,600 tokens (03)
@@ -269,6 +290,7 @@ grep -r "\.windsurf/docs/" .windsurf/workflows/
 ### Opportunity 1: Context Engineering Superrule
 
 **Merge:**
+
 - `06_context_engineering.md` (11.8KB, 2802 tokens)
 - `batch-operations.md` (6.3KB)
 - `context-loading-patterns.md` (7.0KB)
@@ -278,25 +300,29 @@ grep -r "\.windsurf/docs/" .windsurf/workflows/
 **Result:** Single `06_context_engineering.md` rule (~15-18KB) - **TOO LARGE**
 
 **Better approach:** Split into 2-3 focused rules:
-1. `06_file_operations.md` (glob: **/*.py, **/*.md, *.toml)
+
+1. `06_file_operations.md` (glob: **/_.py, **/_.md, *.toml)
 2. `07_context_loading.md` (model_decision: context/performance)
 3. `08_git_operations.md` (model_decision: git operations)
 
 ### Opportunity 2: Task System Consolidation
 
 **Merge:**
+
 - `07_task_system.md` (29.1KB, 7176 tokens)
 - `task-system-reference.md` (6.8KB)
 
 **Problem:** Already over limit
 
 **Solution:** Extract to separate rule:
+
 - `07_task_system_core.md` (model_decision, <10KB) - Core update_plan usage
 - `08_task_system_reference.md` (manual, <10KB) - Detailed reference
 
 ### Opportunity 3: Automation Reference
 
 **Merge:**
+
 - `automation-scripts.md` (5.5KB)
 - Parts of `01_testing_and_tooling.md` (Taskfile commands)
 
@@ -313,9 +339,9 @@ grep -r "\.windsurf/docs/" .windsurf/workflows/
 ### Glob Triggers (4 rules, ~8KB)
 
 - `01_python_standards.md` (glob: **/*.py)
-- `02_testing_standards.md` (glob: tests/**/*.py, **/*test*.py)
-- `03_documentation_standards.md` (glob: docs/**/*.md, *.md)
-- `04_config_standards.md` (glob: *.toml, *.ini, *.yml, *.yaml, Taskfile.yml)
+- `02_testing_standards.md` (glob: tests/**/*.py,**/_test_.py)
+- `03_documentation_standards.md` (glob: docs/**/_.md,_.md)
+- `04_config_standards.md` (glob: _.toml,_.ini, _.yml,_.yaml, Taskfile.yml)
 
 ### Model Decision (8 rules, ~20KB)
 
@@ -372,5 +398,5 @@ grep -r "\.windsurf/docs/" .windsurf/workflows/
 
 ---
 
-**Analysis Complete**  
+**Analysis Complete**
 **Next Phase:** Design New Structure

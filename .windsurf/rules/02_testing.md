@@ -149,32 +149,34 @@ Before delivering checkpoints:
 - **Traceability:** Document fetch rationale in checkpoints
 - **Current date awareness:** October 15, 2025 - ensure references are current
 
-
 ---
 
 ## Rule Metadata
 
-**File:** `02_testing.md`  
-**Trigger:** glob  
-**Estimated Tokens:** ~1,800  
-**Last Updated:** 2025-10-21  
+**File:** `02_testing.md`
+**Trigger:** glob
+**Estimated Tokens:** ~1,800
+**Last Updated:** 2025-10-21
 **Status:** Active
 
 **Can be @mentioned:** Yes (hybrid loading)
 
-
 **Topics Covered:**
+
 - pytest best practices
 - Test fixtures
 - TDD workflow
 - Test markers
 
 **Workflow References:**
+
 - /implement - Test-first development
 - /validate - Test execution
 
 **Dependencies:**
+
 - Source: 01_testing_and_tooling.md
 
 **Changelog:**
+
 - 2025-10-21: Created from 01_testing_and_tooling.md

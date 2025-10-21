@@ -205,31 +205,33 @@ File naming is validated on every commit via `ls-lint` pre-commit hook.
 **Version:** 1.0.0
 **Status:** Active (enforced via ls-lint)
 
-
 ---
 
 ## Rule Metadata
 
-**File:** `05_windsurf_structure.md`  
-**Trigger:** glob  
-**Estimated Tokens:** ~1,200  
-**Last Updated:** 2025-10-21  
+**File:** `05_windsurf_structure.md`
+**Trigger:** glob
+**Estimated Tokens:** ~1,200
+**Last Updated:** 2025-10-21
 **Status:** Active
 
 **Can be @mentioned:** Yes (hybrid loading)
 
-
 **Topics Covered:**
+
 - Directory structure
 - Forbidden files
 - Frontmatter format
 - Validation
 
 **Workflow References:**
+
 - All workflows - Enforces structure when editing .windsurf/
 
 **Dependencies:**
+
 - Source: directory-structure.md
 
 **Changelog:**
+
 - 2025-10-21: Created from directory-structure.md

@@ -117,12 +117,13 @@ repos:
         files: ^\.windsurf/rules/.*\.md$
         pass_filenames: false
 
-      - id: update-machine-readable-docs
-        name: "📚 docs · Update machine-readable documentation"
-        entry: uv run python scripts/update_machine_readable_docs.py
-        language: system
-        files: ^\.windsurf/(workflows|rules)/.*\.md$
-        pass_filenames: false
+      # Auto-generated docs removed - content consolidated into rules
+      # - id: update-machine-readable-docs
+      #   name: "📚 docs · Update machine-readable documentation"
+      #   entry: uv run python scripts/update_machine_readable_docs.py
+      #   language: system
+      #   files: ^\.windsurf/(workflows|rules)/.*\.md$
+      #   pass_filenames: false
 
       - id: validate-workflows
         name: "🔄 workflows · Validate workflow and rule files"

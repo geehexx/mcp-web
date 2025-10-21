@@ -50,9 +50,9 @@ class WorkflowValidator:
         self.warnings: list[str] = []
         self.fixes: list[str] = []
 
-        # Load schema
-        with open(SCHEMA_FILE) as f:
-            self.schema = json.load(f)
+        # Schema validation removed - frontmatter now minimal Windsurf format
+        # Validation focuses on required fields only: trigger, description (for model_decision), globs (for glob)
+        self.schema = None
 
     def validate_all(self) -> int:
         """Validate all workflows and rules.
@@ -149,7 +149,7 @@ class WorkflowValidator:
         except yaml.YAMLError as e:
             raise ValidationError(f"Invalid YAML syntax: {e}") from e
 
-    def _validate_schema(self, frontmatter: dict[str, Any], _rel_path: Path) -> None:
+    def _validate_schema(self, frontmatter: dict[str, Any], rel_path: Path) -> None:
         """Validate frontmatter against JSON schema.
 
         Args:
@@ -159,12 +159,9 @@ class WorkflowValidator:
         Raises:
             ValidationError: If schema validation fails
         """
-        try:
-            jsonschema.validate(frontmatter, self.schema)
-        except jsonschema.ValidationError as e:
-            # Format error message
-            path = ".".join(str(p) for p in e.path) if e.path else "root"
-            raise ValidationError(f"Schema validation failed at '{path}': {e.message}") from e
+        # Schema validation disabled - using minimal Windsurf format
+        # Validation now focuses on required fields only
+        return
 
     def _check_outdated_tools(self, content: str, rel_path: Path) -> None:
         """Check for outdated tool references.

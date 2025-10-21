@@ -100,42 +100,45 @@ type(scope): description
 ## Pre-commit Hooks
 
 **Quality gates enforced:**
+
 - Markdown linting
 - Task format validation
 - Frontmatter validation
 - Token count monitoring
 
 **Bypassing (use sparingly):**
+
 - Only for false positives or urgent hotfixes
 - Document reason in commit message
 - Create follow-up issue if needed
-
-
 
 ---
 
 ## Rule Metadata
 
-**File:** `09_git_workflows.md`  
-**Trigger:** model_decision  
-**Estimated Tokens:** ~1,800  
-**Last Updated:** 2025-10-21  
+**File:** `09_git_workflows.md`
+**Trigger:** model_decision
+**Estimated Tokens:** ~1,800
+**Last Updated:** 2025-10-21
 **Status:** Active
 
 **Can be @mentioned:** Yes (hybrid loading)
 
-
 **Topics Covered:**
+
 - Git operations
 - Conventional commits
 - Pre-commit hooks
 - Commit best practices
 
 **Workflow References:**
+
 - /commit - Git commit workflow
 
 **Dependencies:**
+
 - Source: 06_context_engineering.md (Git Operations section)
 
 **Changelog:**
+
 - 2025-10-21: Created from 06_context_engineering.md

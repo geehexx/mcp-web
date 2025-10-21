@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """Trim 12_task_orchestration.md to <12KB."""
 
-from pathlib import Path
 from datetime import date
+from pathlib import Path
 
 OUTPUT_DIR = Path("/tmp/windsurf-rules-new")
 
-content = """---
+content = (
+    """---
 trigger: model_decision
 description: Apply when using update_plan creating task lists or orchestrating multi-step workflows
 ---
@@ -202,10 +203,12 @@ plan: [
 
 ## Rule Metadata
 
-**File:** `12_task_orchestration.md`  
-**Trigger:** model_decision  
-**Estimated Tokens:** ~3,000  
-**Last Updated:** """ + date.today().isoformat() + """  
+**File:** `12_task_orchestration.md`
+**Trigger:** model_decision
+**Estimated Tokens:** ~3,000
+**Last Updated:** """
+    + date.today().isoformat()
+    + """
 **Status:** Active
 
 **Can be @mentioned:** Yes (hybrid loading)
@@ -227,10 +230,13 @@ plan: [
 - Source: 07_task_system.md (heavily trimmed from 29KB to 3KB)
 
 **Changelog:**
-- """ + date.today().isoformat() + """: Created from 07_task_system.md (core only, trimmed 90%)
+- """
+    + date.today().isoformat()
+    + """: Created from 07_task_system.md (core only, trimmed 90%)
 - Focused on essential rules and format
 - Detailed examples moved to reference documentation
 """
+)
 
 (OUTPUT_DIR / "12_task_orchestration.md").write_text(content)
 print(f"✅ Fixed 12_task_orchestration.md ({len(content)} bytes)")

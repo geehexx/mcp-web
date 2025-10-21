@@ -114,6 +114,7 @@ docs/initiatives/active/YYYY-MM-DD-name/
 **Use automation:** Always use `task archive:initiative NAME=<name>` for archival
 
 **Process:**
+
 1. Verify completion gates
 2. Run archival script
 3. Update references
@@ -121,33 +122,34 @@ docs/initiatives/active/YYYY-MM-DD-name/
 
 **See:** Automation scripts for detailed commands
 
-
-
 ---
 
 ## Rule Metadata
 
-**File:** `08_file_operations.md`  
-**Trigger:** model_decision  
-**Estimated Tokens:** ~2,000  
-**Last Updated:** 2025-10-21  
+**File:** `08_file_operations.md`
+**Trigger:** model_decision
+**Estimated Tokens:** ~2,000
+**Last Updated:** 2025-10-21
 **Status:** Active
 
 **Can be @mentioned:** Yes (hybrid loading)
 
-
 **Topics Covered:**
+
 - File moves
 - Initiative archival
 - Cross-reference updates
 - MCP vs standard tools
 
 **Workflow References:**
+
 - /archive-initiative - Initiative archival
 - /implement - File reorganization
 
 **Dependencies:**
+
 - Source: 06_context_engineering.md (File Operations section)
 
 **Changelog:**
+
 - 2025-10-21: Created from 06_context_engineering.md

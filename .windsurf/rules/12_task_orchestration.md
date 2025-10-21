@@ -14,12 +14,14 @@ description: Apply when using update_plan creating task lists or orchestrating m
 ## When Required
 
 **MANDATORY for:**
+
 - Any work requiring 3+ distinct steps
 - Work expected to take >5 minutes
 - All `/work` or orchestrator workflow invocations
 - Any multi-phase implementation
 
 **NOT required for:**
+
 - Single-step operations
 - Quick fixes (<5 min)
 - Direct tool calls
@@ -32,11 +34,13 @@ description: Apply when using update_plan creating task lists or orchestrating m
 **Required format:** `<number>. /<workflow> - <description>`
 
 **Examples:**
+
 - `1. /detect-context - Analyze project state`
 - `2. /work-routing - Determine workflow route`
 - `3. /implement - Execute implementation workflow`
 
 **Hierarchical tasks** (2-space indent):
+
 - `3.1. /load-context - Load initiative files`
 - `3.2. /implement - Design test cases`
 
@@ -49,16 +53,19 @@ description: Apply when using update_plan creating task lists or orchestrating m
 **Attribute tasks to the workflow that EXECUTES them, not the caller.**
 
 ✅ **Correct:**
+
 ```typescript
 {step: "1. /load-context - Load initiative files", status: "in_progress"}
 ```
 
 ❌ **Wrong:**
+
 ```typescript
 {step: "1. /implement - Load context files", status: "in_progress"}
 ```
 
 **Mapping:**
+
 - Context loading → `/load-context`
 - Implementation → `/implement`
 - Validation → `/validate`
@@ -70,6 +77,7 @@ description: Apply when using update_plan creating task lists or orchestrating m
 **Always preserve full task history.**
 
 ❌ **Wrong:** Removing completed tasks
+
 ```typescript
 plan: [
   {step: "3. /implement - Current task", status: "in_progress"}
@@ -77,6 +85,7 @@ plan: [
 ```
 
 ✅ **Correct:** Keep all tasks
+
 ```typescript
 plan: [
   {step: "1. /detect-context - Analyze state", status: "completed"},
@@ -194,15 +203,16 @@ plan: [
 
 ## Rule Metadata
 
-**File:** `12_task_orchestration.md`  
-**Trigger:** model_decision  
-**Estimated Tokens:** ~3,000  
-**Last Updated:** 2025-10-21  
+**File:** `12_task_orchestration.md`
+**Trigger:** model_decision
+**Estimated Tokens:** ~3,000
+**Last Updated:** 2025-10-21
 **Status:** Active
 
 **Can be @mentioned:** Yes (hybrid loading)
 
 **Topics Covered:**
+
 - update_plan tool usage
 - Task format specification
 - Workflow attribution rules
@@ -210,15 +220,18 @@ plan: [
 - Progress transparency
 
 **Workflow References:**
+
 - /work - Task orchestration
 - /plan - Planning tasks
 - /implement - Implementation tasks
 - All workflows using update_plan
 
 **Dependencies:**
+
 - Source: 07_task_system.md (heavily trimmed from 29KB to 3KB)
 
 **Changelog:**
+
 - 2025-10-21: Created from 07_task_system.md (core only, trimmed 90%)
 - Focused on essential rules and format
 - Detailed examples moved to reference documentation

@@ -1,6 +1,6 @@
 # Windsurf Rules System Design v2 (Hybrid Approach)
 
-**Date:** 2025-10-21  
+**Date:** 2025-10-21
 **Revision:** Hybrid trigger strategy confirmed
 
 ---
@@ -10,6 +10,7 @@
 **Key insight:** Rules with `model_decision` or `glob` triggers can ALSO be explicitly @mentioned for reinforcement.
 
 **Benefits:**
+
 - Semantic loading when model detects need (automatic)
 - Explicit loading when workflow knows it needs full context (@mention)
 - Reduces need for `manual` trigger (only for truly rare reference material)
@@ -32,9 +33,9 @@
 
 | Rule | Globs | Topics | Tokens | Can @mention? |
 |------|-------|--------|--------|---------------|
-| `01_python_code.md` | *.py, **/*.py | Python style, type hints, async | ~2,200 | ✅ Yes (workflows can reinforce) |
-| `02_testing.md` | tests/**/*.py, test_*.py, *_test.py | pytest, TDD, fixtures | ~1,800 | ✅ Yes |
-| `03_documentation.md` | docs/**/*.md, *.md | markdown, ADRs, initiatives | ~2,000 | ✅ Yes |
+| `01_python_code.md` | _.py, **/_.py | Python style, type hints, async | ~2,200 | ✅ Yes (workflows can reinforce) |
+| `02_testing.md` | tests/**/_.py, test__.py, *_test.py | pytest, TDD, fixtures | ~1,800 | ✅ Yes |
+| `03_documentation.md` | docs/**/_.md,_.md | markdown, ADRs, initiatives | ~2,000 | ✅ Yes |
 | `04_config_files.md` | pyproject.toml, *.ini, Taskfile.yml, .pre-commit-config.yaml | Config best practices | ~1,500 | ✅ Yes |
 | `05_windsurf_structure.md` | .windsurf/**/*.md, .windsurf/**/*.json | Windsurf directory structure | ~1,200 | ✅ Yes |
 
@@ -70,6 +71,7 @@
 **None!** All former "manual" rules are now `model_decision` with @mention capability.
 
 **Rationale:**
+
 - If a rule is useful enough to @mention, it's useful enough for semantic loading
 - Manual trigger forces explicit loading every time (friction)
 - Hybrid approach gives best of both worlds
@@ -106,6 +108,7 @@
 ### When to @mention
 
 **Workflows should @mention rules when:**
+
 1. Workflow REQUIRES specific rule content (e.g., `/commit` needs git standards)
 2. Rule provides decision-making data (e.g., `/work-routing` needs routing matrix)
 3. Full context needed upfront (e.g., `/archive-initiative` needs automation commands)
@@ -143,16 +146,19 @@
 ### Consolidated Content
 
 **`14_automation_scripts.md`** (model_decision, ~3KB):
+
 - **Elevate from:** `.windsurf/docs/automation-scripts.md`
 - **Content:** Taskfile commands, scaffolding (non-interactive), archival automation
 - **Why model_decision:** Frequently needed, semantic loading works well
 
 **`15_tool_patterns.md`** (model_decision, ~2.5KB):
+
 - **Merge:** `tool-patterns.md`, `common-patterns.md`
 - **Content:** MCP tool usage, batch operations (quick ref)
 - **Why model_decision:** Tool usage is frequent across all workflows
 
 **`07_context_optimization.md`** (model_decision, ~2.5KB):
+
 - **Merge:** `batch-operations.md` (core patterns), `context-loading-patterns.md`
 - **Content:** When to batch, optimal sizes, pattern examples
 - **Drop:** Advanced edge cases (not needed in rules)
@@ -160,15 +166,18 @@
 ### Split Content
 
 **`01_python_code.md` + `02_testing.md`** (split from `02_python_standards.md`):
+
 - Testing frequent enough for separate glob trigger
 - Reduces tokens loaded when editing non-test Python files
 
 **`12_task_orchestration.md`** (core only, 3KB):
+
 - **Extract from:** `07_task_system.md` (29KB → 3KB)
 - **Keep:** update_plan format, attribution, core rules
 - **Drop:** Detailed examples (move to inline workflow documentation)
 
 **`06_security_practices.md`** (model_decision, remove globs):
+
 - **Remove:** `globs` field (was incorrectly combined with model_decision)
 - **Keep:** OWASP LLM Top 10, security patterns
 - **Trigger:** model_decision only
@@ -212,9 +221,9 @@ description: Apply when using automation scripts Taskfile commands or scaffoldin
 
 ## Rule Metadata
 
-**File:** `14_automation_scripts.md`  
-**Trigger:** model_decision  
-**Estimated Tokens:** ~3,000  
+**File:** `14_automation_scripts.md`
+**Trigger:** model_decision
+**Estimated Tokens:** ~3,000
 **Last Updated:** 2025-10-21
 
 **Can be @mentioned:** Yes (hybrid loading)
@@ -246,6 +255,7 @@ description: Apply when using automation scripts Taskfile commands or scaffoldin
 ### Worst-Case Loading Scenarios
 
 **Scenario 1: Editing Python test file**
+
 ```
 always_on:        00_core_directives.md         ~3,000
 glob (Python):    01_python_code.md             ~2,200
@@ -254,6 +264,7 @@ glob (test):      02_testing.md                 ~1,800
 ```
 
 **Scenario 2: Running `/work` workflow**
+
 ```
 always_on:        00_core_directives.md         ~3,000
 @mention:         12_task_orchestration.md      ~3,000
@@ -263,6 +274,7 @@ model_decision:   07_context_optimization.md    ~2,500 (likely loaded)
 ```
 
 **Scenario 3: Security-focused implementation**
+
 ```
 always_on:        00_core_directives.md         ~3,000
 glob:             01_python_code.md             ~2,200
@@ -301,6 +313,7 @@ model_decision:   15_tool_patterns.md           ~2,500 (semantic)
 ## Migration from V1
 
 **Changes:**
+
 - Remove 2 manual rules (consolidated into model_decision)
 - Update `14_automation_scripts.md`: manual → model_decision
 - Remove `16_task_system_reference.md` (consolidate into workflows)
@@ -321,4 +334,3 @@ model_decision:   15_tool_patterns.md           ~2,500 (semantic)
 ---
 
 **Design Complete - Ready for Implementation**
-

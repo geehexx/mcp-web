@@ -89,37 +89,39 @@ mcp0_read_multiple_files(subsystem_files[:10])
 **Parallel searches:** Independent grep_search calls in parallel
 
 **Performance targets:**
+
 - 5 files: <1s
-- 10 files: <2s  
+- 10 files: <2s
 - 15 files: <3s
-
-
 
 ---
 
 ## Rule Metadata
 
-**File:** `07_context_optimization.md`  
-**Trigger:** model_decision  
-**Estimated Tokens:** ~2,500  
-**Last Updated:** 2025-10-21  
+**File:** `07_context_optimization.md`
+**Trigger:** model_decision
+**Estimated Tokens:** ~2,500
+**Last Updated:** 2025-10-21
 **Status:** Active
 
 **Can be @mentioned:** Yes (hybrid loading)
 
-
 **Topics Covered:**
+
 - Batch operations
 - Parallel loading
 - Context patterns
 - Performance optimization
 
 **Workflow References:**
+
 - /load-context - Context loading
 - /work - Batch optimization
 
 **Dependencies:**
+
 - Merged: batch-operations.md + context-loading-patterns.md
 
 **Changelog:**
+
 - 2025-10-21: Created from batch-operations.md and context-loading-patterns.md

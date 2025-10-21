@@ -415,10 +415,10 @@ Security validation (VERIFY) must occur before committing code (TOOL_CALL). This
 
 ## Rule Metadata
 
-**File:** `06_security_practices.md`  
-**Trigger:** model_decision  
-**Estimated Tokens:** ~2,500  
-**Last Updated:** 2025-10-21  
+**File:** `06_security_practices.md`
+**Trigger:** model_decision
+**Estimated Tokens:** ~2,500
+**Last Updated:** 2025-10-21
 **Status:** Active
 
 **Can be @mentioned:** Yes (hybrid loading)

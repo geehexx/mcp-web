@@ -125,33 +125,34 @@ Continuing with [next task]...
 - ❌ Never: `python scripts/meta_analysis.py`
 - See full details in operational protocols
 
-
-
 ---
 
 ## Rule Metadata
 
-**File:** `10_session_protocols.md`  
-**Trigger:** model_decision  
-**Estimated Tokens:** ~2,000  
-**Last Updated:** 2025-10-21  
+**File:** `10_session_protocols.md`
+**Trigger:** model_decision
+**Estimated Tokens:** ~2,000
+**Last Updated:** 2025-10-21
 **Status:** Active
 
 **Can be @mentioned:** Yes (hybrid loading)
 
-
 **Topics Covered:**
+
 - Session end protocol
 - Progress communication
 - Workflow invocation
 - Exit criteria
 
 **Workflow References:**
+
 - /work-session-protocol - Session end
 - /meta-analysis - Session summary
 
 **Dependencies:**
+
 - Source: 05_operational_protocols.md
 
 **Changelog:**
+
 - 2025-10-21: Created from 05_operational_protocols.md

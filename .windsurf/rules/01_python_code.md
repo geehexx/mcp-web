@@ -378,31 +378,33 @@ Before committing Python code:
 - ✅ `task lint` passes (ruff + mypy)
 - ✅ `task test:unit` passes
 
-
 ---
 
 ## Rule Metadata
 
-**File:** `01_python_code.md`  
-**Trigger:** glob  
-**Estimated Tokens:** ~2,200  
-**Last Updated:** 2025-10-21  
+**File:** `01_python_code.md`
+**Trigger:** glob
+**Estimated Tokens:** ~2,200
+**Last Updated:** 2025-10-21
 **Status:** Active
 
 **Can be @mentioned:** Yes (hybrid loading)
 
-
 **Topics Covered:**
+
 - PEP 8 style
 - Type hints (PEP 484)
 - Async/await patterns
 - Docstrings (Google style)
 
 **Workflow References:**
+
 - /implement - Always loaded when editing Python
 
 **Dependencies:**
+
 - Source: 02_python_standards.md
 
 **Changelog:**
+
 - 2025-10-21: Created from 02_python_standards.md (Python content only)

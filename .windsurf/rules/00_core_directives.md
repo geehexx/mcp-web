@@ -4,7 +4,6 @@ trigger: always_on
 
 # Rule: Agent Persona & Core Directives
 
-
 ---
 
 ## 1. Persona
@@ -182,19 +181,18 @@ task scaffold:initiative  # This will hang waiting for input!
 
 ---
 
-
 ---
 
 ## Rule Metadata
 
-**File:** `00_core_directives.md`  
-**Trigger:** always_on  
-**Estimated Tokens:** ~3,000  
-**Last Updated:** 2025-10-21  
+**File:** `00_core_directives.md`
+**Trigger:** always_on
+**Estimated Tokens:** ~3,000
+**Last Updated:** 2025-10-21
 **Status:** Active
 
-
 **Topics Covered:**
+
 - Agent persona and role
 - Guiding principles (security, robustness, performance)
 - Operational mandate
@@ -202,11 +200,14 @@ task scaffold:initiative  # This will hang waiting for input!
 - Parallel tool call efficiency
 
 **Workflow References:**
+
 - All workflows (always loaded)
 
 **Dependencies:**
+
 - Related rules: All specialized rules reference back to core directives
 
 **Changelog:**
+
 - 2025-10-21: Created from 00_agent_directives.md (sections 1-4 only)
 - 2025-10-20: Trimmed from 12.9KB to ~3KB for always_on compliance

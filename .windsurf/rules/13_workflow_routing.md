@@ -311,32 +311,34 @@ Action: Ask: "What would you like to work on?"
 **Maintained by:** mcp-web core team
 **Version:** 1.0.0
 
-
 ---
 
 ## Rule Metadata
 
-**File:** `13_workflow_routing.md`  
-**Trigger:** model_decision  
-**Estimated Tokens:** ~1,800  
-**Last Updated:** 2025-10-21  
+**File:** `13_workflow_routing.md`
+**Trigger:** model_decision
+**Estimated Tokens:** ~1,800
+**Last Updated:** 2025-10-21
 **Status:** Active
 
 **Can be @mentioned:** Yes (hybrid loading)
 
-
 **Topics Covered:**
+
 - Routing matrix
 - Signal detection
 - Confidence levels
 - Decision tree
 
 **Workflow References:**
+
 - /work - Work routing
 - /work-routing - Routing decisions
 
 **Dependencies:**
+
 - Source: workflow-routing-matrix.md
 
 **Changelog:**
+
 - 2025-10-21: Created from workflow-routing-matrix.md
