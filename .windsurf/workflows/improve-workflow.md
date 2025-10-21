@@ -391,7 +391,7 @@ echo "Reason: [validation failure details]"
 
 **Only proceed if ALL validations pass.**
 
-**See:** [RESTORATION_PROTOCOL.md](../../docs/initiatives/active/workflow-optimization-phase-2/artifacts/RESTORATION_PROTOCOL.md)
+**See:** [RESTORATION_PROTOCOL.md](../../docs/initiatives/completed/workflow-optimization-phase-2/artifacts/RESTORATION_PROTOCOL.md)
 
 ### 3.5 Idempotency Testing
 

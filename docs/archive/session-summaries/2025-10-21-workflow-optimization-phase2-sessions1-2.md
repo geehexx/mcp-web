@@ -212,8 +212,8 @@ Continuing Phase 2 batch optimization after successful POC validation (bump-vers
 **Metrics Source:** `.benchmarks/workflow-tokens-history.jsonl`
 
 **Methodology Documentation:**
-- `docs/initiatives/active/workflow-optimization-phase-2/artifacts/phase1-research/intelligent-compression-v2.md`
-- `docs/initiatives/active/workflow-optimization-phase-2/artifacts/phase2-poc/poc-results.md`
+- `docs/initiatives/completed/workflow-optimization-phase-2/artifacts/phase1-research/intelligent-compression-v2.md`
+- `docs/initiatives/completed/workflow-optimization-phase-2/artifacts/phase2-poc/poc-results.md`
 
 ---
 

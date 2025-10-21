@@ -141,7 +141,7 @@ git log --oneline --all --grep="restore.*workflows" -- .windsurf/workflows/TARGE
 - Return unchanged with note: "Workflow previously restored, skipping to prevent content loss"
 - Exit workflow
 
-**See:** [RESTORATION_PROTOCOL.md](../../docs/initiatives/active/workflow-optimization-phase-2/artifacts/RESTORATION_PROTOCOL.md)
+**See:** [RESTORATION_PROTOCOL.md](../../docs/initiatives/completed/workflow-optimization-phase-2/artifacts/RESTORATION_PROTOCOL.md)
 
 ---
 
@@ -478,7 +478,7 @@ echo "Reason: [validation failure details]"
 
 **Only proceed if ALL validations pass.**
 
-**See:** [RESTORATION_PROTOCOL.md](../../docs/initiatives/active/workflow-optimization-phase-2/artifacts/RESTORATION_PROTOCOL.md)
+**See:** [RESTORATION_PROTOCOL.md](../../docs/initiatives/completed/workflow-optimization-phase-2/artifacts/RESTORATION_PROTOCOL.md)
 
 ---
 

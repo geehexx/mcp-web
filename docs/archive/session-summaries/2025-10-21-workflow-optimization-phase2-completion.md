@@ -158,7 +158,7 @@ None identified. Session achieved all objectives with 23.1% buffer under token t
 ## Session References
 
 - **Previous session:** 2025-10-21-workflow-optimization-rules-fix-session.md
-- **Related initiative:** docs/initiatives/active/workflow-optimization-phase-2/initiative.md
+- **Related initiative:** docs/initiatives/completed/workflow-optimization-phase-2/initiative.md
 - **Baseline comparison:** Started at 73,552 tokens, ended at 65,375 tokens
 
 ---

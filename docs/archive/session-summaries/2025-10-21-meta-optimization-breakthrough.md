@@ -164,7 +164,7 @@ Where:
 5. `/tmp/improve-prompt-comparison.md` - Scoring analysis
 6. `/tmp/improve-prompt-final-results.md` - Complete report
 
-**All archived to:** `docs/initiatives/active/workflow-optimization-phase-2/artifacts/`
+**All archived to:** `docs/initiatives/completed/workflow-optimization-phase-2/artifacts/`
 
 ---
 

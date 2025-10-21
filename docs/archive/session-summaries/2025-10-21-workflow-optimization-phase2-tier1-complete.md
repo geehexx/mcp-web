@@ -235,7 +235,7 @@ Successfully optimized 4 Tier 1 workflows, achieving primary goal of reducing co
 - `.windsurf/workflows/improve-workflow.md`
 
 **Documentation (2):**
-- `docs/initiatives/active/workflow-optimization-phase-2/initiative.md`
+- `docs/initiatives/completed/workflow-optimization-phase-2/initiative.md`
 - `.benchmarks/workflow-tokens-history.jsonl`
 
 **Metadata (1):**
@@ -293,7 +293,7 @@ Successfully optimized 4 Tier 1 workflows, achieving primary goal of reducing co
 - Timestamp: `.windsurf/.last-meta-analysis` (2025-10-21T07:55:00Z)
 
 **Updated:**
-- Initiative document: `docs/initiatives/active/workflow-optimization-phase-2/initiative.md`
+- Initiative document: `docs/initiatives/completed/workflow-optimization-phase-2/initiative.md`
 - Token history: `.benchmarks/workflow-tokens-history.jsonl`
 
 ---

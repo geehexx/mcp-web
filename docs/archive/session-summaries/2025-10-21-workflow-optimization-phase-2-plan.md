@@ -25,8 +25,8 @@ Defined the execution strategy for **Workflow Optimization Phase 2**, including 
 
 ## Work Completed
 
-- **Initiative Documentation:** Added `docs/initiatives/active/workflow-optimization-phase-2/initiative.md` with required frontmatter, objectives, success criteria, and risk matrix.  
-- **Execution Plan:** Authored `docs/initiatives/active/workflow-optimization-phase-2/EXECUTION_PLAN.md`, detailing seven phases (batch improvements, conditional decomposition, duplication reduction, quality gates, documentation, validation, acceptance), strict validation protocol, and rollback strategies.  
+- **Initiative Documentation:** Added `docs/initiatives/completed/workflow-optimization-phase-2/initiative.md` with required frontmatter, objectives, success criteria, and risk matrix.  
+- **Execution Plan:** Authored `docs/initiatives/completed/workflow-optimization-phase-2/EXECUTION_PLAN.md`, detailing seven phases (batch improvements, conditional decomposition, duplication reduction, quality gates, documentation, validation, acceptance), strict validation protocol, and rollback strategies.  
 - **Research Findings:** Consolidated duplication analysis (26 duplicate patterns, ~8-12k tokens) and prompt modularity best practices; decision made against creating a shared input-refinement sub-workflow.  
 - **Tooling References:** Leveraged `.windsurf/workflow-improvement-analysis.json` to prioritize workflows by token savings and conciseness weight.  
 - **Commit History:** Captured work in `13daf80 fix(initiative): remove bold formatting from decision statement`, alongside earlier commits adding the analysis tool and workflow enhancements (`51dda80`, `438c80b`, `b77591e`, `27ada06`).
