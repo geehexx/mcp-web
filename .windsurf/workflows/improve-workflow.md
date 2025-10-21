@@ -1,211 +1,118 @@
 ---
 created: "2025-10-21"
 updated: "2025-10-21"
-description: Optimize Windsurf workflows with intelligent semantic preservation and idempotency
+description: Workflow-specific optimization with intelligent semantic preservation
 auto_execution_mode: 2
 category: Optimization
-complexity: 75
-tokens: 2000
+complexity: 65
+tokens: 2500
 dependencies:
   - improve-prompt
 status: active
-version: "2.0-intelligent-semantic-preservation"
+version: "2.1-self-optimized"
 ---
 
-# Improve Workflow Sub-Workflow
+# Improve Workflow (Sub-workflow)
 
-**Purpose:** Specialized workflow for optimizing Windsurf workflows with deep understanding of workflow structure, task management, and decomposition needs.
+**Purpose:** Workflow-specific optimization with syntax preservation and decomposition detection.
 
-**Invocation:** Called by `/improve-prompt` when `prompt_type=workflow` detected
+**Called By:** `/improve-prompt` when target is a Windsurf workflow
 
-**Philosophy:** Workflows have unique constraints (task management, frontmatter, stages) that require specialized optimization beyond general prompts.
-
-**Parent Workflow:** `/improve-prompt`
-
----
-
-## When to Use
-
-This sub-workflow is **automatically invoked** by `/improve-prompt` when:
-
-- Input type is detected as Windsurf workflow (`.windsurf/workflows/*.md`)
-- File contains workflow frontmatter with `auto_execution_mode`
-- Content includes `update_plan` calls or stage structure
-
-**Do NOT call directly** - use `/improve-prompt` on workflow files.
+**Scope:** Conciseness optimization, workflow syntax validation, decomposition detection
 
 ---
 
-## Stage 0: Pre-Optimization Validation (MANDATORY)
+## Stage 0: Workflow Entry
 
-🔄 **Entering /improve-workflow:** Specialized workflow optimization
+🔄 **Entering /improve-workflow:** Workflow optimization sub-routine
 
-**CRITICAL:** Follow RESTORATION_PROTOCOL to prevent content loss.
+---
 
-### 0.1 Create Baseline Snapshot
+## Stage 1: Parse Workflow Structure
 
-**Before any optimization, create git baseline:**
+### 1.1 Extract Components
 
-```bash
-# Store original for comparison
-git show HEAD:.windsurf/workflows/TARGET.md > /tmp/TARGET-baseline.md
-wc -w /tmp/TARGET-baseline.md  # Record baseline word count
-```
+**Parse:**
 
-**Purpose:** Enable restoration if optimization removes critical content.
+- Frontmatter (YAML metadata)
+- Stage headings (`## Stage N:`)
+- `update_plan` calls with task structure
+- Tables, code blocks, examples
+- Cross-references and dependencies
 
-### 0.2 Extract Workflow Metadata
+### 1.2 Identify Preservation Zones
 
-**From frontmatter:**
+**Critical (100% preservation):**
 
-```yaml
-complexity: [N]      # Workflow complexity score
-tokens: [N]          # Current token count
-dependencies: [...]  # Other workflows it calls
-```
+- All `update_plan({...})` syntax
+- Frontmatter keys
+- Stage numbering sequence
+- Workflow entry/exit markers
 
-**From content:**
+**High (>90%):**
 
-- Stage count
-- `update_plan` occurrences
-- Task management syntax
-- Example count
+- Task attribution (`/workflow-name - Description`)
+- Decision thresholds and criteria
+- Validation checkpoints
 - Cross-references
 
-### 0.3 Apply Compression Decision Matrix
+**Medium (>70%):**
 
-**Use same matrix as `/improve-prompt` Stage 4.0:**
+- Examples and demonstrations
+- Process descriptions
+- Background explanations
 
-Determine strategy based on workflow quality + token count.
+### 1.3 Calculate Conciseness Weight
 
-**See:** `improve-prompt.md` Stage 4.0 for complete matrix.
-
-**Workflow-specific adjustments:**
-
-- Complexity >75: Reduce max reduction by 10%
-- Stage count >10: Light polish only (max 15% reduction)
-- Calls >5 workflows: Preserve all cross-references
-
-### 0.4 Idempotency Pre-Check
-
-**Check if workflow already optimized:**
-
-1. **Method 1:** Cache lookup by hash
-2. **Method 2:** Frontmatter `version` field contains "intelligent" or "semantic"
-3. **Method 3:** Token count vs target delta < 50 tokens
-
-**If already optimized:**
-
-- Return unchanged with note: "Already optimized (cached/version/stable)"
-- Skip all optimization stages
-
-**IMPORTANT:** If workflow version = "v2.0-intelligent-semantic-preservation" and was restored (check git log), do NOT re-optimize.
+**See:** [improve-prompt.md Stage 3.5.2](./improve-prompt.md) for weight calculation logic
 
 ---
 
-## Stage 1: Workflow-Specific Analysis
+## Stage 2: Apply Conciseness Techniques
 
-### 1.1 Workflow Quality Dimensions
+### 2.1 Technique Selection
 
-**Standard dimensions PLUS workflow-specific:**
+**Based on conciseness weight:**
 
-| Dimension | Weight | Focus |
-|-----------|--------|-------|
-| Task management clarity | 1.5x | `update_plan` structure |
-| Stage organization | 1.5x | Logical flow |
-| Frontmatter accuracy | 1.0x | Metadata correctness |
-| Cross-reference integrity | 1.0x | Links to other workflows/rules |
-| Example efficiency | **Conciseness weight** | Examples vs explanations |
-| Instruction density | **Conciseness weight** | Information per token |
+| Weight | Priority | Techniques |
+|--------|----------|------------|
+| 1.0x | Low | Minor cleanup only |
+| 1.5x | Moderate | 1, 2, 3 |
+| 2.0x | High | 1-4 |
+| 2.5x | Critical | All + decomposition |
 
-### 1.2 Decomposition Detection
+**Techniques:**
 
-**Trigger decomposition recommendation if ANY:**
+1. Information Distillation (eliminate verbose phrases)
+2. Structured Bullets (paragraphs → bullet lists)
+3. Keyword Extraction (compact command descriptions)
+4. Example Consolidation (multiple examples → tables)
+5. Reference Externalization (duplicate content → refs)
 
-- ✅ Token count > 6000 (>3000 words)
-- ✅ Complexity score > 75
-- ✅ Stage count > 10
-- ✅ Multiple distinct responsibilities
-- ✅ Workflow calls >5 other workflows
+### 2.2 Example: Information Distillation (Weight × 1.5)
 
-**Decomposition patterns:**
+| Before | After | Savings |
+|--------|-------|---------|
+| "The workflow begins by analyzing..." | "Analyzes project state:" | ~60% |
+| "Execute the following command in your terminal..." | "Run: `command`" | ~70% |
+| "Please provide detailed analysis of..." | "Analyze:" | ~75% |
 
-1. **Planner-Executor Split**: Separate planning from execution
-2. **Stage Extraction**: Move complex stages to sub-workflows
-3. **Responsibility Separation**: Split multi-purpose workflows
-4. **Shared Component Extraction**: Common logic → reusable sub-workflow
+**Target:** Remove filler words while preserving meaning.
 
-**Example:**
+### 2.3 Example: Structured Bullets (Weight × 1.6)
 
-- `improve-prompt.md` (8500 tokens, 9 stages) → Extract model-specific stages
-- `consolidate-summaries.md` (3049 words) → Extract consolidation logic
-
----
-
-## Stage 2: Apply Windsurf-Aware Conciseness
-
-### 2.0 Semantic Preservation Layer
-
-**Before applying conciseness techniques:**
-
-1. Extract `update_plan` calls (100% preserve syntax)
-2. Extract stage numbering (100% preserve)
-3. Extract workflow entry/exit announcements (100% preserve)
-4. Extract cross-references (100% preserve)
-5. Identify task attribution patterns (preserve format)
-
-**Apply conciseness techniques ONLY to:**
-
-- Explanatory prose
-- Examples (keep 2-3 best)
-- Verbose instructions
-- Redundant descriptions
-
-### 2.1 PRESERVE Critical Elements
-
-**NEVER modify these:**
-
-- `update_plan` syntax (exact structure)
-- Frontmatter keys (complexity, tokens, dependencies, etc.)
-- Stage numbering system
-- Task attribution patterns ("N. /workflow-name - description")
-- Workflow entry/exit announcements
-
-### 2.2 Conciseness Techniques (Priority Order)
-
-#### Technique 1: Information Distillation (Weight × 2.0)
-
-**Target:** Verbose explanations, redundant phrases
-
-**Examples:**
+**Before (paragraph):**
 
 ```markdown
-❌ Before: "Please provide a comprehensive and detailed explanation..."
-✅ After: "Explain..."
-
-❌ Before: "It is important to note that you should..."
-✅ After: "Must..."
-
-❌ Before: "In order to accomplish this task, you will need to..."
-✅ After: "To accomplish: ..."
-```
-
-**Savings:** 30-50% on instructional text
-
-#### Technique 2: Structured Bullet Points (Weight × 1.5)
-
-**Target:** Long paragraphs, narrative text
-
-**Transform:**
-
-```markdown
-❌ Before:
 The workflow begins by analyzing the project state. It looks at
 various indicators including active initiatives, git status, test
 results, and session history. Based on this analysis, it makes a
 routing decision.
+```
 
-✅ After:
+**After (bullets):**
+
+```markdown
 Analyzes project state:
 - Active initiatives
 - Git status
@@ -214,27 +121,9 @@ Analyzes project state:
 → Routes based on analysis
 ```
 
-**Savings:** 20-40% on process descriptions
+**Savings:** 20-40%
 
-#### Technique 3: Keyword Extraction (Weight × 1.8)
-
-**Target:** Detailed descriptions, examples
-
-**Transform:**
-
-```markdown
-❌ Before: "Analyze the provided documentation to identify..."
-✅ After: "Identify from docs..."
-
-❌ Before: "Execute the following command in your terminal..."
-✅ After: "Run: `command`"
-```
-
-**Savings:** 15-30% on command/action descriptions
-
-#### Technique 4: Example Consolidation (Weight × 2.0)
-
-**Target:** Redundant examples, verbose demonstrations
+### 2.4 Example Consolidation (Weight × 2.0)
 
 **Strategy:**
 
@@ -243,63 +132,32 @@ Analyzes project state:
 - Use tables for multiple examples
 - Inline short examples
 
-**Before (8 examples, 200 tokens):**
+| Before | After | Savings |
+|--------|-------|---------|
+| 8 verbose examples (200 tokens) | 3-column table (80 tokens) | 60% |
 
-```markdown
-Example 1: ...detailed...
-Example 2: ...detailed...
-...
-Example 8: ...detailed...
-```
+### 2.5 Reference Externalization (Weight × 1.3)
 
-**After (3 examples, 80 tokens):**
+| Before | After | Savings |
+|--------|-------|---------|
+| [3 paragraphs on task management] | See: [12_task_orchestration.md](../rules/12_task_orchestration.md) | 50-80% |
 
-```markdown
-| Pattern | Example |
-|---------|---------|
-| Simple | `short` |
-| Moderate | `medium` |
-| Complex | `longer` |
-```
-
-**Savings:** 40-60% on examples section
-
-#### Technique 5: Reference Externalization (Weight × 1.3)
-
-**Target:** Inline documentation, repeated concepts
-
-**Strategy:**
-
-- Move detailed explanations to rules/docs
-- Reference external sources
-- Use "See: [link]" pattern
-
-**Transform:**
-
-```markdown
-❌ Before: [3 paragraphs explaining task management]
-
-✅ After: See: [12_task_orchestration.md](../rules/12_task_orchestration.md)
-```
-
-**Savings:** 50-80% on repeated concepts
-
-### 2.3 Conciseness Quality Gates
+### 2.6 Quality Gates
 
 **After applying techniques, verify:**
 
-- ✅ **Intent preserved**: Core workflow logic unchanged
-- ✅ **Task management intact**: All `update_plan` calls work
-- ✅ **Examples sufficient**: 2-3 clear examples remain
-- ✅ **Navigation clear**: Stage flow understandable
-- ✅ **References valid**: All links functional
+- ✅ Intent preserved
+- ✅ Task management intact (all `update_plan` calls work)
+- ✅ Examples sufficient (2-3 remain)
+- ✅ Stage flow clear
+- ✅ References valid
 
 **Target reduction:**
 
-- Low priority (weight 1.0x): 10-15% token reduction
-- Moderate (weight 1.5x): 20-30% token reduction
-- High (weight 2.0x): 30-40% token reduction
-- Critical (weight 2.5x): 40-50% + decomposition recommendation
+- Low (1.0x): 10-15%
+- Moderate (1.5x): 20-30%
+- High (2.0x): 30-40%
+- Critical (2.5x): 40-50% + decomposition
 
 ---
 
@@ -307,14 +165,9 @@ Example 8: ...detailed...
 
 ### 3.1 Syntax Validation
 
-**Verify:**
-
 ```bash
 # Frontmatter valid
 python scripts/validate_workflows.py
-
-# Links valid
-# Check all markdown links are valid
 
 # Task syntax valid
 grep "step:.*status:" improved.md | validate format
@@ -325,8 +178,8 @@ grep "step:.*status:" improved.md | validate format
 **Check:**
 
 - Stage numbering sequential
-- Task attributions correct (workflow names)
-- Dependencies list accurate
+- Task attributions correct
+- Dependencies accurate
 - Complexity score reasonable
 - Token count matches estimate
 
@@ -335,29 +188,27 @@ grep "step:.*status:" improved.md | validate format
 **Test:**
 
 - Can be called by other workflows
-- Calls to dependencies work
+- Dependency calls work
 - Cross-references resolve
 - Examples run correctly
 
 ### 3.4 Pre-Commit Validation (RESTORATION_PROTOCOL)
 
-**MANDATORY validation before ANY commit:**
+**MANDATORY before ANY commit:**
 
 #### 3.4.1 Quantitative Validation
 
 ```bash
-# Compare baseline vs optimized
 original_words=$(wc -w < /tmp/TARGET-baseline.md)
 new_words=$(wc -w < .windsurf/workflows/TARGET.md)
 reduction_pct=$(echo "scale=2; 100 * ($original_words - $new_words) / $original_words" | bc)
 ```
 
-**FAIL if:** reduction_pct > 15% (excessive content loss)
+**FAIL if:** reduction_pct > 15%
 
 #### 3.4.2 Structural Validation
 
 ```bash
-# Check all stage headings preserved
 grep "^##" /tmp/TARGET-baseline.md | sort > /tmp/baseline-structure.txt
 grep "^##" .windsurf/workflows/TARGET.md | sort > /tmp/optimized-structure.txt
 diff /tmp/baseline-structure.txt /tmp/optimized-structure.txt
@@ -368,7 +219,6 @@ diff /tmp/baseline-structure.txt /tmp/optimized-structure.txt
 #### 3.4.3 Critical Element Validation
 
 ```bash
-# Verify preservation of critical elements
 baseline_update_plans=$(grep -c "update_plan" /tmp/TARGET-baseline.md)
 optimized_update_plans=$(grep -c "update_plan" .windsurf/workflows/TARGET.md)
 
@@ -376,106 +226,75 @@ baseline_critical=$(grep -c "CRITICAL\|MANDATORY" /tmp/TARGET-baseline.md)
 optimized_critical=$(grep -c "CRITICAL\|MANDATORY" .windsurf/workflows/TARGET.md)
 ```
 
-**FAIL if:** update_plans OR critical markers count reduced
+**FAIL if:** update_plans OR critical markers reduced
 
 #### 3.4.4 Restoration Decision
 
 **If ANY validation fails:**
 
 ```bash
-# RESTORE from baseline
 cp /tmp/TARGET-baseline.md .windsurf/workflows/TARGET.md
 echo "❌ VALIDATION FAILED: Restored from baseline"
-echo "Reason: [validation failure details]"
 ```
-
-**Only proceed if ALL validations pass.**
 
 **See:** [RESTORATION_PROTOCOL.md](../../docs/initiatives/completed/workflow-optimization-phase-2/artifacts/RESTORATION_PROTOCOL.md)
 
 ### 3.5 Idempotency Testing
 
-**For workflows, test multiple dimensions:**
+**Test multiple dimensions:**
 
 ```python
 # Test 1: Re-optimize produces no changes
-re_optimized = optimize_workflow(compressed, same_config)
 exact_match = (compressed == re_optimized)
 
 # Test 2: update_plan calls unchanged
-original_plans = extract_update_plan_calls(compressed)
-re_optimized_plans = extract_update_plan_calls(re_optimized)
 plans_match = (original_plans == re_optimized_plans)
 
 # Test 3: Frontmatter integrity
 frontmatter_intact = verify_frontmatter(compressed, re_optimized)
 
-# Test 4: Workflow entry/exit preserved
+# Test 4: Workflow markers preserved
 markers_intact = verify_workflow_markers(compressed, re_optimized)
 
-# PASS criteria: ALL tests pass
+# PASS: ALL tests pass
 assert exact_match AND plans_match AND frontmatter_intact AND markers_intact
 ```
 
-**Golden tests:** Use 4 previously optimized workflows as baselines.
-
 ---
 
-## Stage 4: Generate Decomposition Recommendation
+## Stage 4: Decomposition Detection
 
-**If token count > 6000 OR complexity > 75:**
+**If tokens > 6000 OR complexity > 75:**
 
-### 4.1 Analyze Decomposition Opportunities
+### 4.1 Identify Opportunities
 
-**Identify:**
+- **Distinct responsibilities** (multiple purposes)
+- **Complex stages** (>500 tokens each)
+- **Reusable logic** (patterns used >2 times)
+- **Optional features** (separable)
 
-1. **Distinct responsibilities**: Multiple purposes
-2. **Complex stages**: Stages > 500 tokens each
-3. **Reusable logic**: Patterns used >2 times
-4. **Optional features**: Can be separated
-
-### 4.2 Propose Decomposition Strategy
-
-**Template:**
+### 4.2 Propose Strategy
 
 ```markdown
 ## 🔄 DECOMPOSITION RECOMMENDED
 
-**Current State:**
-- Tokens: [N] (Target: <6000)
-- Complexity: [N] (Target: <75)
-- Stages: [N]
+**Current:** [N] tokens, complexity [N]
+**Target:** <6000 tokens, <75 complexity
 
-**Proposed Decomposition:**
+**Proposed:**
+- Extract: [What to separate]
+- New files: `part1.md` ([N] tokens), `part2.md` ([N] tokens)
+- Benefits: [Token/complexity reduction, maintainability]
+- Implementation: [Steps]
 
-### Option 1: [Strategy Name]
-**Extract:** [What to separate]
-**New Files:**
-- `workflow-name-part1.md` ([N] tokens)
-- `workflow-name-part2.md` ([N] tokens)
-
-**Benefits:**
-- Token reduction: [N]% → [new total]
-- Complexity reduction: [old] → [new]
-- Maintainability: [improvement]
-
-**Implementation:**
-1. Create sub-workflow for [X]
-2. Extract stages [N-M]
-3. Update parent workflow to call sub-workflow
-4. Update dependencies
-
-### Option 2: [Alternative Strategy]
-[Similar structure]
-
-**Recommendation:** Option [N] because [reason]
+**Recommendation:** [Chosen option] because [reason]
 ```
 
 ---
 
 ## Stage 5: Output Format
 
-### 5.1 Standard Output (No Decomposition)
+### 5.1 Standard Output
 
 ```markdown
 # 🎯 Workflow Optimization Results
@@ -484,14 +303,14 @@ assert exact_match AND plans_match AND frontmatter_intact AND markers_intact
 - **Original:** [N] tokens, complexity [N]
 - **Improved:** [N] tokens, complexity [N]
 - **Reduction:** -[N] tokens (-[X]%)
-- **Conciseness Weight:** [N]x (priority: [low/moderate/high])
+- **Weight:** [N]x ([priority])
 
-## Changes Applied
-1. **Information Distillation**: -[N] tokens
-2. **Structured Bullets**: -[N] tokens
-3. **Keyword Extraction**: -[N] tokens
-4. **Example Consolidation**: -[N] tokens
-5. **Reference Externalization**: -[N] tokens
+## Changes
+1. Information Distillation: -[N] tokens
+2. Structured Bullets: -[N] tokens
+3. Keyword Extraction: -[N] tokens
+4. Example Consolidation: -[N] tokens
+5. Reference Externalization: -[N] tokens
 
 ## Validation
 ✅ Intent preserved
@@ -500,48 +319,28 @@ assert exact_match AND plans_match AND frontmatter_intact AND markers_intact
 ✅ Links functional
 
 ## Improved Workflow
-[Full improved workflow]
+[Full content]
 ```
 
-### 5.2 With Decomposition Recommendation
+### 5.2 With Decomposition
 
-**Include everything from 5.1 PLUS:**
-
-```markdown
-## 🔄 DECOMPOSITION RECOMMENDED
-
-[Output from Stage 4.2]
-
-**Next Steps:**
-1. Review decomposition proposal
-2. If approved, create sub-workflows
-3. Re-run /improve-workflow on each part
-4. Validate integration
-```
+Include everything from 5.1 PLUS decomposition proposal from Stage 4.2.
 
 ---
 
-## Integration with Parent Workflow
+## Integration
 
-### Called By: `/improve-prompt`
+### Called By
 
-**Detection logic in parent:**
+`/improve-prompt` when detecting Windsurf workflow (`.windsurf/workflows/*.md` with `auto_execution_mode` frontmatter)
 
-```python
-if file_path.endswith('.md') and '.windsurf/workflows/' in file_path:
-    # Check frontmatter
-    if 'auto_execution_mode' in frontmatter:
-        # This is a workflow
-        call_subworkflow('improve-workflow')
-```
+### Returns To
 
-### Returns To: `/improve-prompt`
-
-**Response format:**
+`/improve-prompt` with response:
 
 ```json
 {
-  "improved_content": "[full improved workflow]",
+  "improved_content": "[full workflow]",
   "metrics": {
     "tokens_before": 8500,
     "tokens_after": 5200,
@@ -565,71 +364,47 @@ if file_path.endswith('.md') and '.windsurf/workflows/' in file_path:
 
 ## Anti-Patterns
 
-### ❌ Don't: Over-Compress Critical Instructions
+**❌ Don't:**
 
-**Bad:**
+- Over-compress critical instructions
+- Remove all examples (need 2-3)
+- Break `update_plan` syntax
+- Ignore decomposition signals (>6000 tokens)
 
-```markdown
-Do X.
-```
+**✅ Do:**
 
-**Good:**
-
-```markdown
-Execute X:
-- Step 1
-- Step 2
-Result: [expected]
-```
-
-### ❌ Don't: Remove All Examples
-
-Need 2-3 concrete examples for clarity.
-
-### ❌ Don't: Break Task Management Syntax
-
-`update_plan` structure is sacred - never modify.
-
-### ❌ Don't: Ignore Decomposition Signals
-
-If >6000 tokens after optimization → MUST recommend decomposition.
+- Preserve task management structure
+- Keep concrete examples
+- Validate before committing
+- Recommend decomposition when needed
 
 ---
 
 ## Success Metrics
 
-| Metric | Target | Measurement |
-|--------|--------|-------------|
-| Token reduction | >20% | Before/after count |
-| Quality preservation | >90% | Validation checks |
-| Syntax correctness | 100% | Script validation |
-| Decomposition detection | >95% | For workflows >6000 tokens |
+| Metric | Target |
+|--------|--------|
+| Token reduction | >20% |
+| Quality preservation | >90% |
+| Syntax correctness | 100% |
+| Decomposition detection | >95% (for >6000 tokens) |
 
 ---
 
 ## References
 
-### Parent Workflow
+- [improve-prompt.md](./improve-prompt.md) - Parent workflow
+- [detect-context.md](./detect-context.md) - Example well-structured workflow
+- [12_task_orchestration.md](../rules/12_task_orchestration.md) - Task system
+- [RESTORATION_PROTOCOL.md](../../docs/initiatives/completed/workflow-optimization-phase-2/artifacts/RESTORATION_PROTOCOL.md)
 
-- [improve-prompt.md](./improve-prompt.md) - Main optimization workflow
+**External:**
 
-### Related Workflows
-
-- [detect-context.md](./detect-context.md) - Example of well-structured workflow
-- [work.md](./work.md) - Orchestration pattern
-
-### Rules
-
-- [12_task_orchestration.md](../rules/12_task_orchestration.md) - Task management system
-- [05_windsurf_structure.md](../rules/05_windsurf_structure.md) - Workflow structure rules
-
-### External Research
-
-- [10clouds Token Optimization](https://10clouds.com/blog/a-i/mastering-ai-token-optimization-proven-strategies-to-cut-ai-cost/) (2025)
-- [Prompt Compression Techniques](https://medium.com/@sahin.samia/prompt-compression-in-large-language-models-llms-making-every-token-count-078a2d1c7e03) (2025)
-- [Workflow Decomposition Patterns](https://skywork.ai/blog/agentic-ai-examples-workflow-patterns-2025/) (2025)
+- [Token Optimization](https://10clouds.com/blog/a-i/mastering-ai-token-optimization-proven-strategies-to-cut-ai-cost/) (2025)
+- [Prompt Compression](https://medium.com/@sahin.samia/prompt-compression-in-large-language-models-llms-making-every-token-count-078a2d1c7e03) (2025)
+- [Workflow Patterns](https://skywork.ai/blog/agentic-ai-examples-workflow-patterns-2025/) (2025)
 
 ---
 
-**Version:** 1.0.0
+**Version:** 2.1-self-optimized
 **Last Updated:** 2025-10-21
