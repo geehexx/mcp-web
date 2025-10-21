@@ -17,23 +17,34 @@ version: 2.3.0
 
 ## Purpose
 
-Merge multiple per-session summaries from the same day into comprehensive daily summaries, reducing redundancy while maintaining critical information.
+Merge multiple per-session summaries from same day into comprehensive daily summaries. Reduces redundancy, preserves critical information.
 
 ---
 
-## Stage 0: Create Task Plan
+## Usage
 
-🔄 **Entering /consolidate-summaries workflow**
+**Invocation:** `/consolidate-summaries [date]` (e.g., `/consolidate-summaries 2025-10-15`)
 
-**Create task plan:**
+**When to use:**
+
+- 5+ summaries in single day
+- Quarterly documentation reviews
+- **Never:** Current day (allow ongoing work)
+
+**Prerequisites:**
+
+- Date in past (not today)
+- Multiple summaries exist
+- No active work references
+
+**Task plan:**
 
 ```typescript
 update_plan({
-  explanation: "📋 Starting /consolidate-summaries workflow",
+  explanation: "📋 Starting /consolidate-summaries",
   plan: [
-    { step: "1. /consolidate-summaries - Identify and analyze target summaries", status: "in_progress" },
+    { step: "1. /consolidate-summaries - Identify and analyze targets", status: "in_progress" },
     { step: "2. /consolidate-summaries - Extract information systematically", status: "pending" },
-    { step: "2.5. /consolidate-summaries - Extract action items (optional)", status: "pending" },
     { step: "3. /consolidate-summaries - Apply consolidation rules", status: "pending" },
     { step: "4. /consolidate-summaries - Validate and create consolidated summary", status: "pending" },
     { step: "5. /consolidate-summaries - Delete originals and commit", status: "pending" }
@@ -43,115 +54,55 @@ update_plan({
 
 ---
 
-## When to Use
-
-- Day has 5+ individual session summaries
-- Quarterly documentation reviews
-- Session summary proliferation reduces discoverability
-- **Never** consolidate current day (allow ongoing work)
-
-## Invocation
-
-`/consolidate-summaries [date]` (e.g., `/consolidate-summaries 2025-10-15`)
-
----
-
-## Prerequisites
-
-1. Date must be in the past (not current day)
-2. Multiple summaries exist for target date
-3. No active work referencing individual summaries
-
----
-
 ## Stage 1: Analysis
 
-### 1.1 Identify Target Summaries
+### 1.1 Identify & Read Targets
 
 ```bash
-# List summaries for target date
+# Count summaries
 ls -1 docs/archive/session-summaries/YYYY-MM-DD-*.md | wc -l
 ```
 
-**Decision criteria:**
+**Decision:** 5+ → Consolidate | 3-4 → If redundant | 1-2 → Skip
 
-- 5+ summaries: Consolidate highly recommended
-- 3-4 summaries: Consolidate if redundant
-- 1-2 summaries: Leave as-is
+**Batch read (CRITICAL - 7x faster):**
 
-### 1.2 Read and Categorize Content
-
-⚠️ **CRITICAL:** Use batch reading for efficiency. Reading files sequentially is 7x slower.
-
-Use [Batch Reading Pattern](../rules/07_context_optimization.md):
+```typescript
 mcp0_read_multiple_files([
-    "/home/gxx/projects/mcp-web/docs/archive/session-summaries/YYYY-MM-DD-*.md",
+  "docs/archive/session-summaries/YYYY-MM-DD-*.md"
 ])
+```
 
-See [Tool Patterns Guide](../rules/15_tool_patterns.md) for optimal batch sizes (10-15 files).
+See: [07_context_optimization.md](../rules/07_context_optimization.md), [15_tool_patterns.md](../rules/15_tool_patterns.md)
 
-Extract from each: objectives, accomplishments, decisions, files modified, commits, learnings, unresolved issues, next steps
+**Extract:** objectives, accomplishments, decisions, files, commits, learnings, issues, next steps
 
-### 1.3 Check External References
+### 1.2 Check References
 
 ```bash
 grep -r "2025-10-15-specific-session.md" docs/ .windsurf/ --include="*.md"
 ```
 
-Update references to consolidated summary after creation if found.
+Update references after consolidation.
 
 ---
 
-## Stage 2: Methodical Extraction
+## Stage 2: Structured Extraction
 
-**CRITICAL:** Follow structured extraction for consistency.
+**Extract from each summary (10 steps):**
 
-### 2.1 Extract Information Systematically
-
-For each summary file:
-
-#### Step 1: Session Metadata
-
-- Title, duration, primary focus area
-
-#### Step 2: Context Narrative (2-3 sentences, ≤120 words)
-
-- Objectives, constraints, triggering events
-- Critical observations
-- Cross-session references
-
-#### Step 3: Accomplishments (concrete actions only)
-
-- **[Action verb]**: [What] ([File/Component]) — [Context clause if needed]
-
-#### Step 4: Decisions (explicit choices)
-
-- **[Topic]**: [Decision] - [Rationale] (trade-offs/alternatives)
-
-#### Step 5: Technical Learnings (specific insights)
-
-- **[Technology]**: [Learning] (measurements/data)
-
-#### Step 6: Issues (unresolved only)
-
-- **[Component]**: [Problem] - [Why unresolved] (blockers/dependencies)
-
-#### Step 7: Dependencies & Interactions
-
-- Upstream/downstream work, open questions
-- **Cross-session continuity**: How does this session connect to others? What themes span multiple sessions?
-
-#### Step 8: Supporting Evidence
-
-- Commit hashes, benchmarks, source quotes
-
-#### Step 9: Next Steps (concrete actions)
-
-- [ ] [Action] [task] — [Owner/dependency]
-
-#### Step 10: Metrics
-
-- Files modified, commits, tests, ADRs, duration
+| Step | Extract | Format |
+|------|---------|--------|
+| 1 | Metadata | Title, duration, focus |
+| 2 | Context | 2-3 sentences (≤120 words), objectives, observations |
+| 3 | Accomplishments | **[Verb]**: [What] ([File]) — [Context] |
+| 4 | Decisions | **[Topic]**: [Decision] - [Rationale] (trade-offs) |
+| 5 | Learnings | **[Tech]**: [Learning] (measurements) |
+| 6 | Issues | **[Component]**: [Problem] - [Why unresolved] |
+| 7 | Dependencies | Upstream/downstream, cross-session continuity |
+| 8 | Evidence | Commits, benchmarks, quotes |
+| 9 | Next Steps | - [ ] [Action] — [Owner] |
+| 10 | Metrics | Files, commits, tests, ADRs, duration |
 
 ### 2.2 Create Extraction Matrix (JSON Format)
 
@@ -195,195 +146,44 @@ For each summary file:
 
 ## Stage 2.5: Action Item Extraction (Optional)
 
-**Purpose:** Extract actionable insights from summaries - pain points, missing capabilities, regressions, and improvement opportunities.
+**Purpose:** Mine summaries for initiatives (pain points, gaps, regressions, improvements)
+**When:** Quarterly reviews, initiative planning
 
-**When to Use:** Mining summaries for initiative planning, quarterly reviews, or systematic improvement cycles.
+### Process (5 Steps)
 
-### 2.5.1 Manual Extraction Process
+| Step | Action | Output |
+|------|--------|--------|
+| 1 | **Read sections** | Accomplishments → workarounds<br>Decisions → constraints<br>Learnings → gaps<br>Issues → pain points<br>Next Steps → deferred work |
+| 2 | **Identify types** | Pain Points, Missing Capabilities, Regressions, Improvements |
+| 3 | **Categorize** | workflow, testing, docs, security, performance, automation, infra, quality |
+| 4 | **Track source** | File, section, quote |
+| 5 | **Score** | Impact: high/medium/low<br>Confidence: high (3+ mentions)/medium/low |
 
-For each summary:
-
-#### Step 1: Read Section by Section
-
-Read systematically through each major section:
-
-- Accomplishments → look for workarounds indicating missing features
-- Decisions → look for forced choices indicating constraints
-- Learnings → look for surprises indicating gaps
-- Unresolved Issues → explicit pain points
-- Next Steps → deferred work indicating priority/capacity issues
-
-#### Step 2: Identify Action Items
-
-Capture four types of action items:
-
-**1. Pain Points** - Problems explicitly mentioned or implied
-
-- Example: "Manual file operations time-consuming" → Need automation
-- Example: "Task system violations occurred 3 times" → Need validation
-
-**2. Missing Capabilities** - Features/workflows identified as needed
-
-- Example: "No cross-reference validation" → Need validation tool
-- Example: "Cannot use MCP for local files" → Need file system support
-
-**3. Regressions** - Issues that recurred or weren't fully fixed
-
-- Example: "Workflow violations despite mandatory rules" → Enforcement gap
-- Example: "Markdown linting errors reappeared" → CI integration needed
-
-**4. Improvement Opportunities** - Suggestions or ideas mentioned
-
-- Example: "Could parallelize test execution" → Performance optimization
-- Example: "Workflow decomposition worked well" → Apply pattern elsewhere
-
-#### Step 3: Categorize by Theme
-
-Assign primary category:
-
-- `workflow` - Workflow improvements, automation
-- `testing` - Test infrastructure, coverage, performance
-- `documentation` - Docs quality, structure, automation
-- `security` - Security checks, validation, compliance
-- `performance` - Speed, efficiency, resource usage
-- `automation` - Scaffolding, code generation, tooling
-- `infrastructure` - Dev environment, CI/CD, tooling
-- `quality` - Linting, validation, standards enforcement
-
-#### Step 4: Note Source Information
-
-For each action item, record:
-
-- **File:** Summary filename
-- **Section:** Section where found (e.g., "Unresolved Issues", "Learnings")
-- **Quote:** Verbatim quote if available (preserves context)
-
-Example:
-
-```yaml
-- file: 2025-10-18-task-system-violations.md
-  section: "Recommendations"
-  quote: "Add task format validation pre-commit hook"
-```
-
-#### Step 5: Assign Impact and Confidence
-
-**Impact** (effect if implemented):
-
-- `high` - Blocks work, affects quality, or prevents major issues
-- `medium` - Improves efficiency, reduces friction
-- `low` - Nice-to-have, cosmetic improvement
-
-**Confidence** (how certain this is needed):
-
-- `high` - Mentioned 3+ times OR explicit user directive OR blocking issue
-- `medium` - Mentioned 1-2 times, clear benefit
-- `low` - Implied need, inferred from context
-
-**Frequency heuristics:**
-
-- Same issue across 3+ sessions → High confidence
-- Explicit in unresolved issues → High confidence
-- Mentioned in passing once → Low confidence
-
-### 2.5.2 Create Action Items YAML
-
-**Template:**
+### YAML Template
 
 ```yaml
 action_items:
-  - id: "YYYY-MM-DD-summary#section#index"
-    title: "Concise action item title (5-10 words)"
-    description: "Detailed description with context"
-    category: "workflow"  # See Step 3 for categories
+  - id: "YYYY-MM-DD#section#N"
+    title: "Title (5-10 words)"
+    category: "workflow"  # Step 3 categories
     impact: "high"  # high | medium | low
     confidence: "high"  # high | medium | low
-
-    # Source tracking
-    source_summary: "2025-10-18-task-system-violations.md"
-    source_section: "Recommendations"
-    source_quote: "Add task format validation pre-commit hook"
-    session_date: "2025-10-18"
-
-    # Context
-    related_files: []  # Files mentioned in context
-    related_initiatives: []  # Initiatives mentioned
-
-    # Mapping (filled during validation)
-    suggested_initiative: null  # Which initiative this belongs to
-    create_new_initiative: false  # Whether this needs new initiative
-
-  - id: "YYYY-MM-DD-summary#section#2"
-    # ... next item
+    source: {file, section, quote, date}
+    context: {related_files, related_initiatives}
+    mapping: {suggested_initiative, create_new_initiative}
 ```
 
-### 2.5.3 Cross-Reference Validation
+### Cross-Reference Validation (HIGH impact+confidence only)
 
-**Purpose:** Avoid duplicate initiatives, map to existing work.
+1. Check active initiatives: `ls -1 docs/initiatives/active/*/initiative.md`
+2. Categorize:
+   - **A:** Already covered → Mark `suggested_initiative`
+   - **B:** Gap in existing → Add to initiative
+   - **C:** New needed → Mark `create_new_initiative: true`
+   - **D:** Low priority → Backlog only
+3. Group Category C items by theme → Propose new initiatives
 
-For each HIGH impact + HIGH confidence action item:
-
-#### Step 1: Check Active Initiatives
-
-Read all active initiatives:
-
-```bash
-ls -1 docs/initiatives/active/*/initiative.md
-```
-
-Compare action item against:
-
-- Initiative objectives
-- Success criteria
-- In-scope items
-- Related initiatives
-
-**Match criteria:**
-
-- Same problem statement
-- Overlapping solution
-- Same files/components mentioned
-
-#### Step 2: Categorize Action Items
-
-##### Category A: Already Covered
-
-- Action item matches existing initiative scope
-- Mark: `suggested_initiative: <initiative-name>`
-- Action: None (already tracked)
-
-##### Category B: Gap in Existing Initiative
-
-- Related to initiative but not explicitly in scope
-- Mark: `suggested_initiative: <initiative-name>`
-- Action: Update initiative to add this item
-
-##### Category C: New Initiative Needed
-
-- Not covered by any active initiative
-- Mark: `create_new_initiative: true`
-- Action: Create new initiative
-
-##### Category D: Low Priority
-
-- Impact: low OR Confidence: low
-- Action: Document but defer
-
-#### Step 3: Deduplication
-
-Check for duplicates across summaries:
-
-- Same category + similar title → Likely duplicate
-- Same related files → Check if same issue
-- Same initiative mentioned → Consolidate
-
-**Deduplication strategy:**
-
-- Keep highest confidence version
-- Merge source quotes from all mentions
-- Increment frequency counter
-
-### 2.5.4 Output Format
+### Output Format
 
 Create two files:
 
@@ -447,29 +247,17 @@ action_items: [... items from 2.5.2 ...]
 
 ---
 
-## Stage 3: Methodical Consolidation
+## Stage 3: Consolidation
 
-### 3.1 Merge Using Explicit Rules
+### 3.1 Merge Rules
 
-#### Rule 1: Deduplicate Accomplishments
-
-- Same action + same component → merge, keep specific description
-
-#### Rule 2: Consolidate Decisions
-
-- Same topic: Keep both if complementary, merge if elaboration
-
-#### Rule 3: Synthesize Learnings
-
-- Same tech: Combine, preserve measurements, note progression
-
-#### Rule 4: Aggregate Issues
-
-- Group by component, keep distinct issues, prioritize by frequency
-
-#### Rule 5: Consolidate Next Steps
-
-- Remove exact duplicates, merge overlapping, group by component, prioritize by dependency
+| Rule | Action |
+|------|--------|
+| 1. Accomplishments | Same action+component → merge, keep specific |
+| 2. Decisions | Same topic → both if complementary, merge if elaboration |
+| 3. Learnings | Same tech → combine, preserve measurements |
+| 4. Issues | Group by component, distinct only, prioritize by frequency |
+| 5. Next Steps | Remove duplicates, merge overlapping, group by component |
 
 ### 3.2 Generate Consolidated Summary
 
