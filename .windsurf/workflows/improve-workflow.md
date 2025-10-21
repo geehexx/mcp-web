@@ -1,14 +1,15 @@
 ---
 created: "2025-10-21"
 updated: "2025-10-21"
-description: Optimize Windsurf workflow prompts with context-aware conciseness and decomposition detection
+description: Optimize Windsurf workflows with intelligent semantic preservation and idempotency
 auto_execution_mode: 2
 category: Optimization
-complexity: 70
-tokens: 1750
+complexity: 75
+tokens: 2000
 dependencies:
   - improve-prompt
 status: active
+version: "2.0-intelligent-semantic-preservation"
 ---
 
 # Improve Workflow Sub-Workflow
@@ -57,29 +58,30 @@ dependencies: [...]  # Other workflows it calls
 - Example count
 - Cross-references
 
-### 0.2 Calculate Conciseness Priority
+### 0.2 Apply Compression Decision Matrix
 
-**Dynamic weight based on size:**
+**Use same matrix as `/improve-prompt` Stage 4.0:**
 
-| Token Count | Word Count | Weight | Priority | Strategy |
-|-------------|------------|--------|----------|----------|
-| <2000 | <1000 | 1.0x | Low | Standard optimization |
-| 2000-4000 | 1000-2000 | 1.5x | Moderate | Conciseness focus |
-| 4000-6000 | 2000-3000 | 2.0x | High | Aggressive conciseness |
-| >6000 | >3000 | 2.5x | **CRITICAL** | **Decomposition candidate** |
+Determine strategy based on workflow quality + token count.
 
-**Conciseness weight formula:**
+**See:** `improve-prompt.md` Stage 4.0 for complete matrix.
 
-```python
-if tokens < 2000:
-    weight = 1.0
-elif tokens < 4000:
-    weight = 1.5
-elif tokens < 6000:
-    weight = 2.0
-else:
-    weight = 2.5  # Flag for decomposition
-```
+**Workflow-specific adjustments:**
+- Complexity >75: Reduce max reduction by 10%
+- Stage count >10: Light polish only (max 15% reduction)
+- Calls >5 workflows: Preserve all cross-references
+
+### 0.3 Idempotency Pre-Check
+
+**Check if workflow already optimized:**
+
+1. **Method 1:** Cache lookup by hash
+2. **Method 2:** Frontmatter `version` field contains "intelligent" or "semantic"
+3. **Method 3:** Token count vs target delta < 50 tokens
+
+**If already optimized:**
+- Return unchanged with note: "Already optimized (cached/version/stable)"
+- Skip all optimization stages
 
 ---
 
@@ -123,6 +125,22 @@ else:
 ---
 
 ## Stage 2: Apply Windsurf-Aware Conciseness
+
+### 2.0 Semantic Preservation Layer
+
+**Before applying conciseness techniques:**
+
+1. Extract `update_plan` calls (100% preserve syntax)
+2. Extract stage numbering (100% preserve)
+3. Extract workflow entry/exit announcements (100% preserve)
+4. Extract cross-references (100% preserve)
+5. Identify task attribution patterns (preserve format)
+
+**Apply conciseness techniques ONLY to:**
+- Explanatory prose
+- Examples (keep 2-3 best)
+- Verbose instructions
+- Redundant descriptions
 
 ### 2.1 PRESERVE Critical Elements
 
@@ -301,6 +319,32 @@ grep "step:.*status:" improved.md | validate format
 - Calls to dependencies work
 - Cross-references resolve
 - Examples run correctly
+
+### 3.4 Idempotency Testing
+
+**For workflows, test multiple dimensions:**
+
+```python
+# Test 1: Re-optimize produces no changes
+re_optimized = optimize_workflow(compressed, same_config)
+exact_match = (compressed == re_optimized)
+
+# Test 2: update_plan calls unchanged
+original_plans = extract_update_plan_calls(compressed)
+re_optimized_plans = extract_update_plan_calls(re_optimized)
+plans_match = (original_plans == re_optimized_plans)
+
+# Test 3: Frontmatter integrity
+frontmatter_intact = verify_frontmatter(compressed, re_optimized)
+
+# Test 4: Workflow entry/exit preserved
+markers_intact = verify_workflow_markers(compressed, re_optimized)
+
+# PASS criteria: ALL tests pass
+assert exact_match AND plans_match AND frontmatter_intact AND markers_intact
+```
+
+**Golden tests:** Use 4 previously optimized workflows as baselines.
 
 ---
 

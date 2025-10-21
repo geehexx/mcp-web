@@ -1,15 +1,15 @@
 ---
 created: "2025-10-21"
 updated: "2025-10-21"
-description: LLM-agnostic prompt optimization with model-specific enhancements and self-improvement methodology
+description: LLM-agnostic prompt optimization with intelligent semantic preservation and idempotency
 auto_execution_mode: 2
 category: Optimization
-complexity: 70
-tokens: 3000
+complexity: 75
+tokens: 3500
 dependencies:
   - improve-workflow
 status: active
-version: "2.0-self-optimized"
+version: "3.0-intelligent-semantic-preservation"
 ---
 
 # Improve Prompt Workflow
@@ -173,6 +173,22 @@ update_plan({
 **Project rules:** Preserve triggers, anti-patterns, cross-references
 **GPT-5-Codex:** Minimal prompting, no preambles, concise tools
 
+### 2.5.5 Idempotency Pre-Check
+
+**Before optimization:**
+
+1. Calculate optimization hash (content + config + methodology v2.0)
+2. Check cache: `.windsurf/.optimization-cache.json`
+3. If cache hit: Return cached result immediately with note
+4. If cache miss: Proceed with optimization
+
+**Hash components:**
+- Content SHA-256
+- Methodology version: v2.0
+- Enabled techniques
+- Preservation thresholds
+- Model + temperature=0.0 + seed=42
+
 ### 2.5.4 Sub-Workflow Routing
 
 **If Windsurf workflow:** Route to `/improve-workflow` (handles workflow-specific optimization, decomposition detection, syntax preservation)
@@ -185,7 +201,28 @@ update_plan({
 
 🔄 **Entering Stage 3: Analyze Current Prompt**
 
-### 3.1 Quality Assessment
+### 3.1 Semantic Analysis (Layer 1)
+
+**Before any compression, extract semantic structure:**
+
+```python
+semantic_profile = {
+    "decision_logic": extract_decision_points(content),
+    "key_entities": extract_entities_ner(content),  # Technical terms, functions, names
+    "examples": identify_examples(content),
+    "preservation_zones": identify_critical_sections(content),
+    "compression_zones": identify_redundancy(content)
+}
+```
+
+**Preservation priorities:**
+
+- **Critical (100%):** Decision logic, task syntax, workflow calls
+- **High (>90%):** Key entities, technical terms, constraints
+- **Medium (>70%):** Examples, explanations
+- **Low (<50%):** Redundant phrases, verbose formatting
+
+### 3.2 Quality Assessment
 
 **Score dimensions (0-10):** Clear objective, specific instructions, context, constraints, output format, examples, reasoning guidance, structure
 
@@ -206,6 +243,21 @@ update_plan({
 🔄 **Entering Stage 4: Apply Universal Optimizations**
 
 **Philosophy:** Start with cross-model techniques that work for ALL LLMs, then add model-specific enhancements.
+
+### 4.0 Apply Compression Decision Matrix
+
+**Determine strategy based on quality + token count:**
+
+| Original Quality | Token Count | Strategy | Max Reduction | Validation Level |
+|-----------------|-------------|----------|---------------|------------------|
+| <6/10 | Any | Aggressive restructure | 60% | Standard |
+| 6-7/10 | <2000 | Balanced | 30% | Standard |
+| 6-7/10 | >2000 | Moderate | 40% | Enhanced |
+| 7-8/10 | <2000 | Light polish | 15% | Strict |
+| 7-8/10 | >2000 | Selective | 25% | Strict |
+| >8/10 | Any | **Minimal** | 10% | Very strict |
+
+**Apply strategy to technique selection and aggressiveness.**
 
 ### 4.1 GOLDEN Framework
 
@@ -292,6 +344,53 @@ update_plan({
 
 **Verify:** Intent preservation (objective, requirements, constraints, output type) | Coherence (consistent, complete, clear, appropriate length) | Context compatibility (conventions, @-mentions, no conflicts)
 
+### 6.5 Semantic Preservation Validation (Layer 4)
+
+**Multi-dimensional quality check:**
+
+```python
+scores = {
+    "entity_preservation": measure_overlap(original_entities, compressed_entities),  # Target: ≥90%
+    "decision_logic_intact": verify_all_present(decision_points, compressed),         # Target: ≥98%
+    "examples_sufficient": count_examples(compressed) >= 2,                            # Target: 2-3 per concept
+    "anchors_retained": measure_anchor_overlap(original_anchors, compressed)          # Target: ≥90%
+}
+
+total_score = (
+    scores["entity_preservation"] * 0.30 +
+    scores["decision_logic_intact"] * 0.25 +
+    scores["examples_sufficient"] * 0.20 +
+    scores["anchors_retained"] * 0.25
+)
+
+# PASS criteria: total_score >= 0.92 (92%)
+```
+
+**If validation fails:** Reduce compression aggressiveness and retry.
+
+### 6.6 Idempotency Verification (Layer 5)
+
+**Test that re-optimization produces NO changes:**
+
+```python
+# Test 1: Hash-based exact match
+re_compressed = optimize(compressed_content, same_config)
+hash_match = (sha256(compressed) == sha256(re_compressed))
+
+# Test 2: Semantic similarity (allow minor variations)
+similarity = semantic_similarity_score(compressed, re_compressed)
+
+# Test 3: Token drift
+token_drift = abs(count_tokens(compressed) - count_tokens(re_compressed))
+
+# PASS criteria:
+assert hash_match OR (similarity >= 0.98 AND token_drift <= 10)
+```
+
+**If idempotency fails:** Flag for manual review, do NOT cache.
+
+**If idempotency passes:** Update cache with result.
+
 ---
 
 ## Stage 7: Calculate Metrics
@@ -333,6 +432,28 @@ update_plan({
 | Technique | ✓/✗ | Impact | Rationale |
 |-----------|-----|--------|----------|
 [List applied techniques with impact scores]
+
+## Semantic Preservation Metrics
+
+| Dimension | Score | Threshold | Status |
+|-----------|-------|-----------|--------|
+| Entity Preservation | [N]/10 | ≥9.0 | ✓/✗ |
+| Decision Logic Intact | [N]/10 | ≥9.8 | ✓/✗ |
+| Examples Sufficient | [N]/10 | ≥7.0 | ✓/✗ |
+| Anchor Retention | [N]/10 | ≥9.0 | ✓/✗ |
+| **Overall Score** | **[N]/10** | **≥9.2** | **✓/✗** |
+
+## Idempotency Test
+
+- Hash Match: ✓/✗
+- Semantic Similarity: [N]% (threshold: ≥98%)
+- Token Drift: [N] tokens (threshold: ≤10)
+- **Status:** ✓ PASSED / ✗ FAILED
+
+## Cache Status
+
+- ✓ Cached for future optimizations (hash: [first 8 chars])
+- ✗ Not cached (idempotency failed)
 
 ## Improved Prompt
 ````markdown
