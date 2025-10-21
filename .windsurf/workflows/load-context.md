@@ -5,18 +5,19 @@ description: Batch load project context efficiently
 auto_execution_mode: 3
 category: Operations
 complexity: 65
-tokens: 2300
+tokens: 1610
+version: v2.0-intelligent-semantic-preservation
 dependencies: []
 status: active
 ---
 
 # Load Context Workflow
 
-**Purpose:** Efficiently load project context using batch operations to minimize tool calls and maximize AI understanding.
+**Purpose:** Efficiently load project context using batch operations (3-10x faster than sequential).
 
 **Invocation:** `/load-context [scope]` (called by `/work`, `/implement`, `/plan`)
 
-**Philosophy:** Load smarter, not more. Batch operations are 3-10x faster than sequential reads.
+**Philosophy:** Batch operations minimize tool calls, maximize understanding.
 
 ---
 
@@ -62,34 +63,25 @@ status: active
 
 ## Stage 2: Batch Loading
 
-**Use `mcp0_read_multiple_files` for 3+ files (3-10x faster than sequential)**
+**Use `mcp0_read_multiple_files` for 3+ files (3-10x faster)**
 
-**Priority order:** Essential (PROJECT_SUMMARY, initiatives) → Important (architecture, summaries) → Optional (ADRs, changelog)
+**Priority:** Essential (PROJECT_SUMMARY, initiatives) → Important (arch, summaries) → Optional (ADRs, changelog)
 
 ---
 
 ## Stage 3: Load Files
 
-**Implementation:** Use `mcp0_read_multiple_files` with paths from scope table above. Parse initiative files to extract related source/test files. Run git commands for commit history.
+**Implementation:** `mcp0_read_multiple_files` with paths from scope. Parse initiatives for source/test files. Git commands for history.
 
-**Load times:** full=2-3s, active=1s, initiative=1s, module<1s, minimal<0.5s
+**Times:** full=2-3s, active=1s, initiative=1s, module<1s, minimal<0.5s
 
 ---
 
 ## Stage 4: Parse Context
 
-**Extract:** Version, status, active tasks (`[ ]`), priorities, next steps from summaries
+**Extract:** Version, status, active tasks (`[ ]`), priorities, next steps, unresolved issues, decisions, patterns
 
-- Next steps
-- Unresolved issues
-- Key decisions
-- Work patterns
-
-**From git log:**
-
-- Recent commit types
-- Active areas of development
-- Commit patterns
+**From git:** Commit types, active areas, patterns
 
 ### 4.2 Identify Next Steps
 
