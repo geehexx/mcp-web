@@ -5,7 +5,7 @@ description: Optimize Windsurf workflow prompts with context-aware conciseness a
 auto_execution_mode: 2
 category: Optimization
 complexity: 70
-tokens: 3500
+tokens: 1750
 dependencies:
   - improve-prompt
 status: active
