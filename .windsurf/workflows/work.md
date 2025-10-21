@@ -29,6 +29,19 @@ status: active
 
 **Chain:** `/work` → `/detect-context` → [routed workflow] → `/meta-analysis` (session end)
 
+**🚨 CRITICAL:** Even with specific user instructions (e.g., "@/work Continue Phase 1..."), you MUST follow ALL workflow stages:
+
+1. Create initial task plan (Stage 1)
+2. Detect context (Stage 2) - even if user specified, analyze and confirm
+3. Route to workflow (Stage 3) - show routing decision
+4. Update plan with workflow-specific subtasks (MANDATORY)
+5. Execute workflow (Stage 4)
+6. Check for completion (Stage 5) - after EVERY major task
+7. Session end protocol if triggered (Stage 5)
+
+**Anti-pattern:** "User said do X → skip directly to implementation" ❌
+**Correct:** "User said do X → detect context, confirm route to X, show implementation plan, execute" ✅
+
 ---
 
 ## Stage 0: Workflow Entry
@@ -97,7 +110,9 @@ update_plan({
 
 **Routes:** Active initiative → `/implement`, Test failures → `/implement`, Planning → `/plan`, Completed → `/archive-initiative`, Clean slate → Prompt
 
-**After routing, update plan with subtasks:**
+**🚨 MANDATORY: After routing, update plan with workflow-specific subtasks.**
+
+**This is NOT optional. You MUST show the implementation/research/planning workflow stages.**
 
 ```typescript
 update_plan({
@@ -141,23 +156,62 @@ update_plan({
 /work → /detect-context → /implement → /commit
 ```
 
+**🚨 CRITICAL: After completing each major workflow stage (test, implementation, commit), check for completion:**
+
+```typescript
+// After completing substeps 3.1-3.6, update plan:
+update_plan({
+  explanation: "✅ Implementation complete. Checking for session completion...",
+  plan: [
+    { step: "1-3. Context + routing + implementation", status: "completed" },
+    { step: "4. /work - Detect work completion", status: "in_progress" },
+    { step: "5. /work-session-protocol - Execute if triggered", status: "pending" }
+  ]
+})
+```
+
+**Check completion triggers:**
+
+- All planned tasks done? → Session end protocol
+- Initiative marked completed? → Session end protocol
+- More work remaining? → Continue to next task
+
 ---
 
 ## Stage 5: Session End Protocol
 
 **See:** [work-session-protocol.md](./work-session-protocol.md)
 
+**🚨 MANDATORY CHECK: After completing ANY major workflow (implement, plan, research), you MUST check if session should end.**
+
 **Trigger if ANY:**
 
-1. Initiative marked "Completed" or "✅"
-2. All planned tasks done
-3. User signals session end
+1. Initiative marked "Completed" or "✅" in initiative file
+2. All planned tasks in current session are done
+3. User signals session end ("wrap up", "end session", "done for now")
+4. You completed the user's requested work ("Continue Phase 1..." → Phase 1 work done)
 
-**Protocol:** Commit → Archive → Meta-analysis → Verify exit → Present summary
+**When triggered:**
 
-**Exit Criteria:** All committed, tests pass, initiatives archived, meta-analysis done, summary created
+```typescript
+update_plan({
+  explanation: "🏁 Session completion detected. Executing session end protocol...",
+  plan: [
+    { step: "5.1. Commit all changes", status: "in_progress" },
+    { step: "5.2. Archive completed initiatives", status: "pending" },
+    { step: "5.3. Execute /meta-analysis", status: "pending" },
+    { step: "5.4. Present session summary", status: "pending" }
+  ]
+})
+```
+
+**Protocol:** Commit → Archive (if initiative completed) → Meta-analysis (MANDATORY) → Verify exit → Present summary
+
+**Exit Criteria:** All committed, tests pass, initiatives archived (if applicable), meta-analysis done, summary created
 
 **ONLY present summary after all criteria met.**
+
+**If NOT triggered:** Brief update ("✅ X done, 🔄 continuing with Y") and continue next task WITHOUT asking "shall I continue?"
 
 ---
 
