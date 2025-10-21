@@ -183,6 +183,7 @@ update_plan({
 4. If cache miss: Proceed with optimization
 
 **Hash components:**
+
 - Content SHA-256
 - Methodology version: v2.0
 - Enabled techniques

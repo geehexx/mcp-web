@@ -67,6 +67,7 @@ Determine strategy based on workflow quality + token count.
 **See:** `improve-prompt.md` Stage 4.0 for complete matrix.
 
 **Workflow-specific adjustments:**
+
 - Complexity >75: Reduce max reduction by 10%
 - Stage count >10: Light polish only (max 15% reduction)
 - Calls >5 workflows: Preserve all cross-references
@@ -80,6 +81,7 @@ Determine strategy based on workflow quality + token count.
 3. **Method 3:** Token count vs target delta < 50 tokens
 
 **If already optimized:**
+
 - Return unchanged with note: "Already optimized (cached/version/stable)"
 - Skip all optimization stages
 
@@ -137,6 +139,7 @@ Determine strategy based on workflow quality + token count.
 5. Identify task attribution patterns (preserve format)
 
 **Apply conciseness techniques ONLY to:**
+
 - Explanatory prose
 - Examples (keep 2-3 best)
 - Verbose instructions
