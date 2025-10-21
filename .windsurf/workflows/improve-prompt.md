@@ -5,9 +5,8 @@ description: LLM-agnostic prompt optimization with model-specific enhancements a
 auto_execution_mode: 2
 category: Optimization
 complexity: 65
-tokens: 9500
-dependencies:
-  - improve-workflow
+tokens: 8500
+dependencies: []
 status: active
 ---
 
@@ -22,6 +21,81 @@ status: active
 **Based on:** Cross-model research (2025), Anthropic Prompt Improver, OpenAI GPT-5-Codex patterns, Google Gemini guidelines, Windsurf best practices
 
 **Supported Models:** Claude (3.5+), GPT (4+), Gemini (1.5+), and other instruction-following LLMs
+
+---
+
+## Optimization Research & Learned Techniques (2025)
+
+**Meta-Learning:** This workflow embodies self-improvement through iterative refinement based on empirical results.
+
+### Core Optimization Principles
+
+| Principle | Research Basis | Application |
+|-----------|---------------|-------------|
+| **Quality ≠ Verbosity** | Structured prompts improve accuracy 15-30% (Anthropic 2025) | Tables/bullets > prose for info density |
+| **Strategic Context** | Targeted rationale > comprehensive coverage | Add "why" for key decisions, not everything |
+| **Compression Threshold** | Don't exceed 80% reduction without validation | Balance conciseness with context preservation |
+| **One Purpose Per Section** | Prevents LLM confusion from mixed topics | Each section answers single question |
+| **Contextual Anchors** | Essential keywords guide LLM focus | Retain decision thresholds, quality criteria |
+
+### Token Efficiency Techniques (Proven Effective)
+
+**Priority by baseline quality:**
+
+- **<7/10 quality:** Apply aggressive optimizations (all techniques)
+- **7-8/10 quality:** Selective optimization (structure + examples)
+- **>8/10 quality:** Maintenance focus (clarity, not transformation)
+
+| Technique | Target | Transformation Example | Expected Savings | Quality Impact |
+|-----------|--------|----------------------|------------------|----------------|
+| **Information Distillation** | Verbose phrases | "Please provide detailed analysis" → "Analyze:" | 30-50% | Neutral/Positive |
+| **Structured Bullets** | Long paragraphs | 200-word paragraph → 5 bullet points | 20-40% | Positive (scannability) |
+| **Table Consolidation** | Verbose lists | 8 technique descriptions → compact table | 40-60% | Positive (comparison) |
+| **Example Consolidation** | Redundant examples | 8 partial examples → 1 complete + 3 compact | 40-60% | Positive (depth) |
+| **Metadata Deduplication** | Frontmatter repeats | Remove body metadata if in YAML frontmatter | 100% of dupes | Neutral |
+| **Reference Externalization** | Inline documentation | [5 paragraphs] → "See: [link]" | 50-80% | Context-dependent |
+| **Word-Level Optimization** | Common phrases | "in order to" → "to", "utilize" → "use" | 5-15% | Neutral |
+
+**Research Evidence:**
+
+- Explicit reasoning reduces hallucination 20-40% (OpenAI 2025)
+- Format specifications improve adherence 50-100% (Google Gemini guidelines)
+- Consistent delimiters (tables, XML) aid LLM parsing 25-35% (PromptHub 2025)
+
+### Quality vs Conciseness Balance
+
+**Scoring Framework:** `(Quality × 0.7) + (Efficiency Ratio × 0.3)`
+
+Where:
+
+- Quality = Σ(Completeness, Clarity, Structure, Usability, Context) / 5
+- Efficiency Ratio = Quality Score / (tokens / 100)
+
+**Decision Matrix:**
+
+| Baseline Quality | Token Count | Strategy | Rationale |
+|-----------------|-------------|----------|-----------|
+| <6/10 | Any | Transform aggressively | Low baseline allows experimentation |
+| 6-7/10 | <3000 | Balanced optimization | Room for improvement |
+| 6-7/10 | >3000 | Prioritize conciseness | High verbosity, medium quality |
+| 7-8/10 | <2000 | Maintain, polish | Already efficient |
+| 7-8/10 | >2000 | Selective optimization | Focus high-impact areas |
+| >8/10 | Any | **Minimal changes** | Risk damaging high baseline |
+
+**Key Insight:** Quality improvements + token reduction are NOT mutually exclusive with strategic application.
+
+### Meta-Prompting Self-Improvement
+
+**Iterative Refinement Loop:**
+
+1. **Baseline Assessment** → Measure current quality/efficiency
+2. **Apply Techniques** → Selective based on baseline
+3. **Validate** → Ensure intent preserved, quality maintained/improved
+4. **Measure Delta** → Quantify improvements
+5. **Learn** → Update technique weights based on results
+6. **Repeat** → Self-apply learnings to workflow itself
+
+**Self-Application Criteria:** Only self-optimize if baseline <8/10 OR tokens >4000. Otherwise, risk over-optimization.
 
 ---
 
@@ -155,40 +229,13 @@ update_plan({
 | **Gemini (1.5+)** | Hierarchical | Long context, multimodal | System instructions, query placement |
 | **Generic/Auto** | GOLDEN framework | Instruction following | Universal patterns only |
 
-### 2.5.2 Calculate Token Count and Conciseness Priority
-
-**Count tokens:**
-
-```python
-import tiktoken
-enc = tiktoken.get_encoding("cl100k_base")
-token_count = len(enc.encode(prompt_text))
-word_count = len(prompt_text.split())
-```
-
-**Dynamic conciseness weight:**
-
-| Token Count | Word Count | Weight | Priority | Strategy |
-|-------------|------------|--------|----------|----------|
-| <2000 | <1000 | 1.0x | Low | Standard optimization |
-| 2000-4000 | 1000-2000 | 1.5x | Moderate | Conciseness focus |
-| 4000-6000 | 2000-3000 | 2.0x | High | Aggressive conciseness |
-| >6000 | >3000 | 2.5x | **CRITICAL** | **Decomposition candidate** |
-
-**Apply weight to quality scoring:**
-
-- Multiply "Example inclusion" score by conciseness weight
-- Multiply "Instruction density" score by conciseness weight
-- Adjust optimization technique priority based on weight
-
-### 2.5.3 Identify Special Constraints
+### 2.5.2 Identify Special Constraints
 
 **For Windsurf workflows:**
 
 - Must preserve task management syntax (`update_plan`, stage announcements)
 - Must maintain frontmatter structure
 - Workflow-specific conventions (stage numbering, etc.)
-- **If detected: Route to `/improve-workflow` sub-workflow**
 
 **For project rules:**
 
@@ -202,34 +249,6 @@ word_count = len(prompt_text.split())
 - No preambles (model doesn't support them)
 - Concise tool descriptions
 - Terminal + apply_patch tools only
-
-### 2.5.4 Sub-Workflow Routing
-
-**If prompt type is Windsurf workflow:**
-
-```python
-if ('.windsurf/workflows/' in file_path and
-    'auto_execution_mode' in frontmatter):
-    # This is a Windsurf workflow
-    # Route to specialized sub-workflow
-    result = call_subworkflow('improve-workflow', {
-        'prompt': prompt_text,
-        'token_count': token_count,
-        'conciseness_weight': conciseness_weight,
-        'metadata': frontmatter
-    })
-    return result  # Skip to Stage 8 (present results)
-```
-
-**Sub-workflow handles:**
-
-- Workflow-specific analysis
-- Conciseness-focused optimization
-- Decomposition detection (>6000 tokens)
-- Windsurf syntax preservation
-- Validation and metrics
-
-**See:** [improve-workflow.md](./improve-workflow.md) for details
 
 **Print stage completion:**
 
@@ -395,14 +414,7 @@ Next: Provide next steps or 2 alternatives if confidence < 0.7
 
 ### 4.2 Core Universal Optimization Strategies
 
-Apply techniques in priority order based on analysis (these work across all models).
-
-**CRITICAL:** Apply conciseness weight to technique priority:
-
-- Weight 1.0x (low): Apply techniques 1-8 normally
-- Weight 1.5x (moderate): Prioritize techniques 9-11 (conciseness)
-- Weight 2.0x (high): Aggressively apply techniques 9-12
-- Weight 2.5x (critical): Apply ALL conciseness techniques + flag decomposition
+Apply techniques in priority order based on analysis (these work across all models):
 
 #### Universal Technique 1: Add Chain-of-Thought Reasoning
 
@@ -608,126 +620,7 @@ Specify technical requirements:
 - Security: [OWASP guidelines, input validation]
 ```
 
----
-
-### 4.3 Conciseness-Focused Techniques
-
-#### When to Apply
-
-**Apply when conciseness weight ≥ 1.5x (tokens > 2000)**
-
-These techniques prioritize token reduction while preserving meaning.
-
-#### Technique 9: Information Distillation (Weight × 2.0)
-
-**Target:** Verbose explanations, redundant phrases
-
-**Transforms:**
-
-```text
-❌ "Please provide a comprehensive explanation of..."
-✅ "Explain..."
-
-❌ "It is important to note that you should..."
-✅ "Must..."
-
-❌ "In order to accomplish this task..."
-✅ "To accomplish..."
-
-❌ "You will need to make sure that you..."
-✅ "Ensure..."
-```
-
-**Savings:** 30-50% on instructional text
-
-#### Technique 10: Structured Bullet Points (Weight × 1.5)
-
-**Target:** Long paragraphs, narrative text
-
-**Transform:**
-
-```text
-❌ Before:
-The system analyzes various indicators including active
-initiatives, git status, test results, and session history.
-Based on this comprehensive analysis, it makes a routing
-decision to determine the next appropriate workflow.
-
-✅ After:
-Analyzes:
-- Active initiatives
-- Git status
-- Test results
-- Session history
-→ Routes to appropriate workflow
-```
-
-**Savings:** 20-40% on process descriptions
-
-#### Technique 11: Keyword Extraction (Weight × 1.8)
-
-**Target:** Detailed descriptions
-
-**Transform:**
-
-```text
-❌ "Analyze the provided documentation to identify..."
-✅ "Identify from docs..."
-
-❌ "Execute the following command in your terminal..."
-✅ "Run: `command`"
-
-❌ "Navigate to the directory where the file is located..."
-✅ "Navigate to file directory..."
-```
-
-**Savings:** 15-30% on action descriptions
-
-#### Technique 12: Example Consolidation (Weight × 2.0)
-
-**Target:** Redundant examples, verbose demonstrations
-
-**Strategy:**
-
-- Keep 2-3 best examples
-- Remove duplicate patterns
-- Use tables for multiple examples
-- Inline short examples
-
-**Transform:**
-
-```text
-❌ Before (8 examples, 500 tokens):
-Example 1: [detailed explanation]
-Example 2: [detailed explanation]
-...
-Example 8: [detailed explanation]
-
-✅ After (3 examples, 150 tokens):
-| Pattern | Example |
-|---------|----------|
-| Simple | `short` |
-| Moderate | `medium` |
-| Complex | `detailed` |
-```
-
-**Savings:** 40-60% on examples section
-
-#### Technique 13: Reference Externalization (Weight × 1.3)
-
-**Target:** Inline documentation, repeated concepts
-
-**Transform:**
-
-```text
-❌ Before: [5 paragraphs explaining task management]
-
-✅ After: See: [12_task_orchestration.md](../rules/12_task_orchestration.md)
-```
-
-**Savings:** 50-80% on repeated concepts
-
-### 4.4 Apply Selected Techniques
+### 4.2 Apply Selected Techniques
 
 **Based on analysis, apply techniques in optimal order:**
 
