@@ -5,7 +5,8 @@ description: Research best practices and existing patterns
 auto_execution_mode: 3
 category: Planning
 complexity: 50
-tokens: 2350
+tokens: 1410
+version: v2.0-intelligent-semantic-preservation
 dependencies: []
 status: active
 ---
@@ -14,9 +15,9 @@ status: active
 
 **Purpose:** Gather comprehensive research for features, technologies, or architectural decisions.
 
-**Invocation:** Called by `/plan` or standalone for research tasks
+**Invocation:** Called by `/plan` or standalone
 
-**Philosophy:** Good research prevents mistakes and identifies proven patterns.
+**Philosophy:** Good research prevents mistakes, identifies proven patterns.
 
 ---
 
@@ -48,21 +49,12 @@ update_plan({
 
 ## Stage 2: Define Research Scope
 
-### Identify What to Research
-
-**From requirement:**
-
-- Technology/framework specifics
-- Security considerations
-- Performance implications
-- Best practices for domain
-- Similar implementations
+**From requirement:** Technology/framework specifics, security, performance, best practices, similar implementations
 
 **Example:**
-
 ```markdown
 **Research Needed:**
-- API key authentication best practices
+- API authentication best practices
 - Python libraries for key hashing
 - FastAPI security patterns
 - OWASP API security guidelines
@@ -72,37 +64,24 @@ update_plan({
 
 ## Stage 3: Internal Pattern Discovery
 
-### 2.1 Search Existing Codebase
-
-**Look for similar patterns:**
+### 3.1 Search Codebase
 
 ```bash
-# Search for related implementations
-grep_search("auth|authentication|api.?key", "src/", recursive=true, includes=["*.py"])
-
-# Check for existing security patterns
+grep_search("auth|authentication", "src/", recursive=true, includes=["*.py"])
 grep_search("hash|encrypt|secret", "src/", recursive=true, includes=["*.py"])
 ```
 
-### 2.2 Review Related ADRs
+### 3.2 Review ADRs
 
 ```bash
-# List all ADRs
 ls docs/adr/*.md
-
-# Search for security-related decisions
 grep_search("security|auth|encrypt", "docs/adr/", recursive=true)
 ```
 
-### 2.3 Check Project Rules
-
-**Read relevant rules:**
+### 3.3 Check Project Rules
 
 ```python
-# Always check security rules for security-related work
 mcp0_read_text_file("/home/gxx/projects/mcp-web/.windsurf/rules/06_security_practices.md")
-
-# Check testing standards
 mcp0_read_text_file("/home/gxx/projects/mcp-web/.windsurf/rules/02_testing.md")
 ```
 
@@ -110,277 +89,138 @@ mcp0_read_text_file("/home/gxx/projects/mcp-web/.windsurf/rules/02_testing.md")
 
 ## Stage 4: External Web Research
 
-### 3.1 Run Comprehensive Web Searches
+### 4.1 Run 5+ Targeted Searches
 
-**Perform 5+ targeted searches:**
+1. **Best practices:** `search_web("[Technology] [Feature] best practices 2025")`
+2. **Performance:** `search_web("[Technology] [Feature] performance benchmarks")`
+3. **Security:** `search_web("OWASP [Feature] security 2025")`
+4. **Examples:** `search_web("[Technology] production examples [Feature]")`
+5. **Recent updates:** `search_web("[Library] security vulnerabilities CVE 2024 2025")`
 
-1. **Best practices** (current year)
+### 4.2 Document Findings
 
-   ```text
-   search_web("[Technology] [Feature] best practices 2025")
-   Example: "Python API authentication best practices 2025"
-   ```
-
-2. **Performance/scalability**
-
-   ```text
-   search_web("[Technology] [Feature] performance benchmarks")
-   Example: "JWT vs API key performance comparison"
-   ```
-
-3. **Security focus**
-
-   ```text
-   search_web("OWASP [Feature] security 2025")
-   Example: "OWASP API security authentication 2025"
-   ```
-
-4. **Real-world examples**
-
-   ```text
-   search_web("[Technology] production examples [Feature]")
-   Example: "Python JWT production examples authentication"
-   ```
-
-5. **Recent updates**
-
-   ```text
-   search_web("[Library] security vulnerabilities CVE 2024 2025")
-   Example: "bcrypt security vulnerabilities CVE 2024 2025"
-   ```
-
-### 3.2 Document Findings
-
-**For each search:**
-
+**Per search:**
 ```markdown
-**Query:** [Search query used]
-**Key Findings:**
-- [Finding 1 with source URL]
-- [Finding 2 with source URL]
-- [Finding 3 with source URL]
-
-**Recommendations:**
-- [Actionable recommendation]
+**Query:** [query]
+**Key Findings:** [3 findings with URLs]
+**Recommendations:** [actionable items]
 ```
 
-### 3.3 Compare Alternatives
-
-**Create comparison table:**
+### 4.3 Compare Alternatives
 
 | Approach | Pros | Cons | Use Case |
 |----------|------|------|----------|
-| API Keys | Simple, fast | Less secure than OAuth | Internal APIs, CLI tools |
-| JWT | Stateless, scalable | Complex setup | Web apps, microservices |
-| OAuth2 | Industry standard | Heavy implementation | Public APIs, 3rd party |
+| API Keys | Simple, fast | Less secure | Internal APIs, CLI |
+| JWT | Stateless, scalable | Complex | Web apps, microservices |
+| OAuth2 | Standard | Heavy | Public APIs, 3rd party |
 
-**Decision criteria:**
-
-- Project requirements
-- Complexity vs benefit
-- Security needs
-- Maintenance burden
+**Decision criteria:** Requirements, complexity vs benefit, security, maintenance
 
 ---
 
 ## Stage 5: Technical Assessment
 
-### 4.1 Dependency Analysis
+### 5.1 Dependency Analysis
 
-**For each library considered:**
-
+**Per library:**
 ```markdown
 **Library:** [name]
-- **Maintenance:** [Active? Last release?]
-- **Security:** [Known CVEs? Security policy?]
-- **License:** [Compatible with project?]
-- **Dependencies:** [What does it pull in?]
-- **Community:** [GitHub stars, downloads, issues]
+- Maintenance: [Active? Last release?]
+- Security: [CVEs? Policy?]
+- License: [Compatible?]
+- Dependencies: [What it pulls]
+- Community: [Stars, downloads]
 ```
 
-**Check with:**
+**Check:** `pip show [package]`, `search_web("[package] CVE")`
 
-```bash
-# PyPI package info
-pip show [package-name]
+### 5.2 Performance
 
-# Security advisories
-search_web("[package-name] security advisories CVE")
-```
+**Measure/estimate:** Latency, memory, CPU, caching
 
-### 4.2 Performance Considerations
-
-**Measure or estimate:**
-
-- Latency impact (ms per request)
-- Memory footprint
-- CPU usage
-- Caching opportunities
-
-### 4.3 Security Review
-
-**For security-sensitive features:**
+### 5.3 Security Review
 
 **Checklist:**
-
 - [ ] OWASP guidelines reviewed
-- [ ] Known vulnerabilities checked
+- [ ] Vulnerabilities checked
 - [ ] Input validation planned
 - [ ] Output sanitization planned
-- [ ] Authentication/authorization clear
+- [ ] Auth/authz clear
 - [ ] Audit logging included
 - [ ] Rate limiting considered
 
 ---
 
-## Stage 6: Compile Research Summary
-
-### Format Output
+## Stage 6: Compile Summary
 
 ```markdown
 # Research Summary: [Topic]
 
 **Date:** YYYY-MM-DD
-**Scope:** [What was researched]
-**Decision Needed:** [What needs to be decided]
-
----
+**Scope:** [What researched]
+**Decision:** [What needs deciding]
 
 ## Best Practices (2025)
+**Web:** [3 practices with URLs]
+**Project:** [2 internal patterns]
 
-**From web research:**
-1. [Practice 1] — [Source URL]
-2. [Practice 2] — [Source URL]
-3. [Practice 3] — [Source URL]
-
-**From project patterns:**
-1. [Internal pattern we already use]
-2. [Existing module that follows similar approach]
-
----
-
-## Recommended Approach
-
-**Recommendation:** [Specific approach to take]
-
-**Rationale:**
-- [Reason 1: aligns with best practices]
-- [Reason 2: fits project constraints]
-- [Reason 3: balances complexity vs benefit]
-
-**Alternatives Considered:**
-- [Alternative 1] — Rejected because [reason]
-- [Alternative 2] — Deferred to future phase because [reason]
-
----
+## Recommendation
+**Approach:** [Specific approach]
+**Rationale:** [3 reasons]
+**Alternatives:** [2 alternatives with rejection reasons]
 
 ## Libraries/Tools
+| Library | Version | Purpose | Why |
+|---------|---------|---------|-----|
+| [name] | [ver] | [use] | [justification] |
 
-| Library | Version | Purpose | Justification |
-|---------|---------|---------|---------------|
-| [name] | [version] | [use] | [why this one] |
+**Install:** `uv add [package]`
 
-**Installation:**
-```bash
-uv add [package-name]
-```
-
----
-
-## Implementation Considerations
-
-**Breaking Changes:**
-
-- [Change 1] — Mitigation: [approach]
-
-**Performance Impact:**
-
-- [Impact area] — Benchmark: [expected result]
-
-**Security Requirements:**
-
-- [Requirement 1] — Implementation: [how to satisfy]
-
----
+## Implementation
+**Breaking:** [changes + mitigation]
+**Performance:** [impact + benchmark]
+**Security:** [requirements + implementation]
 
 ## References
-
-**External:**
-
-- [URL 1] - [Description]
-- [URL 2] - [Description]
-
-**Internal:**
-
-- [filepath 1] - [Description]
-- [ADR-XXXX] - [Related decision]
-
-**Standards:**
-
-- OWASP [relevant guide]
-- RFC [relevant spec]
-
+**External:** [2 URLs]
+**Internal:** [2 filepaths/ADRs]
+**Standards:** [OWASP/RFC]
 ```
 
-**Print workflow exit:**
-
-```markdown
-✅ **Completed /research:** Research complete with [N] sources analyzed and recommendation provided
-```
+**Exit:** `✅ **Completed /research:** [N] sources analyzed, recommendation provided`
 
 ---
 
 ## Quality Checks
 
-### Research Completeness
+**Completeness:** Web search (current), internal patterns, security, performance, dependencies, alternatives, sources cited
 
-- [ ] Web search performed for current best practices
-- [ ] Internal patterns checked
-- [ ] Security considerations documented
-- [ ] Performance impact assessed
-- [ ] Dependencies evaluated
-- [ ] Alternatives compared
-- [ ] Sources cited with URLs
-
-### Decision Readiness
-
-- [ ] Clear recommendation provided
-- [ ] Rationale explained
-- [ ] Trade-offs identified
-- [ ] Implementation path outlined
-- [ ] Risks documented
+**Decision Readiness:** Clear recommendation, rationale, trade-offs, implementation path, risks
 
 ---
 
 ## Anti-Patterns
 
-| Anti-Pattern | Bad | Good |
-|--------------|-----|------|
-| **Skip Web Research** | "I think we should use X" | "I researched X vs Y vs Z. X is best because [sources]" |
-| **Outdated Sources** | Using 2020 articles without checking | Prioritize 2024-2025 sources, note if using older |
-| **Ignore Security** | Pick fastest option without security review | Evaluate security implications first |
-| **Over-Research** | Spend 4 hours researching for 1-hour task | Research proportional to task complexity |
+| Don't | Do |
+|-------|----|
+| Skip web research | Research X vs Y vs Z with sources |
+| Use outdated sources | Prioritize 2024-2025, note if older |
+| Ignore security | Evaluate security first |
+| Over-research | Research proportional to complexity |
 
 ---
 
 ## Integration
 
-### Called By
+**Called By:** `/plan`, user (standalone)
+**Output:** Summary, recommendation, citations
 
-- `/plan` - During Stage 2 (Research & Discovery)
-- User - Standalone research tasks
+## References
 
-### Output
+- [OWASP](https://owasp.org/)
+- [PyPI](https://pypi.org/)
+- [CVE](https://cve.mitre.org/)
+- [RFC](https://www.rfc-editor.org/)
 
-- Research summary (markdown format)
-- Recommendation with rationale
-- Source citations
-
----
-
-## External References
-
-- OWASP Top 10: <https://owasp.org/>
-- Python Package Index (PyPI): <https://pypi.org/>
-- Common Vulnerabilities (CVE): <https://cve.mitre.org/>
-- RFC Standards: <https://www.rfc-editor.org/>
+**Version:** v2.0-intelligent-semantic-preservation
+**Last Updated:** 2025-10-21
