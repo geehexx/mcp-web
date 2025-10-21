@@ -1,7 +1,7 @@
 ---
 trigger: glob
 description: Windsurf directory structure enforcement frontmatter format
-globs: ".windsurf/**/*.md, .windsurf/**/*.json"
+globs: .windsurf/**/*.md, .windsurf/**/*.json
 ---
 
 # .windsurf Directory Structure

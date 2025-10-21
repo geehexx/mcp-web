@@ -195,12 +195,13 @@ a0d748e docs(initiative): mark windsurf rules revamp as completed
 
 ### Key Learnings
 
-1. **Windsurf frontmatter is MINIMAL** - Only `trigger` + conditional fields
-2. **Globs must be quoted** - YAML parsing requirement
-3. **model_decision + globs are mutually exclusive** - Cannot coexist
-4. **12KB limit is strict** - Must trim aggressively for compliance
-5. **Hybrid loading is powerful** - Best of automatic + explicit
-6. **`.windsurf/docs` must be removed** - Content belongs in rules with proper triggers
+1. **Windsurf frontmatter is MINIMAL** - Only `trigger` + conditional fields (description/globs)
+2. **Globs must be UNQUOTED** - Windsurf-specific format: `globs: *.py, **/*.py` NOT `"*.py, **/*.py"`
+3. **Validation scripts need Windsurf-specific handling** - Standard YAML parsers fail on unquoted globs with `*`
+4. **model_decision + globs are mutually exclusive** - Cannot coexist
+5. **12KB limit is strict** - Must trim aggressively for compliance
+6. **Hybrid approach is powerful** - Best of automatic + explicit
+7. **`.windsurf/docs` must be removed** - Content belongs in rules with proper triggers
 
 ### References
 

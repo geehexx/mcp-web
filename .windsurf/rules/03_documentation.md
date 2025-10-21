@@ -1,7 +1,7 @@
 ---
 trigger: glob
 description: Documentation standards markdown ADRs initiatives
-globs: "docs/**/*.md, *.md, README.md"
+globs: docs/**/*.md, *.md, README.md
 ---
 
 # Documentation Standards & Management

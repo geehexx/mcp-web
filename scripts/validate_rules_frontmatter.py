@@ -44,11 +44,31 @@ def validate_rule_file(file_path: Path) -> list[str]:
         # Find the closing ---
         end_idx = content.index("\n---\n", 4)
         yaml_content = content[4:end_idx]
-        frontmatter = yaml.safe_load(yaml_content)
+
+        # Windsurf accepts unquoted globs, but YAML doesn't
+        # Parse with lenient handling for glob lines
+        frontmatter = {}
+        for line in yaml_content.strip().split("\n"):
+            if ":" in line:
+                key, value = line.split(":", 1)
+                key = key.strip()
+                value = value.strip()
+                # For globs, accept unquoted format (Windsurf-specific)
+                if key == "globs":
+                    frontmatter[key] = value  # Keep raw value
+                else:
+                    # Parse as YAML for other fields
+                    try:
+                        parsed = yaml.safe_load(f"{key}: {value}")
+                        if parsed:
+                            frontmatter.update(parsed)
+                    except yaml.YAMLError:
+                        # Fallback to raw string
+                        frontmatter[key] = value
     except ValueError:
         return [f"{file_path}: Malformed YAML front-matter (missing closing ---)"]
-    except yaml.YAMLError as e:
-        return [f"{file_path}: Invalid YAML front-matter: {e}"]
+    except Exception as e:
+        return [f"{file_path}: Invalid front-matter: {e}"]
 
     if not isinstance(frontmatter, dict):
         return [f"{file_path}: Front-matter must be a YAML dictionary"]

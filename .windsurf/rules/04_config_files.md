@@ -1,7 +1,7 @@
 ---
 trigger: glob
 description: Configuration file best practices TOML YAML Taskfile
-globs: "pyproject.toml, *.ini, Taskfile.yml, .pre-commit-config.yaml"
+globs: pyproject.toml, *.ini, Taskfile.yml, .pre-commit-config.yaml
 ---
 
 # Configuration File Standards

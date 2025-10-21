@@ -1,7 +1,7 @@
 ---
 trigger: glob
 description: Testing standards pytest fixtures TDD practices
-globs: "tests/**/*.py, test_*.py, *_test.py, conftest.py"
+globs: tests/**/*.py, test_*.py, *_test.py, conftest.py
 ---
 
 # Testing Standards
