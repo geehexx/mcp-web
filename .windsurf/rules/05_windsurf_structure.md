@@ -10,6 +10,36 @@ globs: .windsurf/**/*.md, .windsurf/**/*.json
 
 ---
 
+## MCP Tool Selection for .windsurf/ Files
+
+**CRITICAL:** Always use MCP filesystem tools when editing files in `.windsurf/` directory.
+
+### Required Tools
+
+| Operation | Tool | Example |
+|-----------|------|----------|
+| Read | `mcp0_read_text_file` | `mcp0_read_text_file("/home/gxx/projects/mcp-web/.windsurf/workflows/work.md")` |
+| Write (create/overwrite) | `mcp0_write_file` | `mcp0_write_file("/home/gxx/projects/mcp-web/.windsurf/rules/new.md", content)` |
+| Edit | `mcp0_edit_file` | `mcp0_edit_file("/home/gxx/projects/mcp-web/.windsurf/workflows/commit.md", edits)` |
+| Delete | Command-line `rm` | MCP doesn't support delete |
+
+### Decision Tree
+
+```text
+Is file in .windsurf/ directory?
+│
+├── YES → Use MCP tools (mcp0_*)
+│   ├─ MUST use absolute path: /home/gxx/projects/mcp-web/.windsurf/...
+│   └─ Never use relative paths like .windsurf/...
+│
+└── NO → Use standard tools (read_file, edit, write_to_file)
+    └─ Can use relative or absolute paths
+```
+
+**Rationale:** The `.windsurf/` directory is protected and requires MCP tools for reliable access.
+
+---
+
 ## Directory Rules
 
 ### Approved Directories
@@ -194,8 +224,9 @@ File naming is validated on every commit via `ls-lint` pre-commit hook.
 
 **Topics Covered:**
 
+- MCP tool selection for .windsurf/ files (CRITICAL)
 - Directory structure
-- Forbidden files
+- File naming conventions
 - Frontmatter format
 - Validation
 

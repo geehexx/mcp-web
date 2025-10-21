@@ -1,45 +1,21 @@
 ---
-trigger: glob
-description: Apply when editing .windsurf/ files or moving archiving reorganizing files
-globs: .windsurf/**/*.md, .windsurf/**/*.json
+trigger: model_decision
+description: Apply when moving archiving or reorganizing files
 ---
 
 # File Operations and Archival
 
-## 1.1 Tool Selection
+**Purpose:** Guidance for file operations, initiative structure, and archival procedures.
 
-**Protected directories (.windsurf/):** ALWAYS use MCP filesystem tools for files in `.windsurf/` directory
+**Note:** For `.windsurf/` file editing, see `05_windsurf_structure.md` for MCP tool requirements.
 
-- `mcp0_read_text_file` for reading
-- `mcp0_write_file` for creating/overwriting
-- `mcp0_edit_file` for editing
-- Deletions: Use command-line `rm` (MCP doesn't support delete)
+---
 
-**Regular files:** Standard `read_file`, `edit`, `write_to_file` tools
-
-**Fallback strategy:** If standard tools fail on protected files, immediately retry with `mcp0_*` tools
-
-**CRITICAL: MCP tools require ABSOLUTE paths** - Always use `/home/gxx/projects/mcp-web/...` format, never relative paths like `docs/...`
-
-### 1.2 Tool Selection Decision Tree
-
-```text
-Is file in .windsurf/ directory?
-│
-├── YES → Use MCP tools (mcp0_*)
-│   ├─ Use absolute path: /home/gxx/projects/mcp-web/.windsurf/...
-│   └─ Example: mcp0_read_text_file("/home/gxx/projects/mcp-web/.windsurf/workflows/work.md")
-│
-└── NO → Use standard tools
-    ├─ Can use relative path: docs/file.md
-    └─ Example: read_file("docs/file.md")
-```
-
-### 1.3 Initiative Structure Decision Tree
+## 1.1 Initiative Structure Decision Tree
 
 **Use scaffolding system when creating new initiatives:** `task scaffold:initiative`
 
-#### Decision: Flat File vs Folder Structure
+### Decision: Flat File vs Folder Structure
 
 ```text
 Does initiative meet ANY of these criteria?
@@ -69,7 +45,7 @@ Does initiative meet ANY of these criteria?
 
 **NEVER create both** - this violates ADR-0013.
 
-### 1.4 Artifact Management
+### 1.2 Artifact Management
 
 **Artifacts belong in initiative folders:**
 
@@ -110,7 +86,7 @@ docs/initiatives/active/YYYY-MM-DD-name/
 
 ---
 
-## Initiative Archival
+## 1.3 Initiative Archival
 
 **Use automation:** Always use `task archive:initiative NAME=<name>` for archival
 
@@ -129,7 +105,7 @@ docs/initiatives/active/YYYY-MM-DD-name/
 
 **File:** `08_file_operations.md`
 **Trigger:** model_decision
-**Estimated Tokens:** ~2,000
+**Estimated Tokens:** ~1,500
 **Last Updated:** 2025-10-21
 **Status:** Active
 
@@ -137,10 +113,10 @@ docs/initiatives/active/YYYY-MM-DD-name/
 
 **Topics Covered:**
 
-- File moves
+- Initiative structure decision (flat vs folder)
+- Artifact management
 - Initiative archival
-- Cross-reference updates
-- MCP vs standard tools
+- File organization
 
 **Workflow References:**
 
@@ -149,8 +125,10 @@ docs/initiatives/active/YYYY-MM-DD-name/
 
 **Dependencies:**
 
+- Related: 05_windsurf_structure.md (for .windsurf/ file tool selection)
 - Source: 06_context_engineering.md (File Operations section)
 
 **Changelog:**
 
 - 2025-10-21: Created from 06_context_engineering.md
+- 2025-10-21: Moved MCP tool selection to 05_windsurf_structure.md, changed trigger to model_decision
