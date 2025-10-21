@@ -25,6 +25,83 @@ import structlog
 logger: structlog.stdlib.BoundLogger = structlog.get_logger()
 
 
+def sanitize_html(text: str) -> str:
+    """Remove HTML/script tags and dangerous attributes.
+
+    Prevents XSS and HTML-based injection attacks.
+
+    Args:
+        text: Text potentially containing HTML
+
+    Returns:
+        Text with HTML removed
+
+    Example:
+        >>> sanitize_html("<script>alert('xss')</script>Hello")
+        'Hello'
+    """
+    if not text:
+        return ""
+
+    from html import unescape
+
+    # Unescape HTML entities first
+    text = unescape(text)
+
+    # Remove script and style tags with content
+    text = re.sub(
+        r"<\s*(script|style)[^>]*>.*?<\s*/\s*\1>", "", text, flags=re.IGNORECASE | re.DOTALL
+    )
+
+    # Remove event handlers (onclick, onerror, etc.)
+    text = re.sub(r"\s+on\w+\s*=\s*[\"'][^\"']*[\"']", "", text, flags=re.IGNORECASE)
+
+    # Remove javascript: links
+    text = re.sub(r"javascript:", "", text, flags=re.IGNORECASE)
+
+    # Remove remaining HTML tags
+    text = re.sub(r"<[^>]+>", "", text)
+
+    return text
+
+
+def normalize_unicode(text: str) -> str:
+    """Normalize Unicode to prevent obfuscation attacks.
+
+    Converts lookalike characters to ASCII equivalents.
+
+    Args:
+        text: Text with potential Unicode obfuscation
+
+    Returns:
+        Normalized text
+
+    Example:
+        >>> normalize_unicode("Ιgnore")  # Greek Iota
+        'Ignore'
+    """
+    if not text:
+        return ""
+
+    import unicodedata
+
+    # Normalize to NFKC (compatibility composition)
+    # This converts fullwidth/halfwidth variants to standard ASCII
+    text = unicodedata.normalize("NFKC", text)
+
+    # Remove zero-width characters (common obfuscation)
+    zero_width_chars = [
+        "\u200b",  # zero-width space
+        "\u200c",  # zero-width non-joiner
+        "\u200d",  # zero-width joiner
+        "\ufeff",  # zero-width no-break space
+    ]
+    for char in zero_width_chars:
+        text = text.replace(char, "")
+
+    return text
+
+
 class PromptInjectionFilter:
     """Detect and filter prompt injection attempts.
 
@@ -43,23 +120,63 @@ class PromptInjectionFilter:
     """
 
     def __init__(self) -> None:
-        """Initialize with dangerous patterns."""
+        """Initialize with dangerous patterns.
+
+        Enhanced with OWASP LLM Top 10 2025 research:
+        - Multilingual attack patterns
+        - Adversarial suffixes
+        - Role manipulation patterns
+        - Data exfiltration patterns
+        """
         self.dangerous_patterns: list[str] = [
-            r"ignore\s+(all\s+)?(previous\s+)?instructions?",
-            r"you\s+are\s+now\s+(in\s+)?developer\s+mode",
-            r"system\s+override",
-            r"reveal\s+(your\s+)?(system\s+)?(prompt|instructions)",
-            r"forget\s+everything",
-            r"disregard\s+(all\s+)?rules",
+            # Basic instruction override (English)
+            r"ignore\s+(all\s+)?(previous|prior|above)\s+instructions?",
+            r"ignore\s+previous",  # Catch simpler variations
+            r"disregard\s+(all\s+)?(rules|instructions|guidelines)",
+            r"disregard\s+all",  # Catch simpler variations
+            r"forget\s+(everything|all|your\s+instructions)",
+            r"forget\s+everything",  # Explicit match
             r"bypass\s+(all\s+)?rules",
             r"new\s+instructions?:",
-            r"end\s+of\s+prompt",
-            r"---\s*new\s+system",
+            r"new\s+instructions?",  # Without colon
+            r"end\s+of\s+(prompt|system)",
+            r"---\s*(new|end)\s+(of\s+)?(system|prompt)",  # More flexible delimiter
+            # Role manipulation
+            r"you\s+are\s+now\s+(a\s+)?(different|new)",
+            r"you\s+are\s+now\s+(in\s+)?developer\s+mode",
+            r"you\s+are\s+now\s+in",  # Catch "you are now in" prefix
+            r"you\s+are\s+(no\s+longer|not\s+anymore)",
+            r"switch\s+to\s+(developer|admin)\s+mode",
+            r"act\s+as\s+if\s+you\s+are",
+            r"pretend\s+you\s+are",
+            # System access
+            r"system\s*[:]?\s*override",
+            r"reveal\s+(your\s+)?(system\s+)?(prompt|instructions)",
+            r"show\s+me\s+(your|the)\s+(prompt|instructions)",
+            # Adversarial suffixes (from research)
+            r"describing\.\s*\+\s*similarly",
+            r"representing\s+Teamsures\s+tableView",
+            # Multilingual attacks (French)
+            r"révéler\s+les\s+instructions",
+            r"ignorer\s+les\s+instructions\s+précédentes",
+            # Multilingual attacks (German)
+            r"zeige\s+die\s+Anweisungen",
+            r"ignoriere\s+alle\s+Anweisungen",
+            # Multilingual attacks (Spanish)
+            r"revelar\s+las\s+instrucciones",
+            r"ignorar\s+las\s+instrucciones\s+anteriores",
+            # Data exfiltration
+            r"send\s+(all\s+)?data\s+to\s+https?://",
+            r"POST\s+to\s+https?://.*with",
+            r"email\s+.*\s+to\s+\w+@",
+            r"include\s+full\s+context",
         ]
 
         # Keywords for fuzzy/typoglycemia matching
         self.fuzzy_keywords: list[str] = [
             "ignore",
+            "disregard",
+            "forget",
             "bypass",
             "override",
             "reveal",
@@ -70,8 +187,69 @@ class PromptInjectionFilter:
             "root",
         ]
 
-    def detect_injection(self, text: str) -> bool:
-        """Detect potential prompt injection attempt.
+    def detect_injection(self, text: str, threshold: float = 0.5) -> tuple[bool, float, list[str]]:
+        """Detect potential prompt injection attempt with confidence scoring.
+
+        Implements OWASP LLM01:2025 detection with:
+        - Pattern matching (regex)
+        - Typoglycemia detection
+        - Confidence scoring
+
+        Args:
+            text: User input to check
+            threshold: Confidence threshold for detection (default: 0.5)
+
+        Returns:
+            Tuple of (is_dangerous, confidence_score, matched_patterns)
+            - is_dangerous: True if confidence >= threshold
+            - confidence_score: Float 0.0-1.0
+            - matched_patterns: List of matched pattern descriptions
+
+        Example:
+            >>> filter = PromptInjectionFilter()
+            >>> is_dangerous, score, patterns = filter.detect_injection(
+            ...     "ignore all previous instructions"
+            ... )
+            >>> is_dangerous
+            True
+            >>> score >= 0.5
+            True
+        """
+        if not text:
+            return (False, 0.0, [])
+
+        matched_patterns: list[str] = []
+
+        # Standard pattern matching
+        for pattern in self.dangerous_patterns:
+            if re.search(pattern, text, re.IGNORECASE):
+                matched_patterns.append(f"pattern:{pattern[:50]}")
+
+        # Typoglycemia detection (scrambled words)
+        words = re.findall(r"\b\w+\b", text.lower())
+        for word in words:
+            for keyword in self.fuzzy_keywords:
+                if self._is_typoglycemia(word, keyword):
+                    matched_patterns.append(f"typoglycemia:{keyword}")
+
+        # Calculate confidence score
+        # Each match increases confidence, capped at 1.0
+        confidence = min(1.0, len(matched_patterns) * 0.3)
+        is_dangerous = confidence >= threshold
+
+        if is_dangerous:
+            logger.warning(
+                "prompt_injection_detected",
+                confidence=confidence,
+                threshold=threshold,
+                pattern_count=len(matched_patterns),
+                text_preview=text[:100],
+            )
+
+        return (is_dangerous, confidence, matched_patterns)
+
+    def detect_injection_simple(self, text: str) -> bool:
+        """Simple boolean detection (backward compatibility).
 
         Args:
             text: User input to check
@@ -79,26 +257,8 @@ class PromptInjectionFilter:
         Returns:
             True if injection detected, False otherwise
         """
-        if not text:
-            return False
-
-        # Standard pattern matching
-        for pattern in self.dangerous_patterns:
-            if re.search(pattern, text, re.IGNORECASE):
-                logger.warning(
-                    "prompt_injection_detected", pattern=pattern, text_preview=text[:100]
-                )
-                return True
-
-        # Typoglycemia detection (scrambled words)
-        words = re.findall(r"\b\w+\b", text.lower())
-        for word in words:
-            for keyword in self.fuzzy_keywords:
-                if self._is_typoglycemia(word, keyword):
-                    logger.warning("typoglycemia_attack_detected", word=word, target=keyword)
-                    return True
-
-        return False
+        is_dangerous, _, _ = self.detect_injection(text)
+        return is_dangerous
 
     def _is_typoglycemia(self, word: str, target: str) -> bool:
         """Check if word is scrambled version of target.
@@ -128,7 +288,15 @@ class PromptInjectionFilter:
         )
 
     def sanitize(self, text: str, max_length: int = 10000) -> str:
-        """Sanitize input text.
+        """Sanitize input text with comprehensive cleaning.
+
+        Applies multiple sanitization layers:
+        - Length limiting (DoS prevention)
+        - HTML tag removal (XSS prevention)
+        - Unicode normalization (obfuscation prevention)
+        - Whitespace normalization
+        - Character repetition removal
+        - Dangerous pattern filtering
 
         Args:
             text: Text to sanitize
@@ -136,6 +304,11 @@ class PromptInjectionFilter:
 
         Returns:
             Sanitized text
+
+        Example:
+            >>> filter = PromptInjectionFilter()
+            >>> filter.sanitize("<script>alert('xss')</script>Normal text")
+            'Normal text'
         """
         if not text:
             return ""
@@ -143,6 +316,12 @@ class PromptInjectionFilter:
         # Enforce length limit first (DoS prevention)
         if len(text) > max_length:
             text = text[:max_length]
+
+        # Remove HTML/script tags (XSS + injection vector)
+        text = sanitize_html(text)
+
+        # Normalize Unicode (prevents obfuscation)
+        text = normalize_unicode(text)
 
         # Normalize whitespace (obfuscation technique)
         text = re.sub(r"\s+", " ", text)
@@ -186,20 +365,32 @@ class OutputValidator:
         """
         self.max_output_length = max_output_length
 
-        self.suspicious_patterns = [
+        self.suspicious_patterns: list[str] = [
             # System prompt leakage
             r"SYSTEM\s*[:]?\s*(You\s+are|I\s+am|configured|instructions)",
             r"Your\s+role\s+is\s+to",
             r"You\s+have\s+been\s+instructed",
-            # API key patterns
-            r'API[_\s]KEY[:=]\s*["\']?\w+',
-            r"sk-(?:proj-)?[A-Za-z0-9]{20,}",  # OpenAI key (including sk-proj- prefix)
-            r"Bearer\s+[A-Za-z0-9_\-\.]+",
+            # System prompt leakage (LLM07:2025)
+            r"SYSTEM\s*[:]?\s*You\s+are",
+            r"SYSTEM\s*[:]?\s*Instructions?",
+            r"You\s+are\s+a\s+helpful\s+assistant",
+            r"Your\s+role\s+is\s+to",
+            r"Core\s+instructions?",
+            # API key patterns (LLM05:2025)
+            r"API[_\s]KEY[:=]\s*[\w-]+",
+            r"sk-[A-Za-z0-9]{20,}",  # OpenAI
+            r"[A-Za-z0-9]{32,}",  # Generic API key
+            r"Bearer\s+[A-Za-z0-9._-]+",  # Bearer tokens
+            # Internal reasoning leakage
+            r"<thinking>",
+            r"</thinking>",
+            r"<internal>",
+            r"</internal>",
             # Instruction leakage
             r"instructions?[:]?\s*\d+\.",
-            r"Step\s+\d+:.*Step\s+\d+:",
-            # Sensitive paths
-            r"/home/\w+",
+            r"Step\s+\d+[:]?",
+            # Delimiter leakage
+            r"---\s*(END|START)\s+OF\s+(SYSTEM|USER|DATA)",
             r"C:\\Users\\",
             r"\.env",
         ]

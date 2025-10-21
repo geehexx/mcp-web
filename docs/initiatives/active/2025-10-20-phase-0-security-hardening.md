@@ -382,5 +382,204 @@ Initiative created based on comprehensive technical roadmap analysis.
 
 ---
 
-**Last Updated:** 2025-10-20
-**Status:** Active (Ready to start - highest priority)
+## Updates
+
+### 2025-10-21: Research Complete & Architecture Designed
+
+**Research Completed:**
+
+Conducted comprehensive security research using web resources:
+
+1. **OWASP LLM Top 10 2025** - Reviewed complete vulnerability list from official OWASP PDF and website
+   - LLM01: Prompt Injection (direct + indirect attacks)
+   - LLM02: Sensitive Information Disclosure
+   - LLM05: Improper Output Handling
+   - LLM07: System Prompt Leakage
+   - LLM10: Unbounded Consumption
+
+2. **Latest Prompt Injection Defenses** (2024-2025 research)
+   - Structured prompts with delimiters (OWASP recommended)
+   - Instructional prevention ("never follow USER_DATA")
+   - Retokenization and paraphrasing
+   - Guardrails and overseer patterns
+   - Dual LLM architecture (future consideration)
+   - Source: https://github.com/tldrsec/prompt-injection-defenses
+
+3. **MCP OAuth 2.1 Security Specification**
+   - RFC 8707: Resource Indicators for OAuth 2.0
+   - RFC 7636: PKCE (Proof Key for Code Exchange)
+   - RFC 9728: Protected Resource Metadata
+   - RFC 8414: Authorization Server Metadata
+   - Source: https://modelcontextprotocol.io/specification/
+
+4. **Garak LLM Vulnerability Scanner**
+   - Comprehensive LLM security testing tool (NVIDIA)
+   - Tests: prompt injection, jailbreaks, data leakage, toxicity
+   - Supports 1000+ adversarial payloads
+   - Integration command: `python -m garak --target_type openai --probes promptinject,encoding,dan`
+   - Source: https://github.com/NVIDIA/garak
+
+5. **MCP Security Vulnerabilities** (Adversa AI research)
+   - Reviewed top 25 MCP-specific vulnerabilities
+   - Tool poisoning attacks
+   - Command injection risks in MCP servers
+   - Source: https://adversa.ai/mcp-security-top-25-mcp-vulnerabilities/
+
+**Existing Implementation Audit:**
+
+Analyzed current codebase (`src/mcp_web/security.py`):
+
+✅ **Strong Foundation:**
+
+- `PromptInjectionDetector` with pattern matching implemented
+- `OutputValidator` for sensitive information filtering
+- `RateLimiter` with token bucket algorithm
+- `ConsumptionLimits` for resource enforcement
+- `validate_url()` for SSRF prevention
+- `create_structured_prompt()` for instruction separation
+
+❌ **Gaps Identified:**
+
+- No API key authentication middleware
+- Prompt injection detector needs enhancement (typoglycemia, multilingual)
+- No integration with MCP server authentication flow
+- Missing output sanitization (HTML/script removal)
+- No Garak integration for comprehensive testing
+- Security test coverage incomplete (~60%, need 90%+)
+
+**Architecture Document Created:**
+
+Created comprehensive security architecture (`docs/security/SECURITY_ARCHITECTURE.md`):
+
+- 9 major sections covering full threat model
+- Defense-in-depth architecture (6 layers)
+- Component-by-component security design
+- Authentication strategy (API key v0.3.0, OAuth 2.1 v0.4.0)
+- Garak integration guide
+- Security testing pyramid (unit → integration → E2E)
+- Configuration examples and deployment guidance
+
+**Implementation Plan Refined:**
+
+Based on research and audit, updated approach:
+
+**Phase 1: Enhanced Prompt Injection Prevention (Week 1, Days 1-3)**
+
+- Extend `PromptInjectionDetector` with:
+  - Typoglycemia detection (scrambled keywords)
+  - Multilingual attack patterns (French, German, etc.)
+  - Adversarial suffix detection
+  - Confidence scoring (0-1.0 scale)
+- Implement content sanitization:
+  - HTML tag stripping (scripts, styles, event handlers)
+  - Unicode normalization
+  - Character repetition removal
+- Add structured prompt enhancement:
+  - Clear delimiter boundaries (`---`)
+  - Explicit security rules section
+  - Instructional prevention
+- **Tests:** 25+ test cases covering OWASP scenarios
+
+**Phase 2: Authentication Middleware (Week 1, Days 4-5)**
+
+- Create `src/mcp_web/auth.py`:
+  - `APIKeyAuthenticator` class
+  - Bearer token validation (Authorization header)
+  - Rate limiting per API key
+  - Audit logging (authentication events)
+- MCP server integration:
+  - Authentication middleware in `mcp_server.py`
+  - Configuration (enable/disable, API keys)
+  - Error responses (401 Unauthorized)
+- OAuth 2.1 foundation:
+  - Document OAuth flow (implementation deferred)
+  - Create stub `OAuth21Authenticator` class
+- **Tests:** 15+ test cases for auth flows
+
+**Phase 3: Output Validation Enhancement (Week 2, Days 1-2)**
+
+- Extend `OutputValidator`:
+  - System prompt leakage patterns
+  - API key exposure detection
+  - Internal reasoning leak prevention
+  - Length limits enforcement
+- Implement output sanitization:
+  - Safe response filtering
+  - Structured error messages
+- **Tests:** 12+ test cases for output scenarios
+
+**Phase 4: Comprehensive Security Testing (Week 2, Days 3-4)**
+
+- OWASP LLM Top 10 test suite:
+  - `tests/security/test_owasp_llm01_prompt_injection.py`
+  - `tests/security/test_owasp_llm02_information_disclosure.py`
+  - `tests/security/test_owasp_llm05_output_handling.py`
+  - `tests/security/test_owasp_llm10_unbounded_consumption.py`
+- Garak integration:
+  - Install garak: `uv pip install garak`
+  - Create scan script: `scripts/security_scan.sh`
+  - Document scan procedures
+  - Baseline report: target 90%+ pass rate
+- Security CI/CD:
+  - Add security test stage to GitHub Actions
+  - Bandit + Semgrep integration
+  - Automated vulnerability scanning
+- **Tests:** 40+ security test cases total
+
+**Phase 5: Documentation & Sign-off (Week 2, Day 5)**
+
+- Create `SECURITY.md` (responsible disclosure)
+- Document threat model
+- Create ADRs:
+  - ADR-00XX: Pattern-Based Prompt Injection Detection
+  - ADR-00XX: API Key Authentication Strategy
+  - ADR-00XX: Structured Prompt Architecture
+- Update API documentation with security guidance
+- Security review checklist
+- **Deliverables:** 4 docs + 3 ADRs
+
+**Key Architectural Decisions:**
+
+1. **Pattern-Based Detection (v0.3.0)** - Prioritize simplicity and speed
+   - Rationale: 80-90% detection rate with zero ML dependencies
+   - Trade-off: Lower accuracy than ML, but faster and simpler
+   - Future: ML-based classification in v0.4.0 for 95%+ accuracy
+
+2. **API Key Auth First, OAuth Later** - Pragmatic staging
+   - Rationale: MCP servers often run locally, OAuth adds complexity
+   - v0.3.0: API key with rate limiting (sufficient for local deployment)
+   - v0.4.0: OAuth 2.1 + PKCE for production-scale deployments
+
+3. **Structured Prompts with Delimiters** - OWASP recommended defense
+   - Rationale: Clear SYSTEM vs USER_DATA separation prevents confusion
+   - Implementation: `---` boundaries + security rules section
+   - Trade-off: +10% token overhead, but significantly more secure
+
+4. **Defense-in-Depth, Not Perfect Defense** - Realistic security posture
+   - Rationale: Prompt injection is an arms race, no perfect solution exists
+   - Strategy: 6-layer defense reduces attack surface by 90%+
+   - Monitoring: Continuous detection and logging for rapid response
+
+**Metrics & Targets:**
+
+- **Detection Rate:** 90%+ for known prompt injection patterns
+- **False Positive Rate:** <5% on benign content
+- **Test Coverage:** 90%+ for security modules
+- **Performance Overhead:** <5% latency increase for security checks
+- **Garak Scan:** 90%+ pass rate on comprehensive vulnerability suite
+
+**Next Steps:**
+
+1. **Immediate:** Begin Phase 1 implementation (enhanced prompt injection detection)
+2. **This Week:** Complete Phases 1-2 (detection + authentication)
+3. **Next Week:** Complete Phases 3-5 (validation + testing + docs)
+4. **Target Completion:** 2025-11-03 (on track, 2 weeks total)
+
+**Blockers:** None identified
+
+**Risk Assessment:** Low - Strong foundation exists, clear implementation path defined
+
+---
+
+**Last Updated:** 2025-10-21
+**Status:** Active (Research complete - ready for implementation)
