@@ -84,6 +84,58 @@ docs/initiatives/active/YYYY-MM-DD-name/
 3. **Archived:** Moved with initiative to `docs/initiatives/completed/`
 4. **Never standalone:** Always part of initiative folder
 
+### 1.2.1 Temporary File Usage (/tmp/)
+
+**Policy:** Minimize use of `/tmp/` for artifacts. Only use exceptionally.
+
+**When /tmp/ is acceptable:**
+
+- **Config files for scaffolding:** Short-lived config files passed to scripts
+  ```bash
+  # OK: Temporary config for scaffolding
+  python scripts/scaffold.py --type initiative --config /tmp/config.yaml
+  ```
+
+- **Transient processing:** Intermediate files deleted immediately after use
+  ```python
+  # OK: Temporary file with cleanup
+  with temporary_file("/tmp/temp.txt") as temp:
+      process(temp)  # File auto-deleted
+  ```
+
+**When /tmp/ is NOT acceptable:**
+
+- ❌ **Analysis artifacts:** Research, comparisons, validation reports
+- ❌ **POC results:** Proof-of-concept findings and metrics
+- ❌ **Session work products:** Any file needed for review or continuation
+- ❌ **Long-lived references:** Files referenced in commits or documentation
+
+**Best Practice:**
+
+```text
+✅ CORRECT:
+docs/initiatives/active/my-initiative/
+└── artifacts/
+    ├── analysis.md
+    ├── poc-results.md
+    └── comparison.md
+
+❌ WRONG:
+/tmp/
+├── analysis.md
+├── poc-results.md
+└── comparison.md
+```
+
+**Rationale:**
+- /tmp/ files lost on reboot
+- No version control
+- Hard to reference from commits
+- Lost context for future sessions
+- Cannot be reviewed by other agents
+
+**Migration:** If you created artifacts in /tmp/, move them to the initiative folder immediately.
+
 ---
 
 ## 1.3 Initiative Archival
