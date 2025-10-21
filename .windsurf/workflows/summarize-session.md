@@ -5,7 +5,7 @@ description: Generate formatted session summary from extracted data
 auto_execution_mode: 3
 category: Analysis
 complexity: 55
-tokens: 1430
+tokens: 2075
 dependencies:
   - extract-session
 status: active

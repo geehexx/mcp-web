@@ -1,7 +1,9 @@
 ---
 trigger: glob
 description: Python code style type hints async patterns and best practices
-globs: *.py, **/*.py
+globs:
+  - "*.py"
+  - "**/*.py"
 ---
 
 # Python Code Standards

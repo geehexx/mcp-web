@@ -5,7 +5,7 @@ description: Git commit workflow with validation and review
 auto_execution_mode: 3
 category: Validation
 complexity: 55
-tokens: 1058
+tokens: 1812
 dependencies:
   - validate
 status: active

@@ -5,7 +5,7 @@ description: Batch load project context efficiently
 auto_execution_mode: 3
 category: Operations
 complexity: 65
-tokens: 1908
+tokens: 3454
 dependencies: []
 status: active
 ---

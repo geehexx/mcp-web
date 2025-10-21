@@ -6,7 +6,7 @@ auto_execution_mode: 3
 category: Sub-workflow
 parent: work.md
 complexity: 75
-tokens: 1372
+tokens: 2363
 dependencies:
   - archive-initiative
   - meta-analysis
@@ -427,7 +427,7 @@ Continuing...
 - Parent workflow: [work.md](./work.md)
 - Meta-analysis workflow: [meta-analysis.md](./meta-analysis.md)
 - Archive workflow: [archive-initiative.md](./archive-initiative.md)
-- Agent directives: [00_agent_directives.md](../rules/00_agent_directives.md) (Section 1.8)
+- Agent directives: [00_core_directives.md](../rules/00_core_directives.md) (Section 1.8)
 
 ---
 

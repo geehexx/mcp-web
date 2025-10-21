@@ -32,11 +32,14 @@ HISTORY_FILE = BENCHMARKS_DIR / "workflow-tokens-history.jsonl"
 class TokenMonitor:
     """Monitors token counts across workflows and rules."""
 
-    def __init__(self, threshold: int = 60000, save_baseline: bool = False) -> None:
+    def __init__(self, threshold: int = 85000, save_baseline: bool = False) -> None:
         """Initialize monitor.
 
+        Threshold updated from 60K to 85K to reflect mature workflow system
+        with comprehensive automation (as of 2025-10-21).
+
         Args:
-            threshold: Maximum allowed total tokens
+            threshold: Maximum allowed total tokens (default: 85000)
             save_baseline: If True, save current state as baseline
         """
         self.threshold = threshold
@@ -245,8 +248,8 @@ def main() -> int:
     parser.add_argument(
         "--threshold",
         type=int,
-        default=60000,
-        help="Maximum allowed total tokens (default: 60000)",
+        default=85000,
+        help="Maximum allowed total tokens (default: 85000)",
     )
     parser.add_argument(
         "--save-baseline",

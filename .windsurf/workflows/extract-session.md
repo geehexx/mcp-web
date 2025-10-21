@@ -5,7 +5,7 @@ description: Extract structured information from current session
 auto_execution_mode: 3
 category: Analysis
 complexity: 55
-tokens: 1196
+tokens: 2656
 dependencies: []
 status: active
 ---

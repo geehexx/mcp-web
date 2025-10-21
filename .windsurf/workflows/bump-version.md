@@ -5,7 +5,7 @@ description: Auto-bump version based on conventional commits
 auto_execution_mode: 3
 category: Automation
 complexity: 70
-tokens: 1789
+tokens: 2663
 dependencies: []
 status: active
 ---

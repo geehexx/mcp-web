@@ -2,8 +2,8 @@
 
 **Purpose:** Comprehensive guide for implementing adaptive dynamic planning in workflows.
 
-**Created:** 2025-10-20  
-**Related Initiative:** docs/initiatives/completed/2025-10-20-workflow-task-system-v3.md  
+**Created:** 2025-10-20
+**Related Initiative:** docs/initiatives/completed/2025-10-20-workflow-task-system-v3.md
 **Related Rules:** .windsurf/rules/07_task_system.md
 
 ---
@@ -121,13 +121,13 @@ def detect_phases(initiative_path: str) -> list[str]:
     """Extract phases from initiative markdown."""
     content = read_file(initiative_path)
     phases = []
-    
+
     for line in content.split('\n'):
         if line.startswith('### Phase '):
             # Extract: "### Phase 2: Integration (3-4h)" -> "Phase 2: Integration"
             phase_name = line.strip('#').strip()
             phases.append(phase_name)
-    
+
     return phases
 
 # Usage in /implement workflow
@@ -241,20 +241,20 @@ if (tests_pass && lint_clean && phase_complete) {
 def validate_phase_completion(phase_num: int) -> dict:
     """Automatically validate after phase completion."""
     results = {}
-    
+
     # Run tests
     test_result = run_command("task test:fast")
     results['tests'] = 'pass' if test_result.exit_code == 0 else 'fail'
     test_count = extract_test_count(test_result.output)
-    
+
     # Run linting
     lint_result = run_command("task lint")
     results['lint'] = 'pass' if lint_result.exit_code == 0 else 'fail'
-    
+
     # Type checking
     type_result = run_command("task lint:mypy")
     results['types'] = 'pass' if type_result.exit_code == 0 else 'fail'
-    
+
     # Print results (visibility, not a task)
     print(f"""
 📋 **Phase {phase_num} Complete - Validation Results**
@@ -262,7 +262,7 @@ def validate_phase_completion(phase_num: int) -> dict:
 {'✅' if results['lint'] == 'pass' else '❌'} Linting: {'Clean' if results['lint'] == 'pass' else 'Errors found'}
 {'✅' if results['types'] == 'pass' else '❌'} Type checking: {'No errors' if results['types'] == 'pass' else 'Errors found'}
     """)
-    
+
     return results
 ```
 
@@ -281,20 +281,20 @@ def validate_phase_completion(phase_num: int) -> dict:
 ```python
 def should_auto_commit(phase_num: int, total_phases: int, validation_results: dict) -> bool:
     """Decide if automatic commit is appropriate."""
-    
+
     # Must-have: All quality gates passed
     if validation_results['tests'] != 'pass':
         print("⏸️  Holding commit: Tests failing")
         return False
-    
+
     if validation_results['lint'] != 'pass':
         print("⏸️  Holding commit: Linting errors")
         return False
-    
+
     if validation_results['types'] != 'pass':
         print("⏸️  Holding commit: Type errors")
         return False
-    
+
     # Commit at phase boundaries
     print(f"💾 **Auto-committing:** Phase {phase_num}/{total_phases} complete")
     return True
@@ -333,7 +333,7 @@ if should_auto_commit(current_phase, total_phases, validation_results):
 
 ### The Autonomy Principle
 
-**Parent workflows:** Define WHAT needs to be done (deliverable)  
+**Parent workflows:** Define WHAT needs to be done (deliverable)
 **Child workflows:** Define HOW it will be done (breakdown)
 
 **Example:**
@@ -627,6 +627,6 @@ update_plan({  // In /implement when invoked
 
 ---
 
-**Last Updated:** 2025-10-20  
-**Version:** 1.0.0  
+**Last Updated:** 2025-10-20
+**Version:** 1.0.0
 **Maintainer:** Core Team

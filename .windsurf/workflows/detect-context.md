@@ -5,7 +5,7 @@ description: Intelligent context detection for work continuation
 auto_execution_mode: 3
 category: Operations
 complexity: 80
-tokens: 1617
+tokens: 3307
 dependencies: []
 status: active
 ---

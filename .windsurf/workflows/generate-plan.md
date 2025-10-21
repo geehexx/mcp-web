@@ -5,7 +5,7 @@ description: Generate structured implementation plan from research
 auto_execution_mode: 3
 category: Planning
 complexity: 60
-tokens: 1585
+tokens: 2941
 dependencies:
   - research
 status: active

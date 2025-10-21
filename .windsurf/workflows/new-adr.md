@@ -5,7 +5,7 @@ description: Create New Architecture Decision Record
 auto_execution_mode: 3
 category: Documentation
 complexity: 45
-tokens: 482
+tokens: 995
 dependencies: []
 status: active
 ---

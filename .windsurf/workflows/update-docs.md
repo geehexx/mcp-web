@@ -5,7 +5,7 @@ description: Update PROJECT_SUMMARY.md and CHANGELOG.md
 auto_execution_mode: 3
 category: Automation
 complexity: 55
-tokens: 1533
+tokens: 2335
 dependencies: []
 status: active
 ---
@@ -152,8 +152,8 @@ edit(
 # Update ADR list
 edit(
     file_path="/home/gxx/projects/mcp-web/PROJECT_SUMMARY.md",
-    old_string="- [ADR-0016](docs/adr/0016-title.md)",
-    new_string="- [ADR-0016](docs/adr/0016-title.md)\n- [ADR-0017](docs/adr/0017-new-decision.md)",
+    old_string="- ADR-0016: Previous Decision",
+    new_string="- ADR-0016: Previous Decision\n- ADR-0017: New Decision",
     explanation="Add new ADR reference"
 )
 ```

@@ -1,8 +1,8 @@
 # ADR-0018: Workflow Architecture V3 - Taxonomy and Principles
 
-**Status:** Implemented  
-**Date:** 2025-10-18  
-**Deciders:** @agent  
+**Status:** Implemented
+**Date:** 2025-10-18
+**Deciders:** @agent
 **Related:** [windsurf-workflows-v2-optimization.md](../initiatives/active/windsurf-workflows-v2-optimization.md), [2025-10-18-workflow-architecture-refactor.md](../initiatives/active/2025-10-18-workflow-architecture-refactor.md)
 
 ---

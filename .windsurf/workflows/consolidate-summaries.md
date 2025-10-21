@@ -5,7 +5,7 @@ description: Consolidate historical session summaries into daily comprehensive f
 auto_execution_mode: 3
 category: Analysis
 complexity: 70
-tokens: 2850
+tokens: 5758
 dependencies:
   - extract-session
   - summarize-session
@@ -83,12 +83,11 @@ ls -1 docs/archive/session-summaries/YYYY-MM-DD-*.md | wc -l
 
 ⚠️ **CRITICAL:** Use batch reading for efficiency. Reading files sequentially is 7x slower.
 
-Use [Batch Reading Pattern](/rules/07_context_optimization):
+Use [Batch Reading Pattern](../rules/07_context_optimization.md):
 mcp0_read_multiple_files([
     "/home/gxx/projects/mcp-web/docs/archive/session-summaries/YYYY-MM-DD-*.md",
 ])
 
-See [Tool Patterns Guide](/rules/15_tool_patterns) for optimal batch sizes (10-15 files).
 See [Tool Patterns Guide](../rules/15_tool_patterns.md) for optimal batch sizes (10-15 files).
 
 Extract from each: objectives, accomplishments, decisions, files modified, commits, learnings, unresolved issues, next steps

@@ -5,7 +5,7 @@ description: Archive completed initiative or handle superseded initiatives
 auto_execution_mode: 3
 category: Documentation
 complexity: 50
-tokens: 800
+tokens: 2302
 dependencies: ["scripts/validate_archival.py", "scripts/dependency_registry.py"]
 status: active
 version: 1.3.0
@@ -249,8 +249,8 @@ task archive:initiative NAME=[initiative-folder-name] COMPLETED_ON=YYYY-MM-DD
 **Date:** 2025-10-19
 
 ## What Replaced It
-- [Initiative A](../../initiative.md) - NOW work
-- [Initiative B](../../../other-initiative/initiative.md) - Future work
+- Initiative A (../../initiative.md) - NOW work
+- Initiative B (../../../other-initiative/initiative.md) - Future work
 
 ## What Was Preserved
 Original research in artifacts/ directory...

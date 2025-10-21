@@ -308,11 +308,11 @@ def should_auto_commit() -> bool:
     # Must-haves
     if not tests_passing() or not lint_clean():
         return False
-    
+
     # Logical completeness
     if phase_complete() or feature_working_end_to_end():
         return True
-    
+
     return False
 ```
 

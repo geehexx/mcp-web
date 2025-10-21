@@ -5,7 +5,7 @@ description: Intelligent work orchestration and context detection
 auto_execution_mode: 3
 category: Orchestrator
 complexity: 85
-tokens: 1313
+tokens: 1923
 dependencies:
   - detect-context
   - load-context
@@ -281,7 +281,7 @@ This workflow is decomposed into focused sub-workflows:
 - [detect-context.md](./detect-context.md) - Context detection
 - [load-context.md](./load-context.md) - Context loading
 - [meta-analysis.md](./meta-analysis.md) - Session summary
-- [00_agent_directives.md](../rules/00_agent_directives.md) - Section 1.8
+- [00_core_directives.md](../rules/00_core_directives.md) - Section 1.8
 
 ---
 

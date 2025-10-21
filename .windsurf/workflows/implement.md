@@ -5,7 +5,7 @@ description: Focused implementation with test-first approach
 auto_execution_mode: 3
 category: Implementation
 complexity: 75
-tokens: 2384
+tokens: 3832
 dependencies:
   - load-context
   - validate

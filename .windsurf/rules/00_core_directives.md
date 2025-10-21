@@ -24,7 +24,7 @@ When making any implementation decision, prioritize the following principles in 
 2. **Robustness & Testability:** Code must be deterministic where possible, with comprehensive test coverage (≥90%). All features require tests before implementation.
 3. **Performance & Scalability:** Design for concurrent operations with proper rate limiting. Tests should leverage parallelization (pytest-xdist) for IO-bound workloads.
 4. **Developer Experience:** Project structure, tooling (uv), and documentation must optimize for clarity and maintainability.
-5. **Task Transparency:** All non-trivial work (3+ steps or >5 min) must use the task system (`update_plan` tool) to provide visible progress tracking. See [07_task_system.md](./07_task_system.md).
+5. **Task Transparency:** All non-trivial work (3+ steps or >5 min) must use the task system (`update_plan` tool) to provide visible progress tracking. See [12_task_orchestration.md](./12_task_orchestration.md).
 6. **Agent Autonomy:** Execute workflows from start to finish. Present changes at checkpoints rather than requesting confirmation on minor steps.
 
 ---

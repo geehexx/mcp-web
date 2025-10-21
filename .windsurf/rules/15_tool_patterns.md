@@ -362,10 +362,9 @@ mcp0_edit_file({ path: "/home/gxx/projects/mcp-web/.windsurf/workflows/work.md",
 
 ## References
 
-- [automation-scripts.md](./automation-scripts.md) - Automation script reference
-- [06_context_engineering.md](./07_context_optimization.md) - File operations rules
-- [batch-operations.md](./15_tool_patterns.md (self-reference)) - Batch operation strategies
-- [context-loading-patterns.md](./07_context_optimization.md) - Context loading patterns
+- [14_automation_scripts.md](./14_automation_scripts.md) - Automation script reference
+- [07_context_optimization.md](./07_context_optimization.md) - File operations rules
+- [07_context_optimization.md](./07_context_optimization.md) - Context loading patterns
 - [MCP Filesystem Server Docs](https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem)
 - [Taskfile.yml](../../Taskfile.yml) - All available task commands
 

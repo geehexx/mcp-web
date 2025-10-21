@@ -197,7 +197,7 @@ File naming is validated on every commit via `ls-lint` pre-commit hook.
 
 - [generate_indexes.py](../../scripts/generate_indexes.py) - Index generation script
 - [.ls-lint.yml](../../.ls-lint.yml) - File naming enforcement
-- [frontmatter-schema.json](rules frontmatter (see any rule file for examples)) - Frontmatter validation
+- Frontmatter validation: See rule files for YAML frontmatter examples
 
 ---
 

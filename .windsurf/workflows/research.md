@@ -5,7 +5,7 @@ description: Research best practices and existing patterns
 auto_execution_mode: 3
 category: Planning
 complexity: 50
-tokens: 1300
+tokens: 3033
 dependencies: []
 status: active
 ---

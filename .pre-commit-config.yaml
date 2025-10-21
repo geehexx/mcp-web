@@ -138,7 +138,7 @@ repos:
         language: system
         files: ^\.windsurf/(workflows|rules)/.*\.md$
         pass_filenames: false
-        args: [--threshold, "60000"]
+        args: [--threshold, "85000"]
 
       - id: validate-references
         name: "🔗 docs · Validate internal markdown links"

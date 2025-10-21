@@ -6,7 +6,7 @@ auto_execution_mode: 3
 category: Sub-workflow
 parent: work.md
 complexity: 70
-tokens: 1221
+tokens: 1705
 dependencies:
   - detect-context
 status: active

@@ -5,7 +5,7 @@ description: Systematic session review with intelligent consolidation detection
 auto_execution_mode: 3
 category: Analysis
 complexity: 60
-tokens: 1200
+tokens: 3893
 dependencies:
   - extract-session
   - summarize-session

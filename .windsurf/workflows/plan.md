@@ -5,7 +5,7 @@ description: Research-driven comprehensive project planning
 auto_execution_mode: 2
 category: Planning
 complexity: 70
-tokens: 1729
+tokens: 3299
 dependencies:
   - research
   - generate-plan
@@ -335,7 +335,7 @@ If ANY checked → ADR required
 **Report result:**
 
 ```markdown
-✅ ADR created: ADR-00XX - [Decision Title]
+✅ ADR created: ADR-00XX - Decision Title
 📄 Location: docs/adr/00XX-decision-title.md
 ```
 
@@ -349,7 +349,7 @@ If ANY checked → ADR required
 
 ```markdown
 # Update initiative file with ADR reference
-**Related ADRs:** [ADR-00XX: Decision Title](../../adr/00XX-decision-title.md)
+**Related ADRs:** ADR-00XX: Decision Title (../../adr/00XX-decision-title.md)
 ```
 
 **Print stage completion:**

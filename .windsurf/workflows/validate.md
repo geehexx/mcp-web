@@ -5,7 +5,7 @@ description: Run linting, tests, security checks, cross-reference validation, no
 auto_execution_mode: 3
 category: Validation
 complexity: 62
-tokens: 1920
+tokens: 3009
 dependencies: []
 status: active
 ---
@@ -20,7 +20,7 @@ status: active
 
 **Philosophy:** Catch issues early through automated validation gates.
 
-**For detailed test commands and options, see:** [`docs/guides/testing-reference.md`](../../docs/guides/testing-reference.md)
+**For detailed test commands and options, see:** [`docs/guides/TESTING_REFERENCE.md`](../../docs/guides/TESTING_REFERENCE.md)
 
 ---
 
