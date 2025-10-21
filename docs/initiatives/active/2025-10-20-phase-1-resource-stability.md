@@ -440,6 +440,7 @@ Initiative created based on comprehensive technical roadmap analysis.
 **Implementation Details:**
 
 **BrowserPool Features:**
+
 - Async context manager pattern (guarantees cleanup)
 - Lazy initialization (create on demand, max pool_size=3 default)
 - Semaphore-based concurrency control
@@ -452,6 +453,7 @@ Initiative created based on comprehensive technical roadmap analysis.
 - Comprehensive metrics (active, idle, replacements, pool exhaustion)
 
 **Code Structure:**
+
 ```python
 async with browser_pool.acquire() as browser:
     page = await browser.new_page()
@@ -462,6 +464,7 @@ async with browser_pool.acquire() as browser:
 ```
 
 **Testing Status:**
+
 - 20 test cases created covering:
   - Pool initialization/shutdown
   - Browser acquisition/release patterns
@@ -473,6 +476,7 @@ async with browser_pool.acquire() as browser:
   - Core implementation is complete and validated by linters
 
 **Performance Impact:**
+
 - Before: New browser per request (~2-3s startup, ~100 FDs each)
 - After: Reuse browsers from pool (~0ms startup for warm browser)
 - Expected: 10-100x speedup for Playwright-based fetches
@@ -495,6 +499,7 @@ async with browser_pool.acquire() as browser:
    - Validate zero leaks over 72 hours
 
 **Immediate Next Session:**
+
 - Fix test mocking for async_playwright
 - Integrate BrowserPool with `fetcher.py`
 - Begin Phase 3: httpx singleton implementation

@@ -15,12 +15,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from urllib.parse import unquote, urlparse
 
-import httpx
 import structlog
-from playwright.async_api import async_playwright
 
+from mcp_web.browser_pool import BrowserPool
 from mcp_web.cache import CacheKeyBuilder, CacheManager
 from mcp_web.config import FetcherSettings
+from mcp_web.http_client import close_http_client, get_http_client
 from mcp_web.metrics import get_metrics_collector
 
 logger: structlog.stdlib.BoundLogger | None = None
@@ -117,23 +117,19 @@ class URLFetcher:
         self,
         config: FetcherSettings,
         cache: CacheManager | None = None,
+        browser_pool: BrowserPool | None = None,
     ):
         """Initialize URL fetcher.
 
         Args:
             config: Fetcher configuration
             cache: Optional cache manager
+            browser_pool: Optional browser pool for Playwright fetching
         """
         self.config = config
         self.cache = cache
+        self.browser_pool = browser_pool
         self.metrics = get_metrics_collector()
-
-        # HTTP client
-        self.http_client = httpx.AsyncClient(
-            timeout=config.timeout,
-            follow_redirects=True,
-            headers={"User-Agent": config.user_agent},
-        )
 
         # Resolve allowed directories for file system access
         self.allowed_dirs: list[Path] = []
@@ -250,7 +246,9 @@ class URLFetcher:
         start_time = time.perf_counter()
 
         try:
-            response = await self.http_client.get(url)
+            # Use singleton HTTP client
+            client = await get_http_client(self.config)
+            response = await client.get(url)
             duration_ms = (time.perf_counter() - start_time) * 1000
 
             # Check for problematic responses that might need Playwright
@@ -318,59 +316,88 @@ class URLFetcher:
         start_time = time.perf_counter()
 
         try:
-            async with async_playwright() as p:
-                browser = await p.chromium.launch(headless=True)
-                context = await browser.new_context(
-                    user_agent=self.config.user_agent,
-                    viewport={"width": 1920, "height": 1080},
-                )
-                page = await context.new_page()
+            # Use browser pool if available, fallback to manual browser
+            if self.browser_pool:
+                async with self.browser_pool.acquire() as browser_instance:
+                    page = await browser_instance.new_page()
+                    try:
+                        # Navigate with timeout
+                        response = await page.goto(
+                            url,
+                            wait_until="networkidle",
+                            timeout=self.config.timeout * 1000,
+                        )
 
-                # Navigate with timeout
-                response = await page.goto(
-                    url,
-                    wait_until="networkidle",
-                    timeout=self.config.timeout * 1000,
-                )
+                        if response is None:
+                            raise Exception("No response from page")
 
-                if response is None:
-                    raise Exception("No response from page")
+                        # Get page content
+                        content = await page.content()
+                        headers = response.headers
+                        status = response.status
+                    finally:
+                        await page.close()
+            else:
+                # Fallback: manual browser (legacy mode, not recommended)
+                from playwright.async_api import async_playwright
 
-                # Get page content
-                content = await page.content()
-                headers = response.headers
+                async with async_playwright() as p:
+                    browser = await p.chromium.launch(headless=True)
+                    context = await browser.new_context(
+                        user_agent=self.config.user_agent,
+                        viewport={"width": 1920, "height": 1080},
+                    )
+                    page = await context.new_page()
 
-                await browser.close()
+                    try:
+                        # Navigate with timeout
+                        response = await page.goto(
+                            url,
+                            wait_until="networkidle",
+                            timeout=self.config.timeout * 1000,
+                        )
 
-                duration_ms = (time.perf_counter() - start_time) * 1000
+                        if response is None:
+                            raise Exception("No response from page")
 
-                result = FetchResult(
-                    url=page.url,
-                    content=content.encode("utf-8"),
-                    content_type=headers.get("content-type", "text/html"),
-                    headers=headers,
-                    status_code=response.status,
-                    fetch_method="playwright",
-                )
+                        # Get page content
+                        content = await page.content()
+                        headers = response.headers
+                        status = response.status
+                    finally:
+                        await page.close()
+                        await context.close()
+                        await browser.close()
 
-                self.metrics.record_fetch(
-                    url=url,
-                    method="playwright",
-                    duration_ms=duration_ms,
-                    status_code=response.status,
-                    content_size=len(content),
-                    success=True,
-                )
+            duration_ms = (time.perf_counter() - start_time) * 1000
 
-                _get_logger().info(
-                    "playwright_success",
-                    url=url,
-                    status=response.status,
-                    size=len(content),
-                    duration_ms=round(duration_ms, 2),
-                )
+            result = FetchResult(
+                url=url,
+                content=content.encode("utf-8"),
+                content_type=headers.get("content-type", "text/html"),
+                headers=headers,
+                status_code=status,
+                fetch_method="playwright",
+            )
 
-                return result
+            self.metrics.record_fetch(
+                url=url,
+                method="playwright",
+                duration_ms=duration_ms,
+                status_code=status,
+                content_size=len(content),
+                success=True,
+            )
+
+            _get_logger().info(
+                "playwright_success",
+                url=url,
+                status=status,
+                size=len(content),
+                duration_ms=round(duration_ms, 2),
+            )
+
+            return result
 
         except Exception as e:
             duration_ms = (time.perf_counter() - start_time) * 1000
@@ -579,6 +606,12 @@ class URLFetcher:
         return {url: result for url, result in results if result is not None}
 
     async def close(self) -> None:
-        """Close HTTP client and cleanup resources."""
-        await self.http_client.aclose()
+        """Close HTTP client and cleanup resources.
+
+        Note: This now closes the singleton HTTP client and browser pool.
+        Should only be called on application shutdown.
+        """
+        await close_http_client()
+        if self.browser_pool:
+            await self.browser_pool.shutdown()
         _get_logger().info("fetcher_closed")
