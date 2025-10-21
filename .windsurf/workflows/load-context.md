@@ -1,11 +1,11 @@
 ---
 created: "2025-10-17"
-updated: "2025-10-18"
+updated: "2025-10-21"
 description: Batch load project context efficiently
 auto_execution_mode: 3
 category: Operations
 complexity: 65
-tokens: 3454
+tokens: 2300
 dependencies: []
 status: active
 ---
@@ -20,49 +20,19 @@ status: active
 
 ---
 
-## Stage 0: Workflow Entry
+## Execution
 
-🔄 **Entering /load-context:** Efficient batch context loading
+**Task plan:** Only if called directly (not by parent)
 
-**Print workflow entry announcement:**
+**Scope options:**
 
-```markdown
-🔄 **Entering /load-context:** Loading project context with batch operations
-```
-
----
-
-## Stage 1: Create Task Plan (If Called Directly)
-
-🔄 **Entering Stage 1: Create Task Plan**
-
-**If called directly by user** (not by parent workflow), create task plan:
-
-```typescript
-update_plan({
-  explanation: "📂 Starting /load-context workflow",
-  plan: [
-    { step: "1. /load-context - Determine context scope", status: "in_progress" },
-    { step: "2. /load-context - Batch load files", status: "pending" },
-    { step: "3. /load-context - Parse and extract key information", status: "pending" },
-    { step: "4. /load-context - Validate context completeness", status: "pending" }
-  ]
-})
-```
-
-**If called by parent workflow** (e.g., `/implement` step 3.1), parent already has task tracking.
-
----
-
-## Scope Options
-
-**Available scopes:**
-
-1. **full** - Complete project context (for planning, major changes)
-2. **active** - Current work context (active initiatives, recent changes)
-3. **initiative** - Specific initiative context (requires initiative path)
-4. **module** - Specific module/feature context (requires module name)
-5. **minimal** - Essential context only (for quick tasks)
+| Scope | When | Files Loaded |
+|-------|------|-------------|
+| **full** | Planning, major changes | All docs, initiatives, ADRs, summaries (3), git log (10) |
+| **active** | Current work | Active initiatives, recent summaries (3), unstaged changes |
+| **initiative** | Specific initiative | Initiative file, related ADRs, module files, tests |
+| **module** | Module/feature work | Module source + tests, related docs |
+| **minimal** | Quick tasks | PROJECT_SUMMARY only |
 
 ---
 
@@ -86,231 +56,29 @@ update_plan({
 /implement → load-context initiative
 ```
 
-### 1.2 Scope Definitions
-
-**Full Scope:**
-
-- Project summary and changelog
-- Architecture documentation
-- All active initiatives
-- All active ADRs
-- Recent session summaries (3 most recent)
-- Git log (last 10 commits)
-
-**Active Scope:**
-
-- Project summary
-- Active initiatives (1-3 files)
-- Recent session summary (1 most recent)
-- Git log (last 5 commits)
-- Current branch status
-
-**Initiative Scope:**
-
-- Specific initiative file
-- Related source files
-- Related test files
-- Related ADRs
-- Recent commits related to initiative
-
-**Module Scope:**
-
-- Module source files
-- Module test files
-- Module documentation
-- Related dependencies
-
-**Minimal Scope:**
-
-- Project summary only
-- Git status
+**Scope routing:** `/work` → active, `/plan` → full, `/implement` → initiative
 
 ---
 
-## Stage 2: Batch Loading Strategy
+## Stage 2: Batch Loading
 
-### 2.1 Use MCP Batch Read
+**Use `mcp0_read_multiple_files` for 3+ files (3-10x faster than sequential)**
 
-**Always batch reads when loading 3+ files:**
-
-```python
-# ❌ BAD: Sequential reads (slow)
-mcp0_read_text_file("/home/gxx/projects/mcp-web/PROJECT_SUMMARY.md")
-mcp0_read_text_file("/home/gxx/projects/mcp-web/docs/reference/CHANGELOG.md")
-mcp0_read_text_file("/home/gxx/projects/mcp-web/docs/architecture/ARCHITECTURE.md")
-# 3 tool calls → ~1.5 seconds
-
-# ✅ GOOD: Batch read (fast)
-mcp0_read_multiple_files([
-    "/home/gxx/projects/mcp-web/PROJECT_SUMMARY.md",
-    "/home/gxx/projects/mcp-web/docs/reference/CHANGELOG.md",
-    "/home/gxx/projects/mcp-web/docs/architecture/ARCHITECTURE.md"
-])
-# 1 tool call → ~0.5 seconds (3x faster)
-```
-
-### 2.2 Prioritize Critical Context
-
-**Load in order of importance:**
-
-1. **Essential** (always load first)
-   - PROJECT_SUMMARY.md
-   - Active initiatives
-
-2. **Important** (load if relevant)
-   - Architecture docs
-   - Recent session summaries
-   - Git log
-
-3. **Optional** (load if needed)
-   - All ADRs
-   - Full changelog
-   - Archived initiatives
+**Priority order:** Essential (PROJECT_SUMMARY, initiatives) → Important (architecture, summaries) → Optional (ADRs, changelog)
 
 ---
 
-## Stage 3: Context Loading by Scope
+## Stage 3: Load Files
 
-### 3.1 Full Scope Loading
+**Implementation:** Use `mcp0_read_multiple_files` with paths from scope table above. Parse initiative files to extract related source/test files. Run git commands for commit history.
 
-**Maximum context for planning:**
-
-```python
-# Batch 1: Core documents
-mcp0_read_multiple_files([
-    "/home/gxx/projects/mcp-web/PROJECT_SUMMARY.md",
-    "/home/gxx/projects/mcp-web/docs/reference/CHANGELOG.md",
-    "/home/gxx/projects/mcp-web/docs/architecture/ARCHITECTURE.md",
-    "/home/gxx/projects/mcp-web/docs/CONSTITUTION.md"
-])
-
-# Batch 2: Active initiatives (glob pattern)
-mcp0_read_multiple_files([
-    "/home/gxx/projects/mcp-web/docs/initiatives/active/*.md"
-])
-
-# Batch 3: Recent session summaries (3 most recent)
-session_files = [
-    "/home/gxx/projects/mcp-web/docs/archive/session-summaries/2025-10-17-*.md",
-    "/home/gxx/projects/mcp-web/docs/archive/session-summaries/2025-10-16-*.md",
-    "/home/gxx/projects/mcp-web/docs/archive/session-summaries/2025-10-15-*.md"
-]
-mcp0_read_multiple_files(session_files)
-
-# Batch 4: Key ADRs (most recent 5)
-mcp0_read_multiple_files([
-    "/home/gxx/projects/mcp-web/docs/adr/0017-*.md",
-    "/home/gxx/projects/mcp-web/docs/adr/0016-*.md",
-    "/home/gxx/projects/mcp-web/docs/adr/0015-*.md",
-    "/home/gxx/projects/mcp-web/docs/adr/0014-*.md",
-    "/home/gxx/projects/mcp-web/docs/adr/0013-*.md"
-])
-```
-
-**Estimated load time:** 2-3 seconds (4 batch calls)
-
-### 3.2 Active Scope Loading
-
-**Current work context:**
-
-```python
-# Batch 1: Essential context
-mcp0_read_multiple_files([
-    "/home/gxx/projects/mcp-web/PROJECT_SUMMARY.md",
-    "/home/gxx/projects/mcp-web/docs/initiatives/active/*.md"
-])
-
-# Batch 2: Recent context
-session_files = list_recent_session_summaries(limit=1)
-mcp0_read_multiple_files(session_files)
-
-# Command: Git log
-git log --oneline -5
-git status --short
-```
-
-**Estimated load time:** ~1 second (2 batch calls + git)
-
-### 3.3 Initiative Scope Loading
-
-**Specific initiative context:**
-
-```python
-# Read initiative file to identify dependencies
-mcp0_read_text_file(f"/home/gxx/projects/mcp-web/docs/initiatives/active/{initiative_name}.md")
-
-# Parse initiative for file references
-# Example: Extract "src/mcp_web/auth.py", "tests/unit/test_auth.py"
-
-# Batch load all related files
-mcp0_read_multiple_files([
-    "/home/gxx/projects/mcp-web/src/mcp_web/auth.py",
-    "/home/gxx/projects/mcp-web/tests/unit/test_auth.py",
-    "/home/gxx/projects/mcp-web/docs/adr/0012-auth-strategy.md",
-    "/home/gxx/projects/mcp-web/docs/guides/SECURITY_GUIDE.md"
-])
-
-# Git log for initiative-related commits
-git log --grep="auth" --oneline -10
-```
-
-**Estimated load time:** ~1 second (2 reads + git)
-
-### 3.4 Module Scope Loading
-
-**Module-specific context:**
-
-```python
-module_name = "auth"  # Example
-
-# Batch load module files
-mcp0_read_multiple_files([
-    f"/home/gxx/projects/mcp-web/src/mcp_web/{module_name}.py",
-    f"/home/gxx/projects/mcp-web/tests/unit/test_{module_name}.py",
-    f"/home/gxx/projects/mcp-web/tests/integration/test_{module_name}_integration.py"
-])
-
-# Grep for related documentation
-grep_search(module_name, "/home/gxx/projects/mcp-web/docs/", recursive=True, includes=["*.md"])
-```
-
-**Estimated load time:** <1 second (1 batch + grep)
-
-### 3.5 Minimal Scope Loading
-
-**Quick context for simple tasks:**
-
-```python
-# Single file read
-mcp0_read_text_file("/home/gxx/projects/mcp-web/PROJECT_SUMMARY.md")
-
-# Git status
-git status --short
-```
-
-**Estimated load time:** <0.5 seconds
+**Load times:** full=2-3s, active=1s, initiative=1s, module<1s, minimal<0.5s
 
 ---
 
-## Stage 4: Context Parsing
+## Stage 4: Parse Context
 
-### 4.1 Extract Key Information
-
-**From PROJECT_SUMMARY.md:**
-
-- Current version
-- Project status
-- Key features
-- Recent changes
-
-**From initiatives:**
-
-- Active tasks (unchecked `[ ]` items)
-- Status field
-- Priority
-- Dependencies
-
-**From session summaries:**
+**Extract:** Version, status, active tasks (`[ ]`), priorities, next steps from summaries
 
 - Next steps
 - Unresolved issues

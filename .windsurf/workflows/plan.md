@@ -1,11 +1,11 @@
 ---
 created: "2025-10-17"
-updated: "2025-10-18"
+updated: "2025-10-21"
 description: Research-driven comprehensive project planning
 auto_execution_mode: 2
 category: Planning
 complexity: 70
-tokens: 3299
+tokens: 2200
 dependencies:
   - research
   - generate-plan
@@ -47,54 +47,15 @@ Do NOT plan for:
 
 ---
 
-## Stage 0: Create Planning Task Plan
+## Execution
 
-🔄 **Entering Stage 0: Create Planning Task Plan**
-
-**Print workflow entry announcement:**
-
-```markdown
-🔄 **Entering /plan:** Research-driven comprehensive planning workflow
-```
-
-**MANDATORY:** Create task list before planning.
-
-**Numbering Rules:**
-
-- If called by parent workflow (e.g., /work step 3), use parent number: `3.1. /plan - ...`
-- If called directly, use top-level numbering: `1. /plan - ...`
-- Always include workflow prefix and period after number
-
-```typescript
-// Example: Called directly
-update_plan({
-  explanation: "🔄 Starting /plan workflow",
-  plan: [
-    { step: "1. /plan - Define problem and requirements", status: "in_progress" },
-    { step: "2. /plan - Research best practices", status: "pending" },
-    { step: "3. /plan - Generate structured plan", status: "pending" },
-    { step: "4. /plan - Create initiative document", status: "pending" },
-    { step: "5. /plan - Create ADR (if needed)", status: "pending" },
-    { step: "6. /plan - Present plan to user", status: "pending" }
-  ]
-})
-```
-
-**Note:** Steps 2-3 are orchestration steps that will delegate to `/research` and `/generate-plan` sub-workflows. Those sub-workflows will be added as subtasks when called.
-
-✓ Task plan created
+**Task plan:** Required if called directly. Steps 2-3 delegate to `/research` and `/generate-plan` sub-workflows
 
 ---
 
-## Stage 1: Problem Definition
+## Stage 1: Define Requirements
 
-### 1.1 Capture Requirements
-
-**If user provided description:**
-
-- Restate in own words for confirmation
-- Ask clarifying questions (max 3)
-- Document assumptions explicitly
+**Capture:** Restate user description, ask max 3 clarifying questions, document assumptions
 
 **Example:**
 

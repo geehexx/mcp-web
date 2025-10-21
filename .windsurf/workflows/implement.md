@@ -1,11 +1,11 @@
 ---
 created: "2025-10-17"
-updated: "2025-10-18"
+updated: "2025-10-21"
 description: Focused implementation with test-first approach
 auto_execution_mode: 3
 category: Implementation
 complexity: 75
-tokens: 1900
+tokens: 1400
 dependencies:
   - load-context
   - validate
@@ -56,7 +56,6 @@ update_plan({
     { step: "  3.7. /implement - Commit changes", status: "pending" }
   ]
 })
-```
 ```
 
 **Numbering:** Use parent number if called by parent (e.g., `3.1.`), top-level if direct (e.g., `1.`)
@@ -129,106 +128,22 @@ task test:fast
 
 ## Stage 2.5: Check ADR Requirement (Conditional)
 
-🔄 **Entering Stage 2.5: Check ADR Requirement (Conditional)**
+**Before implementing, assess if ADR needed:**
 
-### 2.5.1 Assess Implementation Approach
+| Scenario | ADR? | Examples |
+|----------|------|----------|
+| New dependency/library | ✅ | httpx, redis, playwright |
+| Security decision | ✅ | Auth strategy, encryption |
+| Performance-critical | ✅ | Caching strategy, parallelism |
+| API contract | ✅ | REST design, GraphQL schema |
+| Core architecture | ✅ | Event-driven, microservices |
+| Algorithm/implementation | ❌ | Sort choice, code patterns |
+| Bug fix | ❌ | Just fix and test |
 
-**Before writing code, check if architectural decision is being made:**
+**If ADR needed:** Call `/new-adr` workflow (add to task plan, delegate, document decision, then proceed)
+**If no ADR:** Continue to Stage 3
 
-```markdown
-**ADR Quick Check:**
-
-Am I about to:
-- [ ] Add a new dependency or library?
-- [ ] Choose between design patterns?
-- [ ] Make a security-sensitive decision?
-- [ ] Implement performance-critical logic?
-- [ ] Define a new API contract?
-- [ ] Change core architecture?
-
-If ANY checked → Pause and assess ADR need
-```
-
-**Decision criteria:**
-
-| Scenario | ADR Required? | Action |
-|----------|---------------|--------|
-| Adding new library (httpx, redis, etc.) | ✅ Yes | Call `/new-adr` |
-| Choosing auth strategy (JWT vs API key) | ✅ Yes | Call `/new-adr` |
-| Algorithm choice (merge-sort vs quick-sort) | ❌ No | Document in code |
-| Variable naming convention | ❌ No | Follow style guide |
-| Framework pattern (map-reduce vs streaming) | ✅ Yes | Call `/new-adr` |
-| Bug fix implementation | ❌ No | Just fix it |
-
-### 2.5.2 Create ADR (If Required)
-
-**If ADR needed:**
-
-**Before calling `/new-adr`, add sub-workflow task:**
-
-```typescript
-update_plan({
-  explanation: "↪️ Delegating to /new-adr for architecture decision",
-  plan: [
-    // ... previous tasks ...
-    { step: "  3.2. /implement - Check ADR requirement", status: "in_progress" },
-    { step: "    3.2.1. /new-adr - Document architectural decision", status: "in_progress" },
-    { step: "  3.3. /implement - Design test cases (TDD)", status: "pending" },
-    // ... rest of tasks
-  ]
-})
-```
-
-**Print delegation announcement:**
-
-```markdown
-🏗️ **Architectural decision detected** - calling `/new-adr` workflow
-↪️ **Delegating to /new-adr:** Document decision before implementing
-```
-
-**Call `/new-adr` workflow:**
-
-- Document decision before implementing
-- Research alternatives with sources
-- Get user approval on approach
-- Link ADR to implementation
-
-**See:** `.windsurf/workflows/new-adr.md`
-
-**After `/new-adr` returns, print completion:**
-
-```markdown
-📋 **ADR Complete:** ADR-00XX created, proceeding with approved approach
-```
-
-**Update task plan:**
-
-```typescript
-update_plan({
-  explanation: "ADR documented, proceeding to implementation",
-  plan: [
-    // ... previous tasks ...
-    { step: "  3.2. /implement - Check ADR requirement", status: "completed" },
-    { step: "    3.2.1. /new-adr - Document architectural decision", status: "completed" },
-    { step: "  3.3. /implement - Design test cases (TDD)", status: "in_progress" },
-    // ... rest of tasks
-  ]
-})
-```
-
-**If no ADR needed:**
-
-```markdown
-ℹ️ No ADR required - proceeding with implementation
-```
-
-**Print stage completion:**
-
-```markdown
-📋 **Stage 2.5 Complete:** ADR assessment finished
-```
-
-**IMPORTANT:** Create ADR BEFORE implementing, not after. Decisions should be documented before they're coded.
+**IMPORTANT:** Document architectural decisions BEFORE implementing.
 
 ---
 
@@ -442,80 +357,15 @@ task security:semgrep
 
 ## Stage 7: Commit Strategy
 
-🔄 **Entering Stage 7: Commit Strategy**
+**Use `/commit` workflow for guided commits:**
+- Atomic commits (one logical change)
+- Conventional commit format
+- References initiative file
 
-### 7.1 Atomic Commits
+**Good commit:** 3 files, 50 lines, descriptive message with bullet points
+**Bad commit:** `git add . && git commit -m "wip"`
 
-**One logical change per commit:**
-
-✅ **Good:**
-
-```bash
-git add src/mcp_web/auth.py tests/unit/test_auth.py
-git commit -m "feat(auth): add API key validation
-
-- Add APIKey Pydantic model
-- Add validation function with bcrypt
-- Add 15 unit tests (100% coverage)
-- Follows OWASP API security guidelines
-
-Refs: docs/initiatives/active/2025-10-15-api-key-auth.md"
-```text
-
-❌ **Bad:**
-
-```bash
-git add .
-git commit -m "wip"
-```text
-
-### 7.2 Use `/commit` Workflow
-
-**For guided commits:**
-
-**Before calling `/commit`, add sub-workflow task:**
-
-```typescript
-update_plan({
-  explanation: "↪️ Delegating to /commit for guided commit",
-  plan: [
-    // ... previous tasks ...
-    { step: "  3.7. /implement - Commit changes", status: "in_progress" },
-    { step: "    3.7.1. /commit - Create conventional commit", status: "in_progress" },
-  ]
-})
-```
-
-**Print delegation announcement:**
-
-```markdown
-↪️ **Delegating to /commit:** Creating conventional commit with validation
-```
-
-**Call `/commit` workflow:**
-
-```bash
-# Review changes
-/commit
-
-# Workflow will:
-# 1. Show git diff
-# 2. Verify ownership
-# 3. Guide commit message
-# 4. Run pre-commit hooks
-```
-
-**After `/commit` returns:**
-
-```markdown
-📋 **Commit Complete:** Changes committed successfully
-```
-
-**Print stage completion:**
-
-```markdown
-📋 **Stage 7 Complete:** Implementation committed
-```
+**See:** `.windsurf/workflows/commit.md`
 
 ---
 
@@ -600,108 +450,20 @@ Write Test (RED) → Implement (GREEN) → Refactor (GREEN) → Commit
 
 ## Anti-Patterns
 
-### ❌ Don't: Implement Without Tests
-
-**Bad:**
-
-```markdown
-1. Write all code
-2. Then write tests
-3. Find bugs
-4. Fix bugs
-5. Find more bugs
-```text
-
-**Good:**
-
-```markdown
-1. Write one test
-2. Implement that feature
-3. Test passes
-4. Next test
-```text
-
-### ❌ Don't: Batch Too Many Changes
-
-**Bad:**
-
-```bash
-# 50 files changed, 2000+ lines
-git commit -m "add feature"
-```text
-
-**Good:**
-
-```bash
-# 3 files changed, 50 lines
-git commit -m "feat(auth): add validation"
-
-# 2 files changed, 30 lines
-git commit -m "feat(auth): add CLI commands"
-```text
-
-### ❌ Don't: Skip Testing After Refactor
-
-**Bad:**
-
-```markdown
-Refactor code → Looks good → Move on
-(broke something, didn't notice)
-```text
-
-**Good:**
-
-```markdown
-Refactor code → Run tests → Verify green → Move on
-```text
-
-### ❌ Don't: Ignore Linting Failures
-
-**Bad:**
-
-```bash
-$ task lint
-ERROR: 5 linting issues
-$ git commit  # Commit anyway
-```text
-
-**Good:**
-
-```bash
-$ task lint
-ERROR: 5 linting issues
-$ task format  # Auto-fix
-$ task lint  # Verify clean
-$ git commit
-```text
+| ❌ Don't | ✅ Do Instead |
+|----------|---------------|
+| Implement without tests | Write test first (TDD) |
+| Batch 50 files in one commit | Atomic commits (3-5 files) |
+| Skip testing after refactor | Always re-run tests |
+| Ignore linting failures | Fix with `task format` before commit |
+| Large infrequent commits | Commit every 30-60 minutes |
+| Write all code then test | Test-driven development (RED-GREEN-REFACTOR) |
 
 ---
 
 ## Progress Reporting
 
-### Checkpoint Format
-
-**Every hour or phase completion:**
-
-```markdown
-## Checkpoint: [Feature Name] - [Phase]
-
-**Completed:**
-- ✓ Task 1
-- ✓ Task 2
-- ✓ Task 3
-
-**Status:**
-- Tests: 45/50 passing (5 new, all green)
-- Coverage: 95% (+5% from start)
-- Lint: Clean (was 3 issues, fixed)
-
-**Next Steps:**
-1. Task 4 (estimated 30 min)
-2. Task 5 (estimated 45 min)
-
-**Blockers:** None
-```text
+**Every hour or phase completion:** Update initiative document with completed tasks, test status, and blockers (if any).
 
 ---
 
@@ -757,5 +519,5 @@ $ git commit
 
 ---
 
-**Last Updated:** October 15, 2025
-**Version:** 1.0
+**Last Updated:** October 21, 2025
+**Version:** 2.0.0
