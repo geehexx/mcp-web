@@ -306,11 +306,16 @@ class APIKeyAuthenticator:
         logger.info("api_key_revoked", key_name=api_key.name)
         return True
 
-    def list_keys(self) -> list[dict[str, str | int | bool]]:
-        """List all API keys (without revealing full key).
+    def list_keys(self) -> list[dict[str, str | int | bool | float]]:
+        """List all API keys with metadata.
 
         Returns:
             List of key metadata dictionaries
+
+        Example:
+            >>> keys = authenticator.list_keys()
+            >>> for key in keys:
+            ...     print(f"{key['name']}: {key['key_prefix']}")
         """
         return [
             {

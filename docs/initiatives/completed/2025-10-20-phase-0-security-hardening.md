@@ -534,9 +534,9 @@ Based on research and audit, updated approach:
 - Create `SECURITY.md` (responsible disclosure)
 - Document threat model
 - Create ADRs:
-  - ADR-00XX: Pattern-Based Prompt Injection Detection
-  - ADR-00XX: API Key Authentication Strategy
-  - ADR-00XX: Structured Prompt Architecture
+  - ADR-0023: Pattern-Based Prompt Injection Detection ✅
+  - ADR-00XX: API Key Authentication Strategy (deferred)
+  - ADR-00XX: Structured Prompt Architecture (deferred)
 - Update API documentation with security guidance
 - Security review checklist
 - **Deliverables:** 4 docs + 3 ADRs

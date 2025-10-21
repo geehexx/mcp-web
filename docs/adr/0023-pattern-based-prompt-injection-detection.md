@@ -1,4 +1,4 @@
-# ADR-0019: Pattern-Based Prompt Injection Detection
+# ADR-0023: Pattern-Based Prompt Injection Detection
 
 **Status:** Accepted
 **Date:** 2025-10-21
