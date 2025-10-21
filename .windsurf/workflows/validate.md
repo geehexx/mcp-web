@@ -1,34 +1,36 @@
 ---
 created: "2025-10-17"
-updated: "2025-10-19"
+updated: "2025-10-21"
 description: Run linting, tests, security checks, cross-reference validation, normative core enforcement
 auto_execution_mode: 3
 category: Validation
 complexity: 62
-tokens: 3009
+tokens: 1900
 dependencies: []
 status: active
 ---
 
 # Validate Workflow
 
-**Purpose:** Pre-commit quality gate workflow. Runs comprehensive checks (linting, tests, security) before committing or merging code.
-
-**Category:** Specialized Operation (atomic quality gate)
+**Purpose:** Pre-commit quality gate workflow. Runs comprehensive checks before committing or merging.
 
 **Invocation:** `/validate` (called by `/work`, `/implement`, `/commit`, or directly)
 
 **Philosophy:** Catch issues early through automated validation gates.
 
-**For detailed test commands and options, see:** [`docs/guides/TESTING_REFERENCE.md`](../../docs/guides/TESTING_REFERENCE.md)
+**For detailed test commands:** [`docs/guides/TESTING_REFERENCE.md`](../../docs/guides/TESTING_REFERENCE.md)
 
 ---
 
-## Stage 0: Create Task Plan
+## When to Run
 
-🔄 **Entering /validate workflow**
+| Run Before | Optional For |
+|------------|--------------|
+| Committing code, PRs, Merging, Releases | Exploratory work, Draft commits, WIP branches |
 
-**Create task plan:**
+---
+
+## Stage 1: Create Task Plan
 
 ```typescript
 update_plan({
@@ -45,456 +47,167 @@ update_plan({
 
 ---
 
-## When to Run
-
-**Always run before:**
-
-- Committing code
-- Creating pull requests
-- Merging to main branch
-- Releasing versions
-
-**Optional for:**
-
-- Exploratory work
-- Draft commits
-- WIP branches
-
----
-
-## Stage 1: Pre-Flight Checks
-
-### 1.1 Verify Clean State (Optional)
-
-```bash
-# Check for uncommitted changes (warning only)
-git status --short
-
-# If unstaged changes present, warn but continue
-# Validation runs on current file state, not just staged
-```
-
-### 1.2 Check Python Environment
-
-```bash
-# Verify uv is available
-uv --version
-
-# Check Python version
-uv run python --version
-```
-
----
-
 ## Stage 2: Linting
 
-### 2.1 Ruff Format Check
+| Check | Command | If Fails | Auto-Fix |
+|-------|---------|----------|----------|
+| **Format** | `task format:check` | Report files needing formatting | `task format` |
+| **Lint** | `task lint` | Review issues, suppress false positives | `task format` |
+| **Type Check** | `task lint:mypy` | Add type hints, use `# type: ignore` with comment | Manual |
+| **Docs** | `task docs:lint` | Review issues | `task docs:fix` |
 
-**Check code formatting:**
-
-```bash
-task format:check
-# Equivalent to: uv run ruff format --check .
-```
-
-**If fails:**
-
-- Auto-fix available: Run `task format` to fix
-- Report which files need formatting
-- Continue to next check (don't halt)
-
-### 2.2 Ruff Lint Check
-
-**Check code style and errors:**
+**Pre-flight checks:**
 
 ```bash
-task lint
-# Runs: ruff check, mypy, markdownlint
+# Verify environment
+uv --version && uv run python --version
+
+# Optional: Check git status
+git status --short
 ```
-
-**If fails:**
-
-- Auto-fix available: Run `task format` first
-- Review remaining issues
-- Suppress false positives if needed
-- Continue to next check
-
-### 2.3 Type Checking (mypy)
-
-**Verify type hints:**
-
-```bash
-task lint:mypy
-# Equivalent to: uv run mypy src/
-```
-
-**If fails:**
-
-- Add missing type hints
-- Use `# type: ignore` for false positives (with comment explaining why)
-- Continue to next check
-
-### 2.4 Documentation Linting
-
-**Check markdown syntax:**
-
-```bash
-task docs:lint
-# Equivalent to: npx markdownlint-cli2 "**/*.md"
-```
-
-**If fails:**
-
-- Auto-fix: Run `task docs:fix`
-- Review remaining issues
-- Continue to next check
 
 ---
 
 ## Stage 3: Testing
 
-### 3.1 Fast Tests
-
-**Run unit tests in parallel:**
+### Fast Tests
 
 ```bash
 task test:fast
-# Equivalent to: uv run pytest tests/unit tests/golden -n auto -x
+# Runs: unit + golden tests in parallel, stops on first failure
 ```
 
-**Configuration:**
+**Configuration:** pytest-xdist parallel, `-x` stop on failure
 
-- Runs unit and golden tests only
-- Parallel execution (pytest-xdist)
-- Stop on first failure (-x)
-
-**If fails:**
-
-- Review failure output
-- Fix failing tests
-- Re-run before continuing
-
-### 3.2 Integration Tests (Conditional)
-
-**If code changes affect integration:**
+### Integration Tests (Conditional)
 
 ```bash
-task test:integration
-# Equivalent to: uv run pytest tests/integration -n auto
+task test:integration  # If code affects integration
 ```
 
-**Skip if:**
+**Skip if:** Documentation-only, test-only, or config-only changes
 
-- Only documentation changes
-- Only test changes (unit tests)
-- Only configuration changes
-
-### 3.3 Coverage Check
-
-**Verify ≥90% coverage:**
+### Coverage Check
 
 ```bash
-task test:coverage
-# Generates coverage report
+task test:coverage  # Target: ≥90%
 ```
 
-**If below threshold:**
-
-- Identify uncovered lines
-- Add tests for critical paths
-- Document why coverage is acceptable (if valid reason)
+**If below threshold:** Add tests for critical paths or document exception
 
 ---
 
 ## Stage 4: Documentation Validation
 
-### 4.1 Cross-Reference Validation
-
-**Check workflow and documentation links:**
+### Cross-Reference Validation
 
 ```bash
 task docs:validate:links
-# Validates:
-# - Workflow internal cross-references (.windsurf/workflows/*.md)
-# - ADR references (ADR-NNNN in .windsurf/ and docs/)
-# - Ensures all referenced files exist
 ```
 
-**If fails:**
+**Validates:**
+- Workflow internal cross-references (`.windsurf/workflows/*.md`)
+- ADR references (ADR-NNNN in `.windsurf/` and `docs/`)
+- All referenced files exist
 
-- Fix broken workflow links
-- Create missing ADR files
-- Update references to use correct paths
+**If fails:** Fix broken links, create missing ADRs, update paths
 
 ---
 
 ## Stage 5: Security Checks
 
-**Validate against security rules:** `.windsurf/rules/06_security_practices.md`
+**Validate against:** `.windsurf/rules/06_security_practices.md`
 
-### 5.0 Security Rules Checklist
-
-**Manual review for security-sensitive code:**
+### Manual Review Checklist (Security-Sensitive Code)
 
 - [ ] OWASP LLM Top 10 compliance (if LLM interactions)
-- [ ] Input validation on all external inputs
+- [ ] Input validation on external inputs
 - [ ] Output sanitization before display
-- [ ] No hardcoded credentials or API keys
-- [ ] Secrets loaded from environment variables
+- [ ] No hardcoded credentials/API keys
+- [ ] Secrets from environment variables
 - [ ] SQL injection prevention (parameterized queries)
-- [ ] Path traversal protection (validate file paths)
-- [ ] Command injection prevention (avoid shell=True)
+- [ ] Path traversal protection
+- [ ] Command injection prevention (no `shell=True`)
 - [ ] Rate limiting on API endpoints
 - [ ] Defense-in-depth approach
 
-**See:** `.windsurf/rules/06_security_practices.md` for complete security guidelines
+### Automated Security Checks
 
-**Automated checks below validate subset of these rules:**
-
-### 5.1 Bandit (Python Security Linter)
-
-**Scan for security issues:**
-
-```bash
-task security:bandit
-# Equivalent to: uv run bandit -c .bandit -r src/
-```
-
-**Common issues caught:**
-
-- Hardcoded passwords
-- SQL injection risks
-- Use of `eval()`, `exec()`
-- Insecure random number generation
-- Weak cryptography
-
-**If fails:**
-
-- Review each issue
-- Fix security vulnerabilities
-- Suppress false positives with `# nosec` and comment
-
-### 5.2 Semgrep (Semantic Security Analysis)
-
-**Advanced security patterns:**
-
-```bash
-task security:semgrep
-# Equivalent to: uv run semgrep --config .semgrep.yml
-```
-
-**Patterns checked:**
-
-- LLM injection risks (OWASP LLM01)
-- Unsafe external fetches
-- Path traversal
-- Command injection
-
-**If fails:**
-
-- Critical issues: Must fix
-- Medium/Low: Review and decide
-- False positives: Add to ignore list
-
-### 5.3 Dependency Audit
-
-**Check for known vulnerabilities:**
-
-```bash
-task security:deps
-# Equivalent to: uv run safety check
-```
-
-**If vulnerabilities found:**
-
-- Update vulnerable dependencies
-- Check if exploit is applicable to our usage
-- Document risk acceptance if upgrade not possible
+| Tool | Command | Detects | Action on Failure |
+|------|---------|---------|-------------------|
+| **Bandit** | `task security:bandit` | Hardcoded passwords, SQL injection, `eval()`/`exec()`, weak crypto | Fix vulnerabilities, suppress with `# nosec` + comment |
+| **Semgrep** | `task security:semgrep` | LLM injection (OWASP LLM01), unsafe fetches, path traversal, command injection | Critical: fix; Medium/Low: review; False positives: ignore list |
+| **Safety** | `task security:deps` | Known vulnerabilities in dependencies | Update deps, document risk if upgrade impossible |
 
 ---
 
 ## Stage 6: Results Summary
 
-### 6.1 Aggregate Results
-
-**Collect all check results:**
+### Aggregate Results
 
 ```markdown
 ## Validation Results
 
 ### ✅ Passed
-- Formatting (ruff format)
-- Type checking (mypy)
-- Unit tests (45/45 passing)
-- Security (bandit, semgrep)
+- Formatting, Type checking, Unit tests (45/45), Security
 
 ### ⚠️ Warnings
-- Documentation lint: 2 minor issues
+- Documentation: 2 minor issues
 - Coverage: 88% (below 90% target)
 
 ### ❌ Failed
 - Integration tests: 2/10 failing
-  - test_playwright_fallback_timeout
-  - test_concurrent_fetches
 
 ### Summary
 Status: ❌ FAILED
-Blocker: Integration tests must pass before commit
+Blocker: Integration tests must pass
 ```
 
-### 6.2 Exit Code Logic
-
-**Determine overall status:**
+### Exit Code Logic
 
 ```python
 if critical_failures > 0:
-    status = "FAILED"
-    exit_code = 1
+    status = "FAILED"; exit_code = 1
 elif warnings > 0:
-    status = "PASSED WITH WARNINGS"
-    exit_code = 0  # Don't block commit
+    status = "PASSED WITH WARNINGS"; exit_code = 0
 else:
-    status = "PASSED"
-    exit_code = 0
+    status = "PASSED"; exit_code = 0
 ```
 
-**Critical failures:**
+**Critical failures:** Test failures, security issues (high/critical), type errors (unless suppressed)
 
-- Any test failures
-- Security issues (high/critical severity)
-- Type errors (unless suppressed)
-
-**Non-critical (warnings):**
-
-- Formatting issues (auto-fixable)
-- Documentation lint issues
-- Coverage slightly below target (85-89%)
+**Non-critical warnings:** Formatting issues, doc lint, coverage 85-89%
 
 ---
 
 ## Stage 7: Remediation Guidance
 
-### 7.1 Fix Auto-Fixable Issues
-
-**If auto-fixes available:**
+### Auto-Fixable Issues
 
 ```bash
-# Fix formatting and linting
-task format
-
-# Fix documentation
-task docs:fix
-
-# Re-run validation
-/validate
+task format      # Fix formatting/linting
+task docs:fix    # Fix documentation
+/validate        # Re-run validation
 ```
 
-### 7.2 Manual Fix Guidance
+### Manual Fixes
 
-**For test failures:**
+**Test failure example:**
 
 ```markdown
-**Test Failure:** test_playwright_fallback_timeout
-
-**Root Cause:** Playwright timeout set too low (5s)
-
-**Fix:**
-1. Increase timeout in tests/integration/conftest.py
-2. Or: Mock slow network in test
-3. Re-run: `uv run pytest tests/integration/test_playwright_fallback.py::test_playwright_fallback_timeout -xvs`
+**Test:** test_playwright_fallback_timeout
+**Root Cause:** Timeout too low (5s)
+**Fix:** Increase timeout in conftest.py OR mock slow network
+**Rerun:** `uv run pytest tests/integration/test_playwright_fallback.py::test_playwright_fallback_timeout -xvs`
 ```
 
-**For security issues:**
+**Security issue example:**
 
 ```markdown
-**Security Issue:** [B303:blacklist] Use of insecure MD5 hash function
-
+**Issue:** [B303:blacklist] Use of insecure MD5
 **Location:** src/mcp_web/cache.py:45
-
-**Fix:**
-1. Replace `hashlib.md5()` with `hashlib.sha256()`
-2. Or: Add `# nosec` if MD5 is acceptable (e.g., non-cryptographic use)
-3. Re-run: `task security:bandit`
-```
-
----
-
-## Integration Points
-
-### 6.1 Called By
-
-- `/work` - Before committing work
-- `/implement` - After implementation phase
-- `/commit` - Pre-commit validation
-- CI/CD pipeline - On every push
-- User - Direct invocation
-
-### 6.2 Calls
-
-- None (leaf workflow - calls tasks only)
-
----
-
-## Examples
-
-### Example 1: Clean Pass
-
-```bash
-$ /validate
-
-Running validation checks...
-
-✅ Format check (ruff)         PASSED
-✅ Lint check (ruff)           PASSED
-✅ Type check (mypy)           PASSED
-✅ Unit tests                  PASSED (45/45)
-✅ Security (bandit)           PASSED
-✅ Security (semgrep)          PASSED
-
-🎉 All checks passed! Ready to commit.
-```
-
-### Example 2: Auto-Fixable Issues
-
-```bash
-$ /validate
-
-Running validation checks...
-
-❌ Format check                FAILED (3 files need formatting)
-⚠️  Lint check                 WARNINGS (5 auto-fixable issues)
-✅ Type check                  PASSED
-✅ Tests                       PASSED
-
-Recommendation:
-Run `task format` to auto-fix issues, then re-validate.
-
-$ task format
-Fixed 3 files, 5 issues
-
-$ /validate
-🎉 All checks passed!
-```
-
-### Example 3: Test Failures
-
-```bash
-$ /validate
-
-Running validation checks...
-
-✅ Format check                PASSED
-✅ Lint check                  PASSED
-✅ Type check                  PASSED
-❌ Unit tests                  FAILED (2/45 failing)
-   - test_cache_expiration: AssertionError
-   - test_summarizer_empty_input: AttributeError
-
-❌ VALIDATION FAILED
-Fix failing tests before committing.
-
-Debug failing tests:
-$ uv run pytest tests/unit/test_cache.py::test_cache_expiration -xvs
+**Fix:** Replace with `sha256()` OR add `# nosec B303` if non-cryptographic use
+**Rerun:** `task security:bandit`
 ```
 
 ---
@@ -503,124 +216,104 @@ $ uv run pytest tests/unit/test_cache.py::test_cache_expiration -xvs
 
 ### Parallel Execution
 
-**Run independent checks in parallel:**
-
 ```bash
-# Sequential (slow)
+# Sequential: ~60s
 task format:check && task lint && task test:fast
-# ~60 seconds
 
-# Parallel (fast) - if supported by task runner
-task format:check & task lint & task test:fast &
-wait
-# ~25 seconds
+# Parallel: ~25s (if supported)
+task format:check & task lint & task test:fast & wait
 ```
 
 ### Incremental Validation
 
-**Only validate changed files:**
-
 ```bash
-# Get changed files
+# Only validate changed files
 changed_files=$(git diff --name-only HEAD)
-
-# Run ruff only on changed files
 uv run ruff check $changed_files
 
-# Run pytest only for tests related to changed modules
-uv run pytest --lf  # Last failed tests
+# Run last failed tests only
+uv run pytest --lf
 ```
 
 ### Caching
 
-**Leverage pytest cache:**
-
 ```bash
-# First run: ~20s
-task test:fast
-
-# Subsequent run (no code changes): ~2s
-task test:fast  # Uses cache
+# First run: ~20s, subsequent (no changes): ~2s
+task test:fast  # Leverages pytest cache
 ```
 
 ---
 
 ## Anti-Patterns
 
-### ❌ Don't: Skip Validation
+| ❌ Don't | ✅ Do |
+|----------|-------|
+| Skip validation (`--no-verify`) | Run `/validate` before commit |
+| Ignore warnings (proceed at 75% coverage) | Add tests to reach 90% |
+| Over-suppress (`# type: ignore`, `# nosec` everywhere) | Specific suppressions with comments: `# nosec B303 - MD5 for cache key only` |
 
-**Bad:**
+---
+
+## Integration Points
+
+**Called By:** `/work`, `/implement`, `/commit`, CI/CD, User
+
+**Calls:** None (leaf workflow)
+
+---
+
+## Examples
+
+### Clean Pass
 
 ```bash
-git commit -m "quick fix" --no-verify
-git push
-# CI fails, blocks team
+✅ Format (ruff)      PASSED
+✅ Lint (ruff)        PASSED
+✅ Type (mypy)        PASSED
+✅ Tests              PASSED (45/45)
+✅ Security (bandit)  PASSED
+✅ Security (semgrep) PASSED
+
+🎉 All checks passed! Ready to commit.
 ```
 
-**Good:**
+### Auto-Fixable Issues
 
 ```bash
-/validate
-# Fix issues
-git commit -m "fix: resolve cache expiration bug"
+❌ Format              FAILED (3 files)
+⚠️  Lint               WARNINGS (5 auto-fixable)
+
+→ Run `task format` then re-validate
 ```
 
-### ❌ Don't: Ignore Warnings
+### Test Failures
 
-**Bad:**
+```bash
+❌ Unit tests          FAILED (2/45)
+   - test_cache_expiration: AssertionError
+   
+❌ VALIDATION FAILED - Fix tests before committing
 
-```markdown
-⚠️ Coverage: 75% (below 90% target)
-AI: "Proceeding anyway..."
-```
-
-**Good:**
-
-```markdown
-⚠️ Coverage: 75% (below 90% target)
-AI: "Adding tests to reach 90% coverage..."
-```
-
-### ❌ Don't: Over-Suppress Issues
-
-**Bad:**
-
-```python
-# type: ignore
-# nosec
-# noqa
-# "It's fine, just ignore everything"
-```
-
-**Good:**
-
-```python
-# type: ignore[attr-defined]  # third-party library missing type stubs
-# nosec B303  # MD5 used for non-cryptographic cache key only
+Debug: uv run pytest tests/unit/test_cache.py::test_cache_expiration -xvs
 ```
 
 ---
 
 ## Configuration Files
 
-**Validation behavior controlled by:**
-
-- `pyproject.toml` - Ruff, mypy, pytest settings
+- `pyproject.toml` - Ruff, mypy, pytest
 - `.bandit` - Bandit security rules
-- `.semgrep.yml` - Semgrep security patterns
-- `pytest.ini` - Pytest configuration
-- `.markdownlint-cli2.jsonc` - Markdown linting rules
+- `.semgrep.yml` - Semgrep patterns
+- `pytest.ini` - Pytest config
+- `.markdownlint-cli2.jsonc` - Markdown linting
 
 ---
 
 ## References
 
-- [Ruff Documentation](https://docs.astral.sh/ruff/)
-- [mypy Documentation](https://mypy.readthedocs.io/)
-- [pytest Documentation](https://docs.pytest.org/)
-- [Bandit Documentation](https://bandit.readthedocs.io/)
-- [Semgrep Documentation](https://semgrep.dev/docs/)
-- Project: `Taskfile.yml`
-- Project: `.windsurf/rules/02_testing.md`
-
----
+- [Ruff](https://docs.astral.sh/ruff/)
+- [mypy](https://mypy.readthedocs.io/)
+- [pytest](https://docs.pytest.org/)
+- [Bandit](https://bandit.readthedocs.io/)
+- [Semgrep](https://semgrep.dev/docs/)
+- Project: `Taskfile.yml`, `.windsurf/rules/02_testing.md`
