@@ -1,11 +1,12 @@
 ---
 created: "2025-10-17"
 updated: "2025-10-21"
-description: Focused implementation with test-first approach
+description: Test-driven implementation workflow
 auto_execution_mode: 3
-category: Implementation
+category: Development
 complexity: 75
-tokens: 1400
+tokens: 1260
+version: v2.0-intelligent-semantic-preservation
 dependencies:
   - load-context
   - validate
@@ -15,13 +16,11 @@ status: active
 
 # Implementation Workflow
 
-**Purpose:** Execute planned work with test-first discipline and incremental validation.
+**Purpose:** Implement features using test-driven development with quality gates.
 
-**Category:** Orchestrator (implementation coordination)
+**Invocation:** Called by `/work` when initiative detected or direct for focused implementation.
 
-**Invocation:** `/implement [optional: context or initiative file]`
-
-**Philosophy:** Small steps, test immediately, commit frequently.
+**Philosophy:** Tests define contract, implementation fulfills it, validation proves it.
 
 **Workflow Chain:** `/implement` → [test-first loop] → `/validate` → `/commit`
 
@@ -31,10 +30,12 @@ status: active
 
 **Before starting:**
 
-- [ ] Plan exists (from `/plan` or initiative file)
-- [ ] Requirements clear
-- [ ] Tests identified (what to verify)
-- [ ] Context loaded (related files read)
+- Initiative defined
+- Context loaded (`/load-context`)
+- Requirements understood (ADR if architectural)
+- Success criteria identified
+
+**If missing:** Pause, clarify before proceeding.
 
 **If no plan exists:** Invoke `/plan` first for non-trivial work.
 
@@ -65,94 +66,9 @@ update_plan({
 
 ---
 
-## Stage 2: Setup & Context Loading
+## Stage 1: Design Test Cases
 
-### 1.1 Load Initiative Context
-
-**If initiative provided:**
-
-```markdown
-Read initiative file:
-- Current phase
-- Unchecked tasks
-- Acceptance criteria
-- References
-```text
-
-**If no initiative:**
-
-```markdown
-Clarify:
-- What to implement?
-- Expected behavior?
-- How to verify?
-```text
-
-### 1.2 Identify Files
-
-**Batch read relevant files:**
-
-```python
-# IMPORTANT: MCP tools require absolute paths
-mcp0_read_multiple_files([
-    # Source files to modify
-    "/home/gxx/projects/mcp-web/src/mcp_web/module.py",
-
-    # Related source for context
-    "/home/gxx/projects/mcp-web/src/mcp_web/related.py",
-
-    # Test files
-    "/home/gxx/projects/mcp-web/tests/unit/test_module.py",
-
-    # Documentation
-    "/home/gxx/projects/mcp-web/docs/API.md",
-])
-```text
-
-### 1.3 Check Current State
-
-```bash
-# Git status
-git status
-
-# Run relevant tests (establish baseline)
-task test:fast
-```
-
-**Print stage completion:**
-
-```markdown
-📋 **Stage 2 Complete:** Context loaded, baseline established
-```
-
----
-
-## Stage 2.5: Check ADR Requirement (Conditional)
-
-**Before implementing, assess if ADR needed:**
-
-| Scenario | ADR? | Examples |
-|----------|------|----------|
-| New dependency/library | ✅ | httpx, redis, playwright |
-| Security decision | ✅ | Auth strategy, encryption |
-| Performance-critical | ✅ | Caching strategy, parallelism |
-| API contract | ✅ | REST design, GraphQL schema |
-| Core architecture | ✅ | Event-driven, microservices |
-| Algorithm/implementation | ❌ | Sort choice, code patterns |
-| Bug fix | ❌ | Just fix and test |
-
-**If ADR needed:** Call `/new-adr` workflow (add to task plan, delegate, document decision, then proceed)
-**If no ADR:** Continue to Stage 3
-
-**IMPORTANT:** Document architectural decisions BEFORE implementing.
-
----
-
-## Stage 3: Test-First Implementation
-
-### 3.1 Write Test FIRST
-
-**Before any production code:**
+**Before code, design comprehensive tests:**
 
 1. **Write failing test**
 
@@ -174,9 +90,25 @@ task test:fast
    - Not implemented yet? ✓ Good
    - Wrong failure reason? Fix test first
 
-### 3.2 Implement Minimum Code
+### Stage 2: Write Failing Tests
 
-**Write simplest code to pass test:**
+1. Create test file (if needed)
+2. Write test functions from designed cases
+3. Run: `task test:fast` or `pytest path/to/test_file.py`
+4. Verify fails with expected errors (not syntax)
+
+**Quality:** Tests fail for RIGHT reason (missing feature, not broken test).
+
+### Stage 3: Implement Feature
+
+**Write minimal code to pass tests:**
+
+1. Implement feature
+2. Follow standards (`.windsurf/rules/01_python_code.md`)
+3. Add docstrings and type hints
+4. Keep focused and testable
+
+**Red-Green-Refactor:**
 
 ```python
 def new_feature():
@@ -187,119 +119,32 @@ def new_feature():
     """
     # Minimal implementation
     return expected
-```text
-
-**DO NOT:**
-
-- Add extra features
-- Optimize prematurely
-- Handle untested edge cases
-
-### 3.3 Verify Test Passes
-
-```bash
-uv run pytest tests/path/to/test.py::test_new_feature -xvs
-```text
-
-**If fails:** Debug, fix, re-test (don't proceed)
-**If passes:** Continue to refactor
-
-### 3.4 Refactor (If Needed)
-
-**Now improve code quality:**
-
-- Extract functions
-- Improve names
-- Add docstrings
-- Follow patterns
-
-**But:** Re-run test after each change
+```
 
 ---
 
-## Stage 4: Expand Coverage
+## Stage 4: Validate
 
-### 4.1 Add Edge Case Tests
+**Call `/validate`:** Formatting, linting, tests (fast + full), security
 
-**For each edge case:**
+**If fails:** Fix before commit.
 
-1. Write test
-2. Run (verify fails or passes correctly)
-3. Fix if needed
-4. Move to next
-
-**Common edge cases:**
-
-- Empty input
-- None/null values
-- Boundary conditions
-- Error conditions
-
-### 4.2 Integration Tests (If Needed)
-
-**For cross-module features:**
-
-```python
-# tests/integration/test_feature_integration.py
-def test_feature_with_module_b():
-    """Test feature X integrated with module B."""
-    # Integration test
-```text
+**If passes:** Proceed to commit.
 
 ---
 
-## Stage 5: Documentation
+## Stage 5: Commit Strategy
 
-### 5.1 Update API Documentation
+**Use `/commit` workflow for guided commits:**
 
-**If public API changed:**
+- Atomic commits (one logical change)
+- Conventional commit format
+- References initiative file
 
-```markdown
-## Update docs/API.md
+**Good commit:** 3 files, 50 lines, descriptive message with bullet points
+**Bad commit:** `git add . && git commit -m "wip"`
 
-Add:
-- New function signatures
-- Usage examples
-- Error cases
-```text
-
-### 5.2 Update README (If Needed)
-
-**For user-facing features:**
-
-```markdown
-## Update README.md
-
-Add:
-- Installation steps (if dependencies added)
-- Usage examples
-- Configuration options
-```text
-
-### 5.3 Inline Documentation
-
-**Ensure docstrings complete:**
-
-```python
-def function(arg: type) -> return_type:
-    """One-line summary.
-
-    Longer description if needed.
-
-    Args:
-        arg: Description
-
-    Returns:
-        Description of return
-
-    Raises:
-        ErrorType: When error occurs
-
-    Example:
-        >>> function(value)
-        result
-    """
-```text
+**See:** `.windsurf/workflows/commit.md`
 
 ---
 
@@ -313,7 +158,7 @@ task test:fast
 
 # Full tests if available
 task test
-```text
+```
 
 **Requirements:**
 
@@ -329,7 +174,7 @@ task format
 
 # Check remaining issues
 task lint
-```text
+```
 
 **Requirements:**
 
@@ -356,24 +201,9 @@ task security:semgrep
 
 ---
 
-## Stage 7: Commit Strategy
+## Stage 7: Progress Tracking
 
-**Use `/commit` workflow for guided commits:**
-
-- Atomic commits (one logical change)
-- Conventional commit format
-- References initiative file
-
-**Good commit:** 3 files, 50 lines, descriptive message with bullet points
-**Bad commit:** `git add . && git commit -m "wip"`
-
-**See:** `.windsurf/workflows/commit.md`
-
----
-
-## Stage 8: Progress Tracking
-
-### 8.1 Update Initiative
+### 7.1 Update Initiative
 
 **Mark completed tasks:**
 
@@ -385,9 +215,9 @@ task security:semgrep
 - [x] Unit tests (15 tests) ✓
 - [ ] Integration with FastAPI
 - [ ] CLI key management
-```text
+```
 
-### 8.2 Document Decisions
+### 7.2 Document Decisions
 
 **If architectural choice made:**
 
@@ -405,7 +235,7 @@ Completed Phase 1 (Core Authentication):
 **Reason:** Better library support, sufficient security for API keys
 
 Next session: Phase 2 (CLI key management)
-```text
+```
 
 ---
 
@@ -424,7 +254,7 @@ Next session: Phase 2 (CLI key management)
 Commit if green
 ↓
 Next feature
-```text
+```
 
 ### The 3-File Rule
 
@@ -437,7 +267,7 @@ Modified:
 3. src/mcp_web/models.py
 
 → RUN: task test:fast
-```text
+```
 
 ### The Red-Green-Refactor Cycle
 
@@ -446,7 +276,7 @@ Write Test (RED) → Implement (GREEN) → Refactor (GREEN) → Commit
        ↑                                                      ↓
        └──────────────────────────────────────────────────────┘
                         Next Feature
-```text
+```
 
 ---
 
@@ -486,7 +316,7 @@ Write Test (RED) → Implement (GREEN) → Refactor (GREEN) → Commit
 **Print workflow exit:**
 
 ```markdown
-✅ **Completed /implement:** Implementation finished, all tests passing, changes committed
+✅ **Completed /implement:** Feature implemented and validated, all tests passing, changes committed
 ```
 
 ---
@@ -521,5 +351,5 @@ Write Test (RED) → Implement (GREEN) → Refactor (GREEN) → Commit
 
 ---
 
-**Last Updated:** October 21, 2025
-**Version:** 2.0.0
+**Last Updated:** 2025-10-21
+**Version:** v2.0-intelligent-semantic-preservation
