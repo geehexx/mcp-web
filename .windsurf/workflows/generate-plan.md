@@ -5,7 +5,8 @@ description: Generate structured implementation plan from research
 auto_execution_mode: 3
 category: Planning
 complexity: 60
-tokens: 2150
+tokens: 1827
+version: v2.0-intelligent-semantic-preservation
 dependencies:
   - research
 status: active
@@ -13,7 +14,7 @@ status: active
 
 # Generate Plan Workflow
 
-**Purpose:** Transform research into concrete implementation plan with phases, tasks, and timelines.
+**Purpose:** Transform research into concrete implementation plan with phases, tasks, timelines.
 
 **Invocation:** Called by `/plan` (Stage 3)
 
@@ -46,20 +47,17 @@ update_plan({
 
 ### 2.1 Restate Requirements
 
-**From user request and research:**
-
 ```markdown
 ## Objective
-
 [One-sentence description]
 
 **User Need:** [Original request]
-**Technical Approach:** [Implementation approach from research]
+**Technical Approach:** [From research]
 ```
 
-### 2.2 Define Success Criteria
+### 2.2 Success Criteria
 
-**SMART criteria:**
+**SMART:**
 
 ```markdown
 ## Success Criteria
@@ -78,18 +76,11 @@ update_plan({
 
 ## Stage 3: Phase Decomposition
 
-### 3.1 Identify Major Milestones
+### 3.1 Identify Milestones
 
-**Break work into phases:**
-
-- **Phase 1:** Core/foundation (minimal viable)
-- **Phase 2:** Enhancement (key features)
-- **Phase 3:** Integration (apply everywhere)
-- **Phase 4:** Polish (docs, review, deploy)
+**Phases:** Core/foundation → Enhancement → Integration → Polish
 
 ### 3.2 Define Each Phase
-
-**Template per phase:**
 
 ```markdown
 ### Phase N: [Name] (N hours)
@@ -106,12 +97,7 @@ update_plan({
 **Dependencies:** [Prerequisites]
 ```
 
-**Task sizing guidelines:**
-
-- Each task: <4 hours
-- Clear deliverables per phase
-- Sequential build-up
-- Each phase: 4-12 hours max
+**Task sizing:** <4h each, clear deliverables, sequential, 4-12h per phase
 
 ---
 
@@ -180,11 +166,9 @@ Phase 1 → Phase 2
 
 ## Stage 7: Document Generation
 
-### 7.1 Generate Initiative File
+### 7.1 Generate Initiative
 
-**Filename:** `docs/initiatives/active/YYYY-MM-DD-descriptive-name.md`
-
-**Template:**
+**File:** `docs/initiatives/active/YYYY-MM-DD-descriptive-name.md`
 
 ```markdown
 # Initiative: [Title]
@@ -270,18 +254,9 @@ Initiative created. Research complete. Ready for Phase 1.
 [Future updates added here as work progresses]
 ```
 
-### 7.2 Validate Initiative
+### 7.2 Validate
 
-**Checklist:**
-
-- [ ] Objective clear and concise
-- [ ] Success criteria measurable
-- [ ] Tasks sized appropriately (<4h each)
-- [ ] Dependencies identified
-- [ ] Risks assessed with mitigations
-- [ ] Out of scope explicitly stated
-- [ ] Effort estimate realistic
-- [ ] Target completion reasonable
+**Checklist:** Objective clear, success measurable, tasks <4h, dependencies mapped, risks mitigated, scope defined, estimates realistic
 
 ---
 
@@ -289,36 +264,17 @@ Initiative created. Research complete. Ready for Phase 1.
 
 ### 8.1 Validate Structure
 
-**Final checks:**
+**Checks:** Tasks have criteria, dependencies mapped, no task >4h, docs planned, ADR documented
 
-- [ ] All tasks have completion criteria
-- [ ] Dependencies mapped
-- [ ] No task >4 hours
-- [ ] Documentation plan included
-- [ ] ADR decision documented
-
-**Print workflow exit:**
-
-```markdown
-✅ **Completed /generate-plan:** Roadmap created with [N] phases and [M] tasks
-```
+**Exit:** `✅ **Completed /generate-plan:** Roadmap with [N] phases, [M] tasks`
 
 ---
 
 ## Quality Standards
 
-### Good Plan Characteristics
+**Good:** Actionable (concrete tasks, clear criteria, realistic), Complete (all phases, dependencies, risks), Maintainable (single source, updates, docs)
 
-| Characteristic | Description |
-|----------------|-------------|
-| **Actionable** | Concrete tasks, clear acceptance criteria, realistic estimates |
-| **Complete** | All phases covered, dependencies identified, risks with mitigations |
-| **Maintainable** | Single source of truth, update section, related docs listed |
-
-### Poor Plan Signs
-
-| Issue | Problem |
-|-------|---------|
+**Poor:**
 | **Vague** | "Implement feature" (too broad), no concrete tasks |
 | **Unrealistic** | 20-hour tasks, no risk assessment, optimistic timeline |
 | **Incomplete** | Missing docs plan, no dependency analysis, unclear criteria |
