@@ -5,7 +5,7 @@ description: Focused implementation with test-first approach
 auto_execution_mode: 3
 category: Implementation
 complexity: 75
-tokens: 3832
+tokens: 1900
 dependencies:
   - load-context
   - validate
@@ -40,50 +40,26 @@ status: active
 
 ---
 
-## Stage 0: Workflow Entry
+## Workflow Execution
 
-🔄 **Entering /implement:** Test-driven implementation workflow
-
-**Print workflow entry announcement:**
-
-```markdown
-🔄 **Entering /implement:** Focused implementation with test-first approach
-```
-
----
-
-## Stage 1: Create Implementation Task Plan
-
-🔄 **Entering Stage 1: Create Implementation Task Plan**
-
-**MANDATORY:** Create task list before implementation.
-
-**Numbering Rules:**
-
-- If called by parent workflow (e.g., /work step 3), use parent number: `3.1. /implement - ...`
-- If called directly, use top-level numbering: `1. /implement - ...`
-- Always include workflow prefix and period after number
-
+**Task plan:**
 ```typescript
-// Example: Called by /work as step 3
 update_plan({
-  explanation: "🔄 Starting /implement workflow",
+  explanation: "🔄 Starting /implement",
   plan: [
-    { step: "  3.1. /implement - Load context files", status: "in_progress" },
+    { step: "  3.1. /implement - Load context", status: "in_progress" },
     { step: "  3.2. /implement - Design test cases (TDD)", status: "pending" },
     { step: "  3.3. /implement - Write failing tests", status: "pending" },
-    { step: "  3.4. /implement - Implement feature code", status: "pending" },
+    { step: "  3.4. /implement - Implement code", status: "pending" },
     { step: "  3.5. /implement - Verify tests pass", status: "pending" },
-    { step: "  3.6. /implement - Run validation checks", status: "pending" },
+    { step: "  3.6. /implement - Run validation", status: "pending" },
     { step: "  3.7. /implement - Commit changes", status: "pending" }
   ]
 })
-
-// OR if called directly (no parent):
-// { step: "1. /implement - Load context files", status: "in_progress" },
-// { step: "2. /implement - Design test cases", status: "pending" },
-// etc.
 ```
+```
+
+**Numbering:** Use parent number if called by parent (e.g., `3.1.`), top-level if direct (e.g., `1.`)
 
 **Adjust plan based on work scope** (e.g., remove test steps for documentation-only changes).
 
