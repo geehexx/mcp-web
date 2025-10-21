@@ -5,7 +5,7 @@ description: Systematic session review with intelligent consolidation detection
 auto_execution_mode: 3
 category: Analysis
 complexity: 60
-tokens: 3893
+tokens: 1900
 dependencies:
   - extract-session
   - summarize-session
@@ -24,530 +24,116 @@ version: 2.0.0
 
 ---
 
-## Stage 0: Create Task Plan
+## Workflow Execution
 
-🔄 **Entering Stage 0: Create Task Plan**
-
-**Print workflow entry announcement:**
-
-```markdown
-🔄 **Entering /meta-analysis:** Systematic session review and summary generation
-```
-
-**Create task plan:**
-
+**Task plan:**
 ```typescript
 update_plan({
-  explanation: "📊 Starting /meta-analysis workflow",
+  explanation: "📊 Starting /meta-analysis",
   plan: [
     { step: "1. /meta-analysis - Check protocol and update timestamp", status: "in_progress" },
-    { step: "2. /meta-analysis - Check for existing summaries (consolidation detection)", status: "pending" },
+    { step: "2. /meta-analysis - Check for consolidation", status: "pending" },
     { step: "3. /meta-analysis - Extract and summarize session", status: "pending" },
-    { step: "4. /meta-analysis - Check living documentation", status: "pending" },
-    { step: "5. /meta-analysis - Commit session summary", status: "pending" }
+    { step: "4. /meta-analysis - Check living docs", status: "pending" },
+    { step: "5. /meta-analysis - Commit summary", status: "pending" }
   ]
 })
 ```
-
-✓ Task plan created
 
 ---
 
 ## Stage 1: Protocol Check
 
-### 1.1 Check Last Execution
-
 ```bash
-# Verify when meta-analysis last ran
+# Check last execution and update timestamp
 cat .windsurf/.last-meta-analysis 2>/dev/null || echo "NEVER"
-
-# Warning if >24h or never run
-```
-
-### 1.2 Update Timestamp
-
-```bash
-# Write current timestamp
 date -u +"%Y-%m-%dT%H:%M:%SZ" > .windsurf/.last-meta-analysis
 ```
 
-**Purpose:** Track protocol adherence and detect violations
-
-**Print stage completion:**
-
-```markdown
-📋 **Stage 1 Complete:** Protocol timestamp updated
-```
-
-**Update task plan:**
-
-```typescript
-update_plan({
-  explanation: "Protocol check complete",
-  plan: [
-    { step: "1. /meta-analysis - Check protocol and update timestamp", status: "completed" },
-    { step: "2. /meta-analysis - Check for existing summaries (consolidation detection)", status: "in_progress" },
-    { step: "3. /meta-analysis - Extract and summarize session", status: "pending" },
-    { step: "4. /meta-analysis - Check living documentation", status: "pending" },
-    { step: "5. /meta-analysis - Commit session summary", status: "pending" }
-  ]
-})
-```
+**Purpose:** Track protocol adherence, detect violations (warn if >24h)
 
 ---
 
 ## Stage 2: Consolidation Detection
 
-🔄 **Entering Stage 2: Consolidation Detection**
-
-### 2.1 Check for Today's Summaries
+**RARE:** Only consolidate with 70%+ confidence of session continuation.
 
 ```bash
-# Get today's date
 TODAY=$(date +"%Y-%m-%d")
-
-# Check for existing summaries from today
 ls -1 docs/archive/session-summaries/${TODAY}-*.md 2>/dev/null | wc -l
 ```
 
-### 2.2 Consolidation Decision Logic
+### Decision Logic
 
-**CRITICAL:** Consolidation is RARE. Only consolidate when HIGH CONFIDENCE of:
+| Signal (Weight) | Check |
+|-----------------|-------|
+| Same initiative (40%) | Explicit mention in conversation |
+| Same files (25%) | >50% overlap in modified files |
+| Time gap (15%) | <1h |
+| Commit messages (10%) | Semantic keyword overlap |
+| User signal (10%) | "continue" mentioned |
 
-1. Session continuation (not a new session)
-2. High semantic overlap (same initiative/topic)
-3. Low information loss risk
+**Threshold: 70%+ → Consolidate | <70% → Separate**
 
-**IF existing summaries found for today:**
+| Condition | Action |
+|-----------|--------|
+| Confidence ≥70% + gap <2h | Call `/consolidate-summaries`, skip to Stage 5 |
+| Otherwise | Proceed to Stage 3 (new summary) |
 
-#### Step 1: Check conversation history (if available)
-
-- Look for explicit session continuation signals
-- Check if user said "continue from previous session"
-- Verify initiative/topic mentioned in current conversation
-
-#### Step 2: Analyze most recent summary
-
-```bash
-# Get most recent summary from today
-LATEST=$(ls -t docs/archive/session-summaries/${TODAY}-*.md 2>/dev/null | head -1)
-
-# Extract key indicators:
-# - Primary initiative name
-# - Focus area
-# - Files modified
-# - Commit messages
-```
-
-#### Step 3: Compare with current session
-
-```bash
-# Get current session info
-git log --oneline --since="$(cat .windsurf/.last-meta-analysis)" | head -10
-
-# Check overlap:
-# - Same initiative mentioned?
-# - Same files being modified?
-# - Related commit messages?
-# - Time gap < 2 hours?
-```
-
-#### Step 4: Calculate confidence score
-
-| Signal | Weight | Check |
-|--------|--------|-------|
-| Same initiative in conversation history | 40% | Explicit mention |
-| Same files modified (>50% overlap) | 25% | Git diff comparison |
-| Time gap < 1 hour | 15% | Timestamp check |
-| Related commit messages (semantic) | 10% | Keyword overlap |
-| User explicitly said "continue" | 10% | Conversation analysis |
-
-#### Confidence Threshold: 70%+
-
-**Decision Matrix:**
-
-| Confidence | Time Gap | Action |
-|------------|----------|--------|
-| ≥70% | <1h | **CONSOLIDATE** - High confidence continuation |
-| ≥70% | 1-2h | **CONSOLIDATE** - Likely continuation |
-| 50-69% | <1h | **SEPARATE** - Uncertain, preserve context |
-| <50% | Any | **SEPARATE** - Different work, keep separate |
-| Any | >2h | **SEPARATE** - Different session |
-
-**NEVER consolidate if:**
-
-- ❌ Different initiatives
-- ❌ Unrelated file changes
-- ❌ Time gap >2 hours
-- ❌ Confidence <70%
-- ❌ User started new topic
-
-**Example Scenarios:**
-
-✅ **CONSOLIDATE** (Confidence: 85%):
-
-- Previous summary: "Workflow Transparency Initiative - Phase 2"
-- Current session: User says "continue Phase 3 of transparency work"
-- Same files: `.windsurf/workflows/*.md`
-- Time gap: 45 minutes
-- Commits: Both about workflow enhancements
-➡️ **Action:** Merge into single comprehensive summary
-
-❌ **SEPARATE** (Confidence: 35%):
-
-- Previous summary: "Workflow Transparency Initiative"
-- Current session: "Fix security vulnerabilities"
-- Different files: `src/mcp_web/*.py` vs `.windsurf/workflows/*.md`
-- Time gap: 3 hours
-- Commits: Unrelated topics
-➡️ **Action:** Create new summary, preserve previous context
-
-❌ **SEPARATE** (Confidence: 55%):
-
-- Previous summary: "Initiative planning"
-- Current session: "Implementation work" (same initiative)
-- Same files: 60% overlap
-- Time gap: 30 minutes
-- BUT: Different phase, different focus
-➡️ **Action:** Keep separate - different aspects deserve separate summaries
-
-### 2.3 Execute Consolidation (if triggered)
-
-**If consolidation triggered:**
-
-**Print delegation announcement:**
-
-```markdown
-↪️ **Delegating to /consolidate-summaries:** Merging with existing summary from today
-```
-
-**Add sub-workflow task:**
-
-```typescript
-update_plan({
-  explanation: "↪️ Consolidating with existing summary",
-  plan: [
-    { step: "1. /meta-analysis - Check protocol and update timestamp", status: "completed" },
-    { step: "2. /meta-analysis - Check for existing summaries (consolidation detection)", status: "in_progress" },
-    { step: "  2.1. /consolidate-summaries - Merge summaries", status: "in_progress" },
-    { step: "3. /meta-analysis - Extract and summarize session", status: "pending" },
-    { step: "4. /meta-analysis - Check living documentation", status: "pending" },
-    { step: "5. /meta-analysis - Commit session summary", status: "pending" }
-  ]
-})
-```
-
-**Call `/consolidate-summaries` with specific summaries:**
-
-```bash
-# Only consolidate the current session with the most recent summary
-# NOT all summaries from today (preserves other unrelated sessions)
-/consolidate-summaries --target "${LATEST}" --merge-with-current
-```
-
-**Note:** This consolidates ONLY the current session with the most recent summary,
-preserving all other summaries from today as separate contexts.
-
-**After consolidation returns:**
-
-```markdown
-📋 **Consolidation Complete:** Merged with existing summary
-```
-
-**SKIP to Stage 4** (living documentation check) - no need to extract/summarize again
-
-### 2.4 Proceed with Normal Flow (if no consolidation)
-
-**If no consolidation needed:**
-
-**Print stage completion:**
-
-```markdown
-📋 **Stage 2 Complete:** No consolidation needed, proceeding with new summary
-```
-
-**Update task plan:**
-
-```typescript
-update_plan({
-  explanation: "No consolidation needed",
-  plan: [
-    { step: "1. /meta-analysis - Check protocol and update timestamp", status: "completed" },
-    { step: "2. /meta-analysis - Check for existing summaries (consolidation detection)", status: "completed" },
-    { step: "3. /meta-analysis - Extract and summarize session", status: "in_progress" },
-    { step: "4. /meta-analysis - Check living documentation", status: "pending" },
-    { step: "5. /meta-analysis - Commit session summary", status: "pending" }
-  ]
-})
-```
+**Never consolidate:** Different initiatives, unrelated files, gap >2h, confidence <70%
 
 ---
 
 ## Stage 3: Extract Session Data
 
-🔄 **Entering Stage 3: Extract Session Data**
-
-**Before calling `/extract-session`, add sub-workflow task:**
-
-```typescript
-update_plan({
-  explanation: "↪️ Delegating to /extract-session",
-  plan: [
-    { step: "1. /meta-analysis - Check protocol and update timestamp", status: "completed" },
-    { step: "2. /meta-analysis - Check for existing summaries (consolidation detection)", status: "completed" },
-    { step: "3. /meta-analysis - Extract and summarize session", status: "in_progress" },
-    { step: "  3.1. /extract-session - Extract session data", status: "in_progress" },
-    { step: "  3.2. /summarize-session - Generate formatted summary", status: "pending" },
-    { step: "4. /meta-analysis - Check living documentation", status: "pending" },
-    { step: "5. /meta-analysis - Commit session summary", status: "pending" }
-  ]
-})
-```
-
-**Print delegation announcement:**
-
-```markdown
-↪️ **Delegating to /extract-session:** Analyzing git history and session artifacts
-```
-
-**Call `/extract-session` workflow:**
-
-- Analyzes git history since last meta-analysis
-- Extracts accomplishments, decisions, learnings
-- Identifies positive and negative patterns
-- Checks protocol compliance
-- Returns structured data
+Call `/extract-session` → Analyzes git history, extracts accomplishments/decisions/learnings, checks protocol compliance.
 
 **See:** `.windsurf/workflows/extract-session.md`
 
-**After `/extract-session` returns, print completion:**
-
-```markdown
-📋 **Extraction Complete:** Session data structured for summary generation
-```
-
 ---
 
-## Stage 4: Generate Session Summary
+## Stage 4: Generate Summary
 
-🔄 **Entering Stage 4: Generate Session Summary**
-
-**Before calling `/summarize-session`, update task:**
-
-```typescript
-update_plan({
-  explanation: "↪️ Delegating to /summarize-session",
-  plan: [
-    { step: "1. /meta-analysis - Check protocol and update timestamp", status: "completed" },
-    { step: "2. /meta-analysis - Extract and summarize session", status: "in_progress" },
-    { step: "  2.1. /extract-session - Extract session data", status: "completed" },
-    { step: "  2.2. /summarize-session - Generate formatted summary", status: "in_progress" },
-    { step: "3. /meta-analysis - Check living documentation", status: "pending" },
-    { step: "4. /meta-analysis - Commit session summary", status: "pending" }
-  ]
-})
-```
-
-**Print delegation announcement:**
-
-```markdown
-↪️ **Delegating to /summarize-session:** Creating formatted session summary
-```
-
-**Call `/summarize-session` workflow:**
-
-- Uses structured template
-- Applies length constraints for consistency
-- Validates against checklist
-- Creates file in proper location
-
-**Output:** `docs/archive/session-summaries/YYYY-MM-DD-description.md`
+Call `/summarize-session` → Uses template, validates, creates `docs/archive/session-summaries/YYYY-MM-DD-description.md`
 
 **See:** `.windsurf/workflows/summarize-session.md`
 
-**After `/summarize-session` returns, print completion:**
+---
 
-```markdown
-📋 **Summary Complete:** Session summary created in docs/archive/session-summaries/
-```
+## Stage 5: Living Documentation
 
-**Update task plan:**
+| Document | Update Triggers ✅ | Skip ❌ |
+|----------|-------------------|----------|
+| **PROJECT_SUMMARY** | Major feature, milestone, architecture change, ADR, initiative status, metrics shift, dependencies | Routine fixes, minor docs, refactoring, test additions |
+| **CHANGELOG** | Release prep, breaking changes, user features, major bugs, dependency updates | Internal work, docs-only, WIP features |
 
-```typescript
-update_plan({
-  explanation: "Session summary generated",
-  plan: [
-    { step: "1. /meta-analysis - Check protocol and update timestamp", status: "completed" },
-    { step: "2. /meta-analysis - Extract and summarize session", status: "completed" },
-    { step: "  2.1. /extract-session - Extract session data", status: "completed" },
-    { step: "  2.2. /summarize-session - Generate formatted summary", status: "completed" },
-    { step: "3. /meta-analysis - Check living documentation", status: "in_progress" },
-    { step: "4. /meta-analysis - Commit session summary", status: "pending" }
-  ]
-})
-```
+**If triggers met:** Call `/update-docs` (see `.windsurf/workflows/update-docs.md`)
 
 ---
 
-## Stage 5: Living Documentation Check
-
-🔄 **Entering Stage 5: Living Documentation Check**
-
-### 4.1 PROJECT_SUMMARY.md Update Triggers
-
-**Update if:**
-
-- ✅ New major feature completed
-- ✅ Significant milestone reached
-- ✅ Architecture changes made
-- ✅ New ADR created
-- ✅ Initiative status changed
-- ✅ Metrics significantly changed
-- ✅ New dependencies added
-
-**Skip if:**
-
-- ❌ Routine bug fixes
-- ❌ Minor documentation updates
-- ❌ Internal refactoring
-- ❌ Test additions (unless coverage milestone)
-
-### 4.2 CHANGELOG.md Update Triggers
-
-**Update if:**
-
-- ✅ Preparing for release
-- ✅ Breaking changes made
-- ✅ New features added (user-facing)
-- ✅ Significant bugs fixed
-- ✅ Dependencies updated (major versions)
-
-**Skip if:**
-
-- ❌ Internal work (no release)
-- ❌ Documentation-only changes
-- ❌ Work-in-progress features
-
-### 4.3 Apply Updates (if needed)
-
-**If triggers met:**
-
-**Print delegation announcement:**
-
-```markdown
-↪️ **Delegating to /update-docs:** Updating PROJECT_SUMMARY and CHANGELOG
-```
-
-**Add sub-workflow task before calling:**
-
-```typescript
-update_plan({
-  explanation: "↪️ Delegating to /update-docs",
-  plan: [
-    // ... completed tasks ...
-    { step: "3. /meta-analysis - Check living documentation", status: "in_progress" },
-    { step: "  3.1. /update-docs - Update living documents", status: "in_progress" },
-    { step: "4. /meta-analysis - Commit session summary", status: "pending" }
-  ]
-})
-```
-
-Call `/update-docs` workflow to apply changes
-
-**See:** `.windsurf/workflows/update-docs.md`
-
-**After `/update-docs` returns (if called):**
-
-```markdown
-📋 **Documentation Updates Complete:** Living documents synchronized
-```
-
-**Print stage completion:**
-
-```markdown
-📋 **Stage 4 Complete:** Living documentation status verified
-```
-
----
-
-## Stage 6: Commit Session Summary
-
-🔄 **Entering Stage 6: Commit Session Summary**
-
-### 5.1 Stage Files
+## Stage 6: Commit
 
 ```bash
-# Stage session summary and timestamp
-git add docs/archive/session-summaries/YYYY-MM-DD-*.md
-git add .windsurf/.last-meta-analysis
-```
-
-### 5.2 Commit
-
-```bash
+git add docs/archive/session-summaries/YYYY-MM-DD-*.md .windsurf/.last-meta-analysis
 git commit -m "docs(session): add YYYY-MM-DD [focus] session summary
 
-- Duration: ~N hours
-- Focus: [Primary focus]
+- Duration: ~N hours, Focus: [Primary focus]
 - Key accomplishments: [highlights]"
 ```
 
-**Print workflow exit:**
-
-```markdown
-✅ **Completed /meta-analysis:** Session summary created and committed
-```
-
 ---
 
-## Success Criteria
+## Success & Integration
 
-**Meta-analysis is complete when:**
+**Complete when:** Summary created, timestamp updated, living docs checked/updated, all committed.
 
-- [ ] Session summary created in `docs/archive/session-summaries/`
-- [ ] Timestamp file updated (`.windsurf/.last-meta-analysis`)
-- [ ] Living documentation status checked (PROJECT_SUMMARY, CHANGELOG)
-- [ ] Updates applied if triggers met
-- [ ] All changes committed with descriptive message
-- [ ] Ready for next session (context preserved)
+**Troubleshooting:**
+- Update PROJECT_SUMMARY? → Check Stage 5 triggers (when in doubt, update)
+- Protocol violation? → Document in summary, propose workflow improvements
+- No learnings? → Write "No significant insights (routine work)"
 
----
+**Called by:** `/work` (MANDATORY at session end) | User (direct)
 
-## Troubleshooting
+**Calls:** `/extract-session`, `/summarize-session`, `/consolidate-summaries`, `/update-docs`
 
-**Issue:** "Should I update PROJECT_SUMMARY?"
-
-**Solution:** Check Stage 4.1 triggers. When in doubt, lean toward updating (better current than stale).
-
-**Issue:** "I violated Session End Protocol"
-
-**Solution:** Document violation in session summary's "High-Priority Gaps" section. Propose workflow improvements.
-
-**Issue:** "No significant learnings this session"
-
-**Solution:** Write "No significant technical insights (routine implementation work)". Not every session produces deep learnings.
-
----
-
-## Integration
-
-### Called By
-
-- `/work` - MANDATORY at session end
-- User - Direct invocation
-
-### Calls
-
-- `/extract-session` - Extract structured session data (Stage 2)
-- `/summarize-session` - Generate formatted summary (Stage 3)
-- `/update-docs` - Update living documentation if needed (Stage 4)
-
----
-
-## References
-
-- `.windsurf/workflows/extract-session.md` - Data extraction
-- `.windsurf/workflows/summarize-session.md` - Summary generation
-- `.windsurf/workflows/update-docs.md` - Living documentation updates
-- `.windsurf/rules/10_session_protocols.md` - Session End Protocol
-- `docs/DOCUMENTATION_STRUCTURE.md` - Where summaries go
+**See:** `.windsurf/workflows/extract-session.md`, `summarize-session.md`, `update-docs.md`, `.windsurf/rules/10_session_protocols.md`
