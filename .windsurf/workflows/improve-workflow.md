@@ -36,11 +36,25 @@ This sub-workflow is **automatically invoked** by `/improve-prompt` when:
 
 ---
 
-## Stage 0: Workflow Context Analysis
+## Stage 0: Pre-Optimization Validation (MANDATORY)
 
 🔄 **Entering /improve-workflow:** Specialized workflow optimization
 
-### 0.1 Extract Workflow Metadata
+**CRITICAL:** Follow RESTORATION_PROTOCOL to prevent content loss.
+
+### 0.1 Create Baseline Snapshot
+
+**Before any optimization, create git baseline:**
+
+```bash
+# Store original for comparison
+git show HEAD:.windsurf/workflows/TARGET.md > /tmp/TARGET-baseline.md
+wc -w /tmp/TARGET-baseline.md  # Record baseline word count
+```
+
+**Purpose:** Enable restoration if optimization removes critical content.
+
+### 0.2 Extract Workflow Metadata
 
 **From frontmatter:**
 
@@ -58,7 +72,7 @@ dependencies: [...]  # Other workflows it calls
 - Example count
 - Cross-references
 
-### 0.2 Apply Compression Decision Matrix
+### 0.3 Apply Compression Decision Matrix
 
 **Use same matrix as `/improve-prompt` Stage 4.0:**
 
@@ -72,7 +86,7 @@ Determine strategy based on workflow quality + token count.
 - Stage count >10: Light polish only (max 15% reduction)
 - Calls >5 workflows: Preserve all cross-references
 
-### 0.3 Idempotency Pre-Check
+### 0.4 Idempotency Pre-Check
 
 **Check if workflow already optimized:**
 
@@ -84,6 +98,8 @@ Determine strategy based on workflow quality + token count.
 
 - Return unchanged with note: "Already optimized (cached/version/stable)"
 - Skip all optimization stages
+
+**IMPORTANT:** If workflow version = "v2.0-intelligent-semantic-preservation" and was restored (check git log), do NOT re-optimize.
 
 ---
 
@@ -323,7 +339,61 @@ grep "step:.*status:" improved.md | validate format
 - Cross-references resolve
 - Examples run correctly
 
-### 3.4 Idempotency Testing
+### 3.4 Pre-Commit Validation (RESTORATION_PROTOCOL)
+
+**MANDATORY validation before ANY commit:**
+
+#### 3.4.1 Quantitative Validation
+
+```bash
+# Compare baseline vs optimized
+original_words=$(wc -w < /tmp/TARGET-baseline.md)
+new_words=$(wc -w < .windsurf/workflows/TARGET.md)
+reduction_pct=$(echo "scale=2; 100 * ($original_words - $new_words) / $original_words" | bc)
+```
+
+**FAIL if:** reduction_pct > 15% (excessive content loss)
+
+#### 3.4.2 Structural Validation
+
+```bash
+# Check all stage headings preserved
+grep "^##" /tmp/TARGET-baseline.md | sort > /tmp/baseline-structure.txt
+grep "^##" .windsurf/workflows/TARGET.md | sort > /tmp/optimized-structure.txt
+diff /tmp/baseline-structure.txt /tmp/optimized-structure.txt
+```
+
+**FAIL if:** Any Stage heading missing
+
+#### 3.4.3 Critical Element Validation
+
+```bash
+# Verify preservation of critical elements
+baseline_update_plans=$(grep -c "update_plan" /tmp/TARGET-baseline.md)
+optimized_update_plans=$(grep -c "update_plan" .windsurf/workflows/TARGET.md)
+
+baseline_critical=$(grep -c "CRITICAL\|MANDATORY" /tmp/TARGET-baseline.md)
+optimized_critical=$(grep -c "CRITICAL\|MANDATORY" .windsurf/workflows/TARGET.md)
+```
+
+**FAIL if:** update_plans OR critical markers count reduced
+
+#### 3.4.4 Restoration Decision
+
+**If ANY validation fails:**
+
+```bash
+# RESTORE from baseline
+cp /tmp/TARGET-baseline.md .windsurf/workflows/TARGET.md
+echo "❌ VALIDATION FAILED: Restored from baseline"
+echo "Reason: [validation failure details]"
+```
+
+**Only proceed if ALL validations pass.**
+
+**See:** [RESTORATION_PROTOCOL.md](../../docs/initiatives/active/workflow-optimization-phase-2/artifacts/RESTORATION_PROTOCOL.md)
+
+### 3.5 Idempotency Testing
 
 **For workflows, test multiple dimensions:**
 

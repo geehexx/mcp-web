@@ -113,7 +113,39 @@ Where:
 
 ---
 
-## Stage 1: Create Task Plan
+## Stage 1: Pre-Optimization Validation (Workflows Only)
+
+**If optimizing a Windsurf workflow (.windsurf/workflows/*.md):**
+
+### 1.1 Create Baseline Snapshot (MANDATORY)
+
+```bash
+# Store original for comparison
+git show HEAD:.windsurf/workflows/TARGET.md > /tmp/TARGET-baseline.md
+wc -w /tmp/TARGET-baseline.md  # Record baseline word count
+```
+
+**Purpose:** Enable restoration if optimization removes critical content.
+
+### 1.2 Check for Restored Workflows
+
+**CRITICAL:** Do NOT re-optimize workflows that were previously restored.
+
+```bash
+# Check if workflow was restored in commit e57edfb
+git log --oneline --all --grep="restore.*workflows" -- .windsurf/workflows/TARGET.md
+```
+
+**If workflow was restored (detect-context, implement, validate, research):**
+
+- Return unchanged with note: "Workflow previously restored, skipping to prevent content loss"
+- Exit workflow
+
+**See:** [RESTORATION_PROTOCOL.md](../../docs/initiatives/active/workflow-optimization-phase-2/artifacts/RESTORATION_PROTOCOL.md)
+
+---
+
+## Stage 2: Create Task Plan
 
 ```typescript
 update_plan({
@@ -131,7 +163,7 @@ update_plan({
 
 ---
 
-## Stage 2: Input Capture
+## Stage 3: Input Capture
 
 🔄 **Entering Stage 2: Input Capture**
 
@@ -143,7 +175,7 @@ update_plan({
 
 ---
 
-## Stage 2.5: Model Detection
+## Stage 3.5: Model Detection
 
 ### 2.5.1 Determine Target Model
 
@@ -198,9 +230,9 @@ update_plan({
 
 ---
 
-## Stage 3: Analyze Current Prompt
+## Stage 4: Analyze Current Prompt
 
-🔄 **Entering Stage 3: Analyze Current Prompt**
+🔄 **Entering Stage 4: Analyze Current Prompt**
 
 ### 3.1 Semantic Analysis (Layer 1)
 
@@ -239,9 +271,9 @@ semantic_profile = {
 
 ---
 
-## Stage 4: Apply Universal Optimizations
+## Stage 5: Apply Universal Optimizations
 
-🔄 **Entering Stage 4: Apply Universal Optimizations**
+🔄 **Entering Stage 5: Apply Universal Optimizations**
 
 **Philosophy:** Start with cross-model techniques that work for ALL LLMs, then add model-specific enhancements.
 
@@ -325,9 +357,9 @@ semantic_profile = {
 
 ---
 
-## Stage 5: Apply Model-Specific Enhancements
+## Stage 6: Apply Model-Specific Enhancements
 
-🔄 **Entering Stage 5: Apply Model-Specific Enhancements**
+🔄 **Entering Stage 6: Apply Model-Specific Enhancements**
 
 | Model | Key Enhancements |
 |-------|------------------|
@@ -339,9 +371,9 @@ semantic_profile = {
 
 ---
 
-## Stage 6: Validate Improvements
+## Stage 7: Validate Improvements
 
-🔄 **Entering Stage 6: Validate Improvements**
+🔄 **Entering Stage 7: Validate Improvements**
 
 **Verify:** Intent preservation (objective, requirements, constraints, output type) | Coherence (consistent, complete, clear, appropriate length) | Context compatibility (conventions, @-mentions, no conflicts)
 
@@ -394,7 +426,63 @@ assert hash_match OR (similarity >= 0.98 AND token_drift <= 10)
 
 ---
 
-## Stage 7: Calculate Metrics
+## Stage 8: Pre-Commit Validation (Workflows Only)
+
+**If optimizing a Windsurf workflow, MANDATORY validation:**
+
+### 8.1 Quantitative Validation
+
+```bash
+# Compare baseline vs optimized
+original_words=$(wc -w < /tmp/TARGET-baseline.md)
+new_words=$(wc -w < .windsurf/workflows/TARGET.md)
+reduction_pct=$(echo "scale=2; 100 * ($original_words - $new_words) / $original_words" | bc)
+```
+
+**FAIL if:** reduction_pct > 15% (excessive content loss)
+
+### 8.2 Structural Validation
+
+```bash
+# Check all stage headings preserved
+grep "^##" /tmp/TARGET-baseline.md | sort > /tmp/baseline-structure.txt
+grep "^##" .windsurf/workflows/TARGET.md | sort > /tmp/optimized-structure.txt
+diff /tmp/baseline-structure.txt /tmp/optimized-structure.txt
+```
+
+**FAIL if:** Any Stage heading missing
+
+### 8.3 Critical Element Validation
+
+```bash
+# Verify preservation of critical elements
+baseline_update_plans=$(grep -c "update_plan" /tmp/TARGET-baseline.md)
+optimized_update_plans=$(grep -c "update_plan" .windsurf/workflows/TARGET.md)
+
+baseline_critical=$(grep -c "CRITICAL\|MANDATORY" /tmp/TARGET-baseline.md)
+optimized_critical=$(grep -c "CRITICAL\|MANDATORY" .windsurf/workflows/TARGET.md)
+```
+
+**FAIL if:** update_plans OR critical markers count reduced
+
+### 8.4 Restoration Decision
+
+**If ANY validation fails:**
+
+```bash
+# RESTORE from baseline
+cp /tmp/TARGET-baseline.md .windsurf/workflows/TARGET.md
+echo "❌ VALIDATION FAILED: Restored from baseline"
+echo "Reason: [validation failure details]"
+```
+
+**Only proceed if ALL validations pass.**
+
+**See:** [RESTORATION_PROTOCOL.md](../../docs/initiatives/active/workflow-optimization-phase-2/artifacts/RESTORATION_PROTOCOL.md)
+
+---
+
+## Stage 9: Calculate Metrics
 
 **Quality scores (0-10):** Re-assess 8 dimensions (objective, instructions, context, constraints, format, examples, reasoning, structure)
 
@@ -404,13 +492,13 @@ assert hash_match OR (similarity >= 0.98 AND token_drift <= 10)
 
 ---
 
-## Stage 8: Present Results
+## Stage 10: Present Results
 
-🔄 **Entering Stage 8: Present Results with Analysis**
+🔄 **Entering Stage 10: Present Results with Analysis**
 
 **Output template:**
 
-```markdown
+```text
 # 🎯 Prompt Optimization Results
 
 ## Summary
@@ -457,9 +545,8 @@ assert hash_match OR (similarity >= 0.98 AND token_drift <= 10)
 - ✗ Not cached (idempotency failed)
 
 ## Improved Prompt
-````markdown
-[FULL IMPROVED PROMPT]
-````
+
+[Full improved prompt content here]
 
 ## Validation
 
