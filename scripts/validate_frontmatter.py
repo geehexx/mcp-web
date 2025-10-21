@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Validate YAML frontmatter in workflow and rule files."""
 
-import json
 import sys
 from pathlib import Path
 
@@ -11,7 +10,7 @@ from jsonschema import ValidationError, validate
 
 def load_schema() -> dict:
     """Schema removed - frontmatter now uses minimal Windsurf format.
-    
+
     Validation rules:
     - trigger: Required (always_on, manual, model_decision, glob)
     - description: Required for model_decision and glob triggers

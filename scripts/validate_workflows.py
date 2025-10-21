@@ -15,13 +15,11 @@ Usage:
     python scripts/validate_workflows.py --fix  # Auto-fix what's possible
 """
 
-import json
 import re
 import sys
 from pathlib import Path
 from typing import Any
 
-import jsonschema
 import yaml
 
 # Project root
@@ -149,18 +147,16 @@ class WorkflowValidator:
         except yaml.YAMLError as e:
             raise ValidationError(f"Invalid YAML syntax: {e}") from e
 
-    def _validate_schema(self, frontmatter: dict[str, Any], rel_path: Path) -> None:
+    def _validate_schema(self, frontmatter: dict[str, Any], rel_path: Path) -> None:  # noqa: ARG002
         """Validate frontmatter against JSON schema.
 
-        Args:
-            frontmatter: Parsed frontmatter
-            rel_path: Relative path for error reporting
+        Schema validation disabled - using minimal Windsurf format.
+        Validation now focuses on required fields only (handled elsewhere).
 
-        Raises:
-            ValidationError: If schema validation fails
+        Args:
+            frontmatter: Parsed frontmatter (unused - kept for interface compatibility)
+            rel_path: Relative path for error reporting (unused - kept for interface compatibility)
         """
-        # Schema validation disabled - using minimal Windsurf format
-        # Validation now focuses on required fields only
         return
 
     def _check_outdated_tools(self, content: str, rel_path: Path) -> None:
