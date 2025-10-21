@@ -1,6 +1,7 @@
 ---
-trigger: model_decision
-description: Apply when moving archiving or reorganizing files and updating cross-references
+trigger: glob
+description: Apply when editing .windsurf/ files or moving archiving reorganizing files
+globs: .windsurf/**/*.md, .windsurf/**/*.json
 ---
 
 # File Operations and Archival

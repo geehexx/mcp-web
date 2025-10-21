@@ -91,13 +91,9 @@ ls:
   .windsurf/workflows:
     .md: kebab-case  # work.md, detect-context.md, implement.md, etc.
 
-  # Windsurf rules - snake_case with leading numbers (rules only)
+  # Windsurf rules - regex pattern (00_agent_directives.md format)
   .windsurf/rules:
     .md: regex:\d{2}_[a-z_]+  # 00_agent_directives.md, 01_testing_and_tooling.md, etc.
-
-  # Windsurf docs - kebab-case (supporting documentation and generated indexes)
-  .windsurf/docs:
-    .md: kebab-case  # workflow-index.md, rules-index.md, common-patterns.md, etc.
 
   # Windsurf schemas - kebab-case
   .windsurf/schemas:

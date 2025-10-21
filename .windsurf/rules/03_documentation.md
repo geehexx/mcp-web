@@ -279,89 +279,28 @@ Documentation PRs must:
 - [ ] Include "Last Updated" date
 - [ ] Be reviewed for clarity
 
-## 3.10 Machine-Readable Documentation Lifecycle
+## 3.10 Windsurf Documentation
 
-**Location:** `.windsurf/docs/`
+**Location:** `.windsurf/rules/` and `.windsurf/workflows/`
 
-**Purpose:** Quick-reference documentation optimized for AI agent consumption (<2000 tokens per file)
+**Purpose:** Rules and workflows are self-documenting via YAML frontmatter.
 
-### Automatic Regeneration
+### Structure
 
-Machine-readable indexes are **automatically regenerated** when workflow or rule frontmatter changes:
+- **Rules:** 16 rule files with model_decision/glob/always_on triggers
+- **Workflows:** 21 workflow files with executable steps
+- **Hybrid Loading:** Rules automatically loaded by trigger OR explicitly @mentioned
 
-**Triggers:**
-- Pre-commit hook (when committing workflow/rule changes)
-- Manual: `task docs:windsurf:update`
-- Force regeneration: `task docs:windsurf:update:force`
-- Check if needed: `task docs:windsurf:check`
+### Maintenance
 
-**Auto-Generated Files:**
-- `workflow-index.md` - Index of all workflows with metadata
-- `rules-index.md` - Index of all rules with metadata
-- `workflow-dependencies.md` - Workflow dependency graph
+**When editing `.windsurf/` files:**
 
-**Change Detection:**
-- Uses SHA-256 hashing of frontmatter content
-- Caches hashes in `.windsurf/.doc-hashes.json`
-- Incrementally regenerates only affected indexes
-- **Idempotent:** Same inputs always produce same outputs
+- **ALWAYS use MCP tools:** `mcp0_read_text_file`, `mcp0_write_file`, `mcp0_edit_file`
+- **Absolute paths required:** `/home/gxx/projects/mcp-web/.windsurf/...`
+- **Validate frontmatter:** Ensure correct YAML format
+- **Update token counts:** Keep frontmatter `tokens` field current
 
-**Implementation:** `scripts/update_machine_readable_docs.py`
-
-### Manual Maintenance Files
-
-Pattern libraries and quick references require manual updates:
-
-- `batch-operations.md` - Batch operation patterns
-- `common-patterns.md` - Shared code examples
-- `context-loading-patterns.md` - Context loading strategies
-- `tool-patterns.md` - MCP tool usage patterns
-- `task-system-reference.md` - Task format specification
-- `workflow-routing-matrix.md` - Routing decision matrix
-- `directory-structure.md` - Directory structure rules
-- `index.md` - Directory index
-
-**Update Triggers:**
-- New patterns discovered
-- Tool usage changes
-- Routing logic updates
-- Task system changes
-
-### Quality Standards
-
-**All machine-readable docs must:**
-- Include YAML frontmatter with metadata
-- Stay within token budget (low: <1000 words, medium: <2000 words)
-- Use tables/lists over prose
-- Be self-contained (minimal cross-references)
-- Pass markdown linting
-
-**Validation:**
-```bash
-# Check if regeneration needed
-task docs:windsurf:check
-
-# Regenerate if changes detected
-task docs:windsurf:update
-
-# Force full regeneration
-task docs:windsurf:update:force
-```
-
-### Integration with Workflows
-
-Workflows should **never manually regenerate** machine-readable docs. The system handles this automatically via:
-
-1. **Pre-commit hook:** Detects workflow/rule frontmatter changes
-2. **Incremental regeneration:** Only regenerates affected indexes
-3. **Cache validation:** Prevents unnecessary regeneration
-
-**Agent Responsibility:**
-
-- Update workflow/rule frontmatter when creating/modifying workflows
-- Update manual pattern libraries when new patterns emerge
-- Never manually edit auto-generated files
-- Trust the automated lifecycle system
+**Reference:** See `08_file_operations.md` for complete MCP tool patterns
 
 ---
 

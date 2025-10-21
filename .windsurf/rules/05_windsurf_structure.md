@@ -18,8 +18,7 @@ Only the following directories are allowed in `.windsurf/`:
 
 1. **`workflows/`** - Executable workflows only (`.md` files)
 2. **`rules/`** - Agent rules only (`.md` files with `XX_name.md` format)
-3. **`docs/`** - Supporting documentation and generated indexes
-4. **`schemas/`** - JSON schemas for validation
+3. **`schemas/`** - JSON schemas for validation
 
 ### Directory Purposes
 
@@ -61,27 +60,6 @@ Only the following directories are allowed in `.windsurf/`:
 - ✅ `02_python_standards.md` - Python coding standards
 - ❌ `INDEX.md` - Generated index (belongs in `docs/`)
 - ❌ `cheatsheet.md` - Reference doc (belongs in `docs/`)
-
-#### `docs/` - Supporting Documentation
-
-**Purpose:** Contains documentation, templates, and generated indexes that support workflows and rules.
-
-**Rules:**
-
-- Supporting documentation for workflows/rules
-- Template libraries (e.g., `common-patterns.md`)
-- Generated indexes and graphs
-- Must follow kebab-case naming: `document-name.md`
-
-**Examples:**
-
-- ✅ `workflow-index.md` - Generated workflow index
-- ✅ `rules-index.md` - Generated rule index
-- ✅ `workflow-dependencies.md` - Generated dependency graph
-- ✅ `common-patterns.md` - Reusable pattern templates
-- ✅ `context-loading-patterns.md` - Context loading strategies
-- ✅ `batch-operations.md` - Batch operation patterns
-- ✅ `DIRECTORY_STRUCTURE.md` - This file
 
 #### `schemas/` - JSON Schemas
 
@@ -179,9 +157,6 @@ python scripts/generate_indexes.py
 
 .windsurf/rules:
   .md: regex:\d{2}_[a-z_]+  # Rules only
-
-.windsurf/docs:
-  .md: kebab-case  # Supporting docs
 
 .windsurf/schemas:
   .json: kebab-case  # Schemas only
