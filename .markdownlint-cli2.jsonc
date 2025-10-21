@@ -27,7 +27,7 @@
     "MD025": { "front_matter_title": "" },
     "MD029": { "style": "ordered" },
     "MD033": {
-      "allowed_elements": ["br", "details", "summary", "img", "kbd"]
+      "allowed_elements": ["br", "details", "summary", "img", "kbd", "thinking", "antml:function_calls", "antml:invoke", "antml:parameter"]
     },
     "MD034": false,
     "MD041": false,

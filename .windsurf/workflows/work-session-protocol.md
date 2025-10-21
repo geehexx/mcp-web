@@ -21,6 +21,7 @@ Detect work completion and execute session end protocol.
 ## Completion Detection
 
 **Trigger if ANY:**
+
 1. Initiative Status = "Completed" or "✅"
 2. All planned tasks complete
 3. User signal: "wrap up", "end session", "done"
@@ -36,7 +37,7 @@ update_plan({
     { step: "5.1. /commit - Commit all", status: "in_progress" },
     { step: "5.2. /archive-initiative - Archive completed", status: "pending" },
     { step: "5.3. /meta-analysis - Execute", status: "pending" },
-    { step: "5.4. Verify exit criteria", status: "pending" }
+    { step: "5.4. /work-session-protocol - Verify exit criteria", status: "pending" }
   ]
 })
 ```

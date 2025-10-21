@@ -239,7 +239,7 @@ semantic_profile = {
 
 | Model | Enhancements |
 |-------|--------------|
-| Claude | Add XML tags, `<thinking>` blocks, explicit reasoning |
+| Claude | Add XML tags, <thinking> blocks, explicit reasoning |
 | GPT | Structured markdown, clear sections, tool schemas |
 | Gemini | System instructions, hierarchical structure, examples first |
 

@@ -91,12 +91,14 @@ docs/initiatives/active/YYYY-MM-DD-name/
 **When /tmp/ is acceptable:**
 
 - **Config files for scaffolding:** Short-lived config files passed to scripts
+
   ```bash
   # OK: Temporary config for scaffolding
   python scripts/scaffold.py --type initiative --config /tmp/config.yaml
   ```
 
 - **Transient processing:** Intermediate files deleted immediately after use
+
   ```python
   # OK: Temporary file with cleanup
   with temporary_file("/tmp/temp.txt") as temp:
@@ -128,6 +130,7 @@ docs/initiatives/active/my-initiative/
 ```
 
 **Rationale:**
+
 - /tmp/ files lost on reboot
 - No version control
 - Hard to reference from commits

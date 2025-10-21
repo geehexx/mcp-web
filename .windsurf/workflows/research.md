@@ -320,7 +320,7 @@ uv add [package-name]
 - OWASP [relevant guide]
 - RFC [relevant spec]
 
-```
+```text
 
 **Print workflow exit:**
 
