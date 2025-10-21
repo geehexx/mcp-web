@@ -462,6 +462,145 @@ During session, discovered attempt to create documentation in `.windsurf/docs/` 
 
 ---
 
+### 2025-10-21 (CRITICAL): Phase 2 Failure Detected - Full Restoration Required
+
+**CRITICAL FINDING:** Phase 2 optimizations (commits 411a807, d4d60af, 47cbdcc, b8b30fb) applied mechanical compression without intelligent context preservation.
+
+**Evidence of Failure:**
+
+1. **Suspicious uniformity:** Identical reduction percentages across unrelated workflows
+   - Tier 1 (high-priority): -50%, -51%, -51%, -50%
+   - Tier 2 (medium-priority): -34%, -37%, -34%, -34%, -36%, -34%, -36%, -35%, -35%
+   - This uniformity indicates **formulaic processing**, not context-aware optimization
+
+2. **Lost Context Examples:**
+   - **Task granularity:** 14-step plans collapsed to 4 generic steps
+   - **Example specificity:** `grep_search("auth|authentication|api.?key"...)` → `grep_search("relevant|pattern"...)`
+   - **Instructional clarity:** Multi-step procedures → compressed bullets without context
+   - **Progress tracking:** Intermediate update_plan() calls removed entirely
+
+3. **Mechanical Formula Applied:**
+   ```
+   FOR each workflow:
+     Remove "Stage 0" entry announcements
+     Collapse task plans to ~4 steps  
+     Remove intermediate update_plan() calls
+     Convert all prose to tables
+     Replace specific examples with generic placeholders
+   ```
+
+**Root Cause:** Optimization focused on token count rather than semantic preservation. No analysis of workflow-specific value or complexity-appropriate granularity.
+
+**Impact:** **17 workflows** potentially compromised with lost instructional clarity, domain knowledge, and actionable guidance.
+
+**Corrective Action Plan:**
+
+#### Phase 1: Research & Analysis ✅ COMPLETE (2 hours)
+
+- ✅ Analyzed git history and identified mechanical compression patterns
+- ✅ Documented evidence of lost context (see `artifacts/phase2-failure-analysis.md`)
+- ✅ Researched intelligent optimization techniques:
+  - Microsoft Research LLMLingua (2024): Semantic preservation at 20x compression
+  - Cognitive Load Theory (2024): Intrinsic/extraneous/germane load management
+  - Technical Writing Best Practices: Progressive disclosure, chunking, example sufficiency
+- ✅ Created `artifacts/intelligent-optimization-methodology.md` with research-backed approach
+
+**Key Research Findings:**
+
+1. **Complexity-based differential optimization:** Simple workflows can handle 30-40% compression, complex workflows need 10-20%
+2. **Runtime-based progress tracking:** <2min workflows need minimal tracking, >10min need granular updates
+3. **Semantic preservation techniques:** Preserve decision logic, keep 2-3 concrete examples, maintain workflow-specific instructions
+4. **Quality validation framework:** Post-optimization checklist, quality metrics, anti-pattern detection
+
+#### Phase 2: Systematic Restoration (4-6 hours) - NEXT SESSION
+
+**Strategy:**
+
+1. **Identify pre-optimization commits:**
+   - High-priority (3): Before 411a807
+   - Medium-priority (6): Before d4d60af
+   - Tier 1-2 (4): Before 47cbdcc
+   - Previously optimized (4): Review from earlier sessions
+
+2. **For each workflow:**
+   - Extract original version from git history
+   - Check for post-optimization additions (git log analysis)
+   - Merge any valid additions back to original
+   - Save as restored baseline
+
+3. **Prioritized restoration order:**
+   - **Critical first (5):** work, detect-context, implement, validate, research
+   - **High-value (6):** generate-plan, load-context, plan, archive-initiative, bump-version, extract-session
+   - **Remaining (6):** Other workflows
+
+#### Phase 3: Intelligent Re-Optimization (6-8 hours) - FUTURE SESSIONS
+
+**Apply research-backed methodology:**
+
+1. **Pre-optimization analysis (per workflow):**
+   - Classify complexity (20-100 scale)
+   - Estimate runtime (<2min, 2-10min, >10min)
+   - Identify preservation zones (decision logic, unique examples)
+   - Identify compression zones (redundancy, verbose descriptions)
+
+2. **Targeted optimization techniques:**
+   - Duplication elimination (high ROI)
+   - Example consolidation (keep 2-3 best)
+   - Table consolidation (for structured data only)
+   - Progress tracking optimization (match to complexity)
+   - **Never:** Generic placeholders, over-tablification, complete structure removal
+
+3. **Quality validation (per workflow):**
+   - Run post-optimization checklist
+   - Verify semantic preservation
+   - Check instruction actionability
+   - Measure quality (8/10+ target)
+   - Ensure token reduction variance (15-30% range)
+
+**Expected Outcomes:**
+
+- **Token reduction:** 15-30% per workflow (variance expected and healthy)
+- **Quality:** 8/10+ instruction clarity
+- **Context:** 100% decision logic preserved
+- **Examples:** 2-3 concrete examples per concept
+- **Progress:** Granularity appropriate for complexity
+
+#### Phase 4: Validation & Documentation (2-3 hours)
+
+- Comprehensive quality review
+- Execution testing (verify instructions actionable)
+- Update initiative with lessons learned
+- Create ADR on intelligent optimization principles
+
+**Total Estimated Effort:** 12-17 hours across 2-3 sessions
+
+**Lessons Learned:**
+
+1. **Never trust uniform percentages** - Different workflows SHOULD have different reductions
+2. **Semantic preservation > token count** - Quality must not be sacrificed for metrics
+3. **Validate before committing** - Execution testing catches lost clarity
+4. **Research-backed > mechanical** - Apply proven techniques contextually, not formulaically
+5. **Differential optimization** - Complexity-appropriate strategies, not one-size-fits-all
+
+**Artifacts Created:**
+
+- `artifacts/phase2-failure-analysis.md` - Detailed analysis of what went wrong
+- `artifacts/intelligent-optimization-methodology.md` - Research-backed approach for re-optimization
+
+**Status:** Analysis complete, restoration plan defined, ready for systematic execution
+
+**Next Steps (Next Session):**
+
+1. Begin systematic workflow restoration from git history
+2. Restore 3-5 proof-of-concept workflows as validation
+3. Apply intelligent re-optimization to POC workflows
+4. Validate quality vs mechanical approach
+5. If successful, proceed with remaining workflows
+
+**Blockers:** None - clear path forward identified
+
+---
+
 ## Files Modified (To Be Updated)
 
 **Workflows:**
