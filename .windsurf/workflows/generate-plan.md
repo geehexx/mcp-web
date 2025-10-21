@@ -5,7 +5,7 @@ description: Generate structured implementation plan from research
 auto_execution_mode: 3
 category: Planning
 complexity: 60
-tokens: 1950
+tokens: 2150
 dependencies:
   - research
 status: active
@@ -27,29 +27,39 @@ status: active
 update_plan({
   explanation: "🔄 Starting /generate-plan workflow",
   plan: [
-    { step: "1. /generate-plan - Define objectives and success criteria", status: "in_progress" },
-    { step: "2. /generate-plan - Decompose into phases and tasks", status: "pending" },
-    { step: "3. /generate-plan - Estimate effort and identify risks", status: "pending" },
-    { step: "4. /generate-plan - Generate and validate initiative document", status: "pending" }
+    { step: "1. /generate-plan - Load context and analyze requirements", status: "in_progress" },
+    { step: "2. /generate-plan - Identify components and dependencies", status: "pending" },
+    { step: "3. /generate-plan - Decompose work into phases", status: "pending" },
+    { step: "4. /generate-plan - Break phases into tasks", status: "pending" },
+    { step: "5. /generate-plan - Estimate effort", status: "pending" },
+    { step: "6. /generate-plan - Identify risks", status: "pending" },
+    { step: "7. /generate-plan - Define success criteria", status: "pending" },
+    { step: "8. /generate-plan - Generate initiative document", status: "pending" },
+    { step: "9. /generate-plan - Validate plan", status: "pending" }
   ]
 })
 ```
 
 ---
 
-## Stage 2: Define Objectives & Success Criteria
+## Stage 2: Define Objectives
 
-### Objectives
+### 2.1 Restate Requirements
+
+**From user request and research:**
 
 ```markdown
 ## Objective
-[One-sentence description of what will be achieved]
+
+[One-sentence description]
 
 **User Need:** [Original request]
-**Technical Approach:** [Implementation based on research]
+**Technical Approach:** [Implementation approach from research]
 ```
 
-### Success Criteria
+### 2.2 Define Success Criteria
+
+**SMART criteria:**
 
 ```markdown
 ## Success Criteria
@@ -58,92 +68,89 @@ update_plan({
 - [ ] [Specific deliverable 2]
 - [ ] [Quality gate: tests, coverage, security]
 - [ ] [Documentation requirement]
+- [ ] [Review requirement]
 
 **Verification:** [How to confirm completion]
-**Estimated Effort:** [N-M hours based on task breakdown]
-```
-
-**Update plan:**
-
-```typescript
-update_plan({
-  explanation: "Objectives defined, decomposing into phases",
-  plan: [
-    { step: "1. /generate-plan - Define objectives and success criteria", status: "completed" },
-    { step: "2. /generate-plan - Decompose into phases and tasks", status: "in_progress" },
-    // ...
-  ]
-})
+**Estimated Effort:** [N-M hours]
 ```
 
 ---
 
-## Stage 3: Phase Decomposition & Task Breakdown
+## Stage 3: Phase Decomposition
 
-### Phase Pattern
+### 3.1 Identify Major Milestones
 
-**Standard decomposition:**
+**Break work into phases:**
 
-- Phase 1: Core/foundation (minimal viable)
-- Phase 2: Enhancement (key features)
-- Phase 3: Integration (apply everywhere)
-- Phase 4: Polish (docs, review, deploy)
+- **Phase 1:** Core/foundation (minimal viable)
+- **Phase 2:** Enhancement (key features)
+- **Phase 3:** Integration (apply everywhere)
+- **Phase 4:** Polish (docs, review, deploy)
 
-### Phase Template
+### 3.2 Define Each Phase
+
+**Template per phase:**
 
 ```markdown
 ### Phase N: [Name] (N hours)
 
-**Goal:** [What this phase achieves]
+**Goal:** [What this achieves]
 
 **Tasks:**
-1. [Concrete task 1] (<4h)
-2. [Concrete task 2] (<4h)
-3. [Concrete task 3] (<4h)
+1. [Concrete task 1] - [Est: N hours]
+   - [Sub-task if needed]
+2. [Concrete task 2] - [Est: N hours]
+3. [Concrete task 3] - [Est: N hours]
 
-**Exit Criteria:** [How to know phase is complete]
-**Dependencies:** [What must complete first]
+**Exit Criteria:** [How to know phase complete]
+**Dependencies:** [Prerequisites]
 ```
 
-### Dependencies & Timeline
+**Task sizing guidelines:**
+
+- Each task: <4 hours
+- Clear deliverables per phase
+- Sequential build-up
+- Each phase: 4-12 hours max
+
+---
+
+## Stage 4: Task Breakdown
+
+### 4.1 Identify Dependencies
 
 ```markdown
 ## Dependencies
 
-Phase 1 → Phase 2 → Phase 3 → Phase 4
+Phase 1 → Phase 2
+       ↘
+        → Phase 3 → Phase 4
 
 **Parallel Work:**
-- Phase 2 + 3 can overlap after Phase 1
-- Documentation starts during Phase 3
+- Phases 2+3 can overlap after Phase 1
 
+**Blockers:**
+- [External dependencies]
+```
+
+### 4.2 Estimate Timeline
+
+```markdown
 **Timeline:**
 - Phase 1: Session 1 (4h)
 - Phase 2: Sessions 1-2 (3h)
 - Phase 3: Session 2 (2h)
 - Phase 4: Sessions 2-3 (2h)
 
-**Total:** 11h across 2-3 sessions
+**Total:** 11 hours across 2-3 sessions
 **Buffer:** +20-30% for unknowns
-```
-
-**Update plan:**
-
-```typescript
-update_plan({
-  explanation: "Phases defined, estimating effort and risks",
-  plan: [
-    { step: "2. /generate-plan - Decompose into phases and tasks", status: "completed" },
-    { step: "3. /generate-plan - Estimate effort and identify risks", status: "in_progress" },
-    // ...
-  ]
-})
 ```
 
 ---
 
-## Stage 4: Effort Estimation & Risk Assessment
+## Stage 5: Effort Estimation
 
-### Effort Estimation
+### 5.1 Estimate Effort
 
 | Task | Estimated Effort |
 |------|-----------------|
@@ -151,32 +158,29 @@ update_plan({
 | [Task 2] | [N] hours |
 | **Total** | **[N-M] hours** |
 
-### Risks & Mitigation
+---
+
+## Stage 6: Risk Assessment
+
+### 6.1 Identify Risks
 
 | Risk | Probability | Impact | Mitigation |
 |------|-------------|--------|------------|
 | [Risk 1] | High/Med/Low | High/Med/Low | [Prevention/mitigation] |
 | [Risk 2] | High/Med/Low | High/Med/Low | [Prevention/mitigation] |
 
-**Risk categories:** Technical, dependency, timeline, security
+**Common categories:**
 
-**Update plan:**
-
-```typescript
-update_plan({
-  explanation: "Effort estimated, risks identified, generating document",
-  plan: [
-    { step: "3. /generate-plan - Estimate effort and identify risks", status: "completed" },
-    { step: "4. /generate-plan - Generate and validate initiative document", status: "in_progress" }
-  ]
-})
-```
+- Technical risks
+- Dependency risks
+- Timeline risks
+- Security risks
 
 ---
 
-## Stage 5: Document Generation
+## Stage 7: Document Generation
 
-### Initiative File
+### 7.1 Generate Initiative File
 
 **Filename:** `docs/initiatives/active/YYYY-MM-DD-descriptive-name.md`
 
@@ -196,13 +200,13 @@ update_plan({
 
 ## Objective
 
-[From Stage 2]
+[From Stage 2.1]
 
 ---
 
 ## Success Criteria
 
-[From Stage 2]
+[From Stage 2.2]
 
 ---
 
@@ -215,28 +219,28 @@ update_plan({
 - [Finding 2]
 
 **Libraries/Tools:**
-- [Library] - [Purpose]
+- [Library 1] - [Purpose]
 
 **References:**
-- [URL] - [Description]
+- [URL 1] - [Description]
 
 ---
 
 ## Implementation Plan
 
-[All phases from Stage 3]
+[All phases from Stage 3.2]
 
 ---
 
 ## Dependencies
 
-[From Stage 3]
+[From Stage 4.1]
 
 ---
 
 ## Risks & Mitigation
 
-[From Stage 4]
+[From Stage 6.1]
 
 **Out of Scope:**
 [Explicitly state what's not included]
@@ -245,9 +249,9 @@ update_plan({
 
 ## ADRs
 
-- [ ] [ADR-XXXX]: [Decision title if architectural]
+- [ ] [ADR-XXXX]: [Decision if architectural]
 
-**ADR Required:** [Yes/No - explain why]
+**ADR Required:** [Yes/No - explain]
 
 ---
 
@@ -262,90 +266,102 @@ update_plan({
 
 ### YYYY-MM-DD (Creation)
 Initiative created. Research complete. Ready for Phase 1.
+
+[Future updates added here as work progresses]
 ```
 
-### Validation Checklist
+### 7.2 Validate Initiative
+
+**Checklist:**
 
 - [ ] Objective clear and concise
 - [ ] Success criteria measurable
-- [ ] Tasks sized <4h each
+- [ ] Tasks sized appropriately (<4h each)
 - [ ] Dependencies identified
 - [ ] Risks assessed with mitigations
-- [ ] Out of scope stated
-- [ ] Estimated effort realistic
+- [ ] Out of scope explicitly stated
+- [ ] Effort estimate realistic
 - [ ] Target completion reasonable
 
-**Update plan:**
+---
 
-```typescript
-update_plan({
-  explanation: "Initiative document generated and validated",
-  plan: [
-    { step: "4. /generate-plan - Generate and validate initiative document", status: "completed" }
-  ]
-})
+## Stage 8: Plan Validation
+
+### 8.1 Validate Structure
+
+**Final checks:**
+
+- [ ] All tasks have completion criteria
+- [ ] Dependencies mapped
+- [ ] No task >4 hours
+- [ ] Documentation plan included
+- [ ] ADR decision documented
+
+**Print workflow exit:**
+
+```markdown
+✅ **Completed /generate-plan:** Roadmap created with [N] phases and [M] tasks
 ```
 
 ---
 
 ## Quality Standards
 
-### Good Plan ✅
+### Good Plan Characteristics
 
 | Characteristic | Description |
 |----------------|-------------|
-| **Actionable** | Concrete tasks with clear acceptance criteria, realistic estimates |
-| **Complete** | All phases covered, dependencies identified, risks with mitigations, documentation plan |
-| **Maintainable** | Initiative file is source of truth, updates section for tracking, related docs listed |
+| **Actionable** | Concrete tasks, clear acceptance criteria, realistic estimates |
+| **Complete** | All phases covered, dependencies identified, risks with mitigations |
+| **Maintainable** | Single source of truth, update section, related docs listed |
 
-### Poor Plan ❌
+### Poor Plan Signs
 
-| Issue | Example | Fix |
-|-------|---------|-----|
-| **Vague** | "Implement feature" | Break into specific tasks |
-| **Unrealistic** | 20-hour single task | Split into <4h tasks |
-| **Incomplete** | No doc plan, missing deps, unclear criteria | Add all required sections |
+| Issue | Problem |
+|-------|---------|
+| **Vague** | "Implement feature" (too broad), no concrete tasks |
+| **Unrealistic** | 20-hour tasks, no risk assessment, optimistic timeline |
+| **Incomplete** | Missing docs plan, no dependency analysis, unclear criteria |
 
 ---
 
 ## Anti-Patterns
 
-| ❌ Don't | ✅ Do |
-|----------|-------|
-| Create mega-plans (50h, 20 phases) | Split into 2-3 smaller initiatives |
-| Ignore risks ("Everything will work") | Identify 3-5 realistic risks with mitigations |
-| Skip documentation planning | List exact docs to update per phase |
+| Anti-Pattern | Bad | Good |
+|--------------|-----|------|
+| **Mega-Plans** | 50-hour initiative, 20 phases | Split into 2-3 smaller initiatives |
+| **Ignore Risks** | "Everything will work" | Identify 3-5 realistic risks with mitigations |
+| **Skip Docs** | "Document later" | List exact docs to update per phase |
 
 ---
 
 ## Integration
 
-**Called By:** `/plan` - After research complete (Stage 3+)
+### Called By
 
-**Input:**
+- `/plan` - After research complete (Stage 3)
+
+### Input
 
 - Research summary with recommendations
 - User requirements
 - Success criteria
 
-**Output:**
+### Output
 
 - Initiative file in `docs/initiatives/active/`
 - ADR (if architectural decision)
 - Plan summary for user approval
 
-**Calls:** `/new-adr` - If architectural decision needed
+### Calls
 
-**Print exit:**
-
-```markdown
-✅ **Completed /generate-plan:** Implementation roadmap created with [N] phases and [M] tasks
-```
+- `/new-adr` - If architectural decision needed
 
 ---
 
 ## References
 
 - `docs/DOCUMENTATION_STRUCTURE.md` - Initiative format
+- `docs/initiatives/template.md` - Initiative template
 - `.windsurf/workflows/new-adr.md` - ADR creation
 - `.windsurf/workflows/research.md` - Research input
