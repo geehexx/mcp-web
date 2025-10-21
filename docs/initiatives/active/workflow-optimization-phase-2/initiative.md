@@ -411,6 +411,57 @@ Optimization removed many intermediate `update_plan()` calls from workflows. Tas
 
 ---
 
+### 2025-10-21 (Session 3): Tier 1-2 Complete + Rules Issue Discovered
+
+**Major Achievement:** Completed all Tier 1-2 workflow optimizations. Achieved 74,108 tokens total (10,892 under threshold, -7.5% from baseline).
+
+**Optimizations Completed:**
+
+| Workflow | Before | After | Reduction | Method |
+|----------|--------|-------|-----------|---------|
+| implement.md | 1,900 | 1,400 | -26% | ADR table compression, commit strategy consolidation, anti-patterns table |
+| detect-context.md | 3,307 | 2,200 | -33% | Removed verbose entry/task sections, signal matrix consolidation, examples removed |
+| load-context.md | 3,454 | 2,300 | -33% | Scope table compression, batch loading condensed, stage merging |
+| plan.md | 3,299 | 2,200 | -33% | Task plan section removal, requirements capture condensed |
+
+**Final Token Count:**
+
+- Workflows: 47,362 tokens (was 51,222, saved 3,860 tokens, -7.5%)
+- Rules: 26,746 tokens (unchanged)
+- **Combined: 74,108 tokens (10,892 under 85k threshold)**
+- vs Baseline: -5,996 tokens (-7.5% improvement)
+
+**Critical Discovery: Rules Documentation Issue**
+
+During session, discovered attempt to create documentation in `.windsurf/docs/` which was removed during windsurf-rules-revamp initiative but rules still reference it.
+
+**Issue:** Rules `03_documentation.md` (section 3.10) and `05_windsurf_structure.md` contain outdated references to `.windsurf/docs/` directory.
+
+**Resolution:**
+
+- Documented issue in `artifacts/rules-update-needed.md`
+- Pattern documentation skipped (not needed - patterns evident in optimized workflows)
+- Rules require manual update to remove `.windsurf/docs/` references
+
+**Lessons Learned:**
+
+1. Always verify directory existence before attempting file creation
+2. Check for incomplete implementations from previous initiatives
+3. Rules files are protected (cannot be edited by agent) - require manual review
+4. Pattern documentation better suited for session summaries than separate docs
+
+**Status:** Ready for validation and commit
+
+**Next Steps:**
+
+- Run validation checks
+- Commit workflow optimizations + rules issue documentation
+- Execute session end protocol
+
+**Blockers:** None (rules issue documented for future fix)
+
+---
+
 ## Files Modified (To Be Updated)
 
 **Workflows:**

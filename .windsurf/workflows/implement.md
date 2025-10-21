@@ -43,6 +43,7 @@ status: active
 ## Workflow Execution
 
 **Task plan:**
+
 ```typescript
 update_plan({
   explanation: "🔄 Starting /implement",
@@ -358,6 +359,7 @@ task security:semgrep
 ## Stage 7: Commit Strategy
 
 **Use `/commit` workflow for guided commits:**
+
 - Atomic commits (one logical change)
 - Conventional commit format
 - References initiative file

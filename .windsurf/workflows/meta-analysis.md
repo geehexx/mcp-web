@@ -27,6 +27,7 @@ version: 2.0.0
 ## Workflow Execution
 
 **Task plan:**
+
 ```typescript
 update_plan({
   explanation: "📊 Starting /meta-analysis",
@@ -128,6 +129,7 @@ git commit -m "docs(session): add YYYY-MM-DD [focus] session summary
 **Complete when:** Summary created, timestamp updated, living docs checked/updated, all committed.
 
 **Troubleshooting:**
+
 - Update PROJECT_SUMMARY? → Check Stage 5 triggers (when in doubt, update)
 - Protocol violation? → Document in summary, propose workflow improvements
 - No learnings? → Write "No significant insights (routine work)"

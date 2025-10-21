@@ -25,6 +25,7 @@ status: active
 ## Stage 1: Load Context
 
 **Process:**
+
 1. List `docs/initiatives/active/` (use `mcp0_list_directory`)
 2. Build initiative paths: DIR → `{dir}/initiative.md`, FILE → `{file}`
 3. Batch read with `mcp0_read_multiple_files` (PROJECT_SUMMARY + initiatives)
@@ -39,6 +40,7 @@ status: active
 **Priority 0 (ABSOLUTE):** User explicit @mention or "continue with X" → Confidence 100%, route to specified initiative
 
 **Priority 1-5:**
+
 - Session summary "Next Steps" / "Unresolved"
 - Initiative unchecked tasks (`- [ ]`)
 - Test failures (`task test:fast | grep FAILED`)
@@ -69,6 +71,7 @@ status: active
 ## Stage 4: Confidence Scoring
 
 **Score calculation:**
+
 - Next steps in summary: +30
 - Unresolved in summary: +30
 - Unchecked tasks: +25
@@ -109,7 +112,6 @@ status: active
 **Caller invokes `/load-context`** with appropriate scope based on route
 
 ---
-
 
 ---
 

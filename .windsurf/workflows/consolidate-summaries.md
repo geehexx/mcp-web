@@ -313,6 +313,7 @@ action_items: [... items from 2.5.2 ...]
 | **Cleanup** | Originals deleted, no broken refs, metadata correct |
 
 **Commit:**
+
 ```bash
 git add docs/archive/session-summaries/YYYY-MM-DD-daily-summary.md
 git commit -m "docs(archive): consolidate YYYY-MM-DD (N sessions)
