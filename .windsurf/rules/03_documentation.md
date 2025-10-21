@@ -1,20 +1,10 @@
 ---
-created: "2025-10-15"
-updated: "2025-10-18"
 trigger: glob
-description: Governs documentation creation, maintenance, and archival. Meta-rule about the development process.
-globs: "docs/**/*.md, *.md"
-category: documentation
-tokens: 1313
-applyTo:
-  - documentation
-  - adr
-  - initiatives
-priority: medium
-status: active
+description: Documentation standards markdown ADRs initiatives
+globs: "docs/**/*.md, *.md, README.md"
 ---
 
-# Rule: Documentation Lifecycle & Management
+# Documentation Standards & Management
 
 ## 3.1 Documentation Structure
 
@@ -388,3 +378,33 @@ When creating/updating documentation:
 - ✅ Run `task docs:lint` before committing
 - ✅ Review for clarity and accuracy
 - ✅ For machine-readable docs: verify token budget and frontmatter
+
+
+---
+
+## Rule Metadata
+
+**File:** `03_documentation.md`  
+**Trigger:** glob  
+**Estimated Tokens:** ~2,000  
+**Last Updated:** 2025-10-21  
+**Status:** Active
+
+**Can be @mentioned:** Yes (hybrid loading)
+
+
+**Topics Covered:**
+- Markdown standards
+- ADR creation
+- Initiative structure
+- Documentation lifecycle
+
+**Workflow References:**
+- /plan - Creating initiatives/ADRs
+- /new-adr - ADR workflow
+
+**Dependencies:**
+- Source: 03_documentation_lifecycle.md
+
+**Changelog:**
+- 2025-10-21: Created from 03_documentation_lifecycle.md

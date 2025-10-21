@@ -438,4 +438,4 @@ protocol_compliance:
 ## References
 
 - `.windsurf/workflows/meta-analysis.md` - Parent workflow
-- `.windsurf/rules/00_agent_directives.md` - Session End Protocol
+- `.windsurf/rules/10_session_protocols.md` - Session End Protocol

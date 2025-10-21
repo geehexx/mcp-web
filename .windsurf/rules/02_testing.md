@@ -1,19 +1,10 @@
 ---
-created: "2025-10-15"
-updated: "2025-10-18"
 trigger: glob
-description: Enforces testing standards, tool usage, and development environment practices.
-globs: "tests/**/*.py, src/**/*.py, *.toml, *.ini, Taskfile.yml"
-category: testing
-tokens: 989
-applyTo:
-  - testing
-  - implementation
-priority: high
-status: active
+description: Testing standards pytest fixtures TDD practices
+globs: "tests/**/*.py, test_*.py, *_test.py, conftest.py"
 ---
 
-# Rule: Testing, Tooling, and Development Environment
+# Testing Standards
 
 ## 1.1 Development Environment
 
@@ -157,3 +148,33 @@ Before delivering checkpoints:
 - **Validation:** Cross-reference non-authoritative sources
 - **Traceability:** Document fetch rationale in checkpoints
 - **Current date awareness:** October 15, 2025 - ensure references are current
+
+
+---
+
+## Rule Metadata
+
+**File:** `02_testing.md`  
+**Trigger:** glob  
+**Estimated Tokens:** ~1,800  
+**Last Updated:** 2025-10-21  
+**Status:** Active
+
+**Can be @mentioned:** Yes (hybrid loading)
+
+
+**Topics Covered:**
+- pytest best practices
+- Test fixtures
+- TDD workflow
+- Test markers
+
+**Workflow References:**
+- /implement - Test-first development
+- /validate - Test execution
+
+**Dependencies:**
+- Source: 01_testing_and_tooling.md
+
+**Changelog:**
+- 2025-10-21: Created from 01_testing_and_tooling.md

@@ -1,16 +1,9 @@
 ---
-type: machine-readable-reference
-category: quick-reference
-purpose: Decision matrix for /work workflow routing based on project signals
-token_budget: low
-audience: ai-agent
-auto_generated: false
-maintenance: manual
-last_updated: "2025-10-20"
-tags: ["workflow-routing", "decision-matrix", "work-orchestration"]
+trigger: model_decision
+description: Apply when routing work making workflow decisions or detecting project context
 ---
 
-# Workflow Routing Matrix
+# Workflow Routing and Signal Detection
 
 **Purpose:** Quick reference for `/work` routing decisions based on detected signals.
 
@@ -317,3 +310,33 @@ Action: Ask: "What would you like to work on?"
 
 **Maintained by:** mcp-web core team
 **Version:** 1.0.0
+
+
+---
+
+## Rule Metadata
+
+**File:** `13_workflow_routing.md`  
+**Trigger:** model_decision  
+**Estimated Tokens:** ~1,800  
+**Last Updated:** 2025-10-21  
+**Status:** Active
+
+**Can be @mentioned:** Yes (hybrid loading)
+
+
+**Topics Covered:**
+- Routing matrix
+- Signal detection
+- Confidence levels
+- Decision tree
+
+**Workflow References:**
+- /work - Work routing
+- /work-routing - Routing decisions
+
+**Dependencies:**
+- Source: workflow-routing-matrix.md
+
+**Changelog:**
+- 2025-10-21: Created from workflow-routing-matrix.md

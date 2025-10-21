@@ -1,16 +1,9 @@
 ---
-type: machine-readable-reference
-category: pattern-library
-purpose: Quick reference for automation scripts via Taskfile commands
-token_budget: medium
-audience: ai-agent
-auto_generated: false
-maintenance: manual
-last_updated: "2025-10-20"
-tags: ["automation", "scripts", "taskfile", "cli"]
+trigger: model_decision
+description: Apply when using automation scripts Taskfile commands or scaffolding operations
 ---
 
-# Automation Scripts
+# Automation Scripts and Taskfile Commands
 
 **Purpose:** Quick reference for automation via `task` commands. All scripts support non-interactive modes for AI agent use.
 
@@ -210,3 +203,34 @@ alternatives:
 **Maintained by:** mcp-web core team
 **Version:** 2.0.0
 **Token count:** ~1200 (within medium budget)
+
+
+---
+
+## Rule Metadata
+
+**File:** `14_automation_scripts.md`  
+**Trigger:** model_decision  
+**Estimated Tokens:** ~3,000  
+**Last Updated:** 2025-10-21  
+**Status:** Active
+
+**Can be @mentioned:** Yes (hybrid loading)
+
+
+**Topics Covered:**
+- Taskfile commands
+- Automation scripts
+- Non-interactive scaffolding
+- File operations
+
+**Workflow References:**
+- /archive-initiative - Archive automation
+- /implement - Scaffolding
+
+**Dependencies:**
+- Source: automation-scripts.md
+
+**Changelog:**
+- 2025-10-21: Changed from manual to model_decision (hybrid approach)
+- 2025-10-21: Created from automation-scripts.md

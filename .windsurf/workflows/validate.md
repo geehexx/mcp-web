@@ -230,7 +230,7 @@ task docs:validate:links
 
 ## Stage 5: Security Checks
 
-**Validate against security rules:** `.windsurf/rules/04_security.md`
+**Validate against security rules:** `.windsurf/rules/06_security_practices.md`
 
 ### 5.0 Security Rules Checklist
 
@@ -247,7 +247,7 @@ task docs:validate:links
 - [ ] Rate limiting on API endpoints
 - [ ] Defense-in-depth approach
 
-**See:** `.windsurf/rules/04_security.md` for complete security guidelines
+**See:** `.windsurf/rules/06_security_practices.md` for complete security guidelines
 
 **Automated checks below validate subset of these rules:**
 
@@ -621,6 +621,6 @@ AI: "Adding tests to reach 90% coverage..."
 - [Bandit Documentation](https://bandit.readthedocs.io/)
 - [Semgrep Documentation](https://semgrep.dev/docs/)
 - Project: `Taskfile.yml`
-- Project: `.windsurf/rules/01_testing_and_tooling.md`
+- Project: `.windsurf/rules/02_testing.md`
 
 ---

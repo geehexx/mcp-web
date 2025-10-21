@@ -1,18 +1,6 @@
 ---
-created: "2025-10-15"
-updated: "2025-10-19"
 trigger: model_decision
-description: Apply when dealing with security-sensitive code including API calls, user input, LLM interactions, file operations, or authentication
-globs: "**/*.py, **/*.ini, **/*.yml, **/*.yaml"
-category: security
-tokens: 1385
-applyTo:
-  - security
-  - api
-  - llm
-  - authentication
-priority: high
-status: active
+description: Apply when dealing with security-sensitive code including API calls user input LLM interactions and authentication
 ---
 
 # Security Guidelines
@@ -421,3 +409,34 @@ These security rules are enforced during the validation workflow:
 
 **Normative Core Principle:**
 Security validation (VERIFY) must occur before committing code (TOOL_CALL). This implements the Agent Constitution Framework's "think then verify then act" pattern, ensuring security is architecturally enforced, not just recommended.
+
+
+---
+
+## Rule Metadata
+
+**File:** `06_security_practices.md`  
+**Trigger:** model_decision  
+**Estimated Tokens:** ~2,500  
+**Last Updated:** 2025-10-21  
+**Status:** Active
+
+**Can be @mentioned:** Yes (hybrid loading)
+
+
+**Topics Covered:**
+- OWASP LLM Top 10
+- Input validation
+- Authentication patterns
+- Secure API design
+
+**Workflow References:**
+- /validate - Security checklist
+- /implement - Security-focused work
+
+**Dependencies:**
+- Source: 04_security.md (removed globs field)
+
+**Changelog:**
+- 2025-10-21: Created from 04_security.md
+- Removed globs field (incompatible with model_decision)

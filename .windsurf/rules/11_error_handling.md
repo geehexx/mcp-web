@@ -1,16 +1,9 @@
 ---
-type: machine-readable-reference
-category: pattern-library
-purpose: Error handling, validation, and retry patterns for robust workflows
-token_budget: medium
-audience: ai-agent
-auto_generated: false
-maintenance: manual
-last_updated: "2025-10-20"
-tags: ["error-handling", "validation", "retries", "robustness"]
+trigger: model_decision
+description: Apply when handling errors implementing error recovery or debugging failures
 ---
 
-# Error Handling Patterns
+# Error Handling and Recovery
 
 **Purpose:** Quick-reference patterns for robust error handling in workflows.
 
@@ -437,3 +430,33 @@ Operation failed?
 
 **Version:** 1.0.0
 **Maintained by:** mcp-web core team
+
+
+---
+
+## Rule Metadata
+
+**File:** `11_error_handling.md`  
+**Trigger:** model_decision  
+**Estimated Tokens:** ~2,200  
+**Last Updated:** 2025-10-21  
+**Status:** Active
+
+**Can be @mentioned:** Yes (hybrid loading)
+
+
+**Topics Covered:**
+- Error patterns
+- Recovery strategies
+- Debugging
+- Graceful degradation
+
+**Workflow References:**
+- /implement - Error handling
+- /validate - Error testing
+
+**Dependencies:**
+- Source: error-handling-patterns.md
+
+**Changelog:**
+- 2025-10-21: Created from error-handling-patterns.md

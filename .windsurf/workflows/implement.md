@@ -777,7 +777,7 @@ $ git commit
 - [Agentic TDD Best Practices (2025)](https://www.latent.space/p/anita-tdd)
 - [Red-Green-Refactor Cycle](https://www.jamesshore.com/v2/books/aoad1/test_driven_development)
 - Project: `.windsurf/workflows/test-before-commit.md`
-- Project: `.windsurf/rules/01_testing_and_tooling.md`
+- Project: `.windsurf/rules/02_testing.md`
 
 ---
 

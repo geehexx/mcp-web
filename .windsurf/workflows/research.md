@@ -142,10 +142,10 @@ grep_search("security|auth|encrypt", "docs/adr/", recursive=true)
 
 ```python
 # Always check security rules for security-related work
-mcp0_read_text_file("/home/gxx/projects/mcp-web/.windsurf/rules/04_security.md")
+mcp0_read_text_file("/home/gxx/projects/mcp-web/.windsurf/rules/06_security_practices.md")
 
 # Check testing standards
-mcp0_read_text_file("/home/gxx/projects/mcp-web/.windsurf/rules/01_testing_and_tooling.md")
+mcp0_read_text_file("/home/gxx/projects/mcp-web/.windsurf/rules/02_testing.md")
 ```
 
 **Print stage completion:**

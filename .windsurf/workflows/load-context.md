@@ -619,7 +619,7 @@ implement_feature()
 
 - [Anthropic Context Window Best Practices](https://docs.anthropic.com/claude/docs/context-window)
 - [Factory.ai Context Stack Pattern](https://factory.ai/news/context-window-problem)
-- Project: `.windsurf/rules/00_agent_directives.md` (Section 1.10)
+- Project: `.windsurf/rules/07_context_optimization.md`
 - Project: `.windsurf/workflows/work.md` (Context loading examples)
 
 ---

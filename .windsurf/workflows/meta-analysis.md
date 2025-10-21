@@ -549,5 +549,5 @@ git commit -m "docs(session): add YYYY-MM-DD [focus] session summary
 - `.windsurf/workflows/extract-session.md` - Data extraction
 - `.windsurf/workflows/summarize-session.md` - Summary generation
 - `.windsurf/workflows/update-docs.md` - Living documentation updates
-- `.windsurf/rules/00_agent_directives.md` - Session End Protocol (Section 1.8)
+- `.windsurf/rules/10_session_protocols.md` - Session End Protocol
 - `docs/DOCUMENTATION_STRUCTURE.md` - Where summaries go

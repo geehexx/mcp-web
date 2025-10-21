@@ -1,13 +1,6 @@
 ---
-type: machine-readable-reference
-category: pattern-library
-purpose: MCP tool usage patterns and best practices for AI agents
-token_budget: medium
-audience: ai-agent
-auto_generated: false
-maintenance: manual
-last_updated: "2025-10-20"
-tags: ["mcp-tools", "patterns", "file-operations", "git", "commands"]
+trigger: model_decision
+description: Apply when using MCP tools or needing guidance on tool calling patterns
 ---
 
 # MCP Tool Usage Patterns
@@ -380,3 +373,32 @@ mcp0_edit_file({ path: "/home/gxx/projects/mcp-web/.windsurf/workflows/work.md",
 
 **Maintained by:** mcp-web core team
 **Version:** 1.0.0
+
+
+---
+
+## Rule Metadata
+
+**File:** `15_tool_patterns.md`  
+**Trigger:** model_decision  
+**Estimated Tokens:** ~2,500  
+**Last Updated:** 2025-10-21  
+**Status:** Active
+
+**Can be @mentioned:** Yes (hybrid loading)
+
+
+**Topics Covered:**
+- MCP tools
+- Tool selection
+- Batch operations
+- Filesystem operations
+
+**Workflow References:**
+- All workflows - Tool usage guidance
+
+**Dependencies:**
+- Source: tool-patterns.md
+
+**Changelog:**
+- 2025-10-21: Created from tool-patterns.md

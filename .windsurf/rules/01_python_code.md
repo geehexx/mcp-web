@@ -1,19 +1,10 @@
 ---
-created: "2025-10-15"
-updated: "2025-10-18"
 trigger: glob
-description: Python code style, type hints, async patterns, and best practices.
-globs: "**/*.py"
-category: language
-tokens: 1549
-applyTo:
-  - python
-  - implementation
-priority: high
-status: active
+description: Python code style type hints async patterns and best practices
+globs: "*.py, **/*.py"
 ---
 
-# Rule: Python Standards and Best Practices
+# Python Code Standards
 
 ## 2.1 Code Style (PEP 8)
 
@@ -386,3 +377,32 @@ Before committing Python code:
 - ✅ Tests written (TDD) with appropriate markers
 - ✅ `task lint` passes (ruff + mypy)
 - ✅ `task test:unit` passes
+
+
+---
+
+## Rule Metadata
+
+**File:** `01_python_code.md`  
+**Trigger:** glob  
+**Estimated Tokens:** ~2,200  
+**Last Updated:** 2025-10-21  
+**Status:** Active
+
+**Can be @mentioned:** Yes (hybrid loading)
+
+
+**Topics Covered:**
+- PEP 8 style
+- Type hints (PEP 484)
+- Async/await patterns
+- Docstrings (Google style)
+
+**Workflow References:**
+- /implement - Always loaded when editing Python
+
+**Dependencies:**
+- Source: 02_python_standards.md
+
+**Changelog:**
+- 2025-10-21: Created from 02_python_standards.md (Python content only)

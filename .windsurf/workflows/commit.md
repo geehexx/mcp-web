@@ -320,4 +320,4 @@ git commit -m "refactor(cache): extract key generation to separate function"
 
 - [Conventional Commits](https://www.conventionalcommits.org/)
 - `.windsurf/workflows/validate.md` - Quality gate workflow
-- `.windsurf/rules/00_agent_directives.md` - Section 1.7 (Git Operations)
+- `.windsurf/rules/09_git_workflows.md` - Git Operations

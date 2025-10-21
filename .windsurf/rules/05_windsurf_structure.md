@@ -1,13 +1,7 @@
 ---
-type: machine-readable-reference
-category: enforcement
-purpose: Define canonical directory structure for Windsurf AI agent configuration
-token_budget: low
-audience: ai-agent
-auto_generated: false
-maintenance: manual
-last_updated: "2025-10-20"
-tags: ["directory-structure", "enforcement", "validation", "ls-lint"]
+trigger: glob
+description: Windsurf directory structure enforcement frontmatter format
+globs: ".windsurf/**/*.md, .windsurf/**/*.json"
 ---
 
 # .windsurf Directory Structure
@@ -210,3 +204,32 @@ File naming is validated on every commit via `ls-lint` pre-commit hook.
 **Maintained by:** mcp-web core team
 **Version:** 1.0.0
 **Status:** Active (enforced via ls-lint)
+
+
+---
+
+## Rule Metadata
+
+**File:** `05_windsurf_structure.md`  
+**Trigger:** glob  
+**Estimated Tokens:** ~1,200  
+**Last Updated:** 2025-10-21  
+**Status:** Active
+
+**Can be @mentioned:** Yes (hybrid loading)
+
+
+**Topics Covered:**
+- Directory structure
+- Forbidden files
+- Frontmatter format
+- Validation
+
+**Workflow References:**
+- All workflows - Enforces structure when editing .windsurf/
+
+**Dependencies:**
+- Source: directory-structure.md
+
+**Changelog:**
+- 2025-10-21: Created from directory-structure.md
