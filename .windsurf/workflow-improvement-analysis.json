@@ -1,0 +1,280 @@
+{
+  "analysis_date": "2025-10-21",
+  "total_workflows": 21,
+  "summary": {
+    "current_total_tokens": 26447,
+    "estimated_total_tokens": 19908,
+    "total_reduction_tokens": 6539,
+    "total_reduction_percent": 24.7249215411956
+  },
+  "workflows": [
+    {
+      "name": "improve-prompt",
+      "current_tokens": 3846,
+      "estimated_tokens": 2884,
+      "reduction_percent": 25.0,
+      "priority": "moderate",
+      "techniques": [
+        "information_distillation",
+        "structured_bullets",
+        "keyword_extraction"
+      ],
+      "decomposition_needed": false,
+      "rationale": "Moderate workflow (3846 tokens); many examples (6); many stages (11)"
+    },
+    {
+      "name": "consolidate-summaries",
+      "current_tokens": 2286,
+      "estimated_tokens": 1485,
+      "reduction_percent": 35.0,
+      "priority": "moderate",
+      "techniques": [
+        "information_distillation",
+        "structured_bullets",
+        "keyword_extraction",
+        "example_consolidation",
+        "reference_externalization"
+      ],
+      "decomposition_needed": false,
+      "rationale": "Moderate workflow (2286 tokens)"
+    },
+    {
+      "name": "implement",
+      "current_tokens": 1594,
+      "estimated_tokens": 1036,
+      "reduction_percent": 35.0,
+      "priority": "low",
+      "techniques": [
+        "information_distillation",
+        "structured_bullets",
+        "keyword_extraction",
+        "example_consolidation",
+        "reference_externalization"
+      ],
+      "decomposition_needed": false,
+      "rationale": "many stages (10)"
+    },
+    {
+      "name": "meta-analysis",
+      "current_tokens": 1543,
+      "estimated_tokens": 1350,
+      "reduction_percent": 12.5,
+      "priority": "low",
+      "techniques": [],
+      "decomposition_needed": false,
+      "rationale": "standard optimization"
+    },
+    {
+      "name": "plan",
+      "current_tokens": 1392,
+      "estimated_tokens": 904,
+      "reduction_percent": 35.0,
+      "priority": "low",
+      "techniques": [
+        "information_distillation",
+        "structured_bullets",
+        "keyword_extraction",
+        "example_consolidation",
+        "reference_externalization"
+      ],
+      "decomposition_needed": false,
+      "rationale": "standard optimization"
+    },
+    {
+      "name": "detect-context",
+      "current_tokens": 1315,
+      "estimated_tokens": 723,
+      "reduction_percent": 45.0,
+      "priority": "low",
+      "techniques": [
+        "information_distillation",
+        "structured_bullets",
+        "keyword_extraction",
+        "example_consolidation",
+        "reference_externalization"
+      ],
+      "decomposition_needed": true,
+      "rationale": "high complexity (80/100)"
+    },
+    {
+      "name": "validate",
+      "current_tokens": 1262,
+      "estimated_tokens": 1104,
+      "reduction_percent": 12.5,
+      "priority": "low",
+      "techniques": [],
+      "decomposition_needed": false,
+      "rationale": "standard optimization"
+    },
+    {
+      "name": "generate-plan",
+      "current_tokens": 1236,
+      "estimated_tokens": 1081,
+      "reduction_percent": 12.5,
+      "priority": "low",
+      "techniques": [],
+      "decomposition_needed": false,
+      "rationale": "standard optimization"
+    },
+    {
+      "name": "research",
+      "current_tokens": 1236,
+      "estimated_tokens": 1081,
+      "reduction_percent": 12.5,
+      "priority": "low",
+      "techniques": [],
+      "decomposition_needed": false,
+      "rationale": "standard optimization"
+    },
+    {
+      "name": "load-context",
+      "current_tokens": 1200,
+      "estimated_tokens": 1050,
+      "reduction_percent": 12.5,
+      "priority": "low",
+      "techniques": [],
+      "decomposition_needed": false,
+      "rationale": "standard optimization"
+    },
+    {
+      "name": "improve-workflow",
+      "current_tokens": 1156,
+      "estimated_tokens": 751,
+      "reduction_percent": 35.0,
+      "priority": "low",
+      "techniques": [
+        "information_distillation",
+        "structured_bullets",
+        "keyword_extraction",
+        "example_consolidation",
+        "reference_externalization"
+      ],
+      "decomposition_needed": false,
+      "rationale": "standard optimization"
+    },
+    {
+      "name": "bump-version",
+      "current_tokens": 1079,
+      "estimated_tokens": 701,
+      "reduction_percent": 35.0,
+      "priority": "low",
+      "techniques": [
+        "information_distillation",
+        "structured_bullets",
+        "keyword_extraction",
+        "example_consolidation",
+        "reference_externalization"
+      ],
+      "decomposition_needed": false,
+      "rationale": "standard optimization"
+    },
+    {
+      "name": "extract-session",
+      "current_tokens": 1043,
+      "estimated_tokens": 912,
+      "reduction_percent": 12.5,
+      "priority": "low",
+      "techniques": [],
+      "decomposition_needed": false,
+      "rationale": "many stages (9)"
+    },
+    {
+      "name": "work-session-protocol",
+      "current_tokens": 938,
+      "estimated_tokens": 609,
+      "reduction_percent": 35.0,
+      "priority": "low",
+      "techniques": [
+        "information_distillation",
+        "structured_bullets",
+        "keyword_extraction",
+        "example_consolidation",
+        "reference_externalization"
+      ],
+      "decomposition_needed": false,
+      "rationale": "standard optimization"
+    },
+    {
+      "name": "update-docs",
+      "current_tokens": 927,
+      "estimated_tokens": 811,
+      "reduction_percent": 12.5,
+      "priority": "low",
+      "techniques": [],
+      "decomposition_needed": false,
+      "rationale": "standard optimization"
+    },
+    {
+      "name": "summarize-session",
+      "current_tokens": 921,
+      "estimated_tokens": 805,
+      "reduction_percent": 12.5,
+      "priority": "low",
+      "techniques": [],
+      "decomposition_needed": false,
+      "rationale": "standard optimization"
+    },
+    {
+      "name": "archive-initiative",
+      "current_tokens": 841,
+      "estimated_tokens": 735,
+      "reduction_percent": 12.5,
+      "priority": "low",
+      "techniques": [],
+      "decomposition_needed": false,
+      "rationale": "standard optimization"
+    },
+    {
+      "name": "work",
+      "current_tokens": 782,
+      "estimated_tokens": 430,
+      "reduction_percent": 45.0,
+      "priority": "low",
+      "techniques": [
+        "information_distillation",
+        "structured_bullets",
+        "keyword_extraction",
+        "example_consolidation",
+        "reference_externalization"
+      ],
+      "decomposition_needed": true,
+      "rationale": "high complexity (85/100)"
+    },
+    {
+      "name": "commit",
+      "current_tokens": 747,
+      "estimated_tokens": 653,
+      "reduction_percent": 12.5,
+      "priority": "low",
+      "techniques": [],
+      "decomposition_needed": false,
+      "rationale": "standard optimization"
+    },
+    {
+      "name": "work-routing",
+      "current_tokens": 717,
+      "estimated_tokens": 466,
+      "reduction_percent": 35.0,
+      "priority": "low",
+      "techniques": [
+        "information_distillation",
+        "structured_bullets",
+        "keyword_extraction",
+        "example_consolidation",
+        "reference_externalization"
+      ],
+      "decomposition_needed": false,
+      "rationale": "standard optimization"
+    },
+    {
+      "name": "new-adr",
+      "current_tokens": 386,
+      "estimated_tokens": 337,
+      "reduction_percent": 12.5,
+      "priority": "low",
+      "techniques": [],
+      "decomposition_needed": false,
+      "rationale": "standard optimization"
+    }
+  ]
+}
