@@ -99,6 +99,22 @@ def normalize_unicode(text: str) -> str:
     for char in zero_width_chars:
         text = text.replace(char, "")
 
+    # Map lookalike characters to ASCII equivalents
+    # Common in Unicode homograph attacks
+    lookalikes = {
+        # Greek letters
+        "Α": "A", "Β": "B", "Ε": "E", "Ζ": "Z", "Η": "H", "Ι": "I",
+        "Κ": "K", "Μ": "M", "Ν": "N", "Ο": "O", "Ρ": "P", "Τ": "T",
+        "Υ": "Y", "Χ": "X",
+        "α": "a", "ο": "o", "ε": "e", "ι": "i",
+        # Cyrillic letters
+        "А": "A", "В": "B", "Е": "E", "К": "K", "М": "M", "Н": "H",
+        "О": "O", "Р": "P", "С": "C", "Т": "T", "Х": "X", "Ү": "Y",
+        "а": "a", "е": "e", "о": "o", "р": "p", "с": "c", "х": "x", "у": "y",
+    }
+    for lookalike, ascii_char in lookalikes.items():
+        text = text.replace(lookalike, ascii_char)
+
     return text
 
 
@@ -131,6 +147,7 @@ class PromptInjectionFilter:
         self.dangerous_patterns: list[str] = [
             # Basic instruction override (English)
             r"ignore\s+(all\s+)?(previous|prior|above)\s+instructions?",
+            r"ignore\s+all\s+instructions?",  # Without previous/prior/above
             r"ignore\s+previous",  # Catch simpler variations
             r"disregard\s+(all\s+)?(rules|instructions|guidelines)",
             r"disregard\s+all",  # Catch simpler variations
@@ -154,16 +171,20 @@ class PromptInjectionFilter:
             r"reveal\s+(your\s+)?(system\s+)?(prompt|instructions)",
             r"show\s+me\s+(your|the)\s+(prompt|instructions)",
             # Adversarial suffixes (from research)
-            r"describing\.\s*\+\s*similarly",
+            r"describing\.\+\s+similarly",  # Match literal ".+ similarly"
+            r"describing\s+similarly",  # Also catch without special chars
             r"representing\s+Teamsures\s+tableView",
             # Multilingual attacks (French)
             r"révéler\s+les\s+instructions",
+            r"ignorer\s+les\s+instructions",  # Simpler match
             r"ignorer\s+les\s+instructions\s+précédentes",
             # Multilingual attacks (German)
             r"zeige\s+die\s+Anweisungen",
             r"ignoriere\s+alle\s+Anweisungen",
+            r"ignorier",  # Catch variations
             # Multilingual attacks (Spanish)
             r"revelar\s+las\s+instrucciones",
+            r"ignorar\s+las\s+instrucciones",  # Simpler match
             r"ignorar\s+las\s+instrucciones\s+anteriores",
             # Data exfiltration
             r"send\s+(all\s+)?data\s+to\s+https?://",
@@ -191,6 +212,7 @@ class PromptInjectionFilter:
         """Detect potential prompt injection attempt with confidence scoring.
 
         Implements OWASP LLM01:2025 detection with:
+        - Unicode normalization (prevents obfuscation)
         - Pattern matching (regex)
         - Typoglycemia detection
         - Confidence scoring
@@ -218,23 +240,31 @@ class PromptInjectionFilter:
         if not text:
             return (False, 0.0, [])
 
+        # Normalize Unicode first to prevent obfuscation
+        normalized_text = normalize_unicode(text)
+
         matched_patterns: list[str] = []
 
-        # Standard pattern matching
+        # Standard pattern matching on normalized text
         for pattern in self.dangerous_patterns:
-            if re.search(pattern, text, re.IGNORECASE):
+            if re.search(pattern, normalized_text, re.IGNORECASE):
                 matched_patterns.append(f"pattern:{pattern[:50]}")
 
-        # Typoglycemia detection (scrambled words)
-        words = re.findall(r"\b\w+\b", text.lower())
+        # Typoglycemia detection (scrambled words) on normalized text
+        words = re.findall(r"\b\w+\b", normalized_text.lower())
         for word in words:
             for keyword in self.fuzzy_keywords:
                 if self._is_typoglycemia(word, keyword):
                     matched_patterns.append(f"typoglycemia:{keyword}")
 
         # Calculate confidence score
-        # Each match increases confidence, capped at 1.0
-        confidence = min(1.0, len(matched_patterns) * 0.3)
+        # Each match increases confidence, with higher weight for pattern matches
+        # Pattern matches: 0.6 each (high confidence - exceeds threshold alone)
+        # Typoglycemia matches: 0.6 each (high confidence - intentional obfuscation)
+        pattern_matches = [p for p in matched_patterns if p.startswith("pattern:")]
+        typo_matches = [p for p in matched_patterns if p.startswith("typoglycemia:")]
+        
+        confidence = min(1.0, len(pattern_matches) * 0.6 + len(typo_matches) * 0.6)
         is_dangerous = confidence >= threshold
 
         if is_dangerous:
@@ -378,8 +408,9 @@ class OutputValidator:
             r"Core\s+instructions?",
             # API key patterns (LLM05:2025)
             r"API[_\s]KEY[:=]\s*[\w-]+",
-            r"sk-[A-Za-z0-9]{20,}",  # OpenAI
-            r"[A-Za-z0-9]{32,}",  # Generic API key
+            r"sk-[A-Za-z0-9]{20,}",  # OpenAI (old format)
+            r"sk-proj-[A-Za-z0-9]{20,}",  # OpenAI (new project-based format)
+            # Note: Removed overly broad [A-Za-z0-9]{32,} pattern to reduce false positives
             r"Bearer\s+[A-Za-z0-9._-]+",  # Bearer tokens
             # Internal reasoning leakage
             r"<thinking>",

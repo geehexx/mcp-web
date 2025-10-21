@@ -25,12 +25,15 @@ import sqlite3
 import sys
 from datetime import date, datetime
 from pathlib import Path
-from typing import Literal
+from typing import Literal, TypedDict
 
 import instructor
+import numpy as np
 import yaml
 from openai import OpenAI
 from pydantic import BaseModel, Field
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 # ============================================================================
 # Pydantic Schemas
@@ -43,9 +46,7 @@ class ActionItem(BaseModel):
     Follows Instructor pattern for reliable LLM extraction with validation.
     """
 
-    id: str = Field(
-        description="Unique ID: {date}-{file}#{section}#{index}"
-    )
+    id: str = Field(description="Unique ID: {date}-{file}#{section}#{index}")
     title: str = Field(description="Concise title (5-10 words)")
     description: str = Field(description="Detailed description (1-3 sentences)")
     category: Literal[
@@ -69,12 +70,8 @@ class ActionItem(BaseModel):
     source_summary: str = Field(description="Source filename")
     source_section: str = Field(description="Section header where found")
     session_date: date = Field(description="Session date from filename")
-    related_files: list[str] = Field(
-        default_factory=list, description="Mentioned file paths"
-    )
-    blockers: list[str] | None = Field(
-        default=None, description="Dependencies or blockers"
-    )
+    related_files: list[str] = Field(default_factory=list, description="Mentioned file paths")
+    blockers: list[str] | None = Field(default=None, description="Dependencies or blockers")
 
 
 # ============================================================================
@@ -113,7 +110,7 @@ def create_user_prompt(section_header: str, section_content: str, metadata: dict
     """Create extraction prompt for a specific section."""
     return f"""Extract action items from this session summary section:
 
-**Session:** {metadata['date']} - {metadata['title']}
+**Session:** {metadata["date"]} - {metadata["title"]}
 **Section:** {section_header}
 
 **Content:**
@@ -148,10 +145,12 @@ def parse_markdown_sections(content: str) -> list[dict[str, str]]:
         if header_match:
             # Save previous section
             if current_content:
-                sections.append({
-                    "header": current_header,
-                    "content": "\n".join(current_content).strip(),
-                })
+                sections.append(
+                    {
+                        "header": current_header,
+                        "content": "\n".join(current_content).strip(),
+                    }
+                )
             # Start new section
             current_header = header_match.group(1).strip()
             current_content = []
@@ -160,10 +159,12 @@ def parse_markdown_sections(content: str) -> list[dict[str, str]]:
 
     # Save final section
     if current_content:
-        sections.append({
-            "header": current_header,
-            "content": "\n".join(current_content).strip(),
-        })
+        sections.append(
+            {
+                "header": current_header,
+                "content": "\n".join(current_content).strip(),
+            }
+        )
 
     return sections
 
@@ -349,7 +350,413 @@ def log_extraction(db_path: Path, items: list[ActionItem]) -> None:
 
 
 # ============================================================================
-# CLI Interface
+# Deduplication (Phase 3)
+# ============================================================================
+
+
+class DuplicatePair(TypedDict):
+    """Pair of potentially duplicate items with similarity score."""
+
+    item1: ActionItem
+    item2: ActionItem
+    similarity: float
+    level: Literal["text", "semantic", "contextual"]
+
+
+def compute_text_similarity(item1: ActionItem, item2: ActionItem) -> float:
+    """Compute text similarity using TF-IDF and cosine similarity.
+
+    Level 1: Fast filter for exact/near duplicates.
+
+    Args:
+        item1: First action item
+        item2: Second action item
+
+    Returns:
+        Similarity score (0.0 to 1.0)
+    """
+    # Combine title and description for richer comparison
+    text1 = f"{item1.title} {item1.description}"
+    text2 = f"{item2.title} {item2.description}"
+
+    # Handle empty strings - both empty should return 0.0 (not comparable)
+    text1_clean = text1.strip()
+    text2_clean = text2.strip()
+    
+    if not text1_clean or not text2_clean:
+        return 0.0
+    
+    # If both are identical after cleaning, return 1.0
+    if text1_clean == text2_clean:
+        return 1.0
+
+    # TF-IDF vectorization
+    vectorizer = TfidfVectorizer(lowercase=True, stop_words="english")
+    try:
+        tfidf_matrix = vectorizer.fit_transform([text1, text2])
+        similarity = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:2])[0][0]
+        return float(similarity)
+    except ValueError:
+        # Handle edge case where vocabulary is empty (e.g., only stop words)
+        # Both texts have no meaningful content after removing stop words
+        # In this case, similarity is based on exact match
+        if text1_clean.lower() == text2_clean.lower():
+            return 1.0
+        # Different texts with no content after stop word removal = different
+        return 0.0
+
+
+def compute_semantic_similarity(
+    item1: ActionItem, item2: ActionItem, client: OpenAI
+) -> float:
+    """Compute semantic similarity using LLM embeddings.
+
+    Level 2: Semantic understanding beyond text matching.
+
+    Args:
+        item1: First action item
+        item2: Second action item
+        client: OpenAI client for embeddings
+
+    Returns:
+        Similarity score (0.0 to 1.0)
+    """
+    # Combine title and description
+    text1 = f"{item1.title}. {item1.description}"
+    text2 = f"{item2.title}. {item2.description}"
+
+    # Get embeddings from OpenAI
+    response = client.embeddings.create(input=[text1, text2], model="text-embedding-3-small")
+
+    # Compute cosine similarity
+    emb1 = np.array(response.data[0].embedding)
+    emb2 = np.array(response.data[1].embedding)
+    similarity = np.dot(emb1, emb2) / (np.linalg.norm(emb1) * np.linalg.norm(emb2))
+
+    return float(similarity)
+
+
+def compute_contextual_similarity(item1: ActionItem, item2: ActionItem) -> float:
+    """Compute contextual similarity based on initiative and file overlap.
+
+    Level 3: Context-based heuristics.
+
+    Args:
+        item1: First action item
+        item2: Second action item
+
+    Returns:
+        Similarity score (0.0 to 1.0)
+    """
+    # File overlap similarity (Jaccard index)
+    files1 = set(item1.related_files or [])
+    files2 = set(item2.related_files or [])
+
+    if not files1 and not files2:
+        file_similarity = 0.0
+    elif not files1 or not files2:
+        file_similarity = 0.0
+    else:
+        intersection = len(files1 & files2)
+        union = len(files1 | files2)
+        file_similarity = intersection / union if union > 0 else 0.0
+
+    # Category match (same category = higher similarity)
+    category_match = 1.0 if item1.category == item2.category else 0.0
+
+    # Impact match
+    impact_match = 1.0 if item1.impact == item2.impact else 0.0
+
+    # Weighted combination
+    contextual_score = (file_similarity * 0.6) + (category_match * 0.3) + (impact_match * 0.1)
+
+    return float(contextual_score)
+
+
+def deduplicate_items(
+    items: list[ActionItem],
+    client: OpenAI | None = None,
+    return_borderline: bool = False,
+) -> list[ActionItem] | tuple[list[ActionItem], list[DuplicatePair]]:
+    """Deduplicate action items using cascading similarity levels.
+
+    Pipeline: Level 1 (text) → Level 2 (semantic) → Level 3 (contextual)
+
+    Thresholds:
+    - ≥0.95 text: Exact duplicate (merge)
+    - ≥0.80 text: High confidence duplicate (merge)
+    - 0.60-0.80 text: Medium confidence (flag for review)
+    - <0.60 text: Check semantic similarity
+    - ≥0.85 semantic: Semantic duplicate (merge)
+    - 0.70-0.85 semantic: Medium confidence (flag for review)
+    - <0.70 semantic: Check contextual similarity
+    - ≥0.80 contextual: High file/initiative overlap (merge)
+
+    Args:
+        items: List of action items to deduplicate
+        client: OpenAI client for semantic similarity (optional)
+        return_borderline: If True, also return borderline pairs for review
+
+    Returns:
+        Deduplicated list of items, optionally with borderline pairs
+    """
+    if len(items) <= 1:
+        return (items, []) if return_borderline else items
+
+    # Track which items to keep and merge mappings
+    keep_indices = set(range(len(items)))
+    borderline_pairs: list[DuplicatePair] = []
+
+    # Compare all pairs
+    for i in range(len(items)):
+        if i not in keep_indices:
+            continue
+
+        for j in range(i + 1, len(items)):
+            if j not in keep_indices:
+                continue
+
+            item1 = items[i]
+            item2 = items[j]
+
+            # Level 1: Text similarity
+            text_sim = compute_text_similarity(item1, item2)
+
+            if text_sim >= 0.80:
+                # High confidence duplicate - merge
+                keep_indices.discard(j)
+                if 0.60 <= text_sim < 0.80:
+                    borderline_pairs.append(
+                        DuplicatePair(
+                            item1=item1, item2=item2, similarity=text_sim, level="text"
+                        )
+                    )
+                continue
+            elif text_sim >= 0.60:
+                # Borderline - flag for review
+                borderline_pairs.append(
+                    DuplicatePair(item1=item1, item2=item2, similarity=text_sim, level="text")
+                )
+                continue
+
+            # Level 2: Semantic similarity (if API available)
+            if client:
+                try:
+                    semantic_sim = compute_semantic_similarity(item1, item2, client)
+
+                    if semantic_sim >= 0.85:
+                        # Semantic duplicate - merge
+                        keep_indices.discard(j)
+                        continue
+                    elif semantic_sim >= 0.70:
+                        # Borderline semantic similarity
+                        borderline_pairs.append(
+                            DuplicatePair(
+                                item1=item1,
+                                item2=item2,
+                                similarity=semantic_sim,
+                                level="semantic",
+                            )
+                        )
+                        continue
+                except Exception as e:
+                    print(f"   ⚠️  Semantic similarity error: {e}")
+
+            # Level 3: Contextual similarity
+            contextual_sim = compute_contextual_similarity(item1, item2)
+
+            if contextual_sim >= 0.80:
+                # High contextual overlap - likely duplicate
+                keep_indices.discard(j)
+            elif contextual_sim >= 0.60:
+                # Borderline contextual similarity
+                borderline_pairs.append(
+                    DuplicatePair(
+                        item1=item1,
+                        item2=item2,
+                        similarity=contextual_sim,
+                        level="contextual",
+                    )
+                )
+
+    # Return deduplicated items
+    deduplicated = [items[i] for i in sorted(keep_indices)]
+
+    if return_borderline:
+        return deduplicated, borderline_pairs
+    return deduplicated
+
+
+def export_borderline_cases(borderline_pairs: list[DuplicatePair], output_path: Path) -> None:
+    """Export borderline duplicate pairs for human review.
+
+    Args:
+        borderline_pairs: List of borderline duplicate pairs
+        output_path: Path to YAML output file
+    """
+    export_data = {
+        "review_required": len(borderline_pairs),
+        "generated_at": datetime.now().isoformat(),
+        "pairs": [
+            {
+                "similarity": pair["similarity"],
+                "level": pair["level"],
+                "item1": {
+                    "id": pair["item1"].id,
+                    "title": pair["item1"].title,
+                    "description": pair["item1"].description,
+                    "source": pair["item1"].source_summary,
+                },
+                "item2": {
+                    "id": pair["item2"].id,
+                    "title": pair["item2"].title,
+                    "description": pair["item2"].description,
+                    "source": pair["item2"].source_summary,
+                },
+            }
+            for pair in borderline_pairs
+        ],
+    }
+
+    output_path.write_text(yaml.dump(export_data, default_flow_style=False, sort_keys=False))
+    print(f"📋 Borderline cases exported to: {output_path}")
+
+
+# ============================================================================
+# Initiative Mapping (Phase 4 - MVP)
+# ============================================================================
+
+
+def load_initiative_metadata(initiatives_dir: Path) -> list[dict[str, str]]:
+    """Load basic metadata from initiative markdown files.
+    
+    MVP implementation for Phase 4. Returns initiative metadata for mapping.
+    
+    Args:
+        initiatives_dir: Path to initiatives directory (active or completed)
+        
+    Returns:
+        List of initiative metadata dicts with keys: title, status, path, related_files
+    """
+    initiatives = []
+    
+    if not initiatives_dir.exists():
+        return initiatives
+        
+    for initiative_file in initiatives_dir.glob("*.md"):
+        try:
+            content = initiative_file.read_text()
+            
+            # Extract title (first # heading)
+            title = ""
+            for line in content.split("\n"):
+                if line.startswith("# "):
+                    title = line[2:].strip()
+                    break
+            
+            # Extract status from frontmatter or content
+            status = "Unknown"
+            if "Status: Active" in content:
+                status = "Active"
+            elif "Status: Completed" in content:
+                status = "Completed"
+            
+            # Extract related files (simple heuristic - look for file paths)
+            related_files = []
+            for line in content.split("\n"):
+                # Look for paths like src/module.py or tests/test_*.py
+                if ".py" in line and ("src/" in line or "tests/" in line or "scripts/" in line):
+                    # Extract path between backticks or quotes
+                    parts = line.split("`")
+                    for part in parts:
+                        if ".py" in part and ("/" in part or "\\" in part):
+                            related_files.append(part.strip())
+            
+            initiatives.append({
+                "title": title,
+                "status": status,
+                "path": str(initiative_file),
+                "related_files": related_files[:10],  # Limit to 10
+            })
+        except Exception as e:
+            print(f"   ⚠️  Error loading initiative {initiative_file.name}: {e}")
+            continue
+    
+    return initiatives
+
+
+def map_action_item_to_initiatives(
+    item: ActionItem,
+    initiatives: list[dict[str, str]],
+) -> list[dict[str, float]]:
+    """Map an action item to relevant initiatives based on file overlap.
+    
+    MVP implementation for Phase 4. Uses simple file overlap heuristic.
+    Full semantic matching deferred to Phase 5 integration.
+    
+    Args:
+        item: Action item to map
+        initiatives: List of initiative metadata dicts
+        
+    Returns:
+        List of matches with initiative title and overlap score (0.0-1.0)
+    """
+    matches = []
+    item_files = set(item.related_files or [])
+    
+    if not item_files:
+        return matches
+    
+    for initiative in initiatives:
+        init_files = set(initiative.get("related_files", []))
+        
+        if not init_files:
+            continue
+        
+        # Compute Jaccard similarity
+        intersection = len(item_files & init_files)
+        union = len(item_files | init_files)
+        
+        if union > 0:
+            overlap_score = intersection / union
+            
+            if overlap_score > 0.0:
+                matches.append({
+                    "title": initiative["title"],
+                    "status": initiative["status"],
+                    "overlap_score": overlap_score,
+                    "matching_files": list(item_files & init_files),
+                })
+    
+    # Sort by overlap score descending
+    matches.sort(key=lambda x: x["overlap_score"], reverse=True)
+    
+    return matches
+
+
+def should_create_new_initiative(item: ActionItem, best_match_score: float = 0.0) -> bool:
+    """Determine if action item warrants a new initiative.
+    
+    MVP heuristic for Phase 4:
+    - High impact AND high confidence
+    - No strong existing initiative match (score < 0.3)
+    
+    Args:
+        item: Action item to evaluate
+        best_match_score: Best overlap score from existing initiatives
+        
+    Returns:
+        True if new initiative should be created
+    """
+    return (
+        item.impact == "high" 
+        and item.confidence == "high" 
+        and best_match_score < 0.3
+    )
+
+
+# ============================================================================
+# CLI Entry Point
 # ============================================================================
 
 

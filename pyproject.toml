@@ -32,6 +32,7 @@ dependencies = [
     # Text Processing & Chunking
     "tiktoken>=0.7.0",
     "nltk>=3.8.0",
+    "scikit-learn>=1.5.0",  # TF-IDF for text similarity
     # LLM Integration
     "openai>=1.40.0",
     "anthropic>=0.34.0", # Optional: Claude support

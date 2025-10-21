@@ -72,7 +72,8 @@ class TestPromptInjectionFilter:
         ]
 
         for text in benign:
-            assert not filter.detect_injection(text), f"False positive: {text}"
+            is_dangerous, _, _ = filter.detect_injection(text)
+            assert not is_dangerous, f"False positive: {text}"
 
     def test_sanitize_input(self):
         """Test input sanitization."""

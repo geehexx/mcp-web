@@ -333,8 +333,9 @@ def test_log_extraction_replace_existing(tmp_path):
     count = cursor.fetchone()[0]
     assert count == 1
 
-    cursor.execute("SELECT title, impact FROM extractions WHERE id = ?",
-                   ("2025-10-20-test#section#1",))
+    cursor.execute(
+        "SELECT title, impact FROM extractions WHERE id = ?", ("2025-10-20-test#section#1",)
+    )
     row = cursor.fetchone()
     assert row[0] == "Updated title"
     assert row[1] == "high"
