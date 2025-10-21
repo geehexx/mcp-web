@@ -103,14 +103,44 @@ def normalize_unicode(text: str) -> str:
     # Common in Unicode homograph attacks
     lookalikes = {
         # Greek letters
-        "Α": "A", "Β": "B", "Ε": "E", "Ζ": "Z", "Η": "H", "Ι": "I",
-        "Κ": "K", "Μ": "M", "Ν": "N", "Ο": "O", "Ρ": "P", "Τ": "T",
-        "Υ": "Y", "Χ": "X",
-        "α": "a", "ο": "o", "ε": "e", "ι": "i",
+        "Α": "A",
+        "Β": "B",
+        "Ε": "E",
+        "Ζ": "Z",
+        "Η": "H",
+        "Ι": "I",
+        "Κ": "K",
+        "Μ": "M",
+        "Ν": "N",
+        "Ο": "O",
+        "Ρ": "P",
+        "Τ": "T",
+        "Υ": "Y",
+        "Χ": "X",
+        "α": "a",
+        "ο": "o",
+        "ε": "e",
+        "ι": "i",
         # Cyrillic letters
-        "А": "A", "В": "B", "Е": "E", "К": "K", "М": "M", "Н": "H",
-        "О": "O", "Р": "P", "С": "C", "Т": "T", "Х": "X", "Ү": "Y",
-        "а": "a", "е": "e", "о": "o", "р": "p", "с": "c", "х": "x", "у": "y",
+        "А": "A",
+        "В": "B",
+        "Е": "E",
+        "К": "K",
+        "М": "M",
+        "Н": "H",
+        "О": "O",
+        "Р": "P",
+        "С": "C",
+        "Т": "T",
+        "Х": "X",
+        "Ү": "Y",
+        "а": "a",
+        "е": "e",
+        "о": "o",
+        "р": "p",
+        "с": "c",
+        "х": "x",
+        "у": "y",
     }
     for lookalike, ascii_char in lookalikes.items():
         text = text.replace(lookalike, ascii_char)
@@ -263,7 +293,7 @@ class PromptInjectionFilter:
         # Typoglycemia matches: 0.6 each (high confidence - intentional obfuscation)
         pattern_matches = [p for p in matched_patterns if p.startswith("pattern:")]
         typo_matches = [p for p in matched_patterns if p.startswith("typoglycemia:")]
-        
+
         confidence = min(1.0, len(pattern_matches) * 0.6 + len(typo_matches) * 0.6)
         is_dangerous = confidence >= threshold
 

@@ -382,10 +382,10 @@ def compute_text_similarity(item1: ActionItem, item2: ActionItem) -> float:
     # Handle empty strings - both empty should return 0.0 (not comparable)
     text1_clean = text1.strip()
     text2_clean = text2.strip()
-    
+
     if not text1_clean or not text2_clean:
         return 0.0
-    
+
     # If both are identical after cleaning, return 1.0
     if text1_clean == text2_clean:
         return 1.0
@@ -406,9 +406,7 @@ def compute_text_similarity(item1: ActionItem, item2: ActionItem) -> float:
         return 0.0
 
 
-def compute_semantic_similarity(
-    item1: ActionItem, item2: ActionItem, client: OpenAI
-) -> float:
+def compute_semantic_similarity(item1: ActionItem, item2: ActionItem, client: OpenAI) -> float:
     """Compute semantic similarity using LLM embeddings.
 
     Level 2: Semantic understanding beyond text matching.
@@ -452,9 +450,7 @@ def compute_contextual_similarity(item1: ActionItem, item2: ActionItem) -> float
     files1 = set(item1.related_files or [])
     files2 = set(item2.related_files or [])
 
-    if not files1 and not files2:
-        file_similarity = 0.0
-    elif not files1 or not files2:
+    if not files1 and not files2 or not files1 or not files2:
         file_similarity = 0.0
     else:
         intersection = len(files1 & files2)
@@ -527,9 +523,7 @@ def deduplicate_items(
                 keep_indices.discard(j)
                 if 0.60 <= text_sim < 0.80:
                     borderline_pairs.append(
-                        DuplicatePair(
-                            item1=item1, item2=item2, similarity=text_sim, level="text"
-                        )
+                        DuplicatePair(item1=item1, item2=item2, similarity=text_sim, level="text")
                     )
                 continue
             elif text_sim >= 0.60:
@@ -629,38 +623,38 @@ def export_borderline_cases(borderline_pairs: list[DuplicatePair], output_path: 
 
 def load_initiative_metadata(initiatives_dir: Path) -> list[dict[str, str]]:
     """Load basic metadata from initiative markdown files.
-    
+
     MVP implementation for Phase 4. Returns initiative metadata for mapping.
-    
+
     Args:
         initiatives_dir: Path to initiatives directory (active or completed)
-        
+
     Returns:
         List of initiative metadata dicts with keys: title, status, path, related_files
     """
     initiatives = []
-    
+
     if not initiatives_dir.exists():
         return initiatives
-        
+
     for initiative_file in initiatives_dir.glob("*.md"):
         try:
             content = initiative_file.read_text()
-            
+
             # Extract title (first # heading)
             title = ""
             for line in content.split("\n"):
                 if line.startswith("# "):
                     title = line[2:].strip()
                     break
-            
+
             # Extract status from frontmatter or content
             status = "Unknown"
             if "Status: Active" in content:
                 status = "Active"
             elif "Status: Completed" in content:
                 status = "Completed"
-            
+
             # Extract related files (simple heuristic - look for file paths)
             related_files = []
             for line in content.split("\n"):
@@ -671,17 +665,19 @@ def load_initiative_metadata(initiatives_dir: Path) -> list[dict[str, str]]:
                     for part in parts:
                         if ".py" in part and ("/" in part or "\\" in part):
                             related_files.append(part.strip())
-            
-            initiatives.append({
-                "title": title,
-                "status": status,
-                "path": str(initiative_file),
-                "related_files": related_files[:10],  # Limit to 10
-            })
+
+            initiatives.append(
+                {
+                    "title": title,
+                    "status": status,
+                    "path": str(initiative_file),
+                    "related_files": related_files[:10],  # Limit to 10
+                }
+            )
         except Exception as e:
             print(f"   ⚠️  Error loading initiative {initiative_file.name}: {e}")
             continue
-    
+
     return initiatives
 
 
@@ -690,69 +686,67 @@ def map_action_item_to_initiatives(
     initiatives: list[dict[str, str]],
 ) -> list[dict[str, float]]:
     """Map an action item to relevant initiatives based on file overlap.
-    
+
     MVP implementation for Phase 4. Uses simple file overlap heuristic.
     Full semantic matching deferred to Phase 5 integration.
-    
+
     Args:
         item: Action item to map
         initiatives: List of initiative metadata dicts
-        
+
     Returns:
         List of matches with initiative title and overlap score (0.0-1.0)
     """
     matches = []
     item_files = set(item.related_files or [])
-    
+
     if not item_files:
         return matches
-    
+
     for initiative in initiatives:
         init_files = set(initiative.get("related_files", []))
-        
+
         if not init_files:
             continue
-        
+
         # Compute Jaccard similarity
         intersection = len(item_files & init_files)
         union = len(item_files | init_files)
-        
+
         if union > 0:
             overlap_score = intersection / union
-            
+
             if overlap_score > 0.0:
-                matches.append({
-                    "title": initiative["title"],
-                    "status": initiative["status"],
-                    "overlap_score": overlap_score,
-                    "matching_files": list(item_files & init_files),
-                })
-    
+                matches.append(
+                    {
+                        "title": initiative["title"],
+                        "status": initiative["status"],
+                        "overlap_score": overlap_score,
+                        "matching_files": list(item_files & init_files),
+                    }
+                )
+
     # Sort by overlap score descending
     matches.sort(key=lambda x: x["overlap_score"], reverse=True)
-    
+
     return matches
 
 
 def should_create_new_initiative(item: ActionItem, best_match_score: float = 0.0) -> bool:
     """Determine if action item warrants a new initiative.
-    
+
     MVP heuristic for Phase 4:
     - High impact AND high confidence
     - No strong existing initiative match (score < 0.3)
-    
+
     Args:
         item: Action item to evaluate
         best_match_score: Best overlap score from existing initiatives
-        
+
     Returns:
         True if new initiative should be created
     """
-    return (
-        item.impact == "high" 
-        and item.confidence == "high" 
-        and best_match_score < 0.3
-    )
+    return item.impact == "high" and item.confidence == "high" and best_match_score < 0.3
 
 
 # ============================================================================
