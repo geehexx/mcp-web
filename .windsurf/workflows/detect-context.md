@@ -5,31 +5,26 @@ description: Intelligent context detection for work continuation
 auto_execution_mode: 3
 category: Operations
 complexity: 80
-tokens: 2200
+tokens: 1870
+version: v2.0-intelligent-semantic-preservation
 dependencies: []
 status: active
 ---
 
 # Detect Context Workflow
 
-**Purpose:** Analyze project state to determine what work should happen next, enabling autonomous continuation.
+**Purpose:** Analyze project state to determine next work, enabling autonomous continuation.
 
 **Invocation:** `/detect-context` (called by `/work` or directly)
 
----
-
-## Execution
-
-**Task plan:** Only if called directly (not by parent workflow like `/work`)
+**Task plan:** Only if called directly (not by parent like `/work`)
 
 ## Stage 1: Load Context
 
-**Process:**
-
-1. List `docs/initiatives/active/` (use `mcp0_list_directory`)
-2. Build initiative paths: DIR → `{dir}/initiative.md`, FILE → `{file}`
-3. Batch read with `mcp0_read_multiple_files` (PROJECT_SUMMARY + initiatives)
-4. Check recent session summaries (`ls -t docs/archive/session-summaries/*.md | head -3`)
+1. List `docs/initiatives/active/` (`mcp0_list_directory`)
+2. Build paths: DIR → `{dir}/initiative.md`, FILE → `{file}`
+3. Batch read `mcp0_read_multiple_files` (PROJECT_SUMMARY + initiatives)
+4. Check recent summaries (`ls -t docs/archive/session-summaries/*.md | head -3`)
 
 **⚠️ CRITICAL:** MCP tools do NOT support globs. List directory first, then read explicit paths.
 
@@ -37,10 +32,9 @@ status: active
 
 ## Stage 2: Detect Signals
 
-**Priority 0 (ABSOLUTE):** User explicit @mention or "continue with X" → Confidence 100%, route to specified initiative
+**Priority 0 (ABSOLUTE):** User explicit @mention or "continue with X" → Confidence 100%, route to specified
 
 **Priority 1-5:**
-
 - Session summary "Next Steps" / "Unresolved"
 - Initiative unchecked tasks (`- [ ]`)
 - Test failures (`task test:fast | grep FAILED`)
@@ -70,24 +64,15 @@ status: active
 
 ## Stage 4: Confidence Scoring
 
-**Score calculation:**
-
-- Next steps in summary: +30
-- Unresolved in summary: +30
-- Unchecked tasks: +25
-- Initiative Active: +25
-- Test failures: +20
-- Unstaged changes: +15
-- Recent commits same area: +15
-- TODO markers: +10
+**Score calculation:** Next steps +30, Unresolved +30, Unchecked tasks +25, Initiative Active +25, Test failures +20, Unstaged changes +15, Recent commits +15, TODO markers +10
 
 **Thresholds & Actions:**
 
 | Score | Confidence | Action | User Interaction |
 |-------|------------|--------|------------------|
-| 80+ | High | Auto-route | None (announce route) |
+| 80+ | High | Auto-route | None (announce) |
 | 30-79 | Medium | Recommend | State choice, mention alternatives |
-| <30 | Low | Prompt | List options, ask for direction |
+| <30 | Low | Prompt | List options, ask |
 
 **Multiple signals:** Present ranked options with recommendation.
 
@@ -95,35 +80,29 @@ status: active
 
 ## Stage 5: Present & Route
 
-**Output format by confidence:**
-
 | Confidence | Format | Example |
-|------------|--------|----------|
-| High (80+) | Announce route | "✓ Detected continuation from last session → Routing to /implement (Initiative X)" |
-| Medium (30-79) | Recommend + alternatives | "Recommendation: Continue initiative\n\nAlternatives:\n1. Continue (recommended)\n2. Run validation\n3. Other" |
-| Low (<30) | List options | "Unable to determine next step.\n\nOptions:\n1. Continue Initiative A\n2. Continue Initiative B\n3. Create plan" |
-
----
+|------------|--------|-----------|
+| High (80+) | Announce | "✓ Detected continuation → Routing to /implement (Initiative X)" |
+| Medium (30-79) | Recommend | "Recommendation: Continue initiative\n\nAlternatives:\n1. Continue\n2. Run validation\n3. Other" |
+| Low (<30) | List options | "Unable to determine.\n\nOptions:\n1. Initiative A\n2. Initiative B\n3. Create plan" |
 
 ## Stage 6: Return Results
 
-**Return to caller (`/work`):** Confidence score, route recommendation, extracted context
+**Return to `/work`:** Confidence score, route recommendation, extracted context
 
-**Caller invokes `/load-context`** with appropriate scope based on route
-
----
+**Caller invokes `/load-context`** with appropriate scope
 
 ---
 
 ## Anti-Patterns
 
-| ❌ Don't | ✅ Do |
-|----------|-------|
-| Ignore user explicit @mentions | User mention = 100% confidence, route exactly as specified |
-| Use glob patterns with MCP tools | List directory first, then read explicit paths |
+| Don't | Do |
+|-------|----|
+| Ignore user @mentions | User mention = 100% confidence, route exactly |
+| Use globs with MCP tools | List directory first, then explicit paths |
 | Ignore session summaries | Check summaries for "Next Steps" / "Unresolved" |
-| Over-rely on git status only | Check summaries + initiatives + git |
-| Auto-route on low confidence (<30%) | Prompt user for direction |
+| Over-rely on git only | Check summaries + initiatives + git |
+| Auto-route low confidence | Prompt user for direction |
 
 ---
 
@@ -131,8 +110,8 @@ status: active
 
 | Phase | Target |
 |-------|--------|
-| Load context | <1s |
-| Search signals | <2s |
+| Load | <1s |
+| Search | <2s |
 | Analyze | <1s |
 | **Total** | **<4s** |
 
@@ -147,7 +126,5 @@ status: active
 - `.windsurf/workflows/work.md`
 - `.windsurf/workflows/load-context.md`
 
----
-
-**Last Updated:** October 21, 2025
-**Version:** 2.0.0
+**Version:** v2.0-intelligent-semantic-preservation
+**Last Updated:** 2025-10-21
