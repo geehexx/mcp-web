@@ -16,17 +16,20 @@ You are continuing the **workflow-optimization-phase-2** initiative. Phase 1 is 
 **Initiative:** [`docs/initiatives/active/workflow-optimization-phase-2/`](docs/initiatives/active/workflow-optimization-phase-2/)
 
 **Phase 1 Status:** ✅ Complete
+
 - Intelligent 5-layer methodology designed and validated
 - POC on `bump-version.md`: 98.63% semantic preservation, 5/5 idempotency tests
 - Methodology integrated into `improve-prompt.md` v3.0 and `improve-workflow.md` v2.0
 - Proven superior to mechanical optimization despite 8.6% token cost
 
 **Phase 2 Status:** ⏳ Ready to Execute
+
 - 16 workflows awaiting optimization
 - Prioritization complete (5 high, 6 medium, 5 low)
 - Execution plan ready in [`phases/phase-2-batch-optimization.md`](docs/initiatives/active/workflow-optimization-phase-2/phases/phase-2-batch-optimization.md)
 
 **Token Counts:**
+
 - Workflows: 40,935 tokens (21 workflows)
 - Rules: 26,190 tokens (16 rules)
 - Combined: 67,125 tokens ✅ (under 85k threshold)
@@ -38,6 +41,7 @@ You are continuing the **workflow-optimization-phase-2** initiative. Phase 1 is 
 Execute **Phase 2: Batch Workflow Optimization** systematically.
 
 **Goal:** Apply intelligent semantic preservation methodology to 16 workflows, achieving:
+
 - ≥92% semantic preservation (average)
 - 15-30% variable token reduction (not uniform)
 - ≥95% idempotency pass rate
@@ -50,6 +54,7 @@ Execute **Phase 2: Batch Workflow Optimization** systematically.
 ### Session 1: High-Priority Workflows (3-4 hours)
 
 **Batch 1 (3 workflows):**
+
 1. `work.md` (1923 tokens, complexity 85)
 2. `detect-context.md` (2200 tokens, complexity 80)
 3. `implement.md` (1400 tokens, complexity 75)
@@ -63,9 +68,10 @@ Execute **Phase 2: Batch Workflow Optimization** systematically.
 Apply **5-Layer Intelligent Methodology:**
 
 **Layer 1: Semantic Analysis**
+
 1. Read workflow completely
 2. Assess quality (1-10 scale)
-3. Count tokens accurately  
+3. Count tokens accurately
 4. Identify critical elements:
    - Decision logic (if/else, thresholds)
    - Task syntax (`update_plan` calls, stage structure)
@@ -75,6 +81,7 @@ Apply **5-Layer Intelligent Methodology:**
 6. Select strategy from decision matrix
 
 **Layer 2-3: Coarse + Fine Compression**
+
 1. Apply section-level budget allocation:
    - Decision matrices: 90% preservation
    - Examples: 60% preservation
@@ -103,6 +110,7 @@ Calculate multi-dimensional preservation score:
 **Layer 5: Idempotency Testing**
 
 Run 5 tests:
+
 1. **Content stability:** Would re-optimization change output? (<5% drift acceptable)
 2. **Version field:** Check v2.0-intelligent-semantic-preservation present
 3. **Semantic drift:** Compare critical elements (0% drift expected)
@@ -164,6 +172,7 @@ Use this to select strategy per workflow:
 ### Pre-Optimization Checklist
 
 Before optimizing each workflow:
+
 - [ ] Workflow read completely
 - [ ] Quality assessed (1-10)
 - [ ] Token count accurate
@@ -173,6 +182,7 @@ Before optimizing each workflow:
 ### Post-Optimization Checklist
 
 After optimizing each workflow:
+
 - [ ] Semantic preservation ≥92%
 - [ ] Idempotency tests ≥4/5 pass
 - [ ] Markdown linting passes (0 errors)
@@ -263,12 +273,14 @@ git status
 ## Expected Outcomes
 
 **After Session 1 (5 high-priority workflows):**
+
 - ~10,073 tokens → ~7,555-8,562 tokens (15-25% reduction)
 - Average semantic preservation: ≥92%
 - All workflows: v2.0 version field
 - 5 commits with detailed metrics
 
 **After Complete Phase 2 (16 workflows):**
+
 - ~30,280 tokens → ~21,342-24,370 tokens (20-28% reduction)
 - Average semantic preservation: ≥92%
 - Combined total: ~59,190-62,190 tokens (well under 85k)
@@ -278,6 +290,7 @@ git status
 ## Anti-Patterns to Avoid
 
 ❌ **Don't:**
+
 - Apply uniform reduction percentages (mechanical approach)
 - Remove concrete examples entirely
 - Over-compress high-complexity workflows (use "Minimal" strategy)
@@ -286,6 +299,7 @@ git status
 - Commit without detailed metrics
 
 ✅ **Do:**
+
 - Use quality-based strategies (decision matrix)
 - Preserve 2-3 best examples
 - Match compression to workflow complexity
@@ -300,6 +314,7 @@ git status
 All workflows in: `.windsurf/workflows/`
 
 **High-Priority (Session 1):**
+
 - work.md
 - detect-context.md
 - implement.md
@@ -307,6 +322,7 @@ All workflows in: `.windsurf/workflows/`
 - research.md
 
 **Medium-Priority (Session 2):**
+
 - generate-plan.md
 - load-context.md
 - plan.md
@@ -315,6 +331,7 @@ All workflows in: `.windsurf/workflows/`
 - extract-session.md
 
 **Low-Priority (Session 3):**
+
 - archive-initiative.md
 - commit.md
 - new-adr.md

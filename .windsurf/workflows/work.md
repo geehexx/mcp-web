@@ -1,11 +1,12 @@
 ---
 created: "2025-10-17"
-updated: "2025-10-18"
+updated: "2025-10-21"
 description: Intelligent work orchestration and context detection
 auto_execution_mode: 3
 category: Orchestrator
 complexity: 85
-tokens: 1923
+tokens: 1650
+version: v2.0-intelligent-semantic-preservation
 dependencies:
   - detect-context
   - load-context
@@ -20,21 +21,19 @@ status: active
 
 # Work Orchestration Workflow
 
-**Purpose:** Central orchestration workflow that intelligently detects project context and routes to specialized workflows.
+**Purpose:** Central orchestration workflow that detects project context and routes to specialized workflows.
 
-**Invocation:** `/work` (with optional context) or `/work` (autonomous detection)
+**Invocation:** `/work` (with optional context) or `/work` (autonomous)
 
-**Philosophy:** AI should understand where to pick up from by analyzing project state, not requiring explicit direction.
+**Philosophy:** AI analyzes project state to determine continuation, no explicit direction required.
 
-**Workflow Chain:** `/work` → `/detect-context` → [routed workflow] → `/meta-analysis` (at session end)
+**Chain:** `/work` → `/detect-context` → [routed workflow] → `/meta-analysis` (at session end)
 
 ---
 
 ## Stage 0: Workflow Entry
 
-🔄 **Entering /work:** Central work orchestration
-
-**Print workflow entry announcement:**
+**Print announcement:**
 
 ```markdown
 🔄 **Entering /work:** Intelligent work orchestration and routing
@@ -44,9 +43,7 @@ status: active
 
 ## Stage 1: Create Initial Task Plan
 
-**MANDATORY:** Create task list before any actions.
-
-**Numbering:** Attribute tasks to workflow that EXECUTES them.
+**MANDATORY:** Create task list before actions. Number tasks by executing workflow.
 
 ```typescript
 update_plan({
@@ -65,13 +62,11 @@ update_plan({
 
 ## Stage 2: Detect Project Context
 
-Call `/detect-context` workflow:
+**Call** `/detect-context`:
 
-- Analyzes project state (initiatives, git, tests, sessions)
-- Classifies signals by confidence level
-- Identifies continuation points
-
-**Returns:** Detection results with routing recommendation
+- Analyzes state (initiatives, git, tests, sessions)
+- Classifies signals by confidence
+- Returns routing recommendation
 
 ```typescript
 update_plan({
@@ -88,11 +83,11 @@ update_plan({
 
 ---
 
-## Stage 3: Route to Appropriate Workflow
+## Stage 3: Route to Workflow
 
-**See:** [work-routing.md](./work-routing.md) for complete routing logic
+**See:** [work-routing.md](./work-routing.md) for complete logic
 
-### Quick Reference
+### Routing Matrix
 
 | Confidence | Action | Details |
 |------------|--------|---------|
@@ -100,15 +95,9 @@ update_plan({
 | **Medium (30-79%)** | Auto-proceed with alternatives | State recommendation, mention alternatives |
 | **Low (<30%)** | Prompt user | Ask for direction |
 
-**Common Routes:**
+**Routes:** Active initiative → `/implement`, Test failures → `/implement`, Planning → `/plan`, Completed → `/archive-initiative`, Clean slate → Prompt user
 
-- Active initiative → `/implement`
-- Test failures → Fix immediately or `/implement`
-- Planning markers → `/plan`
-- Completed initiative → `/archive-initiative`
-- Clean slate → Prompt user
-
-**After routing, update plan with routed workflow steps:**
+**After routing, update plan with subtasks:**
 
 ```typescript
 update_plan({
@@ -133,17 +122,13 @@ update_plan({
 
 ## Stage 4: Execute Workflow
 
-### Load Context
-
-Call `/load-context` with scope:
+**Load Context** (`/load-context`):
 
 - Initiative: initiative + related files
 - Planning: full project context
 - Module: specific module files
 
-### Execute Routed Workflow
-
-**Workflow chain examples:**
+**Chain examples:**
 
 ```yaml
 # Implementation
@@ -158,108 +143,62 @@ Call `/load-context` with scope:
 
 ---
 
-## Stage 5: Detect Work Completion and Execute Session End Protocol
+## Stage 5: Session End Protocol
 
-**See:** [work-session-protocol.md](./work-session-protocol.md) for complete protocol
+**See:** [work-session-protocol.md](./work-session-protocol.md)
 
-### Quick Reference
-
-**Trigger Session End Protocol if ANY of:**
+**Trigger if ANY:**
 
 1. Initiative marked "Completed" or "✅"
 2. All planned tasks done
 3. User explicitly signals session end
 
-**Protocol Steps:**
+**Protocol:** Commit changes → Archive initiatives → Meta-analysis → Verify exit criteria → Present summary
 
-1. Commit all changes (working + auto-fixes)
-2. Archive completed initiatives (`/archive-initiative`)
-3. Execute meta-analysis (`/meta-analysis`)
-4. Verify exit criteria (all committed, tests pass, docs updated)
-5. Present completion summary
+**Exit Criteria:** All committed, tests pass, initiatives archived, meta-analysis done, summary created
 
-**Exit Criteria:**
-
-```markdown
-- [ ] All changes committed (git status clean)
-- [ ] All tests passing (if code changes made)
-- [ ] Completed initiatives archived
-- [ ] Meta-analysis executed
-- [ ] Session summary created
-```
-
-**ONLY present final summary after all criteria met.**
+**ONLY present summary after all criteria met.**
 
 ---
 
-## Stage 6: Continue Working (If Protocol Not Triggered)
+## Stage 6: Continue Working
 
-**If Session End Protocol NOT triggered:**
+**If protocol NOT triggered:**
 
-- Provide brief progress update
-- Continue with next task/phase
-- Do NOT present "completion summary"
-- Do NOT ask "shall I continue?" unless blocked
-- Keep working until actual completion or user signals end
+- Brief progress update
+- Continue next task
+- No "completion summary" or "shall I continue?"
+- Work until completion or user signals end
 
 ---
 
 ## Anti-Patterns
 
-### ❌ Don't: Ask Obvious Questions
-
-- **Bad:** "What would you like to work on?"
-- **Good:** "Detected initiative X (60% complete). Continuing..."
-
-### ❌ Don't: Skip Session End Protocol
-
-**CRITICAL FAILURE:**
-
-- Presenting summary without `/meta-analysis`
-- Leaving completed initiatives in active/
-- Uncommitted changes at session end
-
-### ❌ Don't: Over-Prompt
-
-If 80%+ confident, auto-route. User can redirect if wrong.
+| Don't | Do |
+|-------|----|
+| Ask obvious questions | "Detected initiative X (60%). Continuing..." |
+| Skip session end protocol | **CRITICAL:** Always `/meta-analysis` + archive + commit |
+| Over-prompt | Auto-route if 80%+ confidence |
 
 ---
 
 ## Success Metrics
 
-✅ **Good:**
-
-- Context detection + routing: <30s
-- Autonomous continuation: 70%+
-- Session end protocol: 100%
-
-❌ **Needs Improvement:**
-
-- Asking "what to work on" when context clear
-- Skipping session end protocol
-- Requiring direction for obvious continuations
+| Metric | Target | Status |
+|--------|--------|--------|
+| Detection + routing | <30s | ✅ |
+| Autonomous continuation | 70%+ | ✅ |
+| Session end protocol | 100% | ✅ |
 
 ---
 
 ## Integration
 
-### Calls
+**Calls:** `/detect-context`, `/load-context`, `/plan`, `/implement`, `/validate`, `/commit`, `/archive-initiative`, `/meta-analysis` (mandatory)
 
-- `/detect-context` - Context analysis
-- `/load-context` - Efficient loading
-- `/plan` - Planning
-- `/implement` - Implementation (includes testing)
-- `/validate` - Quality checks
-- `/commit` - Git operations
-- `/archive-initiative` - Archive completed
-- `/meta-analysis` - **MANDATORY** session summary
+**Called By:** User, other workflows
 
-### Called By
-
-- User (direct)
-- Other workflows (when orchestration needed)
-
-**Print workflow exit:**
+**Exit:**
 
 ```markdown
 ✅ **Completed /work:** Work orchestration finished
@@ -281,9 +220,9 @@ This workflow is decomposed into focused sub-workflows:
 - [detect-context.md](./detect-context.md) - Context detection
 - [load-context.md](./load-context.md) - Context loading
 - [meta-analysis.md](./meta-analysis.md) - Session summary
-- [00_core_directives.md](../rules/00_core_directives.md) - Section 1.8
+- [00_core_directives.md](../rules/00_core_directives.md)
 
 ---
 
-**Version:** 2.0.0 (Decomposed for modularity - Phase 4)
-**Last Updated:** 2025-10-18
+**Version:** v2.0-intelligent-semantic-preservation
+**Last Updated:** 2025-10-21
