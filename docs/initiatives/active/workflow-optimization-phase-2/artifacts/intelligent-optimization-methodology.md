@@ -14,6 +14,7 @@
 > "LLMLingua maintains the original reasoning, summarization, and dialogue capabilities of the prompt, even at a maximum compression ratio of 20x... preserving key semantic information, especially in logical reasoning details."
 
 **Application to Workflows:**
+
 - **Preserve:** Decision logic, workflow-specific instructions, critical examples
 - **Compress:** Redundant explanations, verbose stage markers, duplicate patterns
 - **Never lose:** Domain knowledge, unique guidance, actionable instructions
@@ -23,11 +24,13 @@
 **From Cognitive Load Theory (2024):**
 
 **Three types of cognitive load:**
+
 1. **Intrinsic Load:** Inherent complexity of the task (PRESERVE)
 2. **Extraneous Load:** Unnecessary cognitive effort from poor presentation (ELIMINATE)
 3. **Germane Load:** Effort to build mental schemas (OPTIMIZE)
 
 **Apply to workflow optimization:**
+
 - **Intrinsic:** Keep complex workflows detailed (detect-context, work, validate)
 - **Extraneous:** Remove verbose announcements, redundant stage markers
 - **Germane:** Preserve examples that build understanding, remove redundant ones
@@ -35,6 +38,7 @@
 ### 3. Progressive Disclosure
 
 **Keep layered information:**
+
 1. **Overview:** High-level purpose and philosophy (preserve)
 2. **Quick-Start:** Essential steps for simple use cases (preserve)
 3. **Detailed:** Complex scenarios and edge cases (selective compression)
@@ -49,6 +53,7 @@
 **Principle:** Break complex information into manageable chunks
 
 **Apply:**
+
 - ✅ **Keep:** Task plan granularity for complex workflows (>10 steps)
 - ✅ **Compress:** Merge simple sequential steps in straightforward workflows
 - ❌ **Don't:** Collapse all task plans to 4 generic steps
@@ -83,6 +88,7 @@ plan: [
 > "Provide concrete examples and analogies to illustrate complex concepts"
 
 **Apply:**
+
 - ✅ **Keep:** Workflow-specific examples (auth patterns in security workflows)
 - ✅ **Keep:** Examples showing edge cases or common mistakes
 - ❌ **Remove:** Redundant variations of the same concept
@@ -104,6 +110,7 @@ grep_search("hash|encrypt|bcrypt|argon2", "src/", includes=["*.py"])
 ```bash
 grep_search("relevant|pattern", "src/", includes=["*.py"])
 ```
+
 ```
 
 ### Technique 3: Progressive Disclosure in Documentation
@@ -143,6 +150,7 @@ Identify: technology, security, performance needs.
 > "Use pyramid structure: Start with most important information and progressively add details"
 
 **Apply:**
+
 - ✅ **Tables:** For structured data with 3+ similar items (decision matrices, config options)
 - ✅ **Bullets:** For lists of steps or options
 - ✅ **Prose:** For narrative flow, complex logic, decision explanations
@@ -183,6 +191,7 @@ This ensures agent doesn't make arbitrary decisions when context is ambiguous.
 > "Maintain a consistent structure and format throughout the documentation"
 
 **Apply:**
+
 - ✅ **Keep:** Standard workflow structure (Purpose, Invocation, Philosophy, Stages)
 - ✅ **Keep:** Task plan format across all workflows
 - ✅ **Keep:** update_plan() pattern for workflow control
@@ -251,6 +260,7 @@ After optimizing:
 ### ❌ Mechanical Formula Application
 
 **Wrong:**
+
 ```
 FOR each workflow:
   Remove "Stage 0"
@@ -265,6 +275,7 @@ FOR each workflow:
 ### ❌ Generic Placeholder Substitution
 
 **Wrong:**
+
 ```markdown
 <!-- Before -->
 grep_search("auth|authentication|api.?key", "src/", includes=["*.py"])
@@ -280,6 +291,7 @@ grep_search("search_term", "directory", includes=["*.ext"])
 **Wrong:** Converting narrative decision logic to tables loses rationale
 
 **Keep prose for:**
+
 - Complex conditional logic with rationale
 - Workflow philosophy and principles
 - Edge case explanations

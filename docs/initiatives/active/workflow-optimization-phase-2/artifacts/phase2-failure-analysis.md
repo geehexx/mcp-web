@@ -11,7 +11,8 @@
 Phase 2 workflow optimizations (commits 411a807, d4d60af, 47cbdcc) applied **mechanical compression** without intelligent context preservation, evidenced by:
 
 **Suspicious Pattern:** Identical reduction percentages across unrelated workflows
-- Tier 1: -50%, -51%, -51%, -50% 
+
+- Tier 1: -50%, -51%, -51%, -50%
 - Tier 2: -33%, -33%, -33%
 - Tier 3: -34%, -37%, -34%, -34%, -36%, -34%, -36%, -35%, -35%
 
@@ -44,6 +45,7 @@ This uniformity indicates **formulaic processing**, not context-aware optimizati
 ### Example: research.md
 
 **Before (3033 tokens):**
+
 - 14 granular task steps with sub-steps
 - Detailed search patterns for each category
 - Multiple examples per section
@@ -51,6 +53,7 @@ This uniformity indicates **formulaic processing**, not context-aware optimizati
 - Intermediate update_plan() calls
 
 **After (2000 tokens, -34%):**
+
 - 4 collapsed task steps
 - Generic search examples
 - Removed all stage markers
@@ -88,6 +91,7 @@ This uniformity indicates **formulaic processing**, not context-aware optimizati
 ## Affected Workflows (17 Total)
 
 ### High Priority (Already "Optimized")
+
 1. research.md - Lost search pattern specificity
 2. validate.md - Lost validation step details
 3. generate-plan.md - Lost planning methodology
@@ -99,6 +103,7 @@ This uniformity indicates **formulaic processing**, not context-aware optimizati
 9. summarize-session.md - Lost summarization logic
 
 ### Previously "Optimized" (Need Review)
+
 10. implement.md - Stage 2.5 ADR check compressed
 11. detect-context.md - Signal detection logic compressed
 12. load-context.md - Batch loading strategy compressed
@@ -153,6 +158,7 @@ This uniformity indicates **formulaic processing**, not context-aware optimizati
 5. Save as restored baseline
 
 **Commits to check:**
+
 - Before 411a807 (high-priority optimization)
 - Before d4d60af (medium-priority optimization)  
 - Before 47cbdcc (Tier 1-2 optimization)

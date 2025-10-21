@@ -480,6 +480,7 @@ During session, discovered attempt to create documentation in `.windsurf/docs/` 
    - **Progress tracking:** Intermediate update_plan() calls removed entirely
 
 3. **Mechanical Formula Applied:**
+
    ```
    FOR each workflow:
      Remove "Stage 0" entry announcements
@@ -598,6 +599,155 @@ During session, discovered attempt to create documentation in `.windsurf/docs/` 
 5. If successful, proceed with remaining workflows
 
 **Blockers:** None - clear path forward identified
+
+---
+
+### 2025-10-21 (Session 4): Intelligent Methodology Overhaul - COMPREHENSIVE PLAN V3 ✅
+
+**MAJOR ACHIEVEMENT:** Complete rearchitecture from mechanical compression to research-backed intelligent semantic preservation
+
+**Deliverables Created:**
+
+1. **`artifacts/intelligent-compression-v2.md`** - 5-layer methodology based on LLMLingua research
+2. **`artifacts/idempotency-framework-integration.md`** - Hash-based caching + semantic validation
+3. **`COMPREHENSIVE_PLAN_V3.md`** - Complete roadmap with all phases integrated
+
+**Research Completed:**
+
+- **LLMLingua (Microsoft 2024):** Up to 20x compression with minimal performance loss
+  - Coarse-to-fine approach (section → token level)
+  - Budget controller for different content types
+  - Iterative token relationship preservation
+  
+- **Semantic Preservation Techniques:**
+  - Named Entity Recognition (NER) for >95% entity preservation
+  - Contextual anchors (decision thresholds, quality criteria, technical terms)
+  - Multi-dimensional validation (5 quality dimensions)
+  
+- **Information Theory & Compression:**
+  - Lossless compression principles
+  - 80% compression threshold (don't exceed without validation)
+  - Iterative testing for semantic drift detection
+
+**5-Layer Intelligent Methodology:**
+
+1. **Layer 1: Semantic Analysis**
+   - Extract decision logic, entities, task structures, relationships
+   - Build dependency graphs
+   - Identify preservation priorities (100% critical → <50% low-value)
+
+2. **Layer 2: Coarse-Grained Compression**
+   - Section-level budget controller
+   - Different targets per section type (decision matrices 90%, examples 60%)
+   - Remove duplication, consolidate patterns
+
+3. **Layer 3: Fine-Grained Compression**
+   - Token-level contextual anchors
+   - Preserve: decision thresholds, function signatures, technical terms
+   - Compress: filler phrases, verbose instructions, redundant modifiers
+
+4. **Layer 4: Semantic Validation**
+   - Entity preservation: ≥90%
+   - Decision logic intact: ≥98%
+   - Task syntax valid: =100%
+   - Relationship preserved: ≥85%
+   - Anchor retention: ≥90%
+   - **Overall score requirement: ≥92%**
+
+5. **Layer 5: Idempotency Verification**
+   - Hash-based exact match testing
+   - Semantic similarity ≥98%
+   - Token drift ≤10
+   - Re-optimization produces NO changes
+
+**Idempotency Framework:**
+
+- Cache structure: `.windsurf/.optimization-cache.json`
+- Deterministic LLM settings (temp=0.0, seed=42)
+- Golden test suite (4 previously optimized workflows)
+- Semantic drift detection
+- Cache management commands
+
+**Compression Decision Matrix:**
+
+| Original Quality | Token Count | Strategy | Max Reduction | Validation |
+|-----------------|-------------|----------|---------------|------------|
+| <6/10 | Any | Aggressive restructure | 60% | Standard |
+| 6-7/10 | <2000 | Balanced | 30% | Standard |
+| 6-7/10 | >2000 | Moderate | 40% | Enhanced |
+| 7-8/10 | <2000 | Light polish | 15% | Strict |
+| 7-8/10 | >2000 | Selective | 25% | Strict |
+| >8/10 | Any | **Minimal** | 10% | Very strict |
+
+**Key Insight:** Different content requires different strategies - no uniform percentages!
+
+**Updated Implementation Phases:**
+
+- **Phase 1 (Current Session):** Foundation - Research, methodology design, workflow updates, POC
+- **Phase 2 (Next 2-3 Sessions):** Restore + re-optimize all 17 workflows with intelligent methodology
+- **Phase 3 (Future):** Plan consolidation logic (eliminate duplicate task plans)
+- **Phase 4 (Separate Initiative):** Apply learnings to MCP web summarizer
+- **Phase 5 (Future):** Quality gates and automation
+
+**Anti-Patterns Identified:**
+
+❌ Mechanical Targeting: Uniform reduction percentages
+❌ Generic Placeholders: Replacing concrete examples
+❌ Task Granularity Loss: Collapsing detailed steps
+❌ Ignoring Context: One-size-fits-all approach
+
+✅ **Correct Approach:**
+
+- Variable reduction (15-30% based on content)
+- Preserve concrete examples
+- Maintain appropriate granularity
+- Context-aware optimization
+
+**Expected Outcomes (Revised):**
+
+- **Token reduction:** 15-30% (VARIABLE, not uniform)
+- **Semantic preservation:** >92% average
+- **Idempotency:** 100% test pass rate
+- **Entity preservation:** >90% critical terms
+- **Quality:** All workflows pass multi-dimensional validation
+
+**Integration with Future Work:**
+
+- **Plan consolidation:** Similar to `consolidate-summaries.md` logic
+- **MCP web integration:** Budget controller for content sections, compression levels
+- **Automation:** Pre-commit hooks, golden tests, cache management
+
+**Artifacts Directory Structure:**
+
+```
+workflow-optimization-phase-2/
+├── artifacts/
+│   ├── intelligent-compression-v2.md
+│   ├── idempotency-framework-integration.md
+│   ├── idempotency-research.md (from previous)
+│   ├── phase2-failure-analysis.md (from previous)
+│   └── intelligent-optimization-methodology.md (superseded by v2)
+├── COMPREHENSIVE_PLAN_V3.md
+└── initiative.md (this file)
+```
+
+**Status:** Foundation complete. Ready for workflow updates + POC execution.
+
+**Next Steps (This Session):**
+
+1. Update `improve-prompt.md` with intelligent methodology + idempotency
+2. Update `improve-workflow.md` with intelligent methodology + idempotency
+3. Execute POC on 1 workflow with full semantic validation
+4. Measure preservation metrics
+5. Commit all progress
+6. Meta-analysis + continuation prompt
+
+**Estimated Remaining Effort:**
+
+- Phase 1 completion: 2-3 hours (this session)
+- Phases 2-5: 14-28 hours across 6-10 sessions
+
+**Blockers:** None - user approved comprehensive plan
 
 ---
 
