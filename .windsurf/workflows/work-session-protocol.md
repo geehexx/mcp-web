@@ -1,12 +1,12 @@
 ---
 created: "2025-10-18"
-updated: "2025-10-18"
+updated: "2025-10-21"
 description: /work-session-protocol - Session end protocol and completion detection
 auto_execution_mode: 3
 category: Sub-workflow
 parent: work.md
 complexity: 75
-tokens: 2363
+tokens: 1550
 dependencies:
   - archive-initiative
   - meta-analysis
@@ -15,348 +15,216 @@ status: active
 
 # Work Session End Protocol
 
-**Purpose:** Detect when work is complete and execute proper session end protocol.
+**Purpose:** Detect work completion and execute proper session end protocol.
 
 **Called By:** `/work` (Stage 5)
 
-**Triggers:** Initiative completion, all planned tasks done, or user signals end
+**Triggers:** Initiative completion, all tasks done, or user signals end
 
 ---
 
-## Overview
+## Completion Detection
 
-The Session End Protocol ensures proper closure of work sessions with full documentation, archival, and meta-analysis. It is **MANDATORY** when triggered—never skip steps.
+### Trigger If ANY of:
 
-**Protocol Phases:**
+1. **Initiative Completion:** Status = "Completed" or "✅"
+2. **All Tasks Done:** All planned tasks complete
+3. **User Signal:** "wrap up", "end session", "that's all"
 
-1. Detect completion triggers
-2. Commit all changes
-3. Archive completed initiatives
-4. Execute meta-analysis
-5. Verify exit criteria
+### NOT Triggered By:
+
+❌ Progress updates, questions, quick fixes, ongoing implementation
 
 ---
 
-## Stage 0: Create Session End Task Plan
-
-🔄 **Entering Session End Protocol**
-
-**ALWAYS create task plan when protocol triggered:**
+## Stage 1: Create Task Plan
 
 ```typescript
 update_plan({
   explanation: "🏁 Session end detected. Executing protocol.",
   plan: [
-    { step: "5.1. /work-session-protocol - Detect completion triggers", status: "in_progress" },
-    { step: "5.2. /commit - Commit all changes", status: "pending" },
-    { step: "5.3. /archive-initiative - Archive completed initiatives", status: "pending" },
-    { step: "5.4. /meta-analysis - Execute session meta-analysis", status: "pending" },
-    { step: "5.5. /work-session-protocol - Verify exit criteria", status: "pending" }
+    { step: "5.1. /commit - Commit all changes", status: "in_progress" },
+    { step: "5.2. /archive-initiative - Archive completed initiatives", status: "pending" },
+    { step: "5.3. /meta-analysis - Execute session meta-analysis", status: "pending" },
+    { step: "5.4. /work-session-protocol - Verify exit criteria", status: "pending" }
   ]
 })
 ```
 
-**Note:** Numbering assumes this is step 5 of parent `/work` workflow. Adjust if called differently.
-
 ---
 
-## Phase 1: Detect Completion Triggers
+## Stage 2: Commit All Changes
 
-### Trigger Detection
-
-Run these checks to determine if protocol should execute:
-
-```bash
-# Check if initiative marked complete
-grep -l "Status.*Completed\|Status.*✅" docs/initiatives/active/*.md
-
-# Check git status
-git status --short
-
-# Check if all planned tasks done (review task list state)
-```
-
-### Trigger Conditions
-
-**Execute Session End Protocol if ANY of:**
-
-1. **Initiative Completion:** Initiative marked "Completed" or "✅" (found in grep above)
-2. **All Tasks Done:** All planned tasks for routed workflow are complete
-3. **User Signal:** User explicitly says "that's all", "let's wrap up", "end session", etc.
-
-### NOT Triggered By
-
-❌ Mid-work progress updates
-❌ Answering questions
-❌ Quick fixes or patches
-❌ Ongoing implementation (unless initiative complete)
-
----
-
-## Phase 2: Commit All Changes
-
-### 2.1 Check Working Tree
+### Check & Commit
 
 ```bash
 git status --short
-```
 
-**If unstaged or staged changes exist:**
-
-### 2.2 Commit Working Changes
-
-```bash
-# Stage modified files
+# Commit working changes
 git add <modified files>
+git commit -m "type(scope): description"
 
-# Commit with conventional commit message
-git commit -m "type(scope): description
-
-- Detail 1
-- Detail 2"
-```
-
-**Commit Types:** feat, fix, docs, test, refactor, security, chore
-
-### 2.3 Commit Auto-Fixes Separately
-
-**If linters/formatters made changes:**
-
-```bash
+# Commit auto-fixes separately
 git add <auto-fix files>
 git commit -m "style(scope): apply [tool] auto-fixes"
 ```
 
-**Examples:**
-
-- `style(docs): apply markdownlint auto-fixes`
-- `style(workflows): apply markdownlint auto-fixes`
+**Types:** feat, fix, docs, test, refactor, security, chore
 
 ---
 
-## Phase 3: Archive Completed Initiatives
+## Stage 3: Archive Completed Initiatives
 
-### 3.1 Find Completed Initiatives
-
-```bash
-# Get list of completed initiatives from Phase 1 detection
-grep -l "Status.*Completed\|Status.*✅" docs/initiatives/active/*md
-```
-
-### 3.2 Archive Each Initiative
-
-**For each completed initiative:**
+### Find & Archive
 
 ```bash
+# Find completed initiatives
+grep -l "Status.*Completed\|Status.*✅" docs/initiatives/active/*.md
+
+# Archive each (CRITICAL: never skip)
 /archive-initiative <initiative-name>
 ```
 
-**CRITICAL:** Do NOT skip this step. Completed initiatives must be archived before session end.
-
-**What the workflow does:**
-
-- Moves initiative from `active/` to `completed/`
-- Updates initiative with completion metadata
-- Creates archive entry
-- Updates PROJECT_SUMMARY.md (if major)
+**What it does:** Moves to `completed/`, updates metadata, updates PROJECT_SUMMARY.md
 
 ---
 
-## Phase 4: Execute Meta-Analysis
+## Stage 4: Execute Meta-Analysis
 
-### 4.1 Run Meta-Analysis Workflow
+### Invoke Meta-Analysis Workflow
 
-**CRITICAL:** Meta-analysis is a **workflow**, not a Python script.
-
-**Correct invocation:**
+**Correct:**
 
 ```markdown
 /meta-analysis
 ```
 
-**NEVER attempt:**
+**NEVER:**
 
 ```bash
-python scripts/meta_analysis.py  # This script doesn't exist!
+python scripts/meta_analysis.py  # Doesn't exist!
 ```
 
-**If agent cannot directly invoke workflow:**
+### Manual Fallback (If Needed)
 
-Follow manual session summary creation:
+```bash
+# Extract commits
+git log --oneline --since="$(cat .windsurf/.last-meta-analysis 2>/dev/null || echo '24 hours ago')"
 
-1. **Extract session data:**
+# Create summary: docs/archive/session-summaries/YYYY-MM-DD-name.md
+# Use template from docs/DOCUMENTATION_STRUCTURE.md
 
-   ```bash
-   # Get commits since last analysis
-   git log --oneline --since="$(cat .windsurf/.last-meta-analysis 2>/dev/null || echo '24 hours ago')"
-   ```
+# Update timestamp
+date -u +"%Y-%m-%dT%H:%M:%SZ" > .windsurf/.last-meta-analysis
 
-2. **Create session summary:**
-   - File: `docs/archive/session-summaries/YYYY-MM-DD-description.md`
-   - Use template from `docs/DOCUMENTATION_STRUCTURE.md`
-   - Document: accomplishments, decisions, files modified, lessons learned
+# Commit
+git add docs/archive/session-summaries/*.md .windsurf/.last-meta-analysis
+git commit -m "docs(session): add YYYY-MM-DD session summary"
+```
 
-3. **Update timestamp:**
+**Creates:**
+- Session summary
+- Workflow improvements
+- Cross-session continuity
+- Lessons learned
 
-   ```bash
-   date -u +"%Y-%m-%dT%H:%M:%SZ" > .windsurf/.last-meta-analysis
-   ```
-
-4. **Commit:**
-
-   ```bash
-   git add docs/archive/session-summaries/*.md .windsurf/.last-meta-analysis
-   git commit -m "docs(session): add YYYY-MM-DD session summary"
-   ```
-
-**This workflow creates:**
-
-- Session summary in `docs/archive/session-summaries/YYYY-MM-DD-description.md`
-- Workflow improvement recommendations
-- Cross-session continuity documentation
-- Lessons learned capture
-
-**Why mandatory:**
-
-- Enables context detection in future sessions
-- Documents decisions and rationale
-- Identifies patterns and improvements
-- Maintains project knowledge continuity
-
-### 4.2 What Gets Documented
-
-**Session summary includes:**
-
-- Work accomplished (specific changes)
-- Decisions made (technical, architectural)
-- Files modified (with context)
-- Commits created (with hashes)
-- Learnings (technical insights)
-- Unresolved issues (blockers, TODOs)
-- Next steps (continuation points)
+**Why mandatory:** Enables future context detection, documents decisions/patterns
 
 ---
 
-## Phase 5: Verify Exit Criteria
+## Stage 5: Verify Exit Criteria
 
-### 5.1 Exit Criteria Checklist
+### Checklist
 
 ```markdown
 - [ ] All changes committed (git status clean)
-- [ ] All tests passing (if code changes made)
+- [ ] All tests passing (if code changes)
 - [ ] Completed initiatives archived
 - [ ] Meta-analysis executed
 - [ ] Session summary created
-- [ ] Living documentation updated (if major changes)
+- [ ] Living docs updated (if major changes)
 ```
 
-### 5.2 Living Documentation Check
+### Living Documentation Check
 
-**Update if ANY of these apply:**
-
-**PROJECT_SUMMARY.md:**
-
+**Update if:**
 - Major features completed
 - Milestones reached
 - ADRs created
-- Initiative status changed (completed/started)
 - Architecture changes
 
-**CHANGELOG.md:**
+**Skip if:**
+- Routine fixes, internal refactoring, WIP
 
-- Preparing release
-- Breaking changes
-- New user-facing features
-
-**Skip updates if:**
-
-- Routine bug fixes
-- Internal refactoring
-- Work-in-progress (not ready for users)
-
-### 5.3 Final Validation
-
-**Before presenting completion summary:**
+### Final Validation
 
 ```bash
-# Verify git clean
-git status --short
-# Output should be empty
+# Verify clean
+git status --short  # Should be empty
 
-# Verify session summary exists
+# Verify summary exists
 ls -t docs/archive/session-summaries/*.md | head -1
-# Should show today's summary
 
-# If code changes: verify tests pass
+# If code changes: tests pass
 task test:fast
-# Should show all passing
 ```
 
 ---
 
-## Phase 6: Present Completion Summary
+## Stage 6: Present Completion Summary
 
-**ONLY after all exit criteria met, present:**
+**ONLY after all criteria met:**
 
 ```markdown
 ## ✅ Session Complete
 
 ### Summary
-
-[2-3 sentences on what was accomplished]
+[2-3 sentences on accomplishments]
 
 ### Key Accomplishments
-
-- Accomplishment 1 (with specifics)
-- Accomplishment 2 (with specifics)
-- Accomplishment 3 (with specifics)
+- Accomplishment 1
+- Accomplishment 2
+- Accomplishment 3
 
 ### Commits Created
-
-[bash]
-<git log output showing commits>
-[/bash]
+[git log output]
 
 ### Documentation Updated
-
 - Session summary: docs/archive/session-summaries/YYYY-MM-DD-name.md
-- [Any other docs updated]
+- [Other docs]
 
 ### Initiative Progress
-
-- Initiative X: [status update]
-- Overall progress: X% → Y%
+- Initiative X: [status]
+- Overall: X% → Y%
 
 ### Next Steps
-
-- [What to work on next session]
-- [Any blockers or dependencies]
+- [What to work on next]
+- [Blockers/dependencies]
 
 Ready for next session.
 ```
 
 ---
 
-## Continue Working (If Protocol NOT Triggered)
+## Continue Working (Protocol NOT Triggered)
 
-**If completion triggers NOT met:**
+**If completion NOT met:**
 
-- Provide brief progress update
-- Continue with next task/phase
-- Do NOT present "completion summary"
-- Do NOT ask "shall I continue?" unless blocked
-- Keep working until actual completion or user signals end
+- Brief progress update
+- Continue next task
+- **NO** "completion summary"
+- **NO** "shall I continue?" (unless blocked)
 
-**Progress Update Format:**
+**Progress Format:**
 
 ```markdown
 ## Progress Update
 
-✅ Completed: [what's done]
-🔄 In Progress: [current task]
-⏳ Remaining: [what's left]
+✅ Completed: [done]
+🔄 In Progress: [current]
+⏳ Remaining: [left]
 
-Continuing with [next task]...
+Continuing...
 ```
 
 ---
@@ -365,71 +233,46 @@ Continuing with [next task]...
 
 ### ❌ CRITICAL FAILURES
 
-**Never Do This:**
+| Never Do | Why |
+|----------|-----|
+| Skip `/meta-analysis` | Breaks continuity |
+| Leave completed initiatives in active/ | Clutters context |
+| Uncommitted changes at end | Risks work loss |
+| Skip living docs updates | Documentation drift |
 
-1. **Presenting final summary without `/meta-analysis`**
-   - Breaks cross-session continuity
-   - Loses valuable context
+### ❌ Don't Confuse Updates with Session End
 
-2. **Leaving completed initiatives in active/ directory**
-   - Clutters active work
-   - Confuses context detection
-
-3. **Uncommitted changes at session end**
-   - Risks losing work
-   - Creates merge conflicts
-
-4. **Skipping living documentation updates**
-   - Documentation drifts from reality
-   - Users miss important changes
-
-### ❌ Don't: Confuse Progress Updates with Session End
-
-**Progress Update (Mid-Session):**
+**Progress (Mid-Session):**
 
 ```markdown
-✅ Task 1 done
-🔄 Working on Task 2
-⏳ Task 3 pending
-
-Continuing...
+✅ Task 1 done, 🔄 Task 2, ⏳ Task 3. Continuing...
 ```
 
-**Session End (Triggers Met):**
+**Session End (Triggered):**
 
 ```markdown
-✅ Session Complete
-
-[Full completion summary with all protocol steps]
+✅ Session Complete [full summary with protocol]
 ```
 
 ---
 
 ## Success Metrics
 
-**Protocol Execution:**
-
 - Session end protocol: 100% execution when triggered
-- Meta-analysis creation: 100% (never skip)
+- Meta-analysis: 100% (never skip)
 - Initiative archival: 100% (when complete)
-- Documentation updates: 100% (when applicable)
-
-**Timing:**
-
-- Protocol execution: <5 minutes
-- Meta-analysis: <3 minutes
-- Total session end: <10 minutes
+- Protocol time: <10 minutes
 
 ---
 
 ## References
 
-- Parent workflow: [work.md](./work.md)
-- Meta-analysis workflow: [meta-analysis.md](./meta-analysis.md)
-- Archive workflow: [archive-initiative.md](./archive-initiative.md)
-- Agent directives: [00_core_directives.md](../rules/00_core_directives.md) (Section 1.8)
+- [work.md](./work.md) - Parent workflow
+- [meta-analysis.md](./meta-analysis.md)
+- [archive-initiative.md](./archive-initiative.md)
+- [00_core_directives.md](../rules/00_core_directives.md)
 
 ---
 
-**Version:** 1.0.0 (Extracted from work.md Phase 4 decomposition)
-**Last Updated:** 2025-10-18
+**Version:** 1.0.0
+**Last Updated:** 2025-10-21
