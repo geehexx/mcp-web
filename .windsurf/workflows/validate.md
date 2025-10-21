@@ -5,17 +5,16 @@ description: Comprehensive validation and quality checks
 auto_execution_mode: 3
 category: Quality
 complexity: 70
-tokens: 2060
-version: v2.0-intelligent-semantic-preservation
+tokens: 1500
 dependencies: []
 status: active
 ---
 
 # Validate Workflow
 
-**Purpose:** Run comprehensive quality checks before committing to catch issues early.
+**Purpose:** Pre-commit quality gate workflow. Runs comprehensive checks (linting, tests, security) before committing or merging code.
 
-**Invocation:** Called by `/implement` after implementation or directly before commit.
+**Invocation:** `/validate` (called by `/work`, `/implement`, `/commit`, or directly)
 
 **Philosophy:** Catch issues early through automated validation gates.
 
@@ -27,13 +26,13 @@ status: active
 
 ```typescript
 update_plan({
-  explanation: "🔍 Starting /validate",
+  explanation: "✅ Starting /validate workflow",
   plan: [
-    { step: "1. /validate - Format check", status: "in_progress" },
-    { step: "2. /validate - Lint", status: "pending" },
-    { step: "3. /validate - Type check", status: "pending" },
-    { step: "4. /validate - Tests", status: "pending" },
-    { step: "5. /validate - Security", status: "pending" }
+    { step: "1. /validate - Run linting checks", status: "in_progress" },
+    { step: "2. /validate - Run fast tests", status: "pending" },
+    { step: "3. /validate - Run documentation validation", status: "pending" },
+    { step: "4. /validate - Run security checks", status: "pending" },
+    { step: "5. /validate - Generate validation report", status: "pending" }
   ]
 })
 ```
@@ -343,14 +342,27 @@ Debug: uv run pytest tests/unit/test_cache.py::test_cache_expiration -xvs
 
 ---
 
-## Optimization
+## Optimization Strategies
 
-**Parallel:** `task format:check & task lint & task test:fast`
+### Parallel Execution
 
-**Incremental:** Fast checks first → If pass → Full validation
+```bash
+# Run independent checks in parallel for speed
+task format:check & task lint & task test:fast
+```
 
-**CI/CD:**
+### Incremental Validation
+
+**Fast iteration cycle:**
+
+1. Run fast checks first: `task format:check && task test:fast`
+2. If pass, run full validation: `/validate`
+3. Saves time by catching common issues early
+
+### CI/CD Integration
+
 ```yaml
+# GitHub Actions example
 - name: Validate
   run: |
     task format:check
