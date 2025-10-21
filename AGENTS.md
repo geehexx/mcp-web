@@ -170,7 +170,7 @@ ls .windsurf/workflows/
 
 - [Constitution](docs/CONSTITUTION.md) - Project principles and standards
 - [Documentation Structure](docs/DOCUMENTATION_STRUCTURE.md) - Documentation organization
-- [Agent Directives](.windsurf/rules/00_agent_directives.md) - Core agent behavior rules
+- [Core Directives](.windsurf/rules/00_core_directives.md) - Core agent behavior rules
 - [ADR-0018: Workflow Architecture V3](docs/adr/0018-workflow-architecture-v3.md)
 
 **Maintainer:** Core Team

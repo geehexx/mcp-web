@@ -11,7 +11,7 @@ Tags: performance, P2, optimization, cost-reduction
 
 # Initiative: Phase 3 - Performance Optimization
 
-**User Experience - Reduce Latency & Operational Costs**
+## User Experience - Reduce Latency & Operational Costs
 
 ---
 
@@ -41,7 +41,7 @@ Improve user experience and reduce operational costs through linear-time chunkin
 
 **Impact:**
 
-```
+```text
 Current Performance:
 - 5k tokens: 1.2s chunking
 - 10k tokens: 4.8s chunking
@@ -67,28 +67,28 @@ Cost Impact (cache races):
 
 ### In Scope
 
-**P2-PERFORMANCE-001: Linear-Time Chunking**
+#### P2-PERFORMANCE-001: Linear-Time Chunking
 
 - Adaptive chunking strategy (simple for large docs, semantic for small)
 - Dynamic programming algorithm for optimal chunking
 - Streaming chunker (minimal buffering)
 - Configurable thresholds (large doc, deep nesting)
 
-**P2-PERFORMANCE-002: Cache Deduplication**
+#### P2-PERFORMANCE-002: Cache Deduplication
 
 - In-memory deduplication (same-process requests)
 - URL normalization (redirects, trailing slashes)
 - In-flight request tracking (wait for existing fetch)
 - Metrics: dedup.hits, dedup.misses, duplicate.rate
 
-**P2-PERFORMANCE-003: Extraction Optimization**
+#### P2-PERFORMANCE-003: Extraction Optimization
 
 - Extraction result caching (separate from summary cache)
 - Adaptive extraction strategy (simple pages vs complex)
 - trafilatura configuration tuning (favor_precision for simple pages)
 - Benchmark alternative extractors (readability, boilerpy3)
 
-**Performance Testing Framework**
+#### Performance Testing Framework
 
 - Benchmark suite (chunking, extraction, end-to-end)
 - Load testing (100+ concurrent requests)

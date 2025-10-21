@@ -15,9 +15,10 @@ from pathlib import Path
 
 import pytest
 
-# Directories to exclude from markdown checks
+# Directories to exclude from markdown checks (matches .markdownlint-cli2.jsonc)
 EXCLUDE_PATTERNS = [
     "docs/archive",
+    "docs/initiatives/completed",
     "node_modules",
     ".venv",
     ".pytest_cache",

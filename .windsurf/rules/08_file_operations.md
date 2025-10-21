@@ -5,7 +5,7 @@ description: Apply when moving archiving or reorganizing files and updating cros
 
 # File Operations and Archival
 
-### 1.1 Tool Selection
+## 1.1 Tool Selection
 
 **Protected directories (.windsurf/):** ALWAYS use MCP filesystem tools for files in `.windsurf/` directory
 

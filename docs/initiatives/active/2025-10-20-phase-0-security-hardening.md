@@ -11,7 +11,7 @@ Tags: security, P0, deployment-blocker
 
 # Initiative: Phase 0 - Security Hardening
 
-**Deployment Blocker - Must Complete Before Production Release**
+## Deployment Blocker - Must Complete Before Production Release
 
 ---
 
@@ -60,7 +60,7 @@ Current mcp-web implementation lacks critical security controls for production d
 
 ### In Scope
 
-**P0-SECURITY-001: Prompt Injection Prevention**
+#### P0-SECURITY-001: Prompt Injection Prevention
 
 - Content sanitization framework (HTML tag stripping, text normalization)
 - Prompt injection detection (pattern-based + ML classification)
@@ -69,23 +69,23 @@ Current mcp-web implementation lacks critical security controls for production d
 - Test suite with adversarial payloads (Adversa AI's 25 vulnerabilities)
 - Integration with garak LLM vulnerability scanner
 
-**P0-SECURITY-002: Authentication & Authorization**
+#### P0-SECURITY-002: Authentication & Authorization
 
 - API key authentication (bearer token validation)
 - Rate limiting per identity
 - Authentication middleware for MCP tools
 - Audit logging of authentication events
 - Configuration for auth enable/disable (default: enabled)
-- OAuth 2.1 foundation (PKCE + state validation) - optional
+- OAuth 2.1 foundation (PKCE and state validation) - optional
 
-**P0-SECURITY-003: Command Injection Audit**
+#### P0-SECURITY-003: Command Injection Audit
 
 - Comprehensive code audit (subprocess, os.system, eval, exec)
 - Static analysis with Bandit + Semgrep
 - Input validation framework
 - Security linting rules in pre-commit hooks
 
-**Security Testing Infrastructure**
+#### Security Testing Infrastructure
 
 - OWASP LLM Top 10 test suite
 - Fuzzing framework for inputs
@@ -163,7 +163,7 @@ Current mcp-web implementation lacks critical security controls for production d
 #### API Key Authentication
 
 - [ ] Implement API key validation middleware
-- [ ] Add bearer token parsing (Authorization: Bearer <key>)
+- [ ] Add bearer token parsing (Authorization: Bearer `key`)
 - [ ] Create key management utilities (generate, validate, rotate)
 - [ ] Add authentication to MCP server initialization
 - [ ] Environment variable configuration (MCP_WEB_API_KEY, MCP_WEB_AUTH_ENABLED)

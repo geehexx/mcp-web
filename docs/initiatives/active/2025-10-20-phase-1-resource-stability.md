@@ -9,11 +9,9 @@ Updated: 2025-10-20
 Tags: stability, P0-P1, resource-management, deployment-blocker
 ---
 
-# Initiative: Phase 1 - Resource Stability
+# Initiative: Phase 1 - Resource Stability & Leak Prevention
 
-**Production Readiness - Enable Reliable Long-Running Operation**
-
----
+## Production Readiness - Enable Long-Running Deployments
 
 ## Objective
 
@@ -31,33 +29,31 @@ Eliminate resource leaks (Playwright browser contexts, httpx connection pools) a
 - [ ] 72-hour stability test passing
 - [ ] Resource monitoring metrics exposed (FDs, memory, browser count)
 
----
-
 ## Motivation
 
-**Problem:**
+### Problem
 
 Current implementation has critical resource leaks that cause complete service failure:
 
 1. **Playwright Context Leak (P0-STABILITY-001)**: Browser contexts not closed on exception paths → file descriptor exhaustion after ~100 failures → complete service unavailability
 2. **httpx Pool Leak (P1-STABILITY-002)**: AsyncClient connection pools accumulate on task cancellation → gradual memory growth → eventual connection refusal
 
-**Impact:**
+### Impact
 
 - **Without this:** Service fails after 6-24 hours in production (MTBF depends on error rate)
 - **With this:** Reliable 24/7 operation, stable resource usage, predictable behavior
 - **Detection:** `lsof -p $(pgrep mcp_web) | wc -l` grows unbounded (Playwright), `tracemalloc` shows HTTPConnectionPool accumulation (httpx)
 
-**Value:**
+### Value
 
 - **Reliability:** Service can run indefinitely without restarts
 - **Predictability:** Resource usage stable and bounded
 - **Observability:** Health checks and metrics enable proactive monitoring
 - **Production Ready:** Meets SLA requirements for uptime
 
-**Quantified Impact:**
+### Quantified Impact
 
-```
+```text
 Playwright leak:
 - Browser: ~100 file descriptors (sockets, pipes, shared memory)
 - ulimit: typically 1024-4096 FDs
@@ -71,13 +67,13 @@ httpx leak:
 - MTBF: 24-72 hours (slower than Playwright)
 ```
 
----
-
 ## Scope
 
 ### In Scope
 
-**P0-STABILITY-001: Playwright Browser Context Management**
+#### P0-STABILITY-001: Playwright Browser Leak Prevention
+
+##### Browser Pool Implementation
 
 - Browser pool with reusable instances (N configurable browsers)
 - Async context manager pattern (guarantees cleanup)
@@ -87,7 +83,7 @@ httpx leak:
 - Resource monitoring (FD count, browser age, pool utilization)
 - Supervisor pattern (force-kill hung processes)
 
-**P1-STABILITY-002: httpx Connection Pool Optimization**
+#### P1-STABILITY-002: httpx Connection Pool Optimization
 
 - Singleton AsyncClient (shared across requests)
 - Proper connection pool configuration (limits, keepalive, expiry)
@@ -95,7 +91,7 @@ httpx leak:
 - Task cancellation handling (proper connection release)
 - Connection pool monitoring (active, idle, waiting)
 
-**Observability & Health Monitoring**
+#### Observability & Health Monitoring
 
 - Health check endpoint (`/health`) with component checks
 - Prometheus metrics (browsers, connections, FDs, memory)
@@ -103,7 +99,7 @@ httpx leak:
 - Graceful shutdown handler (cleanup on SIGTERM/SIGINT)
 - Resource leak detection tests
 
-**Stability Testing**
+#### Stability Testing
 
 - 72-hour stability test (continuous load)
 - Resource leak test suite (1000+ failed requests)

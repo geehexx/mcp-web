@@ -5,7 +5,7 @@ description: Apply for git operations commits branching or version control work
 
 # Git Workflows and Conventional Commits
 
-### 2.1 Git Commands via run_command
+## 2.1 Git Commands via run_command
 
 **Use `run_command` tool for all git operations:**
 

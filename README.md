@@ -184,7 +184,7 @@ task llm:ollama:pull # Pull recommended models
 task llm:ollama:start # Start Ollama server
 ```
 
-See [docs/LOCAL_LLM_GUIDE.md](docs/LOCAL_LLM_GUIDE.md) for complete local LLM setup.
+See [docs/guides/LOCAL_LLM_GUIDE.md](docs/guides/LOCAL_LLM_GUIDE.md) for complete local LLM setup.
 
 #### Cloud LLM (OpenAI)
 
@@ -485,7 +485,7 @@ task ci # Full CI pipeline
 task ci:fast # Quick check
 ```
 
-See [TASKFILE_GUIDE.md](TASKFILE_GUIDE.md) for complete task reference.
+See [docs/guides/TASKFILE_GUIDE.md](docs/guides/TASKFILE_GUIDE.md) for complete task reference.
 
 ### Running Tests
 

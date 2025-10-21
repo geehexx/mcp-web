@@ -122,15 +122,23 @@ docs/
 │   ├── work-routing.md            # Sub-workflow: Routing logic
 │   └── work-session-protocol.md   # Sub-workflow: Session end protocol
 │
-├── rules/                         # Agent behavior rules (8 rules)
-│   ├── 00_agent_directives.md     # Core principles and persona
-│   ├── 01_testing_and_tooling.md  # Testing standards
-│   ├── 02_python_standards.md     # Code standards
-│   ├── 03_documentation_lifecycle.md  # Documentation rules
-│   ├── 04_security.md             # Security patterns
-│   ├── 05_operational_protocols.md    # Session end, progress communication
-│   ├── 06_context_engineering.md  # File ops, git ops, context management
-│   └── 07_task_system.md          # Task system and progress tracking
+├── rules/                         # Agent behavior rules (16 rules)
+│   ├── 00_core_directives.md      # Core principles and persona (always_on)
+│   ├── 01_python_code.md          # Python code standards
+│   ├── 02_testing.md              # Testing standards
+│   ├── 03_documentation.md        # Documentation standards
+│   ├── 04_config_files.md         # Config file standards
+│   ├── 05_windsurf_structure.md   # Windsurf structure and naming
+│   ├── 06_security_practices.md   # Security patterns
+│   ├── 07_context_optimization.md # Context loading and optimization
+│   ├── 08_file_operations.md      # File operations and archival
+│   ├── 09_git_workflows.md        # Git operations and commits
+│   ├── 10_session_protocols.md    # Session end protocols
+│   ├── 11_error_handling.md       # Error handling patterns
+│   ├── 12_task_orchestration.md   # Task system and progress tracking
+│   ├── 13_workflow_routing.md     # Workflow routing decisions
+│   ├── 14_automation_scripts.md   # Automation script usage
+│   └── 15_tool_patterns.md        # MCP tool usage patterns
 │
 ├── docs/                          # Machine-readable quick-reference documentation
 │   ├── README.md                  # Index and guide for machine-readable docs
