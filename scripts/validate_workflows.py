@@ -117,6 +117,8 @@ class WorkflowValidator:
     def _extract_frontmatter(self, content: str, _rel_path: Path) -> dict[str, Any]:
         """Extract and parse YAML frontmatter.
 
+        Supports Windsurf's lenient YAML format (e.g., unquoted globs).
+
         Args:
             content: File content
             rel_path: Relative path for error reporting
@@ -138,14 +140,40 @@ class WorkflowValidator:
 
         frontmatter_str = parts[1]
 
-        # Parse YAML
+        # Try standard YAML parsing first
         try:
             frontmatter = yaml.safe_load(frontmatter_str)
             if not isinstance(frontmatter, dict):
                 raise ValidationError("Frontmatter must be a YAML object")
             return frontmatter
-        except yaml.YAMLError as e:
-            raise ValidationError(f"Invalid YAML syntax: {e}") from e
+        except yaml.YAMLError:
+            # Fallback: Use lenient parsing for Windsurf-specific format
+            # This handles cases like: globs: *.py, **/*.py
+            frontmatter = {}
+            for line in frontmatter_str.strip().split("\n"):
+                if ":" not in line:
+                    continue
+                key, value = line.split(":", 1)
+                key = key.strip()
+                value = value.strip()
+
+                # For globs field, accept Windsurf's comma-separated format
+                if key == "globs":
+                    frontmatter[key] = value  # Keep as string
+                else:
+                    # Parse other fields as YAML
+                    try:
+                        parsed = yaml.safe_load(f"{key}: {value}")
+                        if parsed and isinstance(parsed, dict):
+                            frontmatter.update(parsed)
+                        else:
+                            frontmatter[key] = value
+                    except yaml.YAMLError:
+                        frontmatter[key] = value
+
+            if not frontmatter:
+                raise ValidationError("Could not parse frontmatter") from None
+            return frontmatter
 
     def _validate_schema(self, frontmatter: dict[str, Any], rel_path: Path) -> None:  # noqa: ARG002
         """Validate frontmatter against JSON schema.
