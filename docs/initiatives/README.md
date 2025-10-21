@@ -381,7 +381,6 @@ This comprehensive guide covers:
 <!-- AUTO:INITIATIVE-INDEX:START -->
 ### Active Initiatives
 
-- [`2025-10-15-performance-optimization-pipeline/`](docs/initiatives/active/2025-10-15-performance-optimization-pipeline)
 - [`2025-10-19-session-summary-mining-advanced.md`](docs/initiatives/active/2025-10-19-session-summary-mining-advanced.md)
 - [`2025-10-20-phase-0-security-hardening.md`](docs/initiatives/active/2025-10-20-phase-0-security-hardening.md)
 - [`2025-10-20-phase-1-resource-stability.md`](docs/initiatives/active/2025-10-20-phase-1-resource-stability.md)
@@ -390,6 +389,7 @@ This comprehensive guide covers:
 
 ### Completed Initiatives
 
+- [`2025-10-15-performance-optimization-pipeline/`](docs/initiatives/completed/2025-10-15-performance-optimization-pipeline)
 - [`2025-10-15-quality-foundation/`](docs/initiatives/completed/2025-10-15-quality-foundation)
 - [`2025-10-16-convert-decisions-to-adrs.md`](docs/initiatives/completed/2025-10-16-convert-decisions-to-adrs.md)
 - [`2025-10-16-fix-security-unit-tests.md`](docs/initiatives/completed/2025-10-16-fix-security-unit-tests.md)

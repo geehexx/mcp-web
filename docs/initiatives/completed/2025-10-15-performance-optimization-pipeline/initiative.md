@@ -9,6 +9,8 @@ Target Completion: 2025-12-31
 Updated: 2025-10-15
 ---
 
+> **⚠️ ARCHIVED:** This initiative was completed on 2025-10-21.
+
 # Initiative: Performance Optimization Pipeline
 
 ---

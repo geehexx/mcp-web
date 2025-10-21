@@ -86,7 +86,7 @@
 
 **Initiative files:**
 
-- docs/initiatives/active/2025-10-15-performance-optimization-pipeline/initiative.md:106
+- docs/initiatives/completed/2025-10-15-performance-optimization-pipeline/initiative.md:106
 - docs/initiatives/active/2025-10-15-quality-foundation/initiative.md:172
 - docs/initiatives/active/2025-10-17-windsurf-workflows-v2-optimization/initiative.md:148
 
