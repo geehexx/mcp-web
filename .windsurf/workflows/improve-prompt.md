@@ -1,24 +1,26 @@
 ---
 created: "2025-10-21"
 updated: "2025-10-21"
-description: Optimize prompts using modern best practices and quantitative analysis
+description: LLM-agnostic prompt optimization with model-specific enhancements and metadata tracking
 auto_execution_mode: 2
 category: Optimization
-complexity: 60
-tokens: 6357
+complexity: 65
+tokens: 8500
 dependencies: []
 status: active
 ---
 
 # Improve Prompt Workflow
 
-**Purpose:** Systematically optimize prompts using Claude 3.5 Sonnet 4 and Windsurf best practices with quantitative validation.
+**Purpose:** Systematically optimize prompts for any LLM (Claude, GPT, Gemini, etc.) using cross-model best practices with quantitative validation.
 
-**Invocation:** `/improve-prompt` followed by the prompt text, or reference a file containing the prompt
+**Invocation:** `/improve-prompt [target_model=auto]` followed by the prompt text, or reference a file containing the prompt
 
-**Philosophy:** Good prompts are specific, structured, and guide model reasoning. Quantify improvements to validate effectiveness.
+**Philosophy:** Good prompts share universal principles (clarity, structure, reasoning guidance) with model-specific enhancements applied when beneficial.
 
-**Based on:** Anthropic Prompt Improver, Windsurf prompt engineering guidelines, Claude extended thinking capabilities
+**Based on:** Cross-model research (2025), Anthropic Prompt Improver, OpenAI GPT-5-Codex patterns, Google Gemini guidelines, Windsurf best practices
+
+**Supported Models:** Claude (3.5+), GPT (4+), Gemini (1.5+), and other instruction-following LLMs
 
 ---
 
@@ -65,11 +67,13 @@ update_plan({
   explanation: "🔄 Starting /improve-prompt workflow",
   plan: [
     { step: "1. /improve-prompt - Capture and parse input prompt", status: "in_progress" },
-    { step: "2. /improve-prompt - Analyze current prompt quality", status: "pending" },
-    { step: "3. /improve-prompt - Apply optimization techniques", status: "pending" },
-    { step: "4. /improve-prompt - Validate improvements", status: "pending" },
-    { step: "5. /improve-prompt - Calculate quantitative metrics", status: "pending" },
-    { step: "6. /improve-prompt - Present results with analysis", status: "pending" }
+    { step: "2. /improve-prompt - Detect target model and context", status: "pending" },
+    { step: "3. /improve-prompt - Analyze current prompt quality", status: "pending" },
+    { step: "4. /improve-prompt - Apply universal optimizations", status: "pending" },
+    { step: "5. /improve-prompt - Apply model-specific enhancements", status: "pending" },
+    { step: "6. /improve-prompt - Validate improvements", status: "pending" },
+    { step: "7. /improve-prompt - Calculate quantitative metrics", status: "pending" },
+    { step: "8. /improve-prompt - Present results with analysis", status: "pending" }
   ]
 })
 ```
@@ -115,10 +119,74 @@ update_plan({
 
 ```typescript
 update_plan({
-  explanation: "Input captured, proceeding to analysis",
+  explanation: "Input captured, detecting target model",
   plan: [
     { step: "1. /improve-prompt - Capture and parse input prompt", status: "completed" },
-    { step: "2. /improve-prompt - Analyze current prompt quality", status: "in_progress" },
+    { step: "2. /improve-prompt - Detect target model and context", status: "in_progress" },
+    // ... rest of tasks
+  ]
+})
+```
+
+---
+
+## Stage 2.5: Model Detection and Context Analysis
+
+🔄 **Entering Stage 2.5: Model Detection**
+
+### 2.5.1 Determine Target Model
+
+**Detection strategy:**
+
+1. **User specified:** Check if user provided `target_model=` parameter
+2. **Context clues:** Analyze prompt for model-specific patterns:
+   - XML tags (`<thinking>`, `<instructions>`) → Likely Claude
+   - Markdown headings (`###`) → Likely GPT
+   - System instruction patterns → Likely Gemini
+3. **Default:** Use `auto` (apply universal optimizations + optional model-specific)
+
+**Model profiles:**
+
+| Model Family | Preferred Structure | Key Strengths | Optimization Focus |
+|--------------|-------------------|---------------|-------------------|
+| **Claude (3.5+)** | XML tags | Extended thinking, detailed reasoning | Chain-of-thought, explicit structure |
+| **GPT (4+)** | Markdown | Code generation, structured output | Clear format, step-by-step |
+| **Gemini (1.5+)** | Hierarchical | Long context, multimodal | System instructions, query placement |
+| **Generic/Auto** | GOLDEN framework | Instruction following | Universal patterns only |
+
+### 2.5.2 Identify Special Constraints
+
+**For Windsurf workflows:**
+- Must preserve task management syntax (`update_plan`, stage announcements)
+- Must maintain frontmatter structure
+- Workflow-specific conventions (stage numbering, etc.)
+
+**For project rules:**
+- Must preserve trigger conditions
+- Must maintain anti-patterns sections
+- Cross-reference integrity
+
+**For GPT-5-Codex specifically:**
+- "Less is more" principle (minimal prompting)
+- No preambles (model doesn't support them)
+- Concise tool descriptions
+- Terminal + apply_patch tools only
+
+**Print stage completion:**
+
+```markdown
+📋 **Stage 2.5 Complete:** Target model: [detected/specified], Context: [type], Special constraints: [N] identified
+```
+
+**Update task plan:**
+
+```typescript
+update_plan({
+  explanation: "Model detected, proceeding to analysis",
+  plan: [
+    { step: "1. /improve-prompt - Capture and parse input prompt", status: "completed" },
+    { step: "2. /improve-prompt - Detect target model and context", status: "completed" },
+    { step: "3. /improve-prompt - Analyze current prompt quality", status: "in_progress" },
     // ... rest of tasks
   ]
 })
@@ -238,15 +306,38 @@ update_plan({
 
 ---
 
-## Stage 4: Apply Optimization Techniques
+## Stage 4: Apply Universal Optimizations
 
-🔄 **Entering Stage 4: Apply Optimization Techniques**
+🔄 **Entering Stage 4: Apply Universal Optimizations**
 
-### 4.1 Core Optimization Strategies
+**Philosophy:** Start with cross-model techniques that work for ALL LLMs, then add model-specific enhancements.
 
-Apply techniques in priority order based on analysis:
+### 4.1 GOLDEN Framework (Universal)
 
-#### Technique 1: Add Chain-of-Thought Reasoning
+**Apply the GOLDEN checklist to all prompts:**
+
+1. **Goal** - One clear objective and success criteria
+2. **Output** - Required format, length, and tone
+3. **Limits** - Constraints (scope, sources, policy, budget, tokens)
+4. **Data** - Minimum context or examples
+5. **Evaluation** - Rubric to verify the result
+6. **Next** - Ask for follow-up plan or alternatives
+
+**Template:**
+```text
+Goal: {{objective and success criteria}}
+Output: {{format, length, tone}}
+Limits: {{scope, rules, budget, tokens}}
+Data: {{context, examples, sources}}
+Evaluation: {{rubric or acceptance criteria}}
+Next: Provide next steps or 2 alternatives if confidence < 0.7
+```
+
+### 4.2 Core Universal Optimization Strategies
+
+Apply techniques in priority order based on analysis (these work across all models):
+
+#### Universal Technique 1: Add Chain-of-Thought Reasoning
 
 **When:** Task complexity is moderate-high, or accuracy is critical
 
@@ -493,9 +584,116 @@ update_plan({
 
 ---
 
-## Stage 5: Validate Improvements
+## Stage 5: Apply Model-Specific Enhancements
 
-🔄 **Entering Stage 5: Validate Improvements**
+🔄 **Entering Stage 5: Apply Model-Specific Enhancements**
+
+**Philosophy:** Add model-specific optimizations only when target model is known and enhancements won't reduce cross-model compatibility.
+
+### 5.1 Claude-Specific Enhancements
+
+**Apply when:** Target model is Claude 3.5+ or patterns suggest Claude
+
+**Enhancements:**
+
+1. **Extended Thinking Tags:**
+   ```xml
+   <thinking>
+   [Let Claude reason through the problem]
+   </thinking>
+   ```
+
+2. **Explicit XML Structure:**
+   - Prefer `<instructions>`, `<context>`, `<constraints>` over markdown
+   - Use detailed nested structure
+   - Claude excels at parsing complex XML
+
+3. **Detailed Reasoning Scaffolds:**
+   - Add more granular reasoning steps
+   - Claude benefits from explicit step breakdowns
+   - Encourage self-critique and verification
+
+### 5.2 GPT-Specific Enhancements
+
+**Apply when:** Target model is GPT-4+ or Codex variant
+
+**Enhancements:**
+
+1. **Markdown Structure:**
+   - Use `###` headings for sections
+   - Prefer markdown over XML
+   - Clear delimiter cues (`---`, triple backticks)
+
+2. **For GPT-5-Codex specifically:**
+   - **MINIMIZE prompting** ("less is more")
+   - **Remove preambles** (model doesn't support them)
+   - **Concise tool descriptions**
+   - Focus on terminal + apply_patch tools only
+   
+3. **Structured Output Emphasis:**
+   - Explicit JSON schemas
+   - Code-first examples
+   - Numeric constraints ("3 bullets", "under 50 words")
+
+### 5.3 Gemini-Specific Enhancements
+
+**Apply when:** Target model is Gemini 1.5+
+
+**Enhancements:**
+
+1. **System Instructions:**
+   - Use dedicated system instruction section
+   - Define role at system level
+
+2. **Hierarchical Structure:**
+   - Clear heading hierarchy
+   - Consistent formatting throughout
+
+3. **Long Context Optimization:**
+   - Place queries at END of long contexts
+   - Experiment with example quantities
+   - Leverage multimodal capabilities when applicable
+
+### 5.4 Auto Mode (No Model-Specific)
+
+**Apply when:** Target model is `auto` or unknown
+
+**Strategy:**
+
+- Use **only** universal optimizations from Stage 4
+- Avoid XML tags (use markdown)
+- Avoid model-specific features
+- Focus on GOLDEN framework compliance
+- Maximum cross-model compatibility
+
+**Print stage completion:**
+
+```markdown
+📋 **Stage 5 Complete:** Model-specific enhancements applied for [model_name]
+```
+
+**Update task plan:**
+
+```typescript
+update_plan({
+  explanation: "Model-specific enhancements applied, validating",
+  plan: [
+    { step: "1. /improve-prompt - Capture and parse input prompt", status: "completed" },
+    { step: "2. /improve-prompt - Detect target model and context", status: "completed" },
+    { step: "3. /improve-prompt - Analyze current prompt quality", status: "completed" },
+    { step: "4. /improve-prompt - Apply universal optimizations", status: "completed" },
+    { step: "5. /improve-prompt - Apply model-specific enhancements", status: "completed" },
+    { step: "6. /improve-prompt - Validate improvements", status: "in_progress" },
+    // ... rest of tasks
+  ]
+})
+```
+
+---
+
+## Stage 6: Validate Improvements
+
+🔄 **Entering Stage 6: Validate Improvements**
 
 ### 5.1 Intent Preservation Check
 
@@ -550,9 +748,9 @@ update_plan({
 
 ---
 
-## Stage 6: Calculate Metrics
+## Stage 7: Calculate Metrics
 
-🔄 **Entering Stage 6: Calculate Quantitative Metrics**
+🔄 **Entering Stage 7: Calculate Quantitative Metrics**
 
 ### 6.1 Quality Score Comparison
 
@@ -655,9 +853,9 @@ update_plan({
 
 ---
 
-## Stage 7: Present Results
+## Stage 8: Present Results
 
-🔄 **Entering Stage 7: Present Results with Analysis**
+🔄 **Entering Stage 8: Present Results with Analysis**
 
 ### 7.1 Comprehensive Output Format
 
@@ -852,6 +1050,102 @@ update_plan({
     { step: "6. /improve-prompt - Present results with analysis", status: "completed" }
   ]
 })
+```
+
+---
+
+## Stage 9: Record Metadata (Optional)
+
+🔄 **Entering Stage 9: Record Metadata**
+
+**Purpose:** Track optimization runs for pattern analysis and threshold refinement.
+
+### 9.1 Metadata Collection
+
+**Collect and save:**
+
+```json
+{
+  "run_id": "[UUID]",
+  "timestamp": "YYYY-MM-DDTHH:MM:SSZ",
+  "input": {
+    "prompt_type": "workflow|rule|ad-hoc|system",
+    "char_count": 1234,
+    "word_count": 234,
+    "has_examples": true|false,
+    "has_structure": true|false
+  },
+  "detection": {
+    "target_model": "claude|gpt|gemini|auto",
+    "detected_model": "claude|gpt|gemini|unknown",
+    "special_constraints": ["windsurf-workflow", "gpt-codex"]
+  },
+  "analysis": {
+    "baseline_score": 6.5,
+    "complexity": "low|medium|high",
+    "ambiguity": "low|medium|high",
+    "critical_issues": 2,
+    "improvements_identified": 5
+  },
+  "optimizations": {
+    "universal_techniques_applied": ["chain-of-thought", "constraints", "format"],
+    "model_specific_applied": ["xml-structure", "extended-thinking"],
+    "total_techniques": 5
+  },
+  "results": {
+    "improved_score": 8.5,
+    "improvement_delta": 2.0,
+    "improvement_percent": 30.8,
+    "char_count_after": 2134,
+    "validation_passed": true
+  },
+  "performance": {
+    "execution_time_seconds": 45,
+    "stages_completed": 8
+  }
+}
+```
+
+### 9.2 Storage Location
+
+**Save to:** `.windsurf/prompt-optimization-history.jsonl`
+
+**Format:** JSON Lines (one JSON object per line)
+
+**Example:**
+```bash
+{"run_id":"abc123","timestamp":"2025-10-21T12:00:00Z",...}
+{"run_id":"def456","timestamp":"2025-10-21T14:30:00Z",...}
+```
+
+### 9.3 Analysis Queries
+
+**Usage pattern analysis:**
+
+```bash
+# Most common prompt types
+jq -s 'group_by(.input.prompt_type) | map({type: .[0].input.prompt_type, count: length})' .windsurf/prompt-optimization-history.jsonl
+
+# Average improvement by model
+jq -s 'group_by(.detection.target_model) | map({model: .[0].detection.target_model, avg_improvement: (map(.results.improvement_delta) | add / length)})' .windsurf/prompt-optimization-history.jsonl
+
+# Most effective techniques
+jq -s 'map(.optimizations.universal_techniques_applied[]) | group_by(.) | map({technique: .[0], count: length}) | sort_by(.count) | reverse' .windsurf/prompt-optimization-history.jsonl
+```
+
+### 9.4 Threshold Refinement
+
+**Monitor and adjust:**
+
+- **Baseline scores:** Track average to calibrate scoring
+- **Improvement patterns:** Which techniques provide most value
+- **Model detection accuracy:** Validate auto-detection logic
+- **Execution time:** Optimize slow stages
+
+**Print stage completion:**
+
+```markdown
+📋 **Stage 9 Complete:** Metadata recorded to prompt-optimization-history.jsonl
 ```
 
 ---
