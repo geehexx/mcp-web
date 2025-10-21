@@ -5,18 +5,22 @@ Implements:
 - Query-aware abstractive summaries
 - Streaming output
 - Multiple LLM provider support (OpenAI, Anthropic)
+- Content-based caching for deduplication
 
 Design Decision DD-006: Map-reduce summarization.
 Design Decision DD-008: OpenAI GPT-4 default.
 Design Decision DD-009: Streaming output.
+Design Decision DD-015: Cache layers for fetch, extract, summarize.
 """
 
 import asyncio
+import hashlib
 from collections.abc import AsyncIterator
 
 import structlog
 from openai import AsyncOpenAI
 
+from mcp_web.cache import CacheKeyBuilder, CacheManager
 from mcp_web.chunker import Chunk
 from mcp_web.config import SummarizerSettings
 from mcp_web.metrics import get_metrics_collector
@@ -47,13 +51,15 @@ class Summarizer:
         ...     print(chunk)
     """
 
-    def __init__(self, config: SummarizerSettings):
+    def __init__(self, config: SummarizerSettings, cache: CacheManager | None = None):
         """Initialize summarizer.
 
         Args:
             config: Summarizer configuration
+            cache: Optional cache manager for result caching
         """
         self.config = config
+        self.cache = cache
         self.token_counter = TokenCounter()
         self.metrics = get_metrics_collector()
 
@@ -92,6 +98,7 @@ class Summarizer:
         chunks: list[Chunk],
         query: str | None = None,
         sources: list[str] | None = None,
+        use_cache: bool = True,
     ) -> AsyncIterator[str]:
         """Summarize chunks with streaming output.
 
@@ -99,9 +106,14 @@ class Summarizer:
             chunks: List of text chunks
             query: Optional query for focused summary
             sources: Optional list of source URLs
+            use_cache: Use cached summary if available (default: True)
 
         Yields:
             Summary text chunks (streaming)
+
+        Note:
+            Caching is content-based (SHA-256 hash) to deduplicate identical
+            content from different sources.
         """
         import time
 
@@ -113,14 +125,37 @@ class Summarizer:
 
         start_time = time.perf_counter()
 
+        # Check cache first
+        if use_cache and self.cache:
+            content_hash = self._compute_content_hash(chunks)
+            cache_key = CacheKeyBuilder.summary_key(
+                content_hash=content_hash,
+                query=query,
+                model=self.config.model,
+            )
+            cached_summary = await self.cache.get(cache_key)
+            if cached_summary:
+                _get_logger().info(
+                    "summarization_cache_hit",
+                    content_hash=content_hash[:16],
+                    query=query[:50] if query else None,
+                )
+                # Yield cached summary as single chunk
+                yield cached_summary
+                return
+
         try:
             # Calculate total tokens
             total_tokens = sum(c.tokens for c in chunks)
+
+            # Accumulate output for caching
+            accumulated_output = []
 
             # Decide strategy: direct or map-reduce
             if total_tokens <= self.config.map_reduce_threshold:
                 # Direct summarization
                 async for response_chunk in self._summarize_direct(chunks, query, sources):
+                    accumulated_output.append(response_chunk)
                     yield response_chunk
             else:
                 # Map-reduce for large documents
@@ -129,18 +164,37 @@ class Summarizer:
                     async for response_chunk in self._summarize_map_reduce_streaming(
                         chunks, query, sources
                     ):
+                        accumulated_output.append(response_chunk)
                         yield response_chunk
                 elif self.config.parallel_map:
                     async for response_chunk in self._summarize_map_reduce(chunks, query, sources):
+                        accumulated_output.append(response_chunk)
                         yield response_chunk
                 else:
                     # Sequential fallback (original implementation)
                     async for response_chunk in self._summarize_map_reduce_sequential(
                         chunks, query, sources
                     ):
+                        accumulated_output.append(response_chunk)
                         yield response_chunk
 
             duration_ms = (time.perf_counter() - start_time) * 1000
+
+            # Cache the result
+            if use_cache and self.cache and accumulated_output:
+                full_summary = "".join(accumulated_output)
+                content_hash = self._compute_content_hash(chunks)
+                cache_key = CacheKeyBuilder.summary_key(
+                    content_hash=content_hash,
+                    query=query,
+                    model=self.config.model,
+                )
+                await self.cache.set(cache_key, full_summary)
+                _get_logger().info(
+                    "summarization_cached",
+                    content_hash=content_hash[:16],
+                    summary_length=len(full_summary),
+                )
 
             _get_logger().info(
                 "summarization_complete",
@@ -641,6 +695,22 @@ class Summarizer:
         )
 
         return "\n".join(parts)
+
+    def _compute_content_hash(self, chunks: list[Chunk]) -> str:
+        """Compute SHA-256 hash of chunk content for cache key.
+
+        Args:
+            chunks: List of chunks to hash
+
+        Returns:
+            Hex-encoded SHA-256 hash
+
+        Note:
+            Hash is based on concatenated chunk text to identify identical
+            content regardless of source URL.
+        """
+        content = "".join(chunk.text for chunk in chunks)
+        return hashlib.sha256(content.encode("utf-8")).hexdigest()
 
     async def close(self) -> None:
         """Close LLM client."""

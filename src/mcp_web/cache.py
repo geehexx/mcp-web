@@ -387,24 +387,27 @@ class CacheKeyBuilder:
 
     @staticmethod
     def summary_key(
-        url: str,
+        content_hash: str,
         query: str | None = None,
-        config: dict[str, Any] | None = None,
+        model: str | None = None,
     ) -> str:
-        """Build cache key for summary.
+        """Build cache key for summary based on content hash.
 
         Args:
-            url: Source URL
-            query: Query string
-            config: Summarization config
+            content_hash: SHA-256 hash of content being summarized
+            query: Optional query string
+            model: LLM model name to avoid cross-model collisions
 
         Returns:
             Cache key string
+
+        Note:
+            Uses content hash instead of URL to cache identical content
+            from different sources (deduplication).
         """
-        parts = ["summary", url]
+        parts = ["summary", content_hash]
         if query:
             parts.append(f"query={query}")
-        if config:
-            config_str = ":".join(f"{k}={v}" for k, v in sorted(config.items()))
-            parts.append(config_str)
+        if model:
+            parts.append(f"model={model}")
         return ":".join(parts)

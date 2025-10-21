@@ -69,7 +69,7 @@ class WebSummarizationPipeline:
         self.fetcher = URLFetcher(config.fetcher, cache=self.cache)
         self.extractor = ContentExtractor(config.extractor, cache=self.cache)
         self.chunker = TextChunker(config.chunker)
-        self.summarizer = Summarizer(config.summarizer)
+        self.summarizer = Summarizer(config.summarizer, cache=self.cache)
 
         self.metrics = get_metrics_collector()
 
