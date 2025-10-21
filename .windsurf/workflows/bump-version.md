@@ -5,9 +5,10 @@ description: Auto-bump version based on conventional commits
 auto_execution_mode: 3
 category: Automation
 complexity: 70
-tokens: 1750
+tokens: 1900
 dependencies: []
 status: active
+version: "2.0-intelligent-semantic-preservation"
 ---
 
 # Bump Version Workflow
@@ -225,18 +226,6 @@ BREAKING CHANGE: All methods now async
 
 **Result:** `0.9.5` → `0.10.0` (minor bump for pre-1.0)
 
-### No Bump
-
-**Commits since v0.2.0:**
-
-```text
-docs: fix typo
-test: add unit test
-chore: update .gitignore
-```
-
-**Result:** No version change (skip workflow)
-
 ---
 
 ## Decision Matrix
@@ -289,3 +278,5 @@ chore: update .gitignore
 - [Semantic Versioning](https://semver.org/)
 - [Conventional Commits](https://www.conventionalcommits.org/)
 - [bump-my-version](https://github.com/callowayproject/bump-my-version)
+
+---
