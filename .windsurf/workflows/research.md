@@ -5,7 +5,7 @@ description: Research best practices and existing patterns
 auto_execution_mode: 3
 category: Planning
 complexity: 50
-tokens: 1410
+tokens: 1380
 version: v2.0-intelligent-semantic-preservation
 dependencies: []
 status: active

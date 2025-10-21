@@ -5,7 +5,7 @@ description: Comprehensive validation and quality checks
 auto_execution_mode: 3
 category: Quality
 complexity: 70
-tokens: 1650
+tokens: 2060
 version: v2.0-intelligent-semantic-preservation
 dependencies: []
 status: active
