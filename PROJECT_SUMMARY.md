@@ -267,7 +267,7 @@ Advanced automation deferred to Session Summary Mining Advanced (blocked on MCP 
 **Owner:** Core Team
 **Priority:** Critical (P0)
 **Target:** 2025-11-03 (2 weeks)
-**Initiative:** `docs/initiatives/active/2025-10-20-phase-0-security-hardening.md`
+**Initiative:** `docs/initiatives/completed/2025-10-20-phase-0-security-hardening.md`
 
 **Objective:** Eliminate P0 security vulnerabilities to achieve minimal security posture for production deployment.
 
