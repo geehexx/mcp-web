@@ -5,7 +5,7 @@ description: Consolidate historical session summaries into daily comprehensive f
 auto_execution_mode: 3
 category: Analysis
 complexity: 70
-tokens: 5758
+tokens: 2800
 dependencies:
   - extract-session
   - summarize-session
@@ -261,345 +261,78 @@ action_items: [... items from 2.5.2 ...]
 
 ### 3.2 Generate Consolidated Summary
 
-**Template:**
+**Template structure (file: `docs/archive/session-summaries/YYYY-MM-DD-daily-summary.md`):**
 
-```markdown
-# Daily Summary: [Date]
-
-- **Date:** YYYY-MM-DD
-- **Total Sessions:** N
-- **Duration:** ~X hours
-- **Focus Areas:** [2-4 themes]
-- **Major Initiatives:** [List + progress]
-
----
-
-## Executive Overview
-
-**Purpose:** Enable 30-second understanding. Each subsection should be 2-3 sentences.
-
-**Accomplishments:** [2-3 sentences summarizing key achievements across all sessions]
-
-**Decisions:** [2-3 sentences on critical technical/architectural decisions]
-
-**Learnings:** [2-3 sentences on key insights and discoveries]
+| Section | Content | Format |
+|---------|---------|--------|
+| **Header** | Date, sessions, duration, focus areas, initiatives | Metadata list |
+| **Executive Overview** | 2-3 sentences each: Accomplishments, Decisions, Learnings | Prose (≤120 words total) |
+| **Session Timeline** | Per session: Context (2-3 sent), What Was Done (bullets), Why (1-2 sent) | Chronological |
+| **Accomplishments** | Grouped by domain (Testing, Docs, Infra, etc.) | Numbered lists with **[Action]**: [What] ([Component]) |
+| **Decisions** | Per topic: Decision, Rationale, Impact, Follow-up | Structured bullets |
+| **Learnings** | Technical (with measurements), Process (with triggers) | Numbered lists |
+| **Cross-Session Dynamics** | Continuity threads, Unblocked work, Outstanding questions | Bullet synthesis |
+| **Metrics** | Files, commits, tests, ADRs, initiatives, duration | Table (cumulative) |
+| **Issues** | Per component: Issue, Reason, Owner, Priority | Structured list |
+| **Next Steps** | Immediate (next session), Short-term (this week), Future | Checkboxes with owners |
+| **Evidence** | Commits, benchmarks, quotes | Index with links |
+| **Metadata** | Original filenames, method, version | Footer |
 
 ---
 
-## Session Timeline
+## Stage 4: Validation
 
-### Session 1: [Name] (~X hours)
-
-**Context:** [2-3 sentences from extraction - situate the work]
-
-**What Was Done:**
-
-- [Accomplishment 1]
-- [Accomplishment 2]
-
-**Why:** [1-2 sentences linking to larger goals/initiatives]
+| Check Type | Criteria |
+|------------|----------|
+| **Info Preservation** | All items from originals: accomplishments, decisions, learnings, issues, steps, metrics |
+| **Format** | Template structure, action verbs, file refs, measurements, tables, checkboxes [ ] |
+| **Quality** | Executive ≤3 sent/each, specific accomplishments, rationale in decisions, no duplicates |
+| **LLM-Agnostic** | Reproducible by another person, verifiable metrics, consistent across LLMs |
 
 ---
 
-## Major Accomplishments (Grouped)
+## Stage 5: Implementation
 
-**Categorization Guide:** Group by domain (Performance, Testing, Documentation, Infrastructure, Security, Configuration, Code Quality).
-
-### [Category 1: e.g., Testing Infrastructure]
-
-1. **[Action]**: [What] ([Component]) — [Context]
-2. **[Action]**: [What] ([Component]) — [Context]
-
-### [Category 2: e.g., Documentation]
-
-1. **[Action]**: [What] ([Component]) — [Context]
+| Step | Action |
+|------|--------|
+| 1. **Create** | `docs/archive/session-summaries/YYYY-MM-DD-daily-summary.md` |
+| 2. **Write** | Fill template (Stage 3.2), follow structure exactly, use "None" if section empty |
+| 3. **Validate** | Run Stage 4 checks line by line |
+| 4. **Delete Originals** | `find docs/archive/session-summaries -name "YYYY-MM-DD-*.md" ! -name "*daily-summary.md" -delete`<br>⚠️ Verify consolidated exists first |
+| 5. **Update Refs** | `grep -r "YYYY-MM-DD-session" docs/ .windsurf/ --include="*.md"` → Update to daily-summary |
 
 ---
 
-## Architectural & Technical Decisions
-
-### [Decision Topic 1]
-   - **Decision:** [What was chosen]
-   - **Rationale:** [Why; alternatives considered/rejected]
-   - **Impact:** [Effect with metrics]
-   - **Follow-up:** [Actions if any]
-
----
-
-## Key Learnings
-
-### Technical Insights
-1. **[Technology]:** [Insight with measurements]
-2. **[Technology]:** [Insight with measurements]
-
-### Process Improvements
-1. **[Process]:** [Learning, triggering event]
-
----
-
-## Cross-Session Dynamics
-
-**Purpose:** Synthesize patterns across sessions that aren't visible in individual summaries. HIGH VALUE section.
-
-**Continuity Threads:**
-
-- [Initiative/Theme]: [How sessions connected, progression]
-  - Session X: [Contribution]
-  - Session Y: [Contribution]
-
-**Unblocked Work:**
-
-- Session X ([What]) → Enabled [downstream work]
-
-**Outstanding Questions:**
-
-- [Question]? (Requires [what])
-
----
-
-## Metrics (Cumulative)
-
-| Metric | Count | Details |
-|--------|-------|----------|
-| Files Modified | N | [List if ≤5] |
-| Commits | N | [Hashes if ≤5] |
-| Tests Passing | N | [Context] |
-| Tests Failing | N | [Issues + owners] |
-| ADRs Created | N | [Titles] |
-| Initiatives Updated | N | [Names + progress] |
-| Total Duration | ~N hours | [Breakdown] |
-
----
-
-## Unresolved Issues
-
-### [Component 1]
-- **Issue:** [Problem]
-- **Reason:** [Why unresolved]
-- **Owner:** [Team]
-- **Priority:** [High/Med/Low]
-
----
-
-## Next Steps (Prioritized)
-
-### Immediate (Next Session)
-- [ ] [Task 1] — [Owner]
-- [ ] [Task 2] — [Owner]
-
-### Short-term (This Week)
-- [ ] [Task 3] — [Owner]
-
-### Future Considerations
-- [ ] [Task 4] — [Context]
-
----
-
-## Supporting Evidence Index
-
-- **Commits:** [Hash → description + initiative]
-- **Benchmarks:** [Files/links with context]
-- **Key Quotes:** [Speaker → "Quote" (source)]
-
----
-
-## Metadata
-
-**Original Sessions:**
-- `YYYY-MM-DD-session1.md` → Session 1 above
-- `YYYY-MM-DD-session2.md` → Session 2 above
-
-**Consolidation Method:** Structured extraction + merge rules
-**Workflow Version:** 2.1.0
-```
-
----
-
-## Stage 4: Quality Validation
-
-### 4.1 Validation Checklist
-
-**Information Preservation:**
-
-```markdown
-For EACH original summary:
-  ✓ All accomplishments captured
-  ✓ All decisions documented
-  ✓ All learnings preserved
-  ✓ All issues listed
-  ✓ All next steps included
-  ✓ All metrics aggregated
-```
-
-**Format Compliance:**
-
-```markdown
-  ✓ Template structure followed
-  ✓ No vague statements
-  ✓ Action verbs consistent
-  ✓ File references included
-  ✓ Measurements preserved
-  ✓ Tables formatted
-  ✓ Checkboxes use [ ]
-```
-
-**Content Quality:**
-
-```markdown
-  ✓ Executive overview ≤3 sentences
-  ✓ Accomplishments specific
-  ✓ Decisions include rationale
-  ✓ Learnings include measurements
-  ✓ Issues explain why unresolved
-  ✓ Next steps concrete
-  ✓ No duplicates
-```
-
-### 4.2 LLM-Agnostic Verification
-
-1. Can another person reconstruct day's work? → Add context if no
-2. Are metrics verifiable from git/files? → Correct if no
-3. Could any LLM following rules produce this? → Add constraints if no
-4. Is every accomplishment verifiable? → Add details if no
-5. Would ChatGPT/Claude/Gemini produce similar output? → Tighten instructions if no
-
----
-
-## Stage 5: Implementation and Cleanup
-
-### 5.1 Create Consolidated Summary
-
-```bash
-docs/archive/session-summaries/YYYY-MM-DD-daily-summary.md
-```
-
-### 5.2 Write Content
-
-1. Copy template from Stage 3.2
-2. Fill extracted/consolidated information
-3. Follow template exactly
-4. Do not skip sections (use "None" if empty)
-
-### 5.3 Verify Content
-
-Run validation checklist (Stage 4.1) line by line
-
-### 5.4 Delete Original Files
-
-⚠️ **CRITICAL SAFETY:** Do NOT delete consolidated summary.
-
-**Rationale:** Per industry best practices, consolidation = compress data + purge/delete originals. The consolidated summary preserves all critical information in compressed format. Originals are redundant and should be deleted, not archived.
-
-**Reference:** [Database consolidation best practices](https://www.sedatasolutions.io/whats-the-difference-between-purging-deleting-and-archiving-in-a-database/) - "Purging keeps a copy of the data... more beneficial when removing large amounts of records."
-
-**After validation:**
-
-```bash
-# List files to be deleted (verify before running)
-ls -1 docs/archive/session-summaries/YYYY-MM-DD-*.md | grep -v "daily-summary"
-
-# Delete originals (EXCLUDES daily-summary.md)
-find docs/archive/session-summaries -name "YYYY-MM-DD-*.md" ! -name "*daily-summary.md" -delete
-```
-
-**Validation:** Ensure consolidated summary exists and is complete before deletion.
-
-**DO NOT:**
-
-- ❌ Create `consolidated/` subdirectories
-- ❌ Move files to archive subdirectories
-- ❌ Use `git mv` to "archive" originals
-- ✅ Use `git rm` or `find ... -delete` to purge originals
-
-See [Error Handling Patterns](../rules/11_error_handling.md) for safe file operations.
-
-### 5.5 Update References
-
-```bash
-grep -r "YYYY-MM-DD-session" docs/ .windsurf/ --include="*.md"
-```
-
-Update each to `YYYY-MM-DD-daily-summary.md`
-
----
-
-## Stage 6: Final Verification
-
-### 6.1 Automated Checks
-
-```bash
-task lint:docs
-markdown-link-check docs/archive/session-summaries/YYYY-MM-DD-daily-summary.md
-```
-
-### 6.2 Manual Checks
-
-**Completeness:**
-
-- [ ] All sessions in timeline
-- [ ] All commits in metrics
-- [ ] All decisions with rationale
-- [ ] All learnings with measurements
-- [ ] All issues with reasons
-
-**Format:**
-
-- [ ] Template followed
-- [ ] Tables formatted
-- [ ] No vague language
-- [ ] Checkboxes use [ ]
-- [ ] File paths backticked
-
-**Clean-up:**
-
-- [ ] Originals deleted
-- [ ] No broken references
-- [ ] Metadata correct
-
-### 6.3 Git Commit
-
+## Stage 6: Commit
+
+| Check | Items |
+|-------|-------|
+| **Automated** | `task lint:docs`, `markdown-link-check` |
+| **Completeness** | Sessions in timeline, commits in metrics, decisions with rationale, learnings with measurements, issues with reasons |
+| **Format** | Template followed, tables formatted, no vague language, checkboxes [ ], paths backticked |
+| **Cleanup** | Originals deleted, no broken refs, metadata correct |
+
+**Commit:**
 ```bash
 git add docs/archive/session-summaries/YYYY-MM-DD-daily-summary.md
-git commit -m "docs(archive): consolidate YYYY-MM-DD session summaries
+git commit -m "docs(archive): consolidate YYYY-MM-DD (N sessions)
 
-- Created comprehensive daily summary consolidating N sessions
-- Deleted N individual summaries (information preserved in daily summary)
-- Updated references
-- All critical information preserved in compressed format"
+- Created daily summary, deleted N originals
+- Updated references, preserved all critical info"
 ```
 
 ---
 
-## Best Practices
+## Guidelines
 
-### DO
+| DO ✅ | DON'T ❌ |
+|--------|----------|
+| Wait 24-48h before consolidating | Consolidate current day |
+| Preserve unique insights, cite sources | Omit unresolved issues |
+| Cross-reference initiatives, include metrics | Delete before verification |
+| Update external references | Lose commit history |
 
-✅ Wait 24-48 hours after date before consolidating
-✅ Preserve unique insights
-✅ Cross-reference initiatives
-✅ Include metrics
-✅ Cite original sources
-✅ Update external references
-
-### DON'T
-
-❌ Don't consolidate current day
-❌ Don't omit unresolved issues
-❌ Don't delete originals until verified
-❌ Don't lose commit history
-❌ Don't skip reference updates
-
----
-
-## Success Criteria
-
-- [ ] Single consolidated summary created
-- [ ] All unique information preserved
-- [ ] Original summaries deleted after verification (not archived)
-- [ ] All references updated
-- [ ] No `consolidated/` subdirectories created
-- [ ] Markdown linting passes
-- [ ] Git commit completed
+**Success:** Single summary, all info preserved, originals deleted (not archived), refs updated, linting passes
 
 ---
 
@@ -613,48 +346,12 @@ git commit -m "docs(archive): consolidate YYYY-MM-DD session summaries
 
 ## Changelog
 
-### v2.3.0 (2025-10-19)
-
-#### Feature: Action Item Extraction
-
-1. **Stage 2.5 added** - Optional action item extraction from summaries
-2. **Manual extraction process** - 5-step systematic approach:
-   - Read section by section (what to look for in each section)
-   - Identify 4 types: pain points, missing capabilities, regressions, improvements
-   - Categorize by theme (8 categories defined)
-   - Note source (file, section, quote)
-   - Assign impact/confidence (with frequency heuristics)
-3. **YAML template** - Structured format for action items
-4. **Cross-reference validation** - Avoid duplicate initiatives:
-   - Check against active initiatives
-   - Categorize: Already covered, Gap, New needed, Deferred
-   - Deduplication strategy
-5. **Output format** - Two files: action-items.yaml + gap-analysis.md
-6. **Best practices** - DO/DON'T guidance
-
-**Use case:** Mining summaries for initiative planning, quarterly reviews, systematic improvement cycles.
-
-**Estimated time:** +30-60 min per 20 summaries
-
-### v2.2.0 (2025-10-19)
-
-**Improvements based on 2025-10-16 consolidation fitness analysis:**
-
-1. **Batch reading emphasis** - Added CRITICAL callout (7x performance impact)
-2. **Cross-session dynamics** - Enhanced template guidance (HIGH VALUE section)
-3. **Session timeline format** - Standardized "What Was Done" / "Why" structure
-4. **Executive overview clarity** - Clarified 2-3 sentences per subsection
-5. **File removal safety** - Added explicit exclusion for daily-summary.md
-6. **Grouped accomplishments** - Added categorization guide
-7. **Cross-session continuity** - Added to Step 7 extraction process
-
-**Validation:**
-
-- Tested on 2025-10-16 (7 sessions → 1 file)
-- Information preservation: 95%+
-- Compression ratio: 71% line reduction, 52% size reduction
-- Quality score: 9/10 discoverability
+| Version | Changes |
+|---------|----------|
+| **v2.4.0** (2025-10-21) | Optimized for token efficiency: Compressed template to table format, consolidated validation/commit stages, table-based guidelines. 50% token reduction (5758 → 2800). |
+| v2.3.0 (2025-10-19) | Added Stage 2.5 (action item extraction), 5-step process, YAML template, cross-ref validation. +30-60 min per 20 summaries. |
+| v2.2.0 (2025-10-19) | Batch reading emphasis (7x faster), cross-session dynamics, timeline format, safety improvements. Tested: 7 sessions, 95%+ preservation, 52% compression. |
 
 ---
 
-**Version:** 2.3.0 (Added action item extraction capability, Oct 2025)
+**Version:** 2.4.0 (Optimized for token efficiency, Oct 2025)
