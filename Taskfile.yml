@@ -529,6 +529,38 @@ tasks:
     cmds:
       - "{{.UV}} run pytest -m golden -vv --tb=long"
 
+  # Session summary mining tasks (Phase 5)
+  mine:summaries:
+    desc: Extract action items from session summaries (DATE_RANGE=YYYY-MM-DD:YYYY-MM-DD, OUTPUT=file.yaml)
+    cmds:
+      - |
+        if [ -n "{{.DATE_RANGE}}" ]; then
+          {{.UV}} run python scripts/extract_action_items.py --date-range {{.DATE_RANGE}}{{if .OUTPUT}} --output {{.OUTPUT}}{{end}}{{if .DB}} --db {{.DB}}{{end}}
+        elif [ -n "{{.ALL}}" ]; then
+          {{.UV}} run python scripts/extract_action_items.py --all{{if .OUTPUT}} --output {{.OUTPUT}}{{end}}{{if .DB}} --db {{.DB}}{{end}}
+        elif [ -n "{{.FILES}}" ]; then
+          {{.UV}} run python scripts/extract_action_items.py {{.FILES}}{{if .OUTPUT}} --output {{.OUTPUT}}{{end}}{{if .DB}} --db {{.DB}}{{end}}
+        else
+          echo "Error: Specify DATE_RANGE, ALL=true, or FILES"
+          echo "Examples:"
+          echo "  task mine:summaries DATE_RANGE=2025-10-15:2025-10-20"
+          echo "  task mine:summaries ALL=true OUTPUT=items.yaml"
+          echo "  task mine:summaries FILES='docs/archive/session-summaries/2025-10-20-*.md'"
+          exit 1
+        fi
+
+  mine:summaries:dry-run:
+    desc: Dry-run extraction (no API calls, validates files only)
+    cmds:
+      - echo "Validating session summaries..."
+      - |
+        if [ -n "{{.DATE_RANGE}}" ]; then
+          {{.UV}} run python -c "from scripts.extract_action_items import find_summaries_by_date_range, parse_date_range; from datetime import date; start, end = parse_date_range('{{.DATE_RANGE}}'); files = find_summaries_by_date_range(start, end); print(f'Found {len(files)} summaries'); [print(f'  - {f.name}') for f in files]"
+        else
+          echo "Specify DATE_RANGE (e.g., DATE_RANGE=2025-10-15:2025-10-20)"
+          exit 1
+        fi
+
   # Scaffolding tasks (automation)
   # NOTE: Interactive tasks below are for HUMAN use only. AI agents should use config mode.
 
