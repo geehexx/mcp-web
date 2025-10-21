@@ -38,6 +38,7 @@ Commit auto-fixes separately: `style(scope): apply [tool] auto-fixes`
 ### 2. Validate (⚠️ MANDATORY)
 
 **Call `/validate`** - Cannot skip (normative core)
+
 - If fails: STOP, fix, re-validate
 - ACF principle: Verify before high-stakes action
 
@@ -57,6 +58,7 @@ git diff --staged   # Confirm
 **Types:** feat, fix, docs, test, refactor, security, perf, chore, style
 
 **Examples:**
+
 ```bash
 feat(cli): add test-robots command
 fix(fetcher): handle Playwright timeout

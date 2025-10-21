@@ -16,8 +16,6 @@ Use this workflow when a significant architectural decision needs to be document
 
 ---
 
-
-
 ## When to Use
 
 **Create ADR for:** New dependencies, major algorithms, security decisions, performance-critical changes, API design, architecture changes

@@ -106,6 +106,7 @@ task docs:validate:links
 ```
 
 **Validates:**
+
 - Workflow internal cross-references (`.windsurf/workflows/*.md`)
 - ADR references (ADR-NNNN in `.windsurf/` and `docs/`)
 - All referenced files exist

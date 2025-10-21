@@ -68,6 +68,7 @@ git log --since="$LAST_RUN" --format="%s" | \
 ```
 
 **Focus mapping:**
+
 - `feat:` → Implementation
 - `fix:` → Bug fixing
 - `docs:` → Documentation
@@ -118,6 +119,7 @@ git log --since="$LAST_RUN" --name-only --diff-filter=A | grep "docs/adr/"
 ```
 
 **Decision pattern:**
+
 - What was decided
 - Why (rationale)
 - Alternatives considered
@@ -136,6 +138,7 @@ git log --since="$LAST_RUN" --format="%B" | \
 ```
 
 **Learning pattern:**
+
 - Technology/pattern
 - Specific insight
 - Measurement (if any)
@@ -157,6 +160,7 @@ grep -r "pytest.mark" tests/ | cut -d: -f2 | sort | uniq -c | sort -rn
 ```
 
 **Examples:**
+
 - Batch operations → 3x faster
 - Test-first → Caught N regressions
 - Git hooks → Prevented N issues
@@ -172,6 +176,7 @@ git log --since="$LAST_RUN" --format="%s" | grep -iE "style.*auto-fix"
 ```
 
 **Pattern:**
+
 - What didn't work
 - Why it failed
 - Better alternative
@@ -221,6 +226,7 @@ grep -l "Status.*Completed" docs/initiatives/active/*.md 2>/dev/null
 ```
 
 **Flag violations:**
+
 - Uncommitted changes
 - Missing meta-analysis timestamp
 - Missing session summary

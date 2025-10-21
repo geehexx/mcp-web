@@ -27,6 +27,7 @@ status: active
 - Clean git state
 
 **Conventional Commit Types:**
+
 - `feat:` → **Minor** bump (0.1.0 → 0.2.0)
 - `fix:` → **Patch** bump (0.1.0 → 0.1.1)
 - `BREAKING CHANGE:` → **Major** bump (0.1.0 → 1.0.0)
@@ -193,7 +194,8 @@ uv build
 ### Feature Release
 
 **Commits since v0.2.0:**
-```
+
+```text
 feat(cli): add test-robots command
 feat(cache): implement TTL expiration
 fix(fetcher): handle timeout
@@ -204,7 +206,8 @@ fix(fetcher): handle timeout
 ### Patch Release
 
 **Commits since v0.2.1:**
-```
+
+```text
 fix(security): sanitize HTML
 fix(tests): resolve timing issue
 ```
@@ -214,7 +217,8 @@ fix(tests): resolve timing issue
 ### Breaking Change (Pre-1.0)
 
 **Commits since v0.9.5:**
-```
+
+```text
 feat(api): add async support
 BREAKING CHANGE: All methods now async
 ```
@@ -224,7 +228,8 @@ BREAKING CHANGE: All methods now async
 ### No Bump
 
 **Commits since v0.2.0:**
-```
+
+```text
 docs: fix typo
 test: add unit test
 chore: update .gitignore

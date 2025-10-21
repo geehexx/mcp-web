@@ -45,6 +45,7 @@ status: active
 ## Decision Logic
 
 **Priority Order:**
+
 1. Blocking tests → Fix
 2. Completed initiatives → Archive
 3. Active initiative → Resume

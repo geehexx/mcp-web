@@ -25,13 +25,13 @@ status: active
 
 ## Completion Detection
 
-### Trigger If ANY of:
+### Trigger If ANY of
 
 1. **Initiative Completion:** Status = "Completed" or "✅"
 2. **All Tasks Done:** All planned tasks complete
 3. **User Signal:** "wrap up", "end session", "that's all"
 
-### NOT Triggered By:
+### NOT Triggered By
 
 ❌ Progress updates, questions, quick fixes, ongoing implementation
 
@@ -123,6 +123,7 @@ git commit -m "docs(session): add YYYY-MM-DD session summary"
 ```
 
 **Creates:**
+
 - Session summary
 - Workflow improvements
 - Cross-session continuity
@@ -148,12 +149,14 @@ git commit -m "docs(session): add YYYY-MM-DD session summary"
 ### Living Documentation Check
 
 **Update if:**
+
 - Major features completed
 - Milestones reached
 - ADRs created
 - Architecture changes
 
 **Skip if:**
+
 - Routine fixes, internal refactoring, WIP
 
 ### Final Validation

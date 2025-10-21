@@ -83,6 +83,7 @@ update_plan({
 ### Phase Pattern
 
 **Standard decomposition:**
+
 - Phase 1: Core/foundation (minimal viable)
 - Phase 2: Enhancement (key features)
 - Phase 3: Integration (apply everywhere)
@@ -322,11 +323,13 @@ update_plan({
 **Called By:** `/plan` - After research complete (Stage 3+)
 
 **Input:**
+
 - Research summary with recommendations
 - User requirements
 - Success criteria
 
 **Output:**
+
 - Initiative file in `docs/initiatives/active/`
 - ADR (if architectural decision)
 - Plan summary for user approval

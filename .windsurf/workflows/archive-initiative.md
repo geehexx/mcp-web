@@ -53,6 +53,7 @@ python scripts/validate_archival.py docs/initiatives/active/[name]/initiative.md
 ### Interpret Results
 
 **Exit codes:**
+
 - `0` = Pass (or forced)
 - `1` = Fail (blocked)
 
@@ -114,6 +115,7 @@ task archive:initiative NAME=[folder-name] COMPLETED_ON=YYYY-MM-DD
 ```
 
 **Script automatically:**
+
 1. ✅ Adds archived notice
 2. ✅ Moves active/ → completed/
 3. ✅ Updates ALL cross-references

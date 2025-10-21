@@ -41,6 +41,7 @@ update_plan({
 ### Research Scope
 
 **Identify:**
+
 - Technology/framework specifics
 - Security considerations  
 - Performance implications
@@ -153,12 +154,14 @@ update_plan({
 ### Performance & Security
 
 **Performance:**
+
 - Latency impact (ms)
 - Memory footprint
 - CPU usage
 - Caching opportunities
 
 **Security checklist (for sensitive features):**
+
 - [ ] OWASP guidelines reviewed
 - [ ] Vulnerabilities checked
 - [ ] Input validation planned
@@ -270,6 +273,7 @@ update_plan({
 ## Quality Checks
 
 ### Completeness
+
 - [ ] Web search performed (5+ queries)
 - [ ] Internal patterns checked
 - [ ] Security/performance assessed
@@ -278,6 +282,7 @@ update_plan({
 - [ ] Sources cited with URLs
 
 ### Decision Readiness
+
 - [ ] Clear recommendation
 - [ ] Rationale explained
 - [ ] Trade-offs identified
@@ -299,10 +304,12 @@ update_plan({
 ## Integration
 
 ### Called By
+
 - `/plan` - Stage 2 (Research & Discovery)
 - User - Standalone research
 
 ### Output
+
 - Research summary (markdown)
 - Recommendation with rationale
 - Source citations
