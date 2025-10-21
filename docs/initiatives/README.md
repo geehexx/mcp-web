@@ -408,4 +408,5 @@ This comprehensive guide covers:
 - [`2025-10-20-phase-0-security-hardening.md`](docs/initiatives/completed/2025-10-20-phase-0-security-hardening.md)
 - [`2025-10-20-workflow-task-system-v3.md`](docs/initiatives/completed/2025-10-20-workflow-task-system-v3.md)
 - [`2025-10-21-windsurf-rules-revamp/`](docs/initiatives/completed/2025-10-21-windsurf-rules-revamp)
+- [`workflow-optimization-phase-2/`](docs/initiatives/completed/workflow-optimization-phase-2)
 <!-- AUTO:INITIATIVE-INDEX:END -->
