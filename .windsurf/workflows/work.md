@@ -21,13 +21,13 @@ status: active
 
 # Work Orchestration Workflow
 
-**Purpose:** Central orchestration workflow that detects project context and routes to specialized workflows.
+**Purpose:** Central orchestration detecting project context and routing to specialized workflows.
 
-**Invocation:** `/work` (with optional context) or `/work` (autonomous)
+**Invocation:** `/work` (with optional context) or autonomous
 
-**Philosophy:** AI analyzes project state to determine continuation, no explicit direction required.
+**Philosophy:** AI analyzes project state to determine continuation autonomously.
 
-**Chain:** `/work` → `/detect-context` → [routed workflow] → `/meta-analysis` (at session end)
+**Chain:** `/work` → `/detect-context` → [routed workflow] → `/meta-analysis` (session end)
 
 ---
 
@@ -91,11 +91,11 @@ update_plan({
 
 | Confidence | Action | Details |
 |------------|--------|---------|
-| **High (80%+)** | Auto-proceed | No user confirmation needed |
-| **Medium (30-79%)** | Auto-proceed with alternatives | State recommendation, mention alternatives |
+| **High (80%+)** | Auto-proceed | No confirmation |
+| **Medium (30-79%)** | Auto-proceed with alternatives | State recommendation + alternatives |
 | **Low (<30%)** | Prompt user | Ask for direction |
 
-**Routes:** Active initiative → `/implement`, Test failures → `/implement`, Planning → `/plan`, Completed → `/archive-initiative`, Clean slate → Prompt user
+**Routes:** Active initiative → `/implement`, Test failures → `/implement`, Planning → `/plan`, Completed → `/archive-initiative`, Clean slate → Prompt
 
 **After routing, update plan with subtasks:**
 
@@ -151,9 +151,9 @@ update_plan({
 
 1. Initiative marked "Completed" or "✅"
 2. All planned tasks done
-3. User explicitly signals session end
+3. User signals session end
 
-**Protocol:** Commit changes → Archive initiatives → Meta-analysis → Verify exit criteria → Present summary
+**Protocol:** Commit → Archive → Meta-analysis → Verify exit → Present summary
 
 **Exit Criteria:** All committed, tests pass, initiatives archived, meta-analysis done, summary created
 
@@ -176,8 +176,8 @@ update_plan({
 
 | Don't | Do |
 |-------|----|
-| Ask obvious questions | "Detected initiative X (60%). Continuing..." |
-| Skip session end protocol | **CRITICAL:** Always `/meta-analysis` + archive + commit |
+| Ask obvious questions | Detected initiative X (60%). Continuing... |
+| Skip session end protocol | Always `/meta-analysis` + archive + commit |
 | Over-prompt | Auto-route if 80%+ confidence |
 
 ---
@@ -207,8 +207,6 @@ update_plan({
 ---
 
 ## Sub-Workflows
-
-This workflow is decomposed into focused sub-workflows:
 
 - [work-routing.md](./work-routing.md) - Routing decision logic
 - [work-session-protocol.md](./work-session-protocol.md) - Session end protocol

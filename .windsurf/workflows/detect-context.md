@@ -5,7 +5,7 @@ description: Intelligent context detection for work continuation
 auto_execution_mode: 3
 category: Operations
 complexity: 80
-tokens: 1870
+tokens: 1120
 version: v2.0-intelligent-semantic-preservation
 dependencies: []
 status: active
@@ -35,6 +35,7 @@ status: active
 **Priority 0 (ABSOLUTE):** User explicit @mention or "continue with X" → Confidence 100%, route to specified
 
 **Priority 1-5:**
+
 - Session summary "Next Steps" / "Unresolved"
 - Initiative unchecked tasks (`- [ ]`)
 - Test failures (`task test:fast | grep FAILED`)

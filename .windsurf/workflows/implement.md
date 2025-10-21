@@ -5,7 +5,7 @@ description: Test-driven implementation workflow
 auto_execution_mode: 3
 category: Development
 complexity: 75
-tokens: 1260
+tokens: 1880
 version: v2.0-intelligent-semantic-preservation
 dependencies:
   - load-context
