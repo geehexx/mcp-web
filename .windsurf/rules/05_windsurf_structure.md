@@ -118,8 +118,8 @@ Only the following directories are allowed in `.windsurf/`:
 Workflows can reference documentation in `docs/`:
 
 ```markdown
-**See:** [common-patterns.md](../docs/common-patterns.md) for reusable patterns
-**See:** [context-loading-patterns.md](../docs/context-loading-patterns.md) for loading strategies
+**See:** [15_tool_patterns.md](./15_tool_patterns.md) for reusable patterns
+**See:** [07_context_optimization.md](./07_context_optimization.md) for loading strategies
 ```
 
 ### Rules Referencing Docs
@@ -127,7 +127,7 @@ Workflows can reference documentation in `docs/`:
 Rules can reference documentation in `docs/`:
 
 ```markdown
-**Detailed patterns:** [batch-operations.md](../docs/batch-operations.md)
+**Detailed patterns:** [15_tool_patterns.md](./15_tool_patterns.md)
 ```
 
 ### Generated Indexes
@@ -197,7 +197,7 @@ File naming is validated on every commit via `ls-lint` pre-commit hook.
 
 - [generate_indexes.py](../../scripts/generate_indexes.py) - Index generation script
 - [.ls-lint.yml](../../.ls-lint.yml) - File naming enforcement
-- [frontmatter-schema.json](../schemas/frontmatter-schema.json) - Frontmatter validation
+- [frontmatter-schema.json](rules frontmatter (see any rule file for examples)) - Frontmatter validation
 
 ---
 

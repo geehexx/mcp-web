@@ -71,7 +71,7 @@ read_file("/path/file.md")                 // Depends on edit completing
 - Reading 5 files in parallel: ~300ms (3x faster)
 - Searching 8 patterns in parallel: 8x speedup
 
-**See:** [batch-operations.md](../docs/batch-operations.md) for detailed patterns
+**See:** [15_tool_patterns.md](./15_tool_patterns.md) for detailed patterns
 
 ---
 
@@ -177,7 +177,7 @@ task scaffold:initiative  # This will hang waiting for input!
 
 **Default configs:** `scripts/templates/configs/{initiative,adr,summary}-default.yaml`
 
-**See:** [automation-scripts.md](../docs/automation-scripts.md)
+**See:** [14_automation_scripts.md](./14_automation_scripts.md)
 
 ---
 

@@ -422,9 +422,9 @@ Operation failed?
 
 ## References
 
-- [batch-operations.md](./batch-operations.md) - Batch error handling
-- [tool-patterns.md](./tool-patterns.md) - Tool-specific errors
-- [04_security.md](../rules/04_security.md) - Security validation
+- [batch-operations.md](./15_tool_patterns.md) - Batch error handling
+- [tool-patterns.md](./15_tool_patterns.md) - Tool-specific errors
+- [04_security.md](./06_security_practices.md) - Security validation
 
 ---
 

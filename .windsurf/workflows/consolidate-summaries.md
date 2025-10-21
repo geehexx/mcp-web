@@ -83,15 +83,13 @@ ls -1 docs/archive/session-summaries/YYYY-MM-DD-*.md | wc -l
 
 ⚠️ **CRITICAL:** Use batch reading for efficiency. Reading files sequentially is 7x slower.
 
-Use [Batch Reading Pattern](../docs/context-loading-patterns.md#pattern-1-batch-reading):
-
-```python
+Use [Batch Reading Pattern](/rules/07_context_optimization):
 mcp0_read_multiple_files([
     "/home/gxx/projects/mcp-web/docs/archive/session-summaries/YYYY-MM-DD-*.md",
 ])
-```
 
-See [Batch Operations Guide](../docs/batch-operations.md#pattern-2-chunked-processing) for optimal batch sizes (10-15 files).
+See [Tool Patterns Guide](/rules/15_tool_patterns) for optimal batch sizes (10-15 files).
+See [Tool Patterns Guide](../rules/15_tool_patterns.md) for optimal batch sizes (10-15 files).
 
 Extract from each: objectives, accomplishments, decisions, files modified, commits, learnings, unresolved issues, next steps
 
@@ -726,7 +724,7 @@ find docs/archive/session-summaries -name "YYYY-MM-DD-*.md" ! -name "*daily-summ
 - ❌ Use `git mv` to "archive" originals
 - ✅ Use `git rm` or `find ... -delete` to purge originals
 
-See [Error Handling Pattern](../docs/batch-operations.md#pattern-4-error-handling-in-batches) for safe file operations.
+See [Error Handling Patterns](../rules/11_error_handling.md) for safe file operations.
 
 ### 5.5 Update References
 

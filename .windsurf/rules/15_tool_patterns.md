@@ -306,7 +306,7 @@ run_command({
 - ❌ Context-heavy decisions
 - ❌ Content writing
 
-**See:** [automation-scripts.md](./automation-scripts.md) for complete reference
+**See:** [automation-scripts.md](./14_automation_scripts.md) for complete reference
 
 ---
 
@@ -363,9 +363,9 @@ mcp0_edit_file({ path: "/home/gxx/projects/mcp-web/.windsurf/workflows/work.md",
 ## References
 
 - [automation-scripts.md](./automation-scripts.md) - Automation script reference
-- [06_context_engineering.md](../rules/06_context_engineering.md) - File operations rules
-- [batch-operations.md](./batch-operations.md) - Batch operation strategies
-- [context-loading-patterns.md](./context-loading-patterns.md) - Context loading patterns
+- [06_context_engineering.md](./07_context_optimization.md) - File operations rules
+- [batch-operations.md](./15_tool_patterns.md (self-reference)) - Batch operation strategies
+- [context-loading-patterns.md](./07_context_optimization.md) - Context loading patterns
 - [MCP Filesystem Server Docs](https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem)
 - [Taskfile.yml](../../Taskfile.yml) - All available task commands
 

@@ -11,6 +11,8 @@ tags: ["windsurf", "rules", "documentation", "architecture", "breaking-change"]
 phase: "Completed"
 ---
 
+> **⚠️ ARCHIVED:** This initiative was completed on 2025-10-21.
+
 # Initiative: Windsurf Rules System Comprehensive Revamp
 
 **Status:** ✅ Completed

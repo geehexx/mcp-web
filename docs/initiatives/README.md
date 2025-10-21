@@ -383,6 +383,10 @@ This comprehensive guide covers:
 
 - [`2025-10-15-performance-optimization-pipeline/`](docs/initiatives/active/2025-10-15-performance-optimization-pipeline)
 - [`2025-10-19-session-summary-mining-advanced.md`](docs/initiatives/active/2025-10-19-session-summary-mining-advanced.md)
+- [`2025-10-20-phase-0-security-hardening.md`](docs/initiatives/active/2025-10-20-phase-0-security-hardening.md)
+- [`2025-10-20-phase-1-resource-stability.md`](docs/initiatives/active/2025-10-20-phase-1-resource-stability.md)
+- [`2025-10-20-phase-2-data-integrity.md`](docs/initiatives/active/2025-10-20-phase-2-data-integrity.md)
+- [`2025-10-20-phase-3-performance-optimization.md`](docs/initiatives/active/2025-10-20-phase-3-performance-optimization.md)
 
 ### Completed Initiatives
 
@@ -403,4 +407,5 @@ This comprehensive guide covers:
 - [`2025-10-19-task-system-validation-enforcement.md`](docs/initiatives/completed/2025-10-19-task-system-validation-enforcement.md)
 - [`2025-10-19-workflow-transparency-improvements.md`](docs/initiatives/completed/2025-10-19-workflow-transparency-improvements.md)
 - [`2025-10-20-workflow-task-system-v3.md`](docs/initiatives/completed/2025-10-20-workflow-task-system-v3.md)
+- [`2025-10-21-windsurf-rules-revamp/`](docs/initiatives/completed/2025-10-21-windsurf-rules-revamp)
 <!-- AUTO:INITIATIVE-INDEX:END -->

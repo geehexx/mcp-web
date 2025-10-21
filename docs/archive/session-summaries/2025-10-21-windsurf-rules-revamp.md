@@ -3,7 +3,7 @@
 **Date:** 2025-10-21
 **Duration:** ~2.5 hours
 **Status:** ✅ Complete
-**Initiative:** [2025-10-21-windsurf-rules-revamp](file:///home/gxx/projects/mcp-web/docs/initiatives/active/2025-10-21-windsurf-rules-revamp/initiative.md)
+**Initiative:** [2025-10-21-windsurf-rules-revamp](file:///home/gxx/projects/mcp-web/docs/initiatives/completed/2025-10-21-windsurf-rules-revamp/initiative.md)
 
 ---
 
@@ -206,7 +206,7 @@ a0d748e docs(initiative): mark windsurf rules revamp as completed
 ### References
 
 - [Windsurf Memories & Rules](https://docs.windsurf.com/windsurf/cascade/memories) - Official spec (verified 2025-10-21)
-- Initiative: `docs/initiatives/active/2025-10-21-windsurf-rules-revamp/`
+- Initiative: `docs/initiatives/completed/2025-10-21-windsurf-rules-revamp/`
 - Artifacts: analysis.md, design-v1.md, design-v2.md, implementation-plan.md
 
 ---

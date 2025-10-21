@@ -174,7 +174,7 @@ task archive:initiative NAME=[initiative-folder-name] COMPLETED_ON=YYYY-MM-DD
 
 **Performance:** 90x faster (15 min → 10 sec), 100% token savings
 
-**See:** [automation-scripts.md](../docs/automation-scripts.md)
+**See:** [14_automation_scripts.md](../rules/14_automation_scripts.md)
 
 ### Manual Fallback (If Script Fails)
 
