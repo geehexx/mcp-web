@@ -1,134 +1,89 @@
 ---
 created: "2025-10-17"
 updated: "2025-10-21"
-description: Extract structured information from current session
+description: Extract structured session information from git and filesystem
 auto_execution_mode: 3
 category: Analysis
-complexity: 55
-tokens: 1700
+complexity: 65
+tokens: 1200
 dependencies: []
 status: active
+version: "2.0-intelligent-semantic-preservation"
 ---
 
 # Extract Session Workflow
 
-**Purpose:** Extract structured data from git history and session context for summary generation.
+Extract structured data from current session (git history, files, tests) for session summary generation.
 
-**Invocation:** Called by `/meta-analysis` (subtask)
-
-**Philosophy:** Automated data extraction enables consistent, comprehensive session summaries.
+**Called by:** `/meta-analysis`
 
 ---
 
-## Stage 1: Create Task Plan
+## Process
 
-**Note:** Parent workflow (`/meta-analysis`) handles task tracking. If called directly:
-
-```typescript
-update_plan({
-  explanation: "🔍 Starting /extract-session workflow",
-  plan: [
-    { step: "1. /extract-session - Identify session scope", status: "in_progress" },
-    { step: "2. /extract-session - Extract accomplishments and decisions", status: "pending" },
-    { step: "3. /extract-session - Identify patterns and metrics", status: "pending" },
-    { step: "4. /extract-session - Check protocol compliance", status: "pending" }
-  ]
-})
-```
-
----
-
-## Stage 2: Identify Session Scope
-
-### Determine Boundaries
+### 1. Get Session Metadata
 
 ```bash
-# Get last meta-analysis timestamp
-LAST_RUN=$(cat .windsurf/.last-meta-analysis 2>/dev/null || echo "24 hours ago")
+# Timestamp
+LAST_RUN=$(cat .windsurf/.last-meta-analysis 2>/dev/null || echo "1 week ago")
 
-# Get commits since last run
-git log --oneline --since="$LAST_RUN"
-
-# Calculate duration
-FIRST=$(git log --reverse --since="$LAST_RUN" --format="%ct" | head -1)
-LAST=$(git log --since="$LAST_RUN" --format="%ct" | head -1)
-DURATION=$(( ($LAST - $FIRST) / 3600 ))  # hours
+# Date range
+git log --since="$LAST_RUN" --format="%ai" | head -1
+git log --since="$LAST_RUN" --format="%ai" | tail -1
 ```
 
-### Identify Primary Focus
+### 2. Extract Commits
 
 ```bash
-# Most common commit type
-git log --since="$LAST_RUN" --format="%s" | \
-  grep -oE "^[a-z]+\(" | sort | uniq -c | sort -rn | head -1
-
-# Common scope
-git log --since="$LAST_RUN" --format="%s" | \
-  grep -oE "\([^)]+\)" | sort | uniq -c | sort -rn | head -1
+git log --since="$LAST_RUN" --format="%h|%an|%ai|%s" | \
+  while IFS='|' read hash author date msg; do
+    type=$(echo "$msg" | grep -oP '^[a-z]+' | head -1)
+    scope=$(echo "$msg" | grep -oP '\([^)]+\)' | tr -d '()')
+    desc=$(echo "$msg" | sed 's/^[a-z]*(\([^)]*\)): *//')
+    echo "$hash|$type|$scope|$desc"
+  done
 ```
 
-**Focus mapping:**
-
-- `feat:` → Implementation
-- `fix:` → Bug fixing
-- `docs:` → Documentation
-- `refactor:` → Refactoring
-- Multiple → Mixed session
-
----
-
-## Stage 3: Extract Accomplishments
-
-### Get Changed Files
+### 3. Identify File Changes
 
 ```bash
-# Files modified
-git diff --name-status "$LAST_RUN"..HEAD
+# Modified files
+git diff --name-only "$LAST_RUN"..HEAD
 
-# Group by type (A/M/D)
-git diff --name-status "$LAST_RUN"..HEAD | awk '{print $1}' | sort | uniq -c
+# By category
+git diff --name-status "$LAST_RUN"..HEAD | \
+  awk '{print $2}' | \
+  sed 's|^.windsurf/workflows/|workflows:|; s|^.windsurf/rules/|rules:|; \
+       s|^tests/|tests:|; s|^src/|src:|; s|^docs/|docs:|' | \
+  cut -d: -f1 | sort | uniq -c
 ```
 
-### Parse Commits
+### 4. Extract Accomplishments
 
 ```bash
-git log --since="$LAST_RUN" --format="%h|%s|%b" | \
-while IFS='|' read hash subject body; do
-  TYPE=$(echo "$subject" | grep -oE "^[a-z]+")
-  SCOPE=$(echo "$subject" | grep -oE "\([^)]+\)" | tr -d '()')
-  DESC=$(echo "$subject" | sed 's/^[a-z]*([^)]*): //')
-  echo "- **$TYPE**: $DESC ($SCOPE)"
-done
+# Feature additions
+git log --since="$LAST_RUN" --format="%s" | grep -E "^feat"
+
+# Files created
+git log --since="$LAST_RUN" --name-status --diff-filter=A --format="" | \
+  awk '{print $2}' | sort | uniq
 ```
 
-**Format:** Action verb + what + where + context
-
----
-
-## Stage 4: Extract Decisions & Learnings
-
-### Search for Decisions
+### 5. Extract Decisions
 
 ```bash
-# Decision markers in commit bodies
-git log --since="$LAST_RUN" --format="%B" | \
-  grep -iE "decided|chose|selected|using.*because"
-
 # ADRs created
-git log --since="$LAST_RUN" --name-only --diff-filter=A | grep "docs/adr/"
+git log --since="$LAST_RUN" --name-status --format="%s" | \
+  grep "docs(adr):" || echo "No ADRs"
+
+# Config changes
+git diff "$LAST_RUN"..HEAD -- '*.toml' '*.yml' '*.json' --name-only
 ```
 
-**Decision pattern:**
-
-- What was decided
-- Why (rationale)
-- Alternatives considered
-- Expected impact
-
-### Search for Learnings
+### 6. Search for Learnings
 
 ```bash
-# Performance measurements
+# Performance
 git log --since="$LAST_RUN" --format="%B" | \
   grep -iE "[0-9]+x|speedup|faster|[0-9]+%|ms"
 
@@ -137,100 +92,41 @@ git log --since="$LAST_RUN" --format="%B" | \
   grep -iE "discovered|learned|found that"
 ```
 
-**Learning pattern:**
-
-- Technology/pattern
-- Specific insight
-- Measurement (if any)
-- Applicability
-
----
-
-## Stage 5: Identify Patterns
-
-### Positive Patterns
+### 7. Identify Patterns
 
 ```bash
-# Successful approaches
+# Positive
 git log --since="$LAST_RUN" --format="%B" | \
   grep -iE "worked well|effective|successful"
 
-# Test patterns
-grep -r "pytest.mark" tests/ | cut -d: -f2 | sort | uniq -c | sort -rn
+# Negative
+git log --since="$LAST_RUN" --format="%s" | \
+  grep -iE "fix:|revert|correct"
 ```
 
-**Examples:**
-
-- Batch operations → 3x faster
-- Test-first → Caught N regressions
-- Git hooks → Prevented N issues
-
-### Negative Patterns
+### 8. Extract Metrics
 
 ```bash
-# Fixes, reverts, corrections
-git log --since="$LAST_RUN" --format="%s" | grep -iE "fix:|revert|correct"
-
-# Auto-fix commits (sign of skipped formatters)
-git log --since="$LAST_RUN" --format="%s" | grep -iE "style.*auto-fix"
-```
-
-**Pattern:**
-
-- What didn't work
-- Why it failed
-- Better alternative
-
----
-
-## Stage 6: Extract Metrics
-
-### Test & Coverage Metrics
-
-```bash
-# Test counts
+# Tests
 pytest --collect-only 2>/dev/null | grep "collected"
 
-# Coverage
-coverage report --format=total 2>/dev/null
-```
-
-### File Counts
-
-```bash
-# Files modified
+# Files/commits
 git diff --name-only "$LAST_RUN"..HEAD | wc -l
-
-# Commits
 git log --oneline --since="$LAST_RUN" | wc -l
 ```
 
----
-
-## Stage 7: Protocol Compliance Check
-
-### Verify Session End Protocol
+### 9. Protocol Compliance
 
 ```bash
-# All changes committed?
+# Uncommitted?
 git status --porcelain | wc -l
 
-# Meta-analysis run?
+# Meta-analysis timestamp?
 [ -f .windsurf/.last-meta-analysis ] && echo "✓" || echo "✗"
-
-# Session summary exists?
-ls -t docs/archive/session-summaries/*.md 2>/dev/null | head -1
 
 # Completed initiatives archived?
 grep -l "Status.*Completed" docs/initiatives/active/*.md 2>/dev/null
 ```
-
-**Flag violations:**
-
-- Uncommitted changes
-- Missing meta-analysis timestamp
-- Missing session summary
-- Unarchived completed initiatives
 
 ---
 
@@ -241,7 +137,7 @@ session:
   date: "YYYY-MM-DD"
   duration_hours: N
   primary_focus: "[focus]"
-  workflows_used: ["workflow1", "workflow2"]
+  workflows_used: ["workflow1"]
 
 commits:
   count: N
@@ -260,19 +156,17 @@ accomplishments:
 decisions:
   - topic: "Versioning"
     decision: "Custom workflow"
-    rationale: "Zero deps, AI-friendly"
+    rationale: "Zero deps"
     impact: "Automation"
 
 learnings:
   - technology: "MCP batch reads"
     insight: "3x faster"
     measurement: "1 vs 3+ calls"
-    applicability: "Always for 3+ files"
 
 positive_patterns:
   - name: "Batch operations"
     why_worked: "Reduced overhead"
-    frequency: "Always"
 
 negative_patterns:
   - name: "Skipped formatters"
@@ -281,9 +175,8 @@ negative_patterns:
 
 metrics:
   files_modified: N
-  lines_added: N
+  commits: N
   tests_added: N
-  coverage_percent: N
 
 protocol_compliance:
   violations: ["Missing timestamp"]
@@ -292,21 +185,6 @@ protocol_compliance:
 
 ---
 
-## Integration
-
-**Called By:** `/meta-analysis` - Primary caller
-
-**Calls:** Git commands, file system scans
-
-**Print exit:**
-
-```markdown
-✅ **Completed /extract-session:** Session data extracted and structured
-```
-
----
-
 ## References
 
-- `.windsurf/workflows/meta-analysis.md` - Parent workflow
-- `.windsurf/rules/10_session_protocols.md` - Session End Protocol
+- `meta-analysis.md`, `10_session_protocols.md`
