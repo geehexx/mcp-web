@@ -13,7 +13,7 @@ import sys
 from pathlib import Path
 
 # Project root
-ROOT = Path(__file__).parent.parent
+ROOT = Path(__file__).resolve().parents[2]
 
 
 def count_files(directory: Path, pattern: str = "*.md") -> int:

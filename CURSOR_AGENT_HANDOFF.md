@@ -100,7 +100,7 @@ A **unified source-of-truth system** that:
 
 **Key Files to Create:**
 
-```
+```text
 .unified/
   ├── README.md
   ├── rules/

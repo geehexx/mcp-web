@@ -50,13 +50,11 @@ This document tracks testing gaps in the `scripts/` directory. It serves as a ro
 **Future Work:**
 
 ```python
-# Pattern to implement:
 from unittest.mock import patch, MagicMock
 import instructor
 
 @patch('scripts.automation.extract_action_items.instructor.patch')
 def test_extract_with_instructor_mock(mock_instructor):
-    # Setup mock client
     mock_client = MagicMock()
     mock_instructor.return_value = mock_client
     # ... test extraction logic
@@ -90,9 +88,9 @@ def test_extract_with_instructor_mock(mock_instructor):
 
 **Future Work:**
 
-- Fix template path resolution in tests
-- Add comprehensive template rendering tests
-- Test all scaffolding workflows (initiative, ADR, summary)
+1. Fix template path resolution in tests.
+2. Add comprehensive template rendering tests.
+3. Test all scaffolding workflows (initiative, ADR, summary).
 
 ---
 
@@ -126,9 +124,9 @@ def test_extract_with_instructor_mock(mock_instructor):
 
 **Future Work:**
 
-- Add unit tests for metric calculation functions
-- Test baseline storage and retrieval
-- Validate threshold detection accuracy
+1. Add unit tests for metric calculation functions.
+2. Test baseline storage and retrieval.
+3. Validate threshold detection accuracy.
 
 ---
 
@@ -159,9 +157,9 @@ def test_extract_with_instructor_mock(mock_instructor):
 
 **Future Work:**
 
-- Create comprehensive dependency test fixtures
-- Test all graph traversal edge cases
-- Validate dependency update propagation
+1. Create comprehensive dependency test fixtures.
+2. Test all graph traversal edge cases.
+3. Validate dependency update propagation.
 
 ---
 
@@ -187,9 +185,9 @@ def test_extract_with_instructor_mock(mock_instructor):
 
 **Future Work:**
 
-- Test large-scale archival operations
-- Validate reference updates across 100+ files
-- Test edge cases in path resolution
+1. Test large-scale archival operations.
+2. Validate reference updates across 100+ files.
+3. Test edge cases in path resolution.
 
 ---
 
@@ -220,7 +218,7 @@ def test_extract_with_instructor_mock(mock_instructor):
 
 ### 7. CLI Output Formats
 
-**All CLI Scripts**
+**Files:** All CLI scripts
 
 **Gaps:**
 
@@ -252,7 +250,8 @@ def test_extract_with_instructor_mock(mock_instructor):
 - `scripts/test_optimization_idempotency.py` (0% coverage)
 
 **Status:** Marked for removal in Phase 0 cleanup
-**Action:** No tests needed - scripts should be deleted
+
+**Action:** No tests needed — scripts should be deleted.
 
 ---
 
@@ -280,44 +279,18 @@ def test_extract_with_instructor_mock(mock_instructor):
 
 ## Testing Patterns Established
 
-### Patterns Successfully Implemented ✅
+### Patterns Successfully Implemented
 
-1. **Golden Master Pattern**
-   - Files: `test_validate_archival.py`, `test_golden_extraction.py`
-   - Use: Regression testing with known-good outputs
-   - Coverage: Excellent for validation scripts
+- **Golden Master Pattern**: Used in `test_validate_archival.py` and `test_golden_extraction.py` for regression testing with known-good outputs.
+- **CLI Integration Pattern**: Applied across `tests/scripts/` via subprocess-based CLI testing.
+- **Edge Case Pattern**: `test_*_edge_cases.py` for malformed input, Unicode, empty files.
+- **Skip Marker Pattern**: `TestFutureWork` classes highlight pending test work.
 
-2. **CLI Integration Pattern**
-   - Files: All `test_*_scripts.py` files
-   - Use: Subprocess-based CLI testing
-   - Coverage: Basic CLI functionality
+### Patterns Needing Development
 
-3. **Edge Case Pattern**
-   - Files: `test_*_edge_cases.py` files
-   - Use: Malformed input, Unicode, empty files
-   - Coverage: Error handling paths
-
-4. **Skip Marker Pattern**
-   - Files: All test files with `TestFutureWork` classes
-   - Use: Document unimplemented tests
-   - Coverage: Roadmap for future work
-
-### Patterns Needing Development 🔄
-
-1. **LLM Mock Pattern**
-   - Status: Research needed
-   - Priority: High
-   - Blocker: Complex instructor/OpenAI mocking
-
-2. **Template Test Pattern**
-   - Status: Failing tests need fixing
-   - Priority: Medium
-   - Blocker: Path resolution issues
-
-3. **Graph Algorithm Pattern**
-   - Status: Not started
-   - Priority: Medium
-   - Need: Dependency graph test fixtures
+- **LLM Mock Pattern**: Requires research to mock instructor and provider clients.
+- **Template Test Pattern**: Needs fixes for template path resolution and coverage across scaffolding flows.
+- **Graph Algorithm Pattern**: Requires fixtures for dependency graphs.
 
 ---
 
@@ -325,133 +298,51 @@ def test_extract_with_instructor_mock(mock_instructor):
 
 | Module | Coverage | Status | Priority |
 |--------|----------|--------|----------|
-| `scripts/lib/cli.py` | 100% | ✅ Complete | - |
-| `scripts/lib/validation.py` | 93% | ✅ Strong | Low |
-| `scripts/lib/frontmatter.py` | 85% | ✅ Good | Low |
-| `scripts/validation/validate_workflows.py` | 83% | ✅ Good | Low |
-| `scripts/validation/validate_references.py` | 79% | ✅ Good | Low |
-| `scripts/automation/file_ops.py` | 70% | ⚠️ Adequate | Medium |
-| `scripts/automation/dependency_registry.py` | 59% | ⚠️ Needs Work | High |
-| `scripts/validation/validate_initiatives.py` | 44% | ⚠️ Needs Work | High |
-| `scripts/validation/validate_archival.py` | 40% | ⚠️ Needs Work | Medium |
-| `scripts/automation/extract_action_items.py` | 27% | ❌ Incomplete | **Critical** |
-| `scripts/analysis/*.py` (7 files) | ~30% | ⚠️ Partial | Medium |
-| `scripts/manage_optimization_cache.py` | 0% | 🗑️ Delete | - |
-| `scripts/test_optimization_idempotency.py` | 0% | 🗑️ Delete | - |
+| `scripts/lib/cli.py` | 100% | ✅ | - |
+| `scripts/lib/validation.py` | 93% | ✅ | Low |
+| `scripts/lib/frontmatter.py` | 85% | ✅ | Low |
+| `scripts/validation/validate_workflows.py` | 83% | ✅ | Low |
+| `scripts/validation/validate_references.py` | 79% | ✅ | Low |
+| `scripts/automation/file_ops.py` | 70% | ⚠️ | Medium |
+| `scripts/automation/dependency_registry.py` | 59% | ⚠️ | High |
+| `scripts/validation/validate_initiatives.py` | 44% | ⚠️ | High |
+| `scripts/validation/validate_archival.py` | 40% | ⚠️ | Medium |
+| `scripts/automation/extract_action_items.py` | 27% | ❌ | Critical |
+| `scripts/analysis/*.py` (7 files) | ~30% | ⚠️ | Medium |
+| `scripts/manage_optimization_cache.py` | 0% | 🗑️ | - |
+| `scripts/test_optimization_idempotency.py` | 0% | 🗑️ | - |
 
 ---
 
 ## Recommendations for Next Session
 
-### Immediate Actions (Next 1-2 Hours)
+### Immediate Actions
 
-1. **Fix extract_action_items.py coverage** (27% → 80%)
-   - Implement LLM mock patterns
-   - Add extraction logic unit tests
-   - Test error handling paths
+1. **Improve `extract_action_items.py` coverage**: Implement LLM mock patterns, add extraction logic unit tests, cover error paths.
+2. **Boost `validate_initiatives.py` coverage**: Add dependency validation tests, cover all gates and error paths.
+3. **Fix failing tests**: Address template path issues in `test_scaffold.py` and async pool behavior in `test_browser_pool.py`.
 
-2. **Fix validate_initiatives.py coverage** (44% → 80%)
-   - Add dependency validation tests
-   - Test all validation gates
-   - Cover error paths
+### Medium-Term Actions
 
-3. **Fix failing tests**
-   - `test_scaffold.py` - template paths
-   - `test_browser_pool.py` - async pool logic
+1. Expand coverage for analysis scripts to ≥70%.
+2. Add end-to-end integration tests for scripts workflows.
 
-### Medium-Term Actions (Future Session)
+### Long-Term Actions
 
-4. **Analysis scripts comprehensive testing**
-   - Each script to 70%+ coverage
-   - Focus on core logic, not CLI
-
-5. **Integration test suite**
-   - End-to-end workflow tests
-   - Multi-script interaction tests
-
-### Long-Term Actions (Future Initiative)
-
-6. **LLM integration test framework**
-   - Reusable mock patterns
-   - Fixture library for LLM responses
-   - Async testing utilities
-
-7. **Performance test suite**
-   - Benchmark all analysis scripts
-   - Regression detection automation
+1. Develop reusable LLM integration test harness.
+2. Introduce performance regression tests for automation scripts.
 
 ---
 
 ## CI/CD Integration
 
-### Current Status
+Current status: coverage enforcement not in CI.
 
-- ❌ Coverage enforcement not added to CI
-- ❌ No coverage threshold check in GitHub Actions
-
-### Needed
+Planned addition:
 
 ```yaml
-# .github/workflows/test.yml
 - name: Check coverage threshold
   run: |
     uv run coverage run --source=scripts -m pytest tests/
     uv run coverage report --fail-under=80 --include="scripts/*"
 ```
-
-### Future Enhancements
-
-- Coverage reports in PR comments
-- Coverage trend tracking
-- Per-module coverage thresholds
-
----
-
-## Metrics
-
-**Test Count:**
-
-- Phase 1 Start: 82 tests
-- Phase 1 End: 180+ tests
-- Added: 98+ new tests
-- Skipped Stubs: 25+ tests
-
-**Coverage:**
-
-- Phase 1 Start: 17%
-- Phase 1 Target: 80%
-- Phase 1 Actual: ~75-80% (final validation pending)
-
-**Effort:**
-
-- Test Files Created: 8 new files
-- Lines of Test Code: ~3,500 lines
-- Time Invested: ~4-5 hours
-
----
-
-## Contributing
-
-When adding tests in future sessions:
-
-1. **Update this document** when adding skipped tests
-2. **Use skip markers** liberally for future work
-3. **Document why** tests are skipped (not just "TODO")
-4. **Link to issues** if test implementation is blocked
-5. **Prioritize** based on this document's recommendations
-
-**Example Skip Pattern:**
-
-```python
-@pytest.mark.skip(
-    reason="TODO: Implement LLM mock pattern - see TESTING_GAPS.md §1"
-)
-def test_llm_integration():
-    pass
-```
-
----
-
-**Maintained By:** Testing Excellence Initiative
-**Next Review:** After Phase 1 completion
-**Version:** 1.0.0

@@ -1,15 +1,16 @@
 ---
 title: "Cursor & Windsurf Dual Compatibility Research"
 type: "research"
-status: "active"
+status: "Active"
 description: "Comprehensive research on Cursor and Windsurf architectures, rules/commands systems, and migration strategy"
 tags: ["research", "cursor", "windsurf", "ide-compatibility", "architecture"]
 related:
-  - "/docs/initiatives/active/2025-10-22-cursor-windsurf-dual-compatibility.md"
+  - "/docs/initiatives/active/2025-10-22-cursor-windsurf-dual-compatibility/initiative.md"
 audience: "ai-agent"
 token_budget: "high"
 complexity: "complex"
 created: "2025-10-22"
+updated: "2025-10-22"
 ---
 
 # Cursor & Windsurf Dual Compatibility Research
@@ -175,17 +176,17 @@ Both IDEs use standard glob patterns:
 
 - `*.py` - All Python files
 - `**/*.py` - Python files in any directory
-- `src/**/*.ts` - TypeScript files in src/
+- `src/**/*.ts` - TypeScript files in `src/`
 - Multiple patterns: Cursor uses array `["*.py", "*.pyi"]`, Windsurf uses comma-separated `"*.py, *.pyi"`
 
 **Transformation:**
 
-- Cursor array → Windsurf comma-separated: `["*.py", "*.pyi"]` → `"*.py, *.pyi"`
-- Windsurf comma-separated → Cursor array: `"*.py, *.pyi"` → `["*.py", "*.pyi"]`
+- Cursor array → Windsurf comma-separated: `["*.py", "*.pyi"]` → "`*.py, *.pyi"`
+- Windsurf comma-separated → Cursor array: "`*.py, *.pyi"` → `["*.py", "*.pyi"]`
 
 ## Unified Format Specification
 
-### Unified Rule File (.unified/rules/rule-name.yaml)
+### Unified Rule File (`.unified/rules/rule-name.yaml`)
 
 ```yaml
 ---
@@ -193,28 +194,21 @@ title: "Rule Title"
 description: "Brief description"
 type: "rule"
 status: "active"
-
 windsurf:
   trigger: "always_on"
   globs: "*.py, **/*.py"
-
 cursor:
   alwaysApply: true
   globs: ["*.py", "**/*.py"]
-
 tags: ["tag1", "tag2"]
 related:
   - "/docs/adr/0001-decision.md"
-
 ---
 
 # Rule Content
-
-## Section 1
-Content...
 ```
 
-### Unified Command File (.unified/commands/command-name.yaml)
+### Unified Command File (`.unified/commands/command-name.yaml`)
 
 ```yaml
 ---
@@ -222,114 +216,56 @@ title: "Command Title"
 description: "Brief description"
 type: "command"
 status: "active"
-
 windsurf:
   type: "workflow"
   category: "category"
   complexity: "simple|moderate|complex"
   dependencies: []
-
 cursor:
   pass_through: true
-
 tags: ["tag1"]
 related: []
-
 ---
 
 # Command/Workflow Content
-
-## Objective
-What this command/workflow does.
-
-## Requirements
-Prerequisites.
-
-## Steps
-1. Step 1
-2. Step 2
-
-## Expected Output
-What should be produced.
 ```
 
 ## Directory Structure (Post-Migration)
 
-```
-.cursor/rules/                    # Generated from .unified/
-.cursor/commands/                 # Generated from .unified/
-.windsurf/rules/                  # Generated from .unified/
-.windsurf/workflows/              # Generated from .unified/
-.unified/                         # Source of truth
+```text
+.cursor/rules/
+.cursor/commands/
+.windsurf/rules/
+.windsurf/workflows/
+.unified/
   ├── rules/
   ├── commands/
   └── README.md
-scripts/adapters/                 # Transformation logic
+scripts/adapters/
   ├── unified_parser.py
   ├── cursor_adapter.py
   ├── windsurf_adapter.py
   └── validator.py
-scripts/build_ide_configs.py      # Main build script
+scripts/build_ide_configs.py
 ```
 
 ## Implementation Phases
 
-### Phase 1: Architecture & Planning (Week 1)
-
-- Create ADR for dual compatibility approach
-- Design unified format specification
-- Document transformation rules
-- Create Cursor agent handoff document
-
-### Phase 2: Adapter System (Week 2)
-
-- Build Python adapter module (`scripts/adapters/`)
-- Implement build process (`scripts/build_ide_configs.py`)
-- Create validation infrastructure
-- Integrate into CI/CD
-
-### Phase 3: Rules Migration (Week 3)
-
-- Convert 16 Windsurf rules to unified format
-- Generate Cursor `.mdc` rules
-- Validate transformations
-- Test in both IDEs
-
-### Phase 4: Commands/Workflows (Week 4)
-
-- Convert 21 Windsurf workflows to unified format
-- Generate Cursor commands
-- Document equivalence and limitations
-- Test in both IDEs
-
-### Phase 5: Automation & Scripts (Week 5)
-
-- Create IDE detection system
-- Update Taskfile for both IDEs
-- Build IDE-specific wrappers
-- Document IDE-specific usage
-
-### Phase 6: Documentation & Testing (Week 6)
-
-- Create comprehensive Cursor agent documentation
-- Update Windsurf documentation
-- Create user guides for both IDEs
-- Complete testing matrix
-
-### Phase 7: Integration & Deployment (Week 7-8)
-
-- CI/CD integration
-- Deployment and release
-- Maintenance documentation
+1. **Phase 1:** Architecture & Planning
+2. **Phase 2:** Adapter System
+3. **Phase 3:** Rules Migration
+4. **Phase 4:** Commands/Workflows
+5. **Phase 5:** Automation & Scripts
+6. **Phase 6:** Documentation & Testing
+7. **Phase 7:** Integration & Deployment
 
 ## Critical Success Factors
 
-1. **Unified format must be superset** of both IDE capabilities
-2. **Adapters must be deterministic** (same input → same output)
-3. **Validation must be comprehensive** (catch all errors)
-4. **Documentation must be explicit** (no assumptions about IDE knowledge)
-5. **Testing must cover both IDEs** (not just one)
-6. **Maintenance process must be clear** (how to add new rules/commands)
+1. Unified format must be a superset of both IDE capabilities.
+2. Adapters must be deterministic.
+3. Validation must be comprehensive.
+4. Documentation must be explicit.
+5. Testing must cover both IDEs.
 
 ## Risks & Mitigation
 
@@ -340,28 +276,13 @@ scripts/build_ide_configs.py      # Main build script
 | Adapter bugs cause inconsistency | Comprehensive validation, automated testing |
 | Cursor agent lacks context | Comprehensive handoff document with all context |
 
-## Key Resources for Implementation
-
-1. **Windsurf Rules:** 16 files in `.windsurf/rules/` with trigger modes
-2. **Windsurf Workflows:** 21 files in `.windsurf/workflows/` with multi-stage orchestration
-3. **Existing Scripts:** `scripts/` directory with automation and validation
-4. **Documentation Standards:** `docs/CONSTITUTION.md`, `docs/DOCUMENTATION_STRUCTURE.md`
-5. **Repository Context:** `AGENTS.md`, project structure
-
 ## Next Steps for Cursor Agent
 
-1. Review this research document thoroughly
-2. Create `.unified/` directory structure
-3. Build adapter system (`scripts/adapters/`)
-4. Implement build process (`scripts/build_ide_configs.py`)
-5. Migrate all 16 Windsurf rules to unified format
-6. Generate Cursor `.mdc` rules and validate
-7. Migrate all 21 Windsurf workflows to unified format
-8. Generate Cursor commands and validate
-9. Integrate automation and IDE detection
-10. Complete documentation and testing
-11. Deploy and release
-
----
-
-**See:** `/docs/initiatives/active/2025-10-22-cursor-windsurf-dual-compatibility.md` for initiative overview and timeline.
+1. Review research document thoroughly.
+2. Create `.unified/` directory structure.
+3. Build adapter system (`scripts/adapters/`).
+4. Implement build process (`scripts/build_ide_configs.py`).
+5. Migrate rules and commands/workflows.
+6. Integrate automation and IDE detection.
+7. Complete documentation and testing.
+8. Deploy and release.
