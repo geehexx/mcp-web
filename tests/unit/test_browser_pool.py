@@ -80,7 +80,7 @@ async def test_pool_initialization(pool_settings, mock_playwright):
     pool = BrowserPool(pool_settings)
 
     with patch("mcp_web.browser_pool.async_playwright") as mock_async_pw:
-        mock_async_pw.return_value.start.return_value = mock_playwright
+        mock_async_pw.return_value.start = AsyncMock(return_value=mock_playwright)
 
         await pool.initialize()
 
@@ -96,7 +96,7 @@ async def test_pool_shutdown(pool_settings, mock_playwright):
     pool = BrowserPool(pool_settings)
 
     with patch("mcp_web.browser_pool.async_playwright") as mock_async_pw:
-        mock_async_pw.return_value.start.return_value = mock_playwright
+        mock_async_pw.return_value.start = AsyncMock(return_value=mock_playwright)
 
         await pool.initialize()
 
@@ -119,7 +119,7 @@ async def test_shutdown_timeout_handling(pool_settings, mock_playwright):
     pool = BrowserPool(pool_settings)
 
     with patch("mcp_web.browser_pool.async_playwright") as mock_async_pw:
-        mock_async_pw.return_value.start.return_value = mock_playwright
+        mock_async_pw.return_value.start = AsyncMock(return_value=mock_playwright)
 
         await pool.initialize()
 
@@ -128,9 +128,10 @@ async def test_shutdown_timeout_handling(pool_settings, mock_playwright):
             pass
 
         # Make browser close hang
-        mock_playwright.chromium.launch.return_value.close = AsyncMock(
-            side_effect=asyncio.sleep(10)  # Longer than timeout
-        )
+        async def slow_close():
+            await asyncio.sleep(10)  # Longer than timeout
+
+        mock_playwright.chromium.launch.return_value.close = AsyncMock(side_effect=slow_close)
 
         # Should not raise, just log warning
         await pool.shutdown(timeout=0.5)
@@ -150,7 +151,7 @@ async def test_acquire_creates_browser_on_demand(pool_settings, mock_playwright)
     pool = BrowserPool(pool_settings)
 
     with patch("mcp_web.browser_pool.async_playwright") as mock_async_pw:
-        mock_async_pw.return_value.start.return_value = mock_playwright
+        mock_async_pw.return_value.start = AsyncMock(return_value=mock_playwright)
 
         await pool.initialize()
 
@@ -170,7 +171,7 @@ async def test_acquire_reuses_existing_browser(pool_settings, mock_playwright):
     pool = BrowserPool(pool_settings)
 
     with patch("mcp_web.browser_pool.async_playwright") as mock_async_pw:
-        mock_async_pw.return_value.start.return_value = mock_playwright
+        mock_async_pw.return_value.start = AsyncMock(return_value=mock_playwright)
 
         await pool.initialize()
 
@@ -193,7 +194,7 @@ async def test_concurrent_acquire_creates_multiple_browsers(pool_settings, mock_
     pool = BrowserPool(pool_settings)
 
     with patch("mcp_web.browser_pool.async_playwright") as mock_async_pw:
-        mock_async_pw.return_value.start.return_value = mock_playwright
+        mock_async_pw.return_value.start = AsyncMock(return_value=mock_playwright)
 
         await pool.initialize()
 
@@ -222,7 +223,7 @@ async def test_pool_exhaustion_waits(pool_settings, mock_playwright):
     pool = BrowserPool(pool_settings)
 
     with patch("mcp_web.browser_pool.async_playwright") as mock_async_pw:
-        mock_async_pw.return_value.start.return_value = mock_playwright
+        mock_async_pw.return_value.start = AsyncMock(return_value=mock_playwright)
 
         await pool.initialize()
 
@@ -264,7 +265,7 @@ async def test_health_check_success(pool_settings, mock_playwright):
     pool = BrowserPool(pool_settings)
 
     with patch("mcp_web.browser_pool.async_playwright") as mock_async_pw:
-        mock_async_pw.return_value.start.return_value = mock_playwright
+        mock_async_pw.return_value.start = AsyncMock(return_value=mock_playwright)
 
         await pool.initialize()
 
@@ -281,7 +282,7 @@ async def test_health_check_failure_triggers_replacement(pool_settings, mock_pla
     pool = BrowserPool(pool_settings)
 
     with patch("mcp_web.browser_pool.async_playwright") as mock_async_pw:
-        mock_async_pw.return_value.start.return_value = mock_playwright
+        mock_async_pw.return_value.start = AsyncMock(return_value=mock_playwright)
 
         await pool.initialize()
 
@@ -319,7 +320,7 @@ async def test_replacement_on_max_age(pool_settings, mock_playwright):
     pool = BrowserPool(pool_settings)
 
     with patch("mcp_web.browser_pool.async_playwright") as mock_async_pw:
-        mock_async_pw.return_value.start.return_value = mock_playwright
+        mock_async_pw.return_value.start = AsyncMock(return_value=mock_playwright)
 
         await pool.initialize()
 
@@ -345,7 +346,7 @@ async def test_replacement_on_max_requests(pool_settings, mock_playwright):
     pool = BrowserPool(pool_settings)
 
     with patch("mcp_web.browser_pool.async_playwright") as mock_async_pw:
-        mock_async_pw.return_value.start.return_value = mock_playwright
+        mock_async_pw.return_value.start = AsyncMock(return_value=mock_playwright)
 
         await pool.initialize()
 
@@ -388,7 +389,7 @@ async def test_acquire_after_shutdown_raises(pool_settings, mock_playwright):
     pool = BrowserPool(pool_settings)
 
     with patch("mcp_web.browser_pool.async_playwright") as mock_async_pw:
-        mock_async_pw.return_value.start.return_value = mock_playwright
+        mock_async_pw.return_value.start = AsyncMock(return_value=mock_playwright)
 
         await pool.initialize()
         await pool.shutdown()
@@ -406,10 +407,13 @@ async def test_browser_creation_timeout_handling(pool_settings, mock_playwright)
     pool = BrowserPool(pool_settings)
 
     with patch("mcp_web.browser_pool.async_playwright") as mock_async_pw:
-        mock_async_pw.return_value.start.return_value = mock_playwright
+        mock_async_pw.return_value.start = AsyncMock(return_value=mock_playwright)
 
         # Make browser launch hang
-        mock_playwright.chromium.launch.side_effect = asyncio.sleep(10)
+        async def slow_launch(*args, **kwargs):
+            await asyncio.sleep(10)
+
+        mock_playwright.chromium.launch = AsyncMock(side_effect=slow_launch)
 
         await pool.initialize()
 
@@ -432,7 +436,7 @@ async def test_metrics_tracking(pool_settings, mock_playwright):
     pool = BrowserPool(pool_settings)
 
     with patch("mcp_web.browser_pool.async_playwright") as mock_async_pw:
-        mock_async_pw.return_value.start.return_value = mock_playwright
+        mock_async_pw.return_value.start = AsyncMock(return_value=mock_playwright)
 
         await pool.initialize()
 
@@ -462,7 +466,7 @@ async def test_browser_closed_on_exception(pool_settings, mock_playwright):
     pool = BrowserPool(pool_settings)
 
     with patch("mcp_web.browser_pool.async_playwright") as mock_async_pw:
-        mock_async_pw.return_value.start.return_value = mock_playwright
+        mock_async_pw.return_value.start = AsyncMock(return_value=mock_playwright)
 
         await pool.initialize()
 
@@ -482,7 +486,7 @@ async def test_browser_closed_on_exception(pool_settings, mock_playwright):
 async def test_page_close_on_exception(mock_playwright):
     """Page properly closed even when exception occurs during work."""
     with patch("mcp_web.browser_pool.async_playwright") as mock_async_pw:
-        mock_async_pw.return_value.start.return_value = mock_playwright
+        mock_async_pw.return_value.start = AsyncMock(return_value=mock_playwright)
 
         from mcp_web.browser_pool import BrowserInstance
 

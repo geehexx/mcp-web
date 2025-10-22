@@ -239,7 +239,7 @@ class TestTaskFormatValidator:
     def test_valid_tasks_pass(self, valid_task_updates: list[dict[str, Any]]) -> None:
         """Test that valid task formats pass validation."""
         # Import will fail until we create the validator
-        from scripts.validate_task_format import TaskFormatValidator
+        from scripts.validation.validate_task_format import TaskFormatValidator
 
         validator = TaskFormatValidator()
 
@@ -249,7 +249,7 @@ class TestTaskFormatValidator:
 
     def test_missing_prefix_detected(self, missing_prefix_violations: list[dict[str, Any]]) -> None:
         """Test detection of missing workflow prefixes."""
-        from scripts.validate_task_format import TaskFormatValidator
+        from scripts.validation.validate_task_format import TaskFormatValidator
 
         validator = TaskFormatValidator()
 
@@ -264,7 +264,7 @@ class TestTaskFormatValidator:
 
     def test_removed_tasks_detected(self, removed_tasks_violations: list[dict[str, Any]]) -> None:
         """Test detection of removed completed tasks."""
-        from scripts.validate_task_format import TaskFormatValidator
+        from scripts.validation.validate_task_format import TaskFormatValidator
 
         validator = TaskFormatValidator()
 
@@ -283,7 +283,7 @@ class TestTaskFormatValidator:
         self, wrong_attribution_violations: list[dict[str, Any]]
     ) -> None:
         """Test detection of wrong workflow attribution."""
-        from scripts.validate_task_format import TaskFormatValidator
+        from scripts.validation.validate_task_format import TaskFormatValidator
 
         validator = TaskFormatValidator()
 
@@ -300,7 +300,7 @@ class TestTaskFormatValidator:
         self, invalid_numbering_violations: list[dict[str, Any]]
     ) -> None:
         """Test detection of invalid task numbering."""
-        from scripts.validate_task_format import TaskFormatValidator
+        from scripts.validation.validate_task_format import TaskFormatValidator
 
         validator = TaskFormatValidator()
 
@@ -317,7 +317,7 @@ class TestTaskFormatValidator:
         self, multiple_in_progress_violations: list[dict[str, Any]]
     ) -> None:
         """Test detection of multiple in_progress tasks."""
-        from scripts.validate_task_format import TaskFormatValidator
+        from scripts.validation.validate_task_format import TaskFormatValidator
 
         validator = TaskFormatValidator()
 
@@ -332,7 +332,7 @@ class TestTaskFormatValidator:
 
     def test_severity_levels(self) -> None:
         """Test that violations have correct severity levels."""
-        from scripts.validate_task_format import TaskFormatValidator
+        from scripts.validation.validate_task_format import TaskFormatValidator
 
         validator = TaskFormatValidator()
 
@@ -357,7 +357,7 @@ class TestViolationMessages:
 
     def test_missing_prefix_message_shows_example(self) -> None:
         """Test that missing prefix errors show correct format."""
-        from scripts.validate_task_format import TaskFormatValidator
+        from scripts.validation.validate_task_format import TaskFormatValidator
 
         validator = TaskFormatValidator()
         violations = validator.validate_task_update(
@@ -370,7 +370,7 @@ class TestViolationMessages:
 
     def test_removed_task_message_shows_which_tasks(self) -> None:
         """Test that removed task errors list specific removed tasks."""
-        from scripts.validate_task_format import TaskFormatValidator
+        from scripts.validation.validate_task_format import TaskFormatValidator
 
         validator = TaskFormatValidator()
         previous = [
@@ -386,7 +386,7 @@ class TestViolationMessages:
 
     def test_wrong_attribution_shows_correct_workflow(self) -> None:
         """Test that attribution errors suggest correct workflow."""
-        from scripts.validate_task_format import TaskFormatValidator
+        from scripts.validation.validate_task_format import TaskFormatValidator
 
         validator = TaskFormatValidator()
         violations = validator.validate_task_update(

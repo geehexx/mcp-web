@@ -70,7 +70,7 @@ class TestMarkdownLinkExtraction:
 
     def test_extract_simple_link(self):
         """Extract basic markdown link."""
-        from scripts.validate_references import extract_markdown_links
+        from scripts.validation.validate_references import extract_markdown_links
 
         text = "[Example](./file.md)"
         links = extract_markdown_links(text)
@@ -82,7 +82,7 @@ class TestMarkdownLinkExtraction:
 
     def test_extract_multiple_links(self):
         """Extract multiple links from same line."""
-        from scripts.validate_references import extract_markdown_links
+        from scripts.validation.validate_references import extract_markdown_links
 
         text = "[Link1](./file1.md) and [Link2](./file2.md)"
         links = extract_markdown_links(text)
@@ -93,7 +93,7 @@ class TestMarkdownLinkExtraction:
 
     def test_extract_link_with_anchor(self):
         """Extract link with section anchor."""
-        from scripts.validate_references import extract_markdown_links
+        from scripts.validation.validate_references import extract_markdown_links
 
         text = "[Section](./file.md#heading)"
         links = extract_markdown_links(text)
@@ -104,7 +104,7 @@ class TestMarkdownLinkExtraction:
 
     def test_ignore_external_links(self):
         """External URLs should not be extracted."""
-        from scripts.validate_references import extract_markdown_links
+        from scripts.validation.validate_references import extract_markdown_links
 
         text = """
 [HTTP](http://example.com)
@@ -119,7 +119,7 @@ class TestMarkdownLinkExtraction:
 
     def test_ignore_code_blocks(self):
         """Links in code blocks should be ignored."""
-        from scripts.validate_references import extract_markdown_links
+        from scripts.validation.validate_references import extract_markdown_links
 
         text = """
 [Valid link](./file.md)
@@ -139,7 +139,7 @@ class TestMarkdownLinkExtraction:
 
     def test_extract_with_line_numbers(self):
         """Links should include correct line numbers."""
-        from scripts.validate_references import extract_markdown_links
+        from scripts.validation.validate_references import extract_markdown_links
 
         text = """Line 0
 [Link on line 1](./file1.md)
@@ -157,7 +157,7 @@ class TestPathResolution:
 
     def test_resolve_current_directory(self):
         """Resolve ./file.md relative to current file."""
-        from scripts.validate_references import resolve_link_path
+        from scripts.validation.validate_references import resolve_link_path
 
         source = Path("/project/docs/README.md")
         link = "./guide.md"
@@ -167,7 +167,7 @@ class TestPathResolution:
 
     def test_resolve_parent_directory(self):
         """Resolve ../file.md going up one level."""
-        from scripts.validate_references import resolve_link_path
+        from scripts.validation.validate_references import resolve_link_path
 
         source = Path("/project/docs/guides/testing.md")
         link = "../README.md"
@@ -177,7 +177,7 @@ class TestPathResolution:
 
     def test_resolve_absolute_from_root(self):
         """Resolve /docs/file.md as absolute from project root."""
-        from scripts.validate_references import resolve_link_path
+        from scripts.validation.validate_references import resolve_link_path
 
         source = Path("/project/docs/guides/testing.md")
         link = "/docs/README.md"
@@ -187,7 +187,7 @@ class TestPathResolution:
 
     def test_resolve_removes_anchor(self):
         """Path resolution should remove #anchor fragment."""
-        from scripts.validate_references import resolve_link_path
+        from scripts.validation.validate_references import resolve_link_path
 
         source = Path("/project/docs/README.md")
         link = "./guide.md#section-one"
@@ -201,7 +201,7 @@ class TestAnchorValidation:
 
     def test_validate_existing_anchor(self):
         """Valid anchor to existing heading should pass."""
-        from scripts.validate_references import validate_anchor
+        from scripts.validation.validate_references import validate_anchor
 
         content = """
 # Main Title
@@ -218,7 +218,7 @@ More content.
 
     def test_validate_nonexistent_anchor(self):
         """Anchor to non-existent heading should fail."""
-        from scripts.validate_references import validate_anchor
+        from scripts.validation.validate_references import validate_anchor
 
         content = """
 # Main Title
@@ -229,7 +229,7 @@ More content.
 
     def test_normalize_anchor_casing(self):
         """Anchors should be normalized (lowercase, hyphenated)."""
-        from scripts.validate_references import validate_anchor
+        from scripts.validation.validate_references import validate_anchor
 
         content = "## Section One Two"
 
@@ -239,7 +239,7 @@ More content.
 
     def test_validate_anchor_special_chars(self):
         """Anchors with special characters should be handled."""
-        from scripts.validate_references import validate_anchor
+        from scripts.validation.validate_references import validate_anchor
 
         content = "## Testing & Validation"
 
@@ -252,7 +252,7 @@ class TestLinkValidation:
 
     def test_validate_valid_file_link(self, temp_docs_dir: Path):
         """Valid link to existing file should pass."""
-        from scripts.validate_references import validate_link
+        from scripts.validation.validate_references import validate_link
 
         source = temp_docs_dir / "README.md"
         link = {"url": "./guide.md", "text": "Guide", "line": 1}
@@ -264,7 +264,7 @@ class TestLinkValidation:
 
     def test_validate_broken_file_link(self, temp_docs_dir: Path):
         """Invalid link to non-existent file should fail."""
-        from scripts.validate_references import validate_link
+        from scripts.validation.validate_references import validate_link
 
         source = temp_docs_dir / "README.md"
         link = {"url": "./nonexistent.md", "text": "Broken", "line": 1}
@@ -276,7 +276,7 @@ class TestLinkValidation:
 
     def test_validate_valid_anchor_link(self, temp_docs_dir: Path):
         """Valid link with anchor to existing section should pass."""
-        from scripts.validate_references import validate_link
+        from scripts.validation.validate_references import validate_link
 
         source = temp_docs_dir / "README.md"
         link = {"url": "./guide.md#section-one", "text": "Guide", "line": 1}
@@ -287,7 +287,7 @@ class TestLinkValidation:
 
     def test_validate_broken_anchor_link(self, temp_docs_dir: Path):
         """Link with invalid anchor should fail."""
-        from scripts.validate_references import validate_link
+        from scripts.validation.validate_references import validate_link
 
         source = temp_docs_dir / "README.md"
         link = {"url": "./guide.md#nonexistent", "text": "Guide", "line": 1}
@@ -303,7 +303,7 @@ class TestScriptIntegration:
 
     def test_scan_directory(self, temp_docs_dir: Path):
         """Scan directory and find all markdown files."""
-        from scripts.validate_references import scan_markdown_files
+        from scripts.validation.validate_references import scan_markdown_files
 
         files = scan_markdown_files(temp_docs_dir)
 
@@ -313,7 +313,7 @@ class TestScriptIntegration:
 
     def test_validate_directory_with_errors(self, temp_docs_dir: Path):
         """Validate directory and detect broken links."""
-        from scripts.validate_references import validate_directory
+        from scripts.validation.validate_references import validate_directory
 
         errors = validate_directory(temp_docs_dir, root=temp_docs_dir.parent)
 
@@ -330,7 +330,7 @@ class TestScriptIntegration:
 
     def test_generate_report(self, temp_docs_dir: Path):
         """Generate human-readable error report."""
-        from scripts.validate_references import generate_report, validate_directory
+        from scripts.validation.validate_references import generate_report, validate_directory
 
         errors = validate_directory(temp_docs_dir, root=temp_docs_dir.parent)
         report = generate_report(errors)
@@ -344,14 +344,14 @@ class TestIgnorePatterns:
 
     def test_ignore_placeholder_links(self):
         """Placeholder links like 'path/to/file' should be ignored."""
-        from scripts.validate_references import should_ignore_link
+        from scripts.validation.validate_references import should_ignore_link
 
         assert should_ignore_link("path/to/file.md") is True
         assert should_ignore_link("relative/path/to/docs") is True
 
     def test_ignore_external_links(self):
         """External URLs should be ignored."""
-        from scripts.validate_references import should_ignore_link
+        from scripts.validation.validate_references import should_ignore_link
 
         assert should_ignore_link("https://example.com") is True
         assert should_ignore_link("http://example.org") is True
@@ -359,7 +359,7 @@ class TestIgnorePatterns:
 
     def test_allow_internal_links(self):
         """Internal relative links should not be ignored."""
-        from scripts.validate_references import should_ignore_link
+        from scripts.validation.validate_references import should_ignore_link
 
         assert should_ignore_link("./docs/file.md") is False
         assert should_ignore_link("../README.md") is False
