@@ -103,7 +103,7 @@ tasks:
     desc: Run benchmarks and compare against baseline (fails if >20% slower)
     cmds:
       - "{{.UV}} run pytest -m benchmark --benchmark-only --benchmark-json=output.json -v -o addopts=''"
-      - "{{.UV}} run python scripts/check_performance_regression.py output.json .benchmarks/baseline.json --threshold 1.2"
+      - "{{.UV}} run python scripts/analysis/check_performance_regression.py output.json .benchmarks/baseline.json --threshold 1.2"
 
   test:bench:baseline:
     desc: Generate new performance baseline
@@ -328,12 +328,12 @@ tasks:
   docs:validate:links:
     desc: Validate internal markdown links across all documentation
     cmds:
-      - "{{.UV}} run python scripts/validate_references.py"
+      - "{{.UV}} run python scripts/validation/validate_references.py"
 
   docs:validate:consistency:
     desc: Validate documentation file counts and consistency
     cmds:
-      - "{{.UV}} run python scripts/validate_documentation.py"
+      - "{{.UV}} run python scripts/validation/validate_documentation.py"
 
   docs:fix:
     desc: Auto-fix markdown issues
@@ -567,46 +567,46 @@ tasks:
   scaffold:initiative:
     desc: Create new flat-file initiative from template (interactive - humans only)
     cmds:
-      - "{{.UV}} run python scripts/scaffold.py --type initiative --mode interactive"
+      - "{{.UV}} run python scripts/automation/scaffold.py --type initiative --mode interactive"
 
   scaffold:initiative:config:
     desc: Create initiative from config file (AI agents use this)
     cmds:
       - '[ -n "{{.CONFIG}}" ] || (echo "CONFIG is required" && exit 1)'
-      - "{{.UV}} run python scripts/scaffold.py --type initiative --config {{.CONFIG}}"
+      - "{{.UV}} run python scripts/automation/scaffold.py --type initiative --config {{.CONFIG}}"
 
   scaffold:initiative-folder:
     desc: Create new folder-based initiative with artifacts/ and phases/ (interactive - humans only)
     cmds:
-      - "{{.UV}} run python scripts/scaffold.py --type initiative-folder --mode interactive"
+      - "{{.UV}} run python scripts/automation/scaffold.py --type initiative-folder --mode interactive"
 
   scaffold:adr:
     desc: Create new ADR from template (interactive - humans only)
     cmds:
-      - "{{.UV}} run python scripts/scaffold.py --type adr --mode interactive"
+      - "{{.UV}} run python scripts/automation/scaffold.py --type adr --mode interactive"
 
   scaffold:adr:config:
     desc: Create ADR from config file (AI agents use this)
     cmds:
       - '[ -n "{{.CONFIG}}" ] || (echo "CONFIG is required" && exit 1)'
-      - "{{.UV}} run python scripts/scaffold.py --type adr --config {{.CONFIG}}"
+      - "{{.UV}} run python scripts/automation/scaffold.py --type adr --config {{.CONFIG}}"
 
   scaffold:summary:
     desc: Create new session summary from template (interactive - humans only)
     cmds:
-      - "{{.UV}} run python scripts/scaffold.py --type summary --mode interactive"
+      - "{{.UV}} run python scripts/automation/scaffold.py --type summary --mode interactive"
 
   scaffold:summary:config:
     desc: Create session summary from config file (AI agents use this)
     cmds:
       - '[ -n "{{.CONFIG}}" ] || (echo "CONFIG is required" && exit 1)'
-      - "{{.UV}} run python scripts/scaffold.py --type summary --config {{.CONFIG}}"
+      - "{{.UV}} run python scripts/automation/scaffold.py --type summary --config {{.CONFIG}}"
 
   # Initiative validation tasks
   validate:initiatives:
     desc: Validate all initiative files (frontmatter, status, dependencies)
     cmds:
-      - "{{.UV}} run python scripts/validate_initiatives.py"
+      - "{{.UV}} run python scripts/validation/validate_initiatives.py"
 
   validate:initiatives:ci:
     desc: Validate initiatives in CI mode (exit 1 on failures)
@@ -616,41 +616,41 @@ tasks:
   validate:dependencies:
     desc: Validate initiative dependencies and detect circular deps
     cmds:
-      - "{{.UV}} run python scripts/dependency_registry.py --validate"
+      - "{{.UV}} run python scripts/automation/dependency_registry.py --validate"
 
   deps:graph:
     desc: Generate initiative dependency graph (DOT format)
     cmds:
-      - "{{.UV}} run python scripts/dependency_registry.py --graph"
+      - "{{.UV}} run python scripts/automation/dependency_registry.py --graph"
 
   deps:blockers:
     desc: Show blocker propagation cascade across initiatives
     cmds:
-      - "{{.UV}} run python scripts/dependency_registry.py --blockers"
+      - "{{.UV}} run python scripts/automation/dependency_registry.py --blockers"
 
   deps:export:
     desc: Export dependency registry to JSON (FILE required)
     cmds:
       - '[ -n "{{.FILE}}" ] || (echo "FILE is required" && exit 1)'
-      - "{{.UV}} run python scripts/dependency_registry.py --export {{.FILE}}"
+      - "{{.UV}} run python scripts/automation/dependency_registry.py --export {{.FILE}}"
 
   archive:initiative:
     desc: Archive initiative from active to completed (NAME required)
     cmds:
       - '[ -n "{{.NAME}}" ] || (echo "NAME is required" && exit 1)'
-      - '{{.UV}} run python scripts/file_ops.py archive-initiative {{.NAME}}{{if .COMPLETED_ON}} --completed-on {{.COMPLETED_ON}}{{end}}{{if .DRY_RUN}} --dry-run{{end}}'
+      - '{{.UV}} run python scripts/automation/file_ops.py archive-initiative {{.NAME}}{{if .COMPLETED_ON}} --completed-on {{.COMPLETED_ON}}{{end}}{{if .DRY_RUN}} --dry-run{{end}}'
 
   move:file:
     desc: Move file and update references (SRC and DST required)
     cmds:
       - '[ -n "{{.SRC}}" ] || (echo "SRC is required" && exit 1)'
       - '[ -n "{{.DST}}" ] || (echo "DST is required" && exit 1)'
-      - '{{.UV}} run python scripts/file_ops.py move-file {{.SRC}} {{.DST}}{{if .NO_UPDATE_REFS}} --no-update-refs{{end}}{{if .DRY_RUN}} --dry-run{{end}}'
+      - '{{.UV}} run python scripts/automation/file_ops.py move-file {{.SRC}} {{.DST}}{{if .NO_UPDATE_REFS}} --no-update-refs{{end}}{{if .DRY_RUN}} --dry-run{{end}}'
 
   update:index:
     desc: Update documentation index (defaults to docs/initiatives)
     cmds:
-      - '{{.UV}} run python scripts/file_ops.py update-index {{default "docs/initiatives" .DIR}}{{if .DRY_RUN}} --dry-run{{end}}'
+      - '{{.UV}} run python scripts/automation/file_ops.py update-index {{default "docs/initiatives" .DIR}}{{if .DRY_RUN}} --dry-run{{end}}'
 
   # Information tasks
   info:

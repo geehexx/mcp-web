@@ -9,6 +9,7 @@ accessible both programmatically and via a small Click-based CLI.
 
 from __future__ import annotations
 
+import contextlib
 import re
 import shutil
 from collections.abc import Iterable, Sequence
@@ -271,10 +272,8 @@ def archive_initiative(
 
     # Strategy 2: Try as provided (full relative or absolute path)
     if src is None:
-        try:
+        with contextlib.suppress(FileNotFoundError):
             src = resolve_repo_path(initiative_path, root=base, must_exist=True)
-        except FileNotFoundError:
-            pass
 
     # Strategy 3: Failed - provide helpful error
     if src is None or not src.exists():

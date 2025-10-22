@@ -97,7 +97,7 @@ repos:
 
       - id: validate-initiatives
         name: "📋 initiatives · Validate initiative files"
-        entry: uv run python scripts/validate_initiatives.py
+        entry: uv run python scripts/validation/validate_initiatives.py
         language: system
         files: ^docs/initiatives/(active|completed)/.*\.md$
         pass_filenames: false
@@ -112,7 +112,7 @@ repos:
 
       - id: validate-rules-frontmatter
         name: "📋 rules · Validate Windsurf rules front-matter"
-        entry: uv run python scripts/validate_rules_frontmatter.py
+        entry: uv run python scripts/validation/validate_rules_frontmatter.py
         language: system
         files: ^\.windsurf/rules/.*\.md$
         pass_filenames: false
@@ -127,14 +127,14 @@ repos:
 
       - id: validate-workflows
         name: "🔄 workflows · Validate workflow and rule files"
-        entry: uv run python scripts/validate_workflows.py
+        entry: uv run python scripts/validation/validate_workflows.py
         language: system
         files: ^\.windsurf/(workflows|rules)/.*\.md$
         pass_filenames: false
 
       - id: check-workflow-tokens
         name: "📊 workflows · Check token count thresholds"
-        entry: uv run python scripts/check_workflow_tokens.py
+        entry: uv run python scripts/analysis/check_workflow_tokens.py
         language: system
         files: ^\.windsurf/(workflows|rules)/.*\.md$
         pass_filenames: false
@@ -142,7 +142,7 @@ repos:
 
       - id: validate-references
         name: "🔗 docs · Validate internal markdown links"
-        entry: uv run python scripts/validate_references.py
+        entry: uv run python scripts/validation/validate_references.py
         language: system
         files: ^(docs|README|AGENTS|CONSTITUTION).*\.md$
         pass_filenames: false

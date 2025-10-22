@@ -4,53 +4,33 @@
 import sys
 from pathlib import Path
 
-import yaml
-from jsonschema import ValidationError, validate
+# Add project root to path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+
+from scripts.lib.frontmatter import extract_frontmatter
 
 
-def load_schema() -> dict:
-    """Schema removed - frontmatter now uses minimal Windsurf format.
+def validate_file(file_path: Path) -> tuple[bool, str]:
+    """Validate single file's frontmatter.
 
-    Validation rules:
-    - trigger: Required (always_on, manual, model_decision, glob)
-    - description: Required for model_decision and glob triggers
-    - globs: Required for glob trigger (quoted, comma-separated)
+    Args:
+        file_path: Path to markdown file
+
+    Returns:
+        Tuple of (is_valid, message)
     """
-    return {}
-
-
-def extract_frontmatter(file_path: Path) -> dict | None:
-    """Extract YAML frontmatter from markdown file."""
-    with open(file_path) as f:
-        content = f.read()
-    if not content.startswith("---"):
-        return None
-    parts = content.split("---", 2)
-    if len(parts) < 3:
-        return None
-    try:
-        return yaml.safe_load(parts[1])
-    except yaml.YAMLError as e:
-        print(f"  ❌ YAML parse error: {e}")
-        return None
-
-
-def validate_file(file_path: Path, schema: dict) -> tuple[bool, str]:
-    """Validate single file's frontmatter."""
-    frontmatter = extract_frontmatter(file_path)
+    frontmatter = extract_frontmatter(file_path, strict=False)
     if not frontmatter:
         return False, "No frontmatter found"
-
-    try:
-        validate(instance=frontmatter, schema=schema)
-        return True, "Valid"
-    except ValidationError as e:
-        return False, f"{e.message} at {'.'.join(str(p) for p in e.path)}"
+    return True, "Valid"
 
 
 def main() -> int:
-    """Main validation function."""
-    schema = load_schema()
+    """Main validation function.
+
+    Returns:
+        Exit code (0 = success, 1 = errors found)
+    """
     workflow_dir = Path(".windsurf/workflows")
     rules_dir = Path(".windsurf/rules")
 
@@ -68,7 +48,7 @@ def main() -> int:
         if file_path.name in ("INDEX.md", "DEPENDENCIES.md"):
             continue
         total_count += 1
-        valid, msg = validate_file(file_path, schema)
+        valid, msg = validate_file(file_path)
         if valid:
             valid_count += 1
             print(f"  ✅ {file_path.name}")
@@ -85,7 +65,7 @@ def main() -> int:
         if file_path.name in ("INDEX.md",):
             continue
         total_count += 1
-        valid, msg = validate_file(file_path, schema)
+        valid, msg = validate_file(file_path)
         if valid:
             valid_count += 1
             print(f"  ✅ {file_path.name}")

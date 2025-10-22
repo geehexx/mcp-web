@@ -1,287 +1,337 @@
-# Automation Scripts
+# Scripts
 
-This directory contains automation scripts for the mcp-web project to reduce token expenditure on mechanical workflow tasks.
+Automation and utility scripts for the mcp-web project. All scripts are organized by purpose and use common libraries for consistency.
 
-## Overview
+## Directory Structure
 
-**Completed Automation:**
-
-- **Phase 1:** Template scaffolding (initiative, ADR, session summary)
-- **Phase 2:** File operations (archive, move, index)
-- **Phase 3:** Frontmatter validation (superseded - delivered via Initiative System)
-- **Phase 4:** Session summary automation (superseded - delivered via Consolidation Workflow)
-
-**Token Savings:** 94-97% reduction in mechanical task overhead
+```text
+scripts/
+├── lib/                      # Common libraries (frontmatter, validation, CLI)
+├── validation/              # Validation scripts for docs, code, and configs
+├── automation/              # Automation scripts (scaffolding, file operations)
+├── analysis/                # Analysis and reporting scripts
+├── hooks/                   # Git pre-commit hooks
+├── templates/               # Templates for scaffolding
+├── manage_optimization_cache.py    # Cache management for workflow optimization
+└── test_optimization_idempotency.py # Test workflow optimization stability
+```
 
 ---
 
-## Phase 1: Template Scaffolding (Complete)
+## Common Libraries (`scripts/lib/`)
 
-### Quick Start
+Shared utilities used across multiple scripts. See individual module docstrings for details.
+
+### `frontmatter.py`
+
+Unified YAML frontmatter parsing for markdown files.
+
+- `extract_frontmatter()` - Standard YAML parsing (strict mode)
+- `extract_frontmatter_lenient()` - Windsurf-compatible (handles unquoted globs)
+- `validate_frontmatter()` - Field validation
+- `has_frontmatter()` - Quick check for frontmatter presence
+
+**Usage:**
+
+```python
+from scripts.lib.frontmatter import extract_frontmatter
+
+data = extract_frontmatter(Path("workflow.md"))
+```
+
+### `validation.py`
+
+Base classes and utilities for validation scripts.
+
+- `ValidationResult` - Result aggregation with reporting
+- `BaseValidator` - Base class for validation scripts
+- `walk_files()` - Directory traversal with exclusions
+- `collect_errors()` - Error collection helper
+
+**Usage:**
+
+```python
+from scripts.lib.validation import BaseValidator
+
+class MyValidator(BaseValidator):
+    def validate_file(self, file_path: Path) -> list[str]:
+        # validation logic
+        return errors
+```
+
+### `cli.py`
+
+Common CLI patterns for consistent script interfaces.
+
+- `create_parser()` - Consistent ArgumentParser creation
+- `add_common_args()` - Standard --verbose, --dry-run flags
+- `handle_exit()` - Exit code handling
+- `confirm_action()` - Y/N prompts
+
+---
+
+## Validation Scripts (`scripts/validation/`)
+
+Scripts for validating documentation, code, and configuration files.
+
+### Core Validators
+
+- **`validate_initiatives.py`** - Validate initiative files (frontmatter, status, dependencies)
+- **`validate_workflows.py`** - Validate .windsurf/ workflows and rules
+- **`validate_references.py`** - Validate internal markdown links
+- **`validate_documentation.py`** - Validate documentation structure and consistency
+- **`validate_frontmatter.py`** - Validate YAML frontmatter in markdown files
+- **`validate_rules_frontmatter.py`** - Validate Windsurf rule frontmatter
+- **`validate_task_format.py`** - Validate task format in documentation
+- **`validate_archival.py`** - Validate archival process compliance
+
+**Run via Taskfile:**
 
 ```bash
-# Create a new initiative
+task validate:initiatives
+task docs:validate:links
+task docs:validate:consistency
+```
+
+---
+
+## Automation Scripts (`scripts/automation/`)
+
+Scripts for scaffolding and file operations.
+
+### `scaffold.py`
+
+Create new documents from templates (initiatives, ADRs, summaries).
+
+**Interactive mode (humans):**
+
+```bash
 task scaffold:initiative
-
-# Create a new ADR
 task scaffold:adr
-
-# Create a new session summary
 task scaffold:summary
 ```
 
-### scaffold.py - Template Generation Tool
+**Config mode (AI agents):**
 
-**Purpose:** Generate standardized documents from Jinja2 templates with interactive prompts and validation.
+```bash
+task scaffold:initiative:config CONFIG=/path/to/config.yaml
+task scaffold:adr:config CONFIG=/path/to/config.yaml
+```
+
+**Templates:** `scripts/templates/` (initiative, ADR, summary)
+
+### `file_ops.py`
+
+File operations with automatic reference updating.
+
+**Commands:**
+
+```bash
+# Archive initiative
+task archive:initiative NAME=my-initiative
+
+# Move file + update refs
+task move:file SRC=old.md DST=new.md
+
+# Update documentation index
+task update:index DIR=docs/initiatives
+```
+
+### `dependency_registry.py`
+
+Initiative dependency management and analysis.
+
+**Commands:**
+
+```bash
+# Validate dependencies
+task validate:dependencies
+
+# Generate dependency graph (DOT)
+task deps:graph
+
+# Show blocker propagation
+task deps:blockers
+
+# Export to JSON
+task deps:export FILE=deps.json
+```
+
+### `extract_action_items.py`
+
+Extract action items from documents (used by summarization workflows).
+
+---
+
+## Analysis Scripts (`scripts/analysis/`)
+
+Scripts for analyzing code, docs, and performance.
+
+### Performance & Benchmarking
+
+- **`benchmark_pipeline.py`** - Pipeline performance benchmarking
+- **`check_performance_regression.py`** - Detect performance regressions
+- **`check_workflow_tokens.py`** - Monitor workflow token counts
+
+**Run via Taskfile:**
+
+```bash
+task test:bench
+task test:bench:regression
+```
+
+### Documentation Analysis
+
+- **`doc_coverage.py`** - Analyze documentation coverage
+- **`analyze_workflow_improvements.py`** - Analyze workflow optimization results
+- **`generate_indexes.py`** - Generate documentation indexes
+- **`update_machine_readable_docs.py`** - Update machine-readable documentation
+
+---
+
+## Utility Scripts
+
+### `manage_optimization_cache.py`
+
+Manage workflow optimization cache.
 
 **Usage:**
 
 ```bash
-# Interactive mode (recommended)
-task scaffold:initiative
-task scaffold:adr
-task scaffold:summary
+# View cache stats
+python scripts/manage_optimization_cache.py --stats
 
-# With config file
-python scripts/scaffold.py --type initiative --config config.yaml
+# Clear entire cache (when optimization prompt changes)
+python scripts/manage_optimization_cache.py --clear
 
-# Dry-run (preview without writing)
-python scripts/scaffold.py --type adr --dry-run
+# Invalidate specific workflow
+python scripts/manage_optimization_cache.py --invalidate implement.md
 
-# Validate template only
-python scripts/scaffold.py --type initiative --validate-only
+# List cached workflows
+python scripts/manage_optimization_cache.py --list
+
+# Export cache for inspection
+python scripts/manage_optimization_cache.py --export cache-backup.json
 ```
 
-**Templates Available:**
+**When to use:**
 
-- `initiative-flat.md.j2` - Flat file initiative (ADR-0013 format)
-- `adr.md.j2` - Architecture Decision Record
-- `session-summary.md.j2` - Session summary with metrics
+- After changing workflow optimization prompts
+- Before running workflow optimization to clear stale cache
+- When debugging optimization issues
 
-**Features:**
+### `test_optimization_idempotency.py`
 
-- ✅ Interactive prompts for all fields
-- ✅ Config file support (YAML/JSON)
-- ✅ Auto-numbering (ADRs)
-- ✅ Auto-dating (all templates)
-- ✅ Markdown linting validation
-- ✅ Frontmatter generation
-- ✅ Dry-run mode
+Test workflow optimization idempotency (ensures re-optimization produces no changes).
 
-**Token Savings:**
-
-- Initiative creation: 1500 tokens → 50 tokens (97% reduction)
-- ADR creation: 1200 tokens → 50 tokens (96% reduction)
-- Session summary: 2500 tokens → 100 tokens (96% reduction)
-
-### Template Structure
-
-```text
-scripts/templates/
-├── initiative-flat.md.j2    # Initiative template
-├── adr.md.j2                 # ADR template
-├── session-summary.md.j2     # Session summary template
-└── schemas/                  # Future: validation schemas
-```
-
-### Testing
+**Usage:**
 
 ```bash
-# Run scaffold tests
-uv run python -m pytest tests/test_scaffold.py -c /dev/null
+# Test specific workflows
+python scripts/test_optimization_idempotency.py --workflows implement.md detect-context.md
 
-# All 26 tests pass
+# Test all golden workflows
+python scripts/test_optimization_idempotency.py --test-golden
+
+# Enable caching (faster, but may hide issues)
+python scripts/test_optimization_idempotency.py --test-golden --cache
+
+# Show full diff for non-idempotent workflows
+python scripts/test_optimization_idempotency.py --test-golden --show-diff
 ```
+
+**When to use:**
+
+- Before Phase 2 optimizations (validate Phase 1 stability)
+- After optimization prompt changes (validate all workflows)
+- When debugging workflow optimization issues
+
+---
+
+## Git Hooks (`scripts/hooks/`)
+
+Pre-commit hooks for automated validation.
+
+- **`validate_task_format_hook.py`** - Validate task format in documentation
+
+**Configuration:** `.pre-commit-config.yaml`
+
+---
+
+## Development Guidelines
+
+### Creating New Scripts
+
+1. **Choose appropriate directory:**
+   - `validation/` - Validates existing content
+   - `automation/` - Creates or modifies content
+   - `analysis/` - Analyzes and reports on content
+
+2. **Use common libraries:**
+
+   ```python
+   from scripts.lib.frontmatter import extract_frontmatter
+   from scripts.lib.validation import BaseValidator
+   from scripts.lib.cli import create_parser, add_common_args
+   ```
+
+3. **Follow standards:**
+   - Type hints on all functions
+   - Google-style docstrings
+   - Add to Taskfile.yml if user-facing
+   - Add to .pre-commit-config.yaml if validator
+
+### Testing Scripts
+
+```bash
+# Run all tests
+task test:all
+
+# Run script-specific tests
+uv run pytest tests/scripts/ -v
+
+# Test with coverage
+uv run pytest tests/scripts/ --cov=scripts.lib --cov-report=term-missing
+```
+
+### Adding to Taskfile
+
+```yaml
+my:task:
+  desc: Description for users
+  cmds:
+    - "{{.UV}} run python scripts/category/my_script.py"
+```
+
+---
+
+## Maintenance
+
+### Code Quality
+
+All scripts pass:
+
+- `task lint` (ruff + mypy)
+- `task test:scripts` (if applicable)
+- Pre-commit hooks
 
 ### Dependencies
 
-- `jinja2>=3.1.0` - Template rendering
-- `python-frontmatter>=1.0.0` - Markdown frontmatter
-- `pyyaml>=6.0.0` - YAML parsing
-- `click>=8.1.0` - CLI framework
+Scripts use:
 
-## Phase 2: File Operations (Complete)
+- **uv** for package management
+- **Python 3.10+** minimum
+- Dependencies in `pyproject.toml`
 
-### file_ops.py - File Operation Helpers
+### Documentation
 
-**Purpose:** Automate file moves, archival, and reference updates to reduce manual overhead and prevent broken links.
+Update this README when:
 
-**Usage:**
+- Adding new scripts
+- Changing script organization
+- Adding new common libraries
+- Modifying script interfaces
 
-```bash
-# Archive initiative (move to completed/, update references)
-task archive:initiative NAME=2025-10-18-my-initiative
+---
 
-# Move file with automatic reference updates
-task move:file SRC=docs/old.md DST=docs/new.md
-
-# Update initiative index
-task update:index DIR=docs/initiatives
-
-# Dry-run mode (all commands)
-task archive:initiative NAME=my-initiative DRY_RUN=true
-```
-
-**Functions:**
-
-- `archive_initiative()` - Move initiative to completed/, add archive banner, update cross-references
-- `move_file_with_refs()` - Move file and update all repository references automatically
-- `update_index()` - Regenerate initiative directory index in README.md
-
-**Features:**
-
-- ✅ Automatic cross-reference updates (repo-wide search and replace)
-- ✅ Archive banner insertion (with completion date)
-- ✅ Index regeneration (Active/Completed sections)
-- ✅ Path safety validation (prevent directory traversal)
-- ✅ Dry-run mode for all operations
-- ✅ CLI and programmatic access
-
-**Token Savings:**
-
-- Archive operations: Manual (15 min) → Automated (10 sec) - 90x faster
-- Reference updates: Error-prone manual → Automatic repo-wide
-- Used by `/archive-initiative` workflow
-
-**Testing:**
-
-```bash
-# Run file_ops tests
-task test:unit FILTER=test_file_ops
-
-# All 4 tests pass (archive file, archive folder, move with refs, index validation)
-```
-
-## Phase 3: Frontmatter Management (Superseded)
-
-**Status:** Completed via [Initiative System Lifecycle Improvements](../docs/initiatives/completed/2025-10-19-initiative-system-lifecycle-improvements/initiative.md)
-
-**What Was Delivered:**
-
-- `scripts/validate_initiatives.py` - Comprehensive frontmatter validator (350+ lines)
-- Pre-commit hook integration (`.pre-commit-config.yaml`)
-- Required field validation (Status, Created, Owner, Priority)
-- Date format validation (YYYY-MM-DD)
-- Status consistency checks (Active vs location)
-- Taskfile commands: `task validate:initiatives`, `task validate:initiatives:ci`
-- 12 unit tests (100% passing)
-
-**Usage:**
-
-```bash
-# Validate all initiatives
-task validate:initiatives
-
-# CI mode (exits with error on failure)
-task validate:initiatives:ci
-```
-
-## Phase 4: Session Summary Automation (Superseded)
-
-**Status:** Superseded by [Session Summary Consolidation Workflow](../docs/initiatives/completed/2025-10-19-session-summary-consolidation-workflow/initiative.md)
-
-**What Was Delivered:**
-
-- Enhanced `/consolidate-summaries` workflow v2.3.0 with action item extraction
-- Manual 5-step extraction process (good-enough for current needs)
-- Advanced LLM automation deferred to [Session Summary Mining Advanced](../docs/initiatives/active/2025-10-19-session-summary-mining-advanced/initiative.md) (blocked on MCP file system support)
-
-## Phase 5: Task Format Validation (Complete)
-
-**Status:** Completed 2025-10-19
-
-**Purpose:** Automated validation and enforcement for task system compliance (Section 1.11).
-
-### validate_task_format.py - Task Validation Script
-
-**Purpose:** Validate task format in `update_plan()` calls to prevent violations.
-
-**Usage:**
-
-```bash
-# Validate a single task
-python scripts/validate_task_format.py --validate "1. /implement - Add feature"
-
-# Validate session summary file (future)
-python scripts/validate_task_format.py --session path/to/summary.md
-```
-
-**Validation Checks:**
-
-- ✅ Workflow prefix presence (`/<workflow>` format)
-- ✅ Completed task preservation (no history loss)
-- ✅ Correct workflow attribution (executor vs orchestrator)
-- ✅ Hierarchical numbering validation
-- ✅ Single in-progress task enforcement
-
-**Test Suite:**
-
-```bash
-uv run pytest tests/unit/test_validate_task_format.py -v
-```
-
-### hooks/validate_task_format_hook.py - Pre-commit Hook
-
-**Purpose:** Automatically validate task format in workflow documentation before commit.
-
-**Targets:**
-
-- `.windsurf/workflows/*.md` - Workflow documentation
-- `docs/archive/session-summaries/*.md` - Session summaries
-
-**Integration:**
-
-- Configured in `.pre-commit-config.yaml`
-- Runs automatically on relevant file changes
-- Skips placeholder examples (`/<routed-workflow>`, etc.)
-
-**Bypass (not recommended):**
-
-```bash
-git commit --no-verify
-```
-
-**Common Violations Guide:**
-
-See [TASK_FORMAT_VIOLATIONS.md](../docs/guides/TASK_FORMAT_VIOLATIONS.md) for:
-
-- 5 violation types with examples
-- Wrong/correct patterns
-- Workflow attribution rules
-- Quick reference guide
-
-## Development
-
-### Adding New Templates
-
-**Steps:**
-
-1. Create template file in `scripts/templates/`
-
-   ```jinja2
-   # my-template.md.j2
-   # {{ title }}
-
-   **Created:** {{ date }}
-
-   {{ content }}
-   ```
-
-2. Add to `TemplateType` enum in `scaffold.py`
-3. Add schema in `Scaffolder.get_schema()`
-4. Add to template_files mapping in `render()` and `validate_template()`
-5. Add Taskfile command
-6. Write tests
-
-### Template Guidelines
-
-- Use Jinja2 syntax
-- Support optional fields with `{% if %}` blocks
-- Use `{%- -%}` to control whitespace
-- Validate all generated files with markdownlint
-
-## References
-
-- Initiative: [2025-10-18-workflow-automation-enhancement.md](../docs/initiatives/completed/2025-10-18-workflow-automation-enhancement.md)
-- Technical Design: [technical-design.md](../docs/initiatives/completed/2025-10-18-workflow-automation-enhancement/technical-design.md)
-- ADR-0013: [Initiative Documentation Standards](../docs/adr/0013-initiative-documentation-standards.md)
+**Last Updated:** 2025-10-22 (Phase 0: Scripts Audit & Refactoring)
