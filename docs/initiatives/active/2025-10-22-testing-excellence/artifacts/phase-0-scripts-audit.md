@@ -11,12 +11,12 @@
 
 Before beginning comprehensive testing (Phases 1-7), audit and refactor the `scripts/` directory to:
 
-1. **Remove obsolete one-time scripts** (5 scripts, ~900 LOC)
+1. **Remove obsolete one-time scripts** (3 scripts, ~500 LOC)
 2. **Extract common functionality** (DRY principle, reduce duplication)
 3. **Organize into logical structure** (maintainability, discoverability)
 4. **Update all references** (Taskfile, pre-commit, docs)
 
-**Rationale:** Testing 24 scripts with 83% untested (20/24) is expensive. By reducing to ~18-19 production scripts and extracting common lib code, we:
+**Rationale:** Testing 24 scripts with 83% untested (20/24) is expensive. By reducing to ~21 production scripts and extracting common lib code, we:
 
 - Reduce testing surface by ~25% (fewer scripts to test)
 - Improve test efficiency via shared lib testing (test once, use everywhere)
@@ -37,9 +37,10 @@ Before beginning comprehensive testing (Phases 1-7), audit and refactor the `scr
 - **CRITICAL (8):** validate_initiatives.py, validate_task_format.py, validate_references.py, extract_action_items.py, dependency_registry.py, generate_indexes.py, file_ops.py, scaffold.py
 - **HIGH (6):** benchmark_pipeline.py, check_performance_regression.py, validate_archival.py, doc_coverage.py, check_workflow_tokens.py, update_machine_readable_docs.py
 - **MEDIUM (7):** validate_documentation.py, validate_frontmatter.py, validate_workflows.py, validate_rules_frontmatter.py, analyze_workflow_improvements.py, hooks/validate_task_format_hook.py
-- **LOW (3):** fix_frontmatter.py, restore_workflows.py, test_optimization_idempotency.py, manage_optimization_cache.py (+ 1 backup file)
+- **LOW (3):** fix_frontmatter.py, restore_workflows.py (+ 1 backup file)
+- **UTILITY (2):** test_optimization_idempotency.py, manage_optimization_cache.py
 
-### Obsolete Scripts (5 scripts, ~900 LOC)
+### Obsolete Scripts (3 scripts, ~500 LOC)
 
 **1. `fix_frontmatter.py` (0 bytes)**
 
@@ -54,26 +55,63 @@ Before beginning comprehensive testing (Phases 1-7), audit and refactor the `scr
 - Usage: NOT in Taskfile, NOT in pre-commit
 - Action: DELETE
 
-**3. `test_optimization_idempotency.py` (274 lines)**
-
-- Purpose: Test workflow optimization idempotency
-- Last used: 2025-10-20 (workflow optimization validation)
-- Usage: NOT in Taskfile, NOT in pre-commit
-- Action: DELETE
-
-**4. `manage_optimization_cache.py` (~200 lines, estimated)**
-
-- Purpose: Cache management for workflow optimization
-- Last used: 2025-10-20 (workflow optimization)
-- Usage: Imported by test_optimization_idempotency.py only
-- Action: DELETE (dependent deleted)
-
-**5. `extract_action_items.py.backup` (unknown size)**
+**3. `extract_action_items.py.backup` (unknown size)**
 
 - Purpose: Backup file
 - Action: DELETE
 
-**Total Removal:** ~900 LOC, 5 files, 0 test coverage required
+**Total Removal:** ~500 LOC, 3 files, 0 test coverage required
+
+### Utility Scripts (KEPT - Not Obsolete)
+
+**1. `test_optimization_idempotency.py` (274 lines)**
+
+- Purpose: Test workflow optimization idempotency with golden workflows
+- Status: ACTIVE utility for workflow optimization validation
+- Usage: Manual testing of workflow optimization stability
+- Commands:
+
+  ```bash
+  # Test specific workflows
+  python scripts/test_optimization_idempotency.py --workflows implement.md
+
+  # Test all golden workflows
+  python scripts/test_optimization_idempotency.py --test-golden
+
+  # Rebuild golden data after optimization prompt changes
+  python scripts/test_optimization_idempotency.py --rebuild-golden
+  ```
+
+- Action: KEEP (document in scripts/README.md, reference in .windsurf/workflows/improve-workflow.md)
+
+**2. `manage_optimization_cache.py` (~200 lines)**
+
+- Purpose: Manage workflow optimization cache (stats, clear, invalidate, export)
+- Status: ACTIVE utility for cache management
+- Usage: Cache operations for workflow optimization
+- Commands:
+
+  ```bash
+  # View cache stats
+  python scripts/manage_optimization_cache.py --stats
+
+  # Clear entire cache (when optimization prompt changes)
+  python scripts/manage_optimization_cache.py --clear
+
+  # Invalidate specific workflow
+  python scripts/manage_optimization_cache.py --invalidate implement.md
+
+  # List cached workflows
+  python scripts/manage_optimization_cache.py --list
+  ```
+
+- Action: KEEP (document in scripts/README.md, reference in .windsurf/rules/)
+
+**Note:** These scripts were initially marked as obsolete but are actually useful utilities for workflow optimization. They should be:
+
+1. Documented in scripts/README.md
+2. Referenced in .windsurf/workflows/improve-workflow.md (where optimization is done)
+3. Potentially added to Taskfile.yml (e.g., `task cache:clear`, `task test:idempotency`)
 
 ---
 
@@ -234,15 +272,15 @@ scripts/
 **Testing Reduction:**
 
 - Before: 24 scripts, 20 untested (83%)
-- After: 18 scripts + 1 lib module
+- After: 21 scripts + 1 lib module
 - Lib tests: 20-30 tests (cover 3-4 common patterns)
 - Net effect: ~25% fewer scripts to test, ~30% fewer duplicated tests
 
 **Code Reduction:**
 
-- Remove obsolete: -900 LOC
+- Remove obsolete: -500 LOC
 - Extract to lib: +330 LOC (new), -500 LOC (removed duplication)
-- Net: -1,070 LOC (~12% reduction)
+- Net: -670 LOC (~8% reduction)
 
 **Maintenance Improvement:**
 
@@ -324,20 +362,22 @@ scripts/
 
 ### Must Have (Phase 0 Complete)
 
-- ✅ 5 obsolete scripts deleted
-- ✅ `scripts/lib/` created with 3 modules (frontmatter, validation, cli)
-- ✅ 20-30 unit tests for lib modules (100% coverage)
-- ✅ 6+ validation scripts refactored to use lib
-- ✅ All Taskfile commands functional (verified)
-- ✅ All pre-commit hooks functional (verified)
-- ✅ scripts/README.md updated
+- 3 scripts deleted
+- 2 utilities documented (test_optimization_idempotency.py, manage_optimization_cache.py)
+- scripts/lib/ with 3 modules (frontmatter, validation, cli)
+- 20-30 unit tests for lib modules (100% coverage)
+- 6+ validation scripts refactored to use lib
+- All Taskfile commands functional (verified)
+- All pre-commit hooks functional (verified)
+- ✅ scripts/README.md updated (includes utility script documentation)
 - ✅ No broken references (link validation passing)
+- ✅ Utility scripts referenced in .windsurf/workflows/improve-workflow.md
 
 ### Nice to Have (Optional)
 
-- 🎯 All scripts moved to subdirectories (validation/, automation/, analysis/)
-- 🎯 Common CLI interface across all scripts
-- 🎯 Shared error reporting format
+- All scripts moved to subdirectories (validation/, automation/, analysis/)
+- Common CLI interface across all scripts
+- Shared error reporting format
 
 ---
 
@@ -367,26 +407,29 @@ scripts/
 ### Phase 0.1: Delete Obsolete (30 min)
 
 ```bash
-# Delete obsolete scripts
+# Delete obsolete scripts only
 git rm scripts/fix_frontmatter.py
 git rm scripts/restore_workflows.py
-git rm scripts/test_optimization_idempotency.py
-git rm scripts/manage_optimization_cache.py
 git rm scripts/extract_action_items.py.backup
 
 # Verify no broken imports
-grep -r "restore_workflows\|test_optimization_idempotency\|manage_optimization_cache" . --exclude-dir=.git
+grep -r "restore_workflows" . --exclude-dir=.git
+
+# NOTE: Keep test_optimization_idempotency.py and manage_optimization_cache.py
+# These are active utilities, not obsolete (user validation 2025-10-22)
 
 # Commit
-git commit -m "refactor(scripts): remove 5 obsolete one-time scripts
+git commit -m "refactor(scripts): remove 3 obsolete one-time scripts
 
 - fix_frontmatter.py (0 bytes, obsolete)
 - restore_workflows.py (207 LOC, one-time workflow restoration)
-- test_optimization_idempotency.py (274 LOC, one-time validation)
-- manage_optimization_cache.py (~200 LOC, dependency of above)
 - extract_action_items.py.backup (backup file)
 
-Total removal: ~900 LOC, 0 test coverage impact
+Total removal: ~500 LOC, 0 test coverage impact
+
+KEPT (not obsolete):
+- test_optimization_idempotency.py (active utility for workflow validation)
+- manage_optimization_cache.py (active utility for cache management)
 
 Part of Phase 0: Scripts Audit & Refactoring
 Prepares for Testing Excellence Initiative (Phases 1-7)"
@@ -523,12 +566,12 @@ Execute Phase 0 of the Testing Excellence & Automation Hardening initiative: Scr
 
 Context:
 - 24 scripts total (8,707 LOC), 20 untested (83%)
-- 5 obsolete scripts identified (~900 LOC)
+- 3 obsolete scripts identified (~500 LOC)
 - 3+ frontmatter parsing implementations (duplication)
 - Plan: Remove obsolete, extract lib, refactor structure
 
 Phases (8-12h total):
-1. Delete 5 obsolete scripts (0.5h)
+1. Delete 3 obsolete scripts (0.5h)
 2. Create scripts/lib/ with frontmatter, validation, CLI modules + 22 tests (3-4h)
 3. Refactor validation scripts to use lib (2-3h)
 4. Refactor automation scripts (1-2h)
@@ -540,7 +583,8 @@ Commit after each phase.
 Verify functionality before proceeding to next phase.
 
 Success criteria:
-- 5 scripts deleted
+- 3 scripts deleted
+- 2 utilities documented (test_optimization_idempotency.py, manage_optimization_cache.py)
 - scripts/lib/ with 3 modules, 22 tests, 100% coverage
 - 6+ scripts refactored
 - All Taskfile/pre-commit functional
