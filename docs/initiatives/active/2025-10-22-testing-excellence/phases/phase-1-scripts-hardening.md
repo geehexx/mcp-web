@@ -35,14 +35,24 @@ Achieve 90%+ coverage on all 24 scripts, prevent automation regressions.
 
 ### 2025-10-22
 
-#### Checkpoint 1: Import Fixes
+#### Checkpoint 1: Import Fixes (Session 1)
 
 - ✅ Fixed 8 test files after Phase 0 reorganization
 - ✅ 139/152 tests passing (91.4% pass rate)
 - ✅ Commit `2a2219b` delivered
 - ⏭️ 13 scaffold test failures documented (template path issues from Phase 0)
 
-**Status:** Checkpoint delivered. Import errors resolved. Remaining scaffold tests document pre-existing template path issues for future fix.
+**Status:** Checkpoint delivered. Import errors resolved.
+
+#### Checkpoint 2: Additional Test Fixes (Session 2)
+
+- ✅ Fixed 34 inline import errors in validation tests (`test_validate_references.py`, `test_validate_task_format.py`)
+- ✅ Fixed 22 AsyncMock usage errors in `test_browser_pool.py`
+- ✅ 317/318 tests passing (99.7% pass rate)
+- ✅ Commit `26a6cb6` delivered
+- ⏭️ 1 scaffold template failure remaining (from Phase 0)
+
+**Status:** Import/mock cleanup complete. Ready for Phase 1 core work (Golden Master tests, coverage push).
 
 ---
 
