@@ -87,7 +87,7 @@ class TestPerformanceRegression:
                     "--threshold",
                     "1.2",  # 20% threshold
                 ],
-                cwd=Path(__file__).parent.parent,  # Run from repo root
+                cwd=Path(__file__).parent.parent.parent,  # Run from repo root (3 levels up)
                 capture_output=True,
                 text=True,
             )

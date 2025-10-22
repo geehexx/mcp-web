@@ -75,6 +75,14 @@ class TestWorkflowValidator:
         workflow_file = temp_windsurf_dir / "workflows" / "test-workflow.md"
         workflow_file.write_text(valid_workflow_content)
 
+        # Create the referenced workflow to avoid broken link error
+        other_workflow = temp_windsurf_dir / "workflows" / "other-workflow.md"
+        other_workflow.write_text("""---
+description: Other workflow
+---
+# Other Workflow
+""")
+
         validator = WorkflowValidator()
         # Monkey patch ROOT to use temp directory
         import scripts.validation.validate_workflows as validate_module

@@ -229,14 +229,17 @@ class WorkflowValidator:
             if not target.exists():
                 self.errors.append(f"{rel_path}: Broken link to '{link}' (target not found)")
 
-    def _validate_token_count(self, content: str, declared_tokens: int, rel_path: Path) -> None:
-        """Validate that token count is approximately correct.
+    def _validate_token_count(
+        self, content: str, declared_tokens: int | str, rel_path: str
+    ) -> None:
+        """Validate token count matches declared value."""
+        # Convert to int if string (from YAML frontmatter)
+        try:
+            declared_tokens = int(declared_tokens)
+        except (ValueError, TypeError):
+            self.errors.append(f"{rel_path}: Invalid token count value: {declared_tokens}")
+            return
 
-        Args:
-            content: File content
-            declared_tokens: Token count from frontmatter
-            rel_path: Relative path for error reporting
-        """
         # Rough approximation: 4 chars = 1 token
         estimated_tokens = len(content) // 4
 

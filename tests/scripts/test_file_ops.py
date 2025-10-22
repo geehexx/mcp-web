@@ -128,7 +128,7 @@ class TestMoveFileWithRefs:
         # Create file with reference
         ref_file = temp_repo / "docs/REFERENCES.md"
         ref_file.write_text("""
-Link to [test](initiatives/active/test.md) here.
+Link to [test](docs/initiatives/active/test.md) here.
 """)
 
         # Move file
