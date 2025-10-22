@@ -3,8 +3,8 @@ Status: Proposed
 Created: 2025-10-22
 Owner: Core Team
 Priority: Critical
-Estimated Duration: 6-8 weeks
-Target Completion: 2025-12-15
+Estimated Duration: "7-9 weeks (includes Phase 0: 8-12h scripts audit)"
+Target Completion: 2025-12-22
 Updated: 2025-10-22
 Tags: testing, quality, automation, mutation-testing, property-based-testing
 ---
@@ -104,7 +104,41 @@ Eliminate testing blind spots through comprehensive coverage of automation scrip
 
 ## Phases
 
-This initiative is organized into **7 phases** for incremental value delivery:
+This initiative is organized into **8 phases** (Phase 0 + 7 core phases) for incremental value delivery:
+
+### [Phase 0: Scripts Audit & Refactoring](artifacts/phase-0-scripts-audit.md) 🔧 **PREP**
+
+**Duration:** 8-12 hours (prep work) | **Priority:** P0
+
+**Objective:** Clean up `scripts/` directory before testing - remove obsolete scripts, extract common lib code, organize structure.
+
+**Key Tasks:**
+
+- Delete 5 obsolete one-time scripts (~900 LOC: fix_frontmatter.py, restore_workflows.py, test_optimization_idempotency.py, manage_optimization_cache.py, backup file)
+- Create `scripts/lib/` module (frontmatter, validation, CLI utilities) with 20-30 unit tests
+- Refactor 6+ validation scripts to use lib (eliminate duplication)
+- Organize scripts into subdirectories (validation/, automation/, analysis/)
+- Update Taskfile, pre-commit hooks, documentation
+
+**Success Criteria:**
+
+- [ ] 5 obsolete scripts deleted
+- [ ] scripts/lib/ created with 3 modules, 20-30 tests, 100% coverage
+- [ ] 6+ scripts refactored to use lib
+- [ ] All Taskfile commands functional
+- [ ] All pre-commit hooks functional
+- [ ] scripts/README.md updated
+
+**Impact:**
+
+- **Testing reduction:** 25% fewer scripts to test (24 → ~18-19 production scripts)
+- **Code reduction:** ~1,070 LOC removed (obsolete + duplication)
+- **Efficiency:** Test lib once, confidence in 6+ scripts
+- **Maintainability:** DRY principle, logical organization, clear patterns
+
+**ROI:** High - reduces Phase 1 scope by 25%, establishes maintainable patterns for 6-8 week initiative
+
+---
 
 ### [Phase 1: Scripts & Automation Hardening](phases/phase-1-scripts-hardening.md) ⚡ **CRITICAL**
 
