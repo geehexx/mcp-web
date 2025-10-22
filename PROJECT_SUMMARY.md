@@ -2,7 +2,7 @@
 
 **Version:** 0.2.0
 **Status:** Active Development
-**Last Updated:** 2025-10-20
+**Last Updated:** 2025-10-22
 **License:** MIT
 
 ---
@@ -395,6 +395,70 @@ Advanced automation deferred to Session Summary Mining Advanced (blocked on MCP 
 - 7-phase implementation plan designed
 
 **Phases 2-7 Planned:** 13-18 hours remaining
+
+#### 7. Session Summary Mining Production
+
+**Status:** Proposed (Sequenced after Phase 1-3)
+**Owner:** Core Team
+**Priority:** Medium (P2)
+**Target:** 2026-01-15
+**Initiative:** `docs/initiatives/active/2025-10-22-session-summary-mining-production.md`
+
+**Objective:** Productionize session summary mining with semantic matching, performance optimization, quality metrics, and archive workflow automation.
+
+**Planned Enhancements:**
+
+- Advanced semantic matching (≥90% accuracy with embeddings)
+- Performance optimization (<5min for 100+ summaries)
+- Quality metrics tracking (precision/recall ≥85%)
+- Archive workflow automation (auto-blocker resolution)
+
+**Estimated:** 80-100 hours (2-2.5 weeks, 2 people)
+
+#### 8. Testing Excellence & Automation Hardening
+
+**Status:** Proposed
+**Owner:** Core Team
+**Priority:** Critical (P0)
+**Target:** 2025-12-15 (6-8 weeks)
+**Initiative:** `docs/initiatives/active/2025-10-22-testing-excellence/initiative.md`
+
+**Objective:** Eliminate testing blind spots through comprehensive coverage of automation scripts (20/24 untested), mutation testing across all modules, deep property-based testing investment, and continuous quality monitoring.
+
+**Critical Gaps:**
+
+- **Scripts Coverage:** 20/24 scripts (83%) have ZERO tests - historical regressions confirmed
+- **Test Quality:** No mutation testing - unknown effectiveness of 302 existing tests
+- **Edge Cases:** No property-based testing for text processing, chunking, validation
+
+**Success Criteria:**
+
+- Scripts coverage ≥90% (currently 17%)
+- Core module mutation score ≥85% (unknown baseline)
+- Scripts mutation score ≥75% (critical scripts)
+- 20+ Hypothesis property-based tests
+- Overall coverage ≥95% (currently 85%)
+- Test execution time <5min in CI
+- Flakiness rate <1%
+- Zero untested CLI entry points
+
+**Phases (7):**
+
+1. **Scripts & Automation Hardening** (Weeks 1-2, 60-80h) - Golden Master tests, CLI integration, critical script deep dive
+2. **Core Module Mutation Testing** (Weeks 3-4, 50-60h) - mutmut setup, baseline, kill surviving mutants
+3. **Scripts Mutation Testing** (Week 5, 30-40h) - Validate test quality for critical scripts (≥75% score)
+4. **Property-Based Testing - Core** (Week 6, 30-40h) - Hypothesis for chunker, URL validation, token counting
+5. **Property-Based Testing - Advanced** (Week 7, 30-40h) - Validation scripts, frontmatter parsing, complex workflows
+6. **Integration & E2E Workflows** (Week 7, 30-40h) - Full workflow validation, script interdependencies
+7. **Observability & Continuous Improvement** (Week 8, 30-40h) - Metrics dashboard, CI optimization, flakiness detection
+
+**Tools:** mutmut (primary mutation testing), cosmic-ray (quarterly deep analysis), Hypothesis (property-based testing), pytest-xdist (parallelization)
+
+**Research:** 12+ external sources analyzed, 20 session summaries mined for historical testing issues
+
+**Estimated:** 260-320 hours (6-8 weeks, 2-3 people) - Aggressive timeline, quality prioritized over speed
+
+**Impact:** Eliminate script regressions (6+ months stable), validate test effectiveness (85%+ mutation scores), discover edge cases (10-30% more via property-based testing), enable continuous quality measurement
 
 ---
 
