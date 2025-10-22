@@ -381,10 +381,10 @@ This comprehensive guide covers:
 <!-- AUTO:INITIATIVE-INDEX:START -->
 ### Active Initiatives
 
-- [`2025-10-19-session-summary-mining-advanced.md`](docs/initiatives/active/2025-10-19-session-summary-mining-advanced.md)
 - [`2025-10-20-phase-1-resource-stability.md`](docs/initiatives/active/2025-10-20-phase-1-resource-stability.md)
 - [`2025-10-20-phase-2-data-integrity.md`](docs/initiatives/active/2025-10-20-phase-2-data-integrity.md)
 - [`2025-10-20-phase-3-performance-optimization.md`](docs/initiatives/active/2025-10-20-phase-3-performance-optimization.md)
+- [`2025-10-22-session-summary-mining-production.md`](docs/initiatives/active/2025-10-22-session-summary-mining-production.md)
 
 ### Completed Initiatives
 
@@ -403,6 +403,7 @@ This comprehensive guide covers:
 - [`2025-10-19-mcp-file-system-support.md`](docs/initiatives/completed/2025-10-19-mcp-file-system-support.md)
 - [`2025-10-19-quality-automation-and-monitoring.md`](docs/initiatives/completed/2025-10-19-quality-automation-and-monitoring.md)
 - [`2025-10-19-session-summary-consolidation-workflow/`](docs/initiatives/completed/2025-10-19-session-summary-consolidation-workflow)
+- [`2025-10-19-session-summary-mining-advanced.md`](docs/initiatives/completed/2025-10-19-session-summary-mining-advanced.md)
 - [`2025-10-19-task-system-validation-enforcement.md`](docs/initiatives/completed/2025-10-19-task-system-validation-enforcement.md)
 - [`2025-10-19-workflow-transparency-improvements.md`](docs/initiatives/completed/2025-10-19-workflow-transparency-improvements.md)
 - [`2025-10-20-phase-0-security-hardening.md`](docs/initiatives/completed/2025-10-20-phase-0-security-hardening.md)

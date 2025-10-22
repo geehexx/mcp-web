@@ -75,6 +75,10 @@ def scaffold(
         click.echo("✓ Template valid")
         return
 
+    # Auto-detect mode from config file if not explicitly set
+    if config and mode == "interactive":
+        mode = "config"
+
     # Gather fields
     if mode == "interactive":
         fields = scaffolder.prompt_interactive()
