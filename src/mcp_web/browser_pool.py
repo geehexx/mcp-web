@@ -79,6 +79,7 @@ class BrowserInstance:
     last_used: float = field(default_factory=time.time)
     request_count: int = 0
     is_healthy: bool = True
+    in_use: bool = False
 
     async def new_page(self) -> Page:
         """Create new page in context.
@@ -190,6 +191,20 @@ class BrowserPool:
         self._metrics = BrowserPoolMetrics()
         self._lock = asyncio.Lock()  # Protect browser list modifications
 
+    def _needs_replacement(self, browser: BrowserInstance) -> bool:
+        """Determine if browser should be replaced before reuse."""
+
+        now = time.time()
+        age = now - browser.created_at
+        idle_time = now - browser.last_used
+
+        return (
+            not browser.is_healthy
+            or age > self.settings.max_age
+            or idle_time > self.settings.idle_timeout
+            or browser.request_count >= self.settings.max_requests
+        )
+
     async def initialize(self) -> None:
         """Initialize Playwright and pool.
 
@@ -271,31 +286,61 @@ class BrowserPool:
         Raises:
             Exception: If browser creation fails
         """
+        replacement_candidate: BrowserInstance | None = None
+        create_new = False
+
         async with self._lock:
-            # Try to find idle browser
+            # Try to reuse existing idle browser
             for browser in self._browsers:
-                age = time.time() - browser.created_at
-                idle_time = time.time() - browser.last_used
+                if browser.in_use:
+                    continue
 
-                # Check if usable
-                if (
-                    browser.is_healthy
-                    and age < self.settings.max_age
-                    and idle_time < self.settings.idle_timeout
-                    and browser.request_count < self.settings.max_requests
-                ):
-                    return browser
+                if self._needs_replacement(browser):
+                    replacement_candidate = browser
+                    self._browsers.remove(browser)
+                    break
 
-            # Create new browser if under pool size
-            if len(self._browsers) < self.settings.pool_size:
-                browser = await self._create_browser()
-                self._browsers.append(browser)
-                self._metrics.total_browsers = len(self._browsers)
+                browser.in_use = True
+                browser.last_used = time.time()
                 return browser
 
-            # Pool full, return least recently used (will be checked for health)
-            self._browsers.sort(key=lambda b: b.last_used)
-            return self._browsers[0]
+            if replacement_candidate is None:
+                if len(self._browsers) < self.settings.pool_size:
+                    create_new = True
+                else:
+                    available = [b for b in self._browsers if not b.in_use]
+                    if available:
+                        candidate = min(available, key=lambda b: b.last_used)
+                        candidate.in_use = True
+                        candidate.last_used = time.time()
+                        return candidate
+
+        if replacement_candidate is not None:
+            await replacement_candidate.close()
+            new_browser = await self._create_browser()
+            new_browser.in_use = True
+            new_browser.last_used = time.time()
+
+            async with self._lock:
+                self._browsers.append(new_browser)
+                self._metrics.replacement_count += 1
+                self._metrics.total_browsers = len(self._browsers)
+
+            return new_browser
+
+        if create_new:
+            new_browser = await self._create_browser()
+            new_browser.in_use = True
+            new_browser.last_used = time.time()
+
+            async with self._lock:
+                self._browsers.append(new_browser)
+                self._metrics.total_browsers = len(self._browsers)
+
+            return new_browser
+
+        # If we reach here, all browsers are currently in use (should not happen due to semaphore)
+        raise RuntimeError("No available browser instances")
 
     async def _create_browser(self) -> BrowserInstance:
         """Create new browser instance.
@@ -350,19 +395,12 @@ class BrowserPool:
             browser: Browser to release
         """
         browser.last_used = time.time()
+        browser.in_use = False
 
-        # Check if should replace
-        age = time.time() - browser.created_at
-        should_replace = (
-            not browser.is_healthy
-            or age > self.settings.max_age
-            or browser.request_count >= self.settings.max_requests
-        )
-
-        if should_replace:
+        if self._needs_replacement(browser):
             _get_logger().info(
                 "browser_replacement",
-                age=round(age, 2),
+                age=round(time.time() - browser.created_at, 2),
                 requests=browser.request_count,
                 healthy=browser.is_healthy,
             )
@@ -385,6 +423,7 @@ class BrowserPool:
 
                 # Create new browser
                 new_browser = await self._create_browser()
+                new_browser.in_use = False
                 self._browsers.append(new_browser)
 
                 self._metrics.replacement_count += 1
@@ -433,5 +472,7 @@ class BrowserPool:
         Returns:
             Current pool metrics
         """
-        self._metrics.idle_browsers = len(self._browsers) - self._metrics.active_browsers
+        self._metrics.idle_browsers = len(
+            [browser for browser in self._browsers if not browser.in_use]
+        )
         return self._metrics

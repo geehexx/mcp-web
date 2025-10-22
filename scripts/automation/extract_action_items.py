@@ -469,6 +469,9 @@ def compute_contextual_similarity(item1: ActionItem, item2: ActionItem) -> float
     return float(contextual_score)
 
 
+SIMILARITY_EPSILON = 1e-6
+
+
 def deduplicate_items(
     items: list[ActionItem],
     client: OpenAI | None = None,
@@ -518,7 +521,7 @@ def deduplicate_items(
             # Level 1: Text similarity
             text_sim = compute_text_similarity(item1, item2)
 
-            if text_sim >= 0.80:
+            if text_sim >= 0.80 - SIMILARITY_EPSILON:
                 # High confidence duplicate - merge
                 keep_indices.discard(j)
                 if 0.60 <= text_sim < 0.80:
@@ -538,11 +541,11 @@ def deduplicate_items(
                 try:
                     semantic_sim = compute_semantic_similarity(item1, item2, client)
 
-                    if semantic_sim >= 0.85:
+                    if semantic_sim >= 0.85 - SIMILARITY_EPSILON:
                         # Semantic duplicate - merge
                         keep_indices.discard(j)
                         continue
-                    elif semantic_sim >= 0.70:
+                    elif semantic_sim >= 0.70 - SIMILARITY_EPSILON:
                         # Borderline semantic similarity
                         borderline_pairs.append(
                             DuplicatePair(
@@ -559,10 +562,10 @@ def deduplicate_items(
             # Level 3: Contextual similarity
             contextual_sim = compute_contextual_similarity(item1, item2)
 
-            if contextual_sim >= 0.80:
+            if contextual_sim >= 0.80 - SIMILARITY_EPSILON:
                 # High contextual overlap - likely duplicate
                 keep_indices.discard(j)
-            elif contextual_sim >= 0.60:
+            elif contextual_sim >= 0.60 - SIMILARITY_EPSILON:
                 # Borderline contextual similarity
                 borderline_pairs.append(
                     DuplicatePair(

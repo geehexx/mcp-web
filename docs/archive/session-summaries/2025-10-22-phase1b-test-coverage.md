@@ -220,7 +220,7 @@ init_database(db_path)  # No error
 
 - **Initiative:** [Testing Excellence](../../initiatives/active/2025-10-22-testing-excellence/initiative.md)
 - **Phase 1:** [Scripts Hardening](../../initiatives/active/2025-10-22-testing-excellence/phases/phase-1-scripts-hardening.md)
-- **Artifacts:** [Phase 1A Summary](../../initiatives/active/testing-excellence/artifacts/phase1a/PHASE_1_COMPLETION_SUMMARY.md)
+- **Artifacts:** [Phase 1A Summary](../../initiatives/active/2025-10-22-testing-excellence/artifacts/PHASE_1_COMPLETION_SUMMARY.md)
 - **Workflows:** `.windsurf/workflows/implement.md`, `.windsurf/workflows/work.md`
 
 ---

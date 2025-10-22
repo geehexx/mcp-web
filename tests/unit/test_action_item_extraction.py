@@ -5,8 +5,6 @@ implemented in Phase 2 of the Session Summary Mining initiative.
 """
 
 import sqlite3
-
-# Import from the extraction script
 import sys
 from datetime import date
 from pathlib import Path
@@ -18,11 +16,18 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent / "scripts"))
 
 from scripts.automation.extract_action_items import (
     ActionItem,
+    deduplicate_items,
+    export_borderline_cases,
     extract_date_from_filename,
+    extract_from_section,
+    extract_from_summary,
     extract_title,
     init_database,
+    load_initiative_metadata,
     log_extraction,
+    map_action_item_to_initiatives,
     parse_markdown_sections,
+    should_create_new_initiative,
     should_skip_section,
 )
 
@@ -481,3 +486,282 @@ def test_action_item_with_empty_related_files():
     )
     assert item.related_files == []
     assert isinstance(item.related_files, list)
+
+
+@pytest.mark.unit
+def test_extract_from_section_populates_missing_metadata():
+    """Extraction populates metadata when response omits fields."""
+
+    class FakeCompletions:
+        def __init__(self, items):
+            self._items = items
+
+        def create(self, **kwargs):
+            return self._items
+
+    class FakeChat:
+        def __init__(self, items):
+            self.completions = FakeCompletions(items)
+
+    class FakeClient:
+        def __init__(self, items):
+            self.chat = FakeChat(items)
+
+    metadata = {
+        "filename": "2025-10-22-summary.md",
+        "date": date(2025, 10, 22),
+        "title": "Session Summary",
+    }
+    section = {"header": "Findings", "content": "Relevant findings content." * 5}
+    items = [
+        ActionItem.model_construct(  # type: ignore[attr-defined]
+            id="",
+            title="Address coverage gaps",
+            description="Improve validation coverage for scripts.",
+            category="testing",
+            impact="high",
+            confidence="medium",
+            source_summary="",
+            source_section="",
+            session_date=None,
+            related_files=[],
+            blockers=None,
+        )
+    ]
+
+    client = FakeClient(items)
+    result = extract_from_section(client, section, metadata)
+
+    assert result[0].source_summary == "2025-10-22-summary.md"
+    assert result[0].source_section == "Findings"
+    assert result[0].session_date == date(2025, 10, 22)
+    assert result[0].id.startswith("2025-10-22-2025-10-22-summary")
+
+
+@pytest.mark.unit
+def test_extract_from_summary_skips_short_sections(monkeypatch, tmp_path):
+    """Summary extraction skips short or ignorable sections."""
+
+    summary_path = tmp_path / "2025-10-22-summary.md"
+    content = """# Session Summary
+
+## Table of Contents
+Short
+
+## Action Items
+This section contains actionable insights with sufficient detail for extraction purposes.
+"""
+    summary_path.write_text(content, encoding="utf-8")
+
+    captured_headers = []
+
+    def fake_extract(client, section, metadata):
+        captured_headers.append(section["header"])
+        return [
+            ActionItem(
+                id="2025-10-22-summary#action-items#1",
+                title="Increase coverage",
+                description="Add missing tests.",
+                category="testing",
+                impact="high",
+                confidence="high",
+                source_summary=metadata["filename"],
+                source_section=section["header"],
+                session_date=metadata["date"],
+                related_files=["scripts/automation/extract_action_items.py"],
+                blockers=None,
+            )
+        ]
+
+    monkeypatch.setattr(
+        "scripts.automation.extract_action_items.extract_from_section",
+        fake_extract,
+    )
+
+    class DummyClient:
+        pass
+
+    items = extract_from_summary(DummyClient(), summary_path)
+
+    assert len(items) == 1
+    assert captured_headers == ["Action Items"]
+
+
+@pytest.mark.unit
+def test_deduplicate_items_merges_high_similarity():
+    """High similarity items are merged during deduplication."""
+
+    base = {
+        "title": "Enforce validation",
+        "description": "Ensure initiative validation covers dependency checks.",
+        "category": "testing",
+        "impact": "high",
+        "confidence": "high",
+        "source_summary": "summary.md",
+        "source_section": "Actions",
+        "session_date": date(2025, 10, 22),
+        "related_files": ["scripts/validation/validate_initiatives.py"],
+        "blockers": None,
+    }
+    items = [
+        ActionItem(id="item-1", **base),
+        ActionItem(id="item-2", **base),
+    ]
+
+    deduplicated, borderline = deduplicate_items(items, return_borderline=True)
+
+    assert len(deduplicated) == 1
+    assert borderline == []
+
+
+@pytest.mark.unit
+def test_deduplicate_items_returns_borderline_pairs():
+    """Borderline contextual similarity is surfaced for review."""
+
+    item_a = ActionItem(
+        id="item-a",
+        title="Expand coverage",
+        description="Add tests for summary extraction.",
+        category="testing",
+        impact="high",
+        confidence="medium",
+        source_summary="summary.md",
+        source_section="Next Steps",
+        session_date=date(2025, 10, 22),
+        related_files=[
+            "scripts/automation/extract_action_items.py",
+            "tests/unit/test_action_item_extraction.py",
+        ],
+        blockers=None,
+    )
+    item_b = ActionItem(
+        id="item-b",
+        title="Refine coverage",
+        description="Improve validation suite structure.",
+        category="testing",
+        impact="high",
+        confidence="medium",
+        source_summary="summary.md",
+        source_section="Action Items",
+        session_date=date(2025, 10, 22),
+        related_files=[
+            "scripts/automation/extract_action_items.py",
+            "tests/scripts/test_validate_workflows.py",
+        ],
+        blockers=None,
+    )
+
+    deduplicated, borderline = deduplicate_items([item_a, item_b], return_borderline=True)
+
+    assert len(deduplicated) == 2
+    assert len(borderline) == 1
+    assert borderline[0]["level"] == "contextual"
+
+
+@pytest.mark.unit
+def test_export_borderline_cases(tmp_path):
+    """Borderline cases are exported to YAML for review."""
+
+    output_path = tmp_path / "borderline.yaml"
+    item = ActionItem(
+        id="item-1",
+        title="Improve docs",
+        description="Document validation workflow.",
+        category="documentation",
+        impact="medium",
+        confidence="medium",
+        source_summary="summary.md",
+        source_section="Docs",
+        session_date=date(2025, 10, 22),
+        related_files=["docs/initiatives/active/initiative.md"],
+        blockers=None,
+    )
+    pair = {
+        "item1": item,
+        "item2": item,
+        "similarity": 0.65,
+        "level": "contextual",
+    }
+
+    export_borderline_cases([pair], output_path)
+
+    content = output_path.read_text(encoding="utf-8")
+
+    assert "review_required" in content
+    assert "item-1" in content
+
+
+@pytest.mark.unit
+def test_should_create_new_initiative_heuristic():
+    """Heuristic requests new initiative for impactful unmatched items."""
+
+    item = ActionItem(
+        id="item-1",
+        title="Critical blocker",
+        description="Address missing initiative.",
+        category="automation",
+        impact="high",
+        confidence="high",
+        source_summary="summary.md",
+        source_section="Blockers",
+        session_date=date(2025, 10, 22),
+        related_files=[],
+        blockers=None,
+    )
+
+    assert should_create_new_initiative(item, best_match_score=0.1) is True
+    assert should_create_new_initiative(item, best_match_score=0.5) is False
+
+
+@pytest.mark.unit
+def test_load_initiative_metadata(tmp_path):
+    """Initiative metadata loader extracts title, status, and related files."""
+
+    initiative_dir = tmp_path / "active"
+    initiative_dir.mkdir()
+    initiative_path = initiative_dir / "testing-excellence.md"
+    initiative_path.write_text(
+        """# Testing Excellence Initiative\n\nStatus: Active\n\nFocus on scripts like `scripts/automation/extract_action_items.py`.\n""",
+        encoding="utf-8",
+    )
+
+    metadata = load_initiative_metadata(initiative_dir)
+
+    assert len(metadata) == 1
+    entry = metadata[0]
+    assert entry["title"] == "Testing Excellence Initiative"
+    assert entry["status"] == "Active"
+    assert "scripts/automation/extract_action_items.py" in entry["related_files"]
+
+
+@pytest.mark.unit
+def test_map_action_item_to_initiatives(tmp_path):
+    """Action items map to initiatives using overlapping related files."""
+
+    initiative_dir = tmp_path / "active"
+    initiative_dir.mkdir()
+    (initiative_dir / "initiative-a.md").write_text(
+        """# Initiative A\n\nStatus: Active\n\nReferences `scripts/automation/extract_action_items.py`.\n""",
+        encoding="utf-8",
+    )
+    initiatives = load_initiative_metadata(initiative_dir)
+
+    item = ActionItem(
+        id="item-initiative",
+        title="Align action",
+        description="Ensure scripts initiatives align.",
+        category="testing",
+        impact="medium",
+        confidence="medium",
+        source_summary="summary.md",
+        source_section="Initiatives",
+        session_date=date(2025, 10, 22),
+        related_files=["scripts/automation/extract_action_items.py"],
+        blockers=None,
+    )
+
+    matches = map_action_item_to_initiatives(item, initiatives)
+
+    assert len(matches) == 1
+    assert matches[0]["title"] == "Initiative A"
+    assert matches[0]["overlap_score"] == 1.0
