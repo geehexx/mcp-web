@@ -142,155 +142,71 @@ This initiative is organized into **8 phases** (Phase 0 + 7 core phases) for inc
 
 ### [Phase 1: Scripts & Automation Hardening](phases/phase-1-scripts-hardening.md) ⚡ **CRITICAL**
 
-**Duration:** Weeks 1-2 (60-80 hours) | **Priority:** P0
+**Status:** In Progress | **Duration:** Weeks 1-2 (60-80 hours) | **Priority:** P0
 
-**Objective:** Achieve 90%+ coverage on all 24 scripts, prevent automation regressions.
+**Objective:** Achieve 90%+ coverage on all scripts, prevent automation regressions.
 
-**Key Tasks:**
-
-- Audit all 24 scripts (categorize by risk, map dependencies)
-- Golden Master test suite (capture current behavior)
-- CLI integration tests (subprocess + mocks pattern)
-- Deep dive on critical scripts (validate_initiatives.py, dependency_registry.py, extract_action_items.py)
-- CI integration (pytest discovery, pre-commit hooks, 90% coverage enforcement)
-
-**Success Criteria:**
-
-- [ ] 90%+ line coverage on `scripts/`
-- [ ] Zero untested CLI entry points
-- [ ] Golden Master suite for all validators
-- [ ] CI fails on script changes without tests
+See [phases/phase-1-scripts-hardening.md](phases/phase-1-scripts-hardening.md) for full details, tasks, and progress.
 
 ---
 
 ### [Phase 2: Core Module Mutation Testing](phases/phase-2-core-mutation-testing.md) 🧬 **HIGH**
 
-**Duration:** Weeks 3-4 (50-60 hours) | **Priority:** P1
+**Status:** Not Started | **Duration:** Weeks 3-4 (50-60 hours) | **Priority:** P1
 
 **Objective:** Measure and improve test effectiveness for `src/mcp_web/` modules.
 
-**Key Tasks:**
-
-- mutmut setup and configuration
-- Baseline mutation score measurement
-- Mutation testing on fetcher, extractor, chunker, summarizer
-- Kill surviving mutants (write tests for uncaught mutations)
-- CI integration (sample-based for PRs, full runs nightly)
-
-**Success Criteria:**
-
-- [ ] Mutation score ≥85% for src/mcp_web/ core modules
-- [ ] Document mutation-resistant patterns
-- [ ] CI mutation testing on PR (sample-based)
-- [ ] Zero equivalent mutants (false positives)
+See [phases/phase-2-core-mutation-testing.md](phases/phase-2-core-mutation-testing.md) for full details.
 
 ---
 
 ### [Phase 3: Scripts Mutation Testing](phases/phase-3-scripts-mutation-testing.md) 🧬 **HIGH**
 
-**Duration:** Week 5 (30-40 hours) | **Priority:** P1
+**Status:** Not Started | **Duration:** Week 5 (30-40 hours) | **Priority:** P1
 
 **Objective:** Validate test quality for critical automation scripts.
 
-**Key Tasks:**
-
-- Mutation testing on scripts/ (focus on critical: validators, extractors, generators)
-- Target ≥75% mutation score for critical scripts
-- Document patterns and best practices
-- Quarterly cosmic-ray runs (comprehensive mutation operators)
-
-**Success Criteria:**
-
-- [ ] Mutation score ≥75% for critical scripts
-- [ ] Documented testing patterns
-- [ ] Quarterly cosmic-ray baseline
+See [phases/phase-3-scripts-mutation-testing.md](phases/phase-3-scripts-mutation-testing.md) for full details.
 
 ---
 
 ### [Phase 4: Property-Based Testing - Core](phases/phase-4-property-based-core.md) 🔬 **MEDIUM**
 
-**Duration:** Week 6 (30-40 hours) | **Priority:** P2
+**Status:** Not Started | **Duration:** Week 6 (30-40 hours) | **Priority:** P2
 
 **Objective:** Deep investment in Hypothesis for core text processing modules.
 
-**Key Tasks:**
-
-- Hypothesis setup and custom strategies
-- Chunker properties (split + rejoin = original, boundary detection, overlap)
-- URL validation properties (malformed URLs, edge cases)
-- Token counting properties (Unicode, emoji, special characters)
-- Extraction properties (HTML parsing edge cases)
-
-**Success Criteria:**
-
-- [ ] 10+ Hypothesis tests for core modules
-- [ ] 5+ new edge cases discovered and fixed
-- [ ] Custom strategies for domain types
+See [phases/phase-4-property-based-core.md](phases/phase-4-property-based-core.md) for full details.
 
 ---
 
 ### [Phase 5: Property-Based Testing - Advanced](phases/phase-5-property-based-advanced.md) 🔬 **MEDIUM**
 
-**Duration:** Week 7 (30-40 hours) | **Priority:** P2
+**Status:** Not Started | **Duration:** Week 7 (30-40 hours) | **Priority:** P2
 
 **Objective:** Extend property-based testing to validation and generation scripts.
 
-**Key Tasks:**
-
-- Validation script properties (frontmatter parsing, YAML validation)
-- Index generation properties (determinism, completeness)
-- Dependency registry properties (consistency, cycles)
-- Complex workflow properties (idempotency, commutativity)
-
-**Success Criteria:**
-
-- [ ] 10+ additional Hypothesis tests
-- [ ] Validation scripts have property-based tests
-- [ ] 5+ new edge cases discovered
+See [phases/phase-5-property-based-advanced.md](phases/phase-5-property-based-advanced.md) for full details.
 
 ---
 
 ### [Phase 6: Integration & E2E Workflows](phases/phase-6-integration-e2e.md) 🔄 **MEDIUM**
 
-**Duration:** Week 7 (30-40 hours) | **Priority:** P2
+**Status:** Not Started | **Duration:** Week 7 (30-40 hours) | **Priority:** P2
 
 **Objective:** Full workflow validation from entry point to output.
 
-**Key Tasks:**
-
-- Workflow validation tests (scaffold → validate → archive)
-- Script interdependency tests (file_ops → index generation)
-- End-to-end pipeline tests (full MCP tool invocation)
-- Failure mode tests (graceful degradation, error propagation)
-
-**Success Criteria:**
-
-- [ ] 15+ integration/E2E tests
-- [ ] All workflow paths tested
-- [ ] Failure modes documented and tested
+See [phases/phase-6-integration-e2e.md](phases/phase-6-integration-e2e.md) for full details.
 
 ---
 
 ### [Phase 7: Observability & Continuous Improvement](phases/phase-7-observability.md) 📊 **LOW**
 
-**Duration:** Week 8 (30-40 hours) | **Priority:** P3
+**Status:** Not Started | **Duration:** Week 8 (30-40 hours) | **Priority:** P3
 
 **Objective:** Establish metrics and continuous monitoring for test health.
 
-**Key Tasks:**
-
-- Test metrics dashboard (execution time, flakiness, coverage trends)
-- CI optimization (parallel strategy, caching, test selection)
-- Flakiness detection (pytest-repeat statistical analysis)
-- Documentation (testing strategy guide, contribution guidelines)
-- Continuous monitoring setup
-
-**Success Criteria:**
-
-- [ ] Test metrics exposed (CSV/JSON)
-- [ ] CI <5min execution time
-- [ ] Flakiness rate <1%
-- [ ] Testing strategy guide complete
+See [phases/phase-7-observability.md](phases/phase-7-observability.md) for full details.
 
 ---
 
