@@ -8,7 +8,8 @@ from datetime import date
 from pathlib import Path
 
 import pytest
-from scripts.extract_action_items import (
+
+from scripts.automation.extract_action_items import (
     ActionItem,
     load_initiative_metadata,
     map_action_item_to_initiatives,

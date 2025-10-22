@@ -14,9 +14,15 @@ import pytest
 # Add scripts to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "scripts"))
 
-from scripts.extract_action_items import (
+from scripts.automation.extract_action_items import (
     ActionItem,
+    extract_date_from_filename,
+    extract_from_summary,
+    extract_title,
+    find_summaries_by_date_range,
+    parse_date_range,
     parse_markdown_sections,
+    should_skip_section,
 )
 
 
@@ -139,8 +145,6 @@ def test_extraction_output_structure_golden():
 @pytest.mark.golden
 def test_section_filtering_golden():
     """Golden test: Section filtering should skip metadata sections."""
-    from scripts.extract_action_items import should_skip_section
-
     # Should skip these sections
     assert should_skip_section("Table of Contents") is True
     assert should_skip_section("Metadata") is True
@@ -172,15 +176,13 @@ def test_extraction_pipeline_idempotent(mock_summary_file: Path):
         )
     ]
 
-    with patch("scripts.extract_action_items.instructor") as mock_instructor:
+    with patch("scripts.automation.extract_action_items.instructor") as mock_instructor:
         # Configure mock to return same items every time
         mock_client = MagicMock()
         mock_client.chat.completions.create.return_value = mock_items
         mock_instructor.from_openai.return_value = mock_client
 
         # First extraction
-        from scripts.extract_action_items import extract_from_summary
-
         result1 = extract_from_summary(mock_client, mock_summary_file)
 
         # Second extraction
@@ -196,8 +198,6 @@ def test_extraction_pipeline_idempotent(mock_summary_file: Path):
 @pytest.mark.golden
 def test_date_extraction_golden():
     """Golden test: Date extraction from filenames."""
-    from scripts.extract_action_items import extract_date_from_filename
-
     # Standard format
     assert extract_date_from_filename("2025-10-20-session-summary.md") == date(2025, 10, 20)
     assert extract_date_from_filename("2024-12-25-holiday-session.md") == date(2024, 12, 25)
@@ -210,8 +210,6 @@ def test_date_extraction_golden():
 @pytest.mark.golden
 def test_title_extraction_golden():
     """Golden test: Title extraction from markdown."""
-    from scripts.extract_action_items import extract_title
-
     content1 = "# Session Summary: Testing\n\nContent here."
     assert extract_title(content1) == "Session Summary: Testing"
 
@@ -226,8 +224,6 @@ def test_title_extraction_golden():
 @pytest.mark.golden
 def test_file_path_date_range_golden(tmp_path: Path):
     """Golden test: Date range file finding."""
-    from scripts.extract_action_items import find_summaries_by_date_range
-
     # Create test files with different dates
     (tmp_path / "docs" / "archive" / "session-summaries").mkdir(parents=True)
     summaries_dir = tmp_path / "docs" / "archive" / "session-summaries"
@@ -263,8 +259,6 @@ def test_file_path_date_range_golden(tmp_path: Path):
 @pytest.mark.golden
 def test_date_range_parsing_golden():
     """Golden test: Date range string parsing."""
-    from scripts.extract_action_items import parse_date_range
-
     # Standard format
     start, end = parse_date_range("2025-10-15:2025-10-20")
     assert start == date(2025, 10, 15)

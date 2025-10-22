@@ -16,7 +16,7 @@ from pydantic import ValidationError
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "scripts"))
 
-from extract_action_items import (
+from scripts.automation.extract_action_items import (
     ActionItem,
     extract_date_from_filename,
     extract_title,

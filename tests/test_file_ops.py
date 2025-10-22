@@ -7,7 +7,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
-from file_ops import (  # type: ignore  # pylint: disable=import-error
+from scripts.automation.file_ops import (  # type: ignore  # pylint: disable=import-error
     ARCHIVE_MARKER,
     INDEX_END,
     INDEX_START,

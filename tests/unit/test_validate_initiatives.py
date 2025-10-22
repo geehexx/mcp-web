@@ -9,7 +9,8 @@ import tempfile
 from pathlib import Path
 
 import pytest
-from scripts.validate_initiatives import InitiativeValidator
+
+from scripts.validation.validate_initiatives import InitiativeValidator
 
 
 @pytest.fixture

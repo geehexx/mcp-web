@@ -10,7 +10,8 @@ import tempfile
 from pathlib import Path
 
 import pytest
-from scripts.dependency_registry import DependencyRegistry
+
+from scripts.automation.dependency_registry import DependencyRegistry
 
 
 @pytest.fixture
