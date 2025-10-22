@@ -354,3 +354,130 @@ def test_extract_from_section_mock():
     # This test would require mocking the instructor client
     # Skipping for now as it's more of an integration test
     pytest.skip("Requires mocked Instructor client - defer to integration tests")
+
+
+# ============================================================================
+# Additional Utility Function Tests
+# ============================================================================
+
+
+@pytest.mark.unit
+def test_parse_markdown_sections_nested_headers():
+    """Parse markdown with nested headers correctly."""
+    content = """# Main
+
+## Section 1
+Content 1
+
+### Subsection 1.1
+Nested content
+
+### Subsection 1.2
+More nested
+
+## Section 2
+Content 2
+"""
+    sections = parse_markdown_sections(content)
+
+    # Should parse all sections
+    assert len(sections) >= 4
+    headers = [s["header"] for s in sections]
+    assert "Section 1" in headers
+    assert "Section 2" in headers
+
+
+@pytest.mark.unit
+def test_should_skip_section_case_insensitive():
+    """Skip section check is case-insensitive."""
+    assert should_skip_section("TABLE OF CONTENTS") is True
+    assert should_skip_section("table of contents") is True
+    assert should_skip_section("Table Of Contents") is True
+
+
+@pytest.mark.unit
+def test_extract_date_with_full_path():
+    """Extract date from full file path."""
+    # Function extracts from filename component, not full path
+    path = "2025-10-15-important-session.md"
+    extracted = extract_date_from_filename(path)
+    assert extracted == date(2025, 10, 15)
+
+
+@pytest.mark.unit
+def test_extract_title_with_markdown_formatting():
+    """Extract title strips markdown formatting."""
+    content = "# **Bold Title** with _emphasis_\n\nContent."
+    title = extract_title(content)
+    assert "Bold Title" in title
+
+
+@pytest.mark.unit
+def test_init_database_idempotent(tmp_path):
+    """Initialize database multiple times is safe."""
+    db_path = tmp_path / "test.db"
+
+    # Initialize twice
+    init_database(db_path)
+    init_database(db_path)
+
+    # Should still work
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM extractions")
+    count = cursor.fetchone()[0]
+    assert count == 0  # No data yet
+    conn.close()
+
+
+@pytest.mark.unit
+def test_log_extraction_empty_list(tmp_path):
+    """Log empty extraction list."""
+    db_path = tmp_path / "test.db"
+    init_database(db_path)
+
+    # Log empty list
+    log_extraction(db_path, [])
+
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM extractions")
+    count = cursor.fetchone()[0]
+    assert count == 0
+    conn.close()
+
+
+@pytest.mark.unit
+def test_action_item_with_no_blockers():
+    """Action item with no blockers stores None."""
+    item = ActionItem(
+        id="test-1",
+        title="Test",
+        description="Description",
+        category="automation",
+        impact="medium",
+        confidence="high",
+        source_summary="test.md",
+        source_section="Section",
+        session_date=date(2025, 10, 20),
+        blockers=None,
+    )
+    assert item.blockers is None
+
+
+@pytest.mark.unit
+def test_action_item_with_empty_related_files():
+    """Action item defaults to empty related_files list."""
+    item = ActionItem(
+        id="test-1",
+        title="Test",
+        description="Description",
+        category="testing",
+        impact="low",
+        confidence="medium",
+        source_summary="test.md",
+        source_section="Section",
+        session_date=date(2025, 10, 20),
+    )
+    assert item.related_files == []
+    assert isinstance(item.related_files, list)

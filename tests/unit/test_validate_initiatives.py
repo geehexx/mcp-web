@@ -283,3 +283,81 @@ Priority: High
         recommended_fields = ["Estimated Duration", "Target Completion", "Updated"]
         for field in recommended_fields:
             assert any(field in r.message for r in infos)
+
+    def test_malformed_frontmatter(self, temp_initiatives_dir):
+        """Test handling of malformed YAML frontmatter."""
+        content = """---
+Status Active
+Created: 2025-10-19
+Invalid::YAML::[Here
+---
+
+# Test
+"""
+        test_file = temp_initiatives_dir / "active" / "test.md"
+        test_file.write_text(content)
+
+        validator = InitiativeValidator(temp_initiatives_dir)
+        results = validator.validate_file(test_file)
+
+        # Should have error about YAML parsing
+        failures = [r for r in results if not r.passed]
+        assert len(failures) > 0
+
+    def test_no_frontmatter(self, temp_initiatives_dir):
+        """Test file without frontmatter."""
+        content = "# Just a title\n\nNo frontmatter here."
+        test_file = temp_initiatives_dir / "active" / "test.md"
+        test_file.write_text(content)
+
+        validator = InitiativeValidator(temp_initiatives_dir)
+        results = validator.validate_file(test_file)
+
+        # Should have failures (critical or otherwise)
+        failures = [r for r in results if not r.passed]
+        assert len(failures) > 0
+
+    def test_unicode_in_content(self, temp_initiatives_dir):
+        """Test handling of unicode characters."""
+        content = """---
+Status: Active
+Created: 2025-10-19
+Owner: テスト ユーザー 🚀
+Priority: High
+---
+
+# Test Initiative 测试 ✨
+
+## Objective
+Test with émojis and spëcial çharacters.
+"""
+        test_file = temp_initiatives_dir / "active" / "test.md"
+        test_file.write_text(content, encoding="utf-8")
+
+        validator = InitiativeValidator(temp_initiatives_dir)
+        results = validator.validate_file(test_file)
+
+        # Should not crash, validation runs
+        assert isinstance(results, list)
+
+    def test_empty_file(self, temp_initiatives_dir):
+        """Test validation of empty file."""
+        test_file = temp_initiatives_dir / "active" / "empty.md"
+        test_file.write_text("")
+
+        validator = InitiativeValidator(temp_initiatives_dir)
+        results = validator.validate_file(test_file)
+
+        # Should have critical failures
+        critical = [r for r in results if r.severity == "critical" and not r.passed]
+        assert len(critical) > 0
+
+    def test_file_not_found(self, temp_initiatives_dir):
+        """Test validation of non-existent file."""
+        test_file = temp_initiatives_dir / "active" / "nonexistent.md"
+
+        validator = InitiativeValidator(temp_initiatives_dir)
+        results = validator.validate_file(test_file)
+
+        # Should handle gracefully (empty results or error message)
+        assert isinstance(results, list)
