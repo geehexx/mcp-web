@@ -558,16 +558,32 @@ class Scaffolder:
         return schemas[self.template_type]
 
     def load_config(self, config_path: str) -> dict[str, Any]:
-        """Load configuration from YAML or JSON file."""
+        """Load configuration from YAML or JSON file and merge with schema defaults."""
         config_file = Path(config_path)
         content = config_file.read_text()
 
         if config_file.suffix in [".yaml", ".yml"]:
-            return yaml.safe_load(content)
+            config_fields = yaml.safe_load(content) or {}
         elif config_file.suffix == ".json":
-            return json.loads(content)
+            config_fields = json.loads(content)
         else:
             raise ValueError(f"Unsupported config format: {config_file.suffix}")
+
+        # Merge with schema defaults and handle auto-generated fields
+        schema = self.get_schema()
+        fields = {}
+        for field_name, field_def in schema.items():
+            if field_name in config_fields:
+                # Use value from config
+                fields[field_name] = config_fields[field_name]
+            elif field_def.get("auto"):
+                # Auto-generate field using schema default
+                fields[field_name] = field_def["default"]
+            else:
+                # Use schema default or empty string
+                fields[field_name] = field_def.get("default", "")
+
+        return fields
 
     def use_defaults(self) -> dict[str, Any]:
         """Use default values for all fields."""

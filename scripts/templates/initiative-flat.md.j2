@@ -1,19 +1,22 @@
-# Initiative: {{ title }}
-
-**Status:** {{ status }}
-**Created:** {{ created }}
-**Owner:** {{ owner }}
-**Priority:** {{ priority }}
-**Estimated Duration:** {{ estimated_duration }}
-{% if target_completion -%}
-**Target Completion:** {{ target_completion }}
-{% endif -%}
-
 ---
+Status: {{ status }}
+Created: {{ created }}
+Owner: {{ owner }}
+Priority: {{ priority }}
+Estimated Duration: {{ estimated_duration }}
+{% if target_completion -%}
+Target Completion: {{ target_completion }}
+{% endif -%}
+{% if updated -%}
+Updated: {{ updated }}
+{% endif -%}
+---
+
+# Initiative: {{ title }}
 
 ## Objective
 
-{{ objective }}
+{{ objective if objective else '(To be defined)' }}
 
 ## Success Criteria
 
@@ -23,11 +26,11 @@
 
 ## Motivation
 
-**Problem:** {{ problem }}
+**Problem:** {{ problem if problem else '(To be defined)' }}
 
-**Impact:** {{ impact }}
+**Impact:** {{ impact if impact else '(To be defined)' }}
 
-**Value:** {{ value }}
+**Value:** {{ value if value else '(To be defined)' }}
 
 ## Scope
 
@@ -57,6 +60,7 @@
 ## Blockers
 
 **Current Blockers:**
+
 {% if blockers and blockers.current -%}
 {% for blocker in blockers.current -%}
 - **{{ blocker.type }}:** {{ blocker.description }}
@@ -65,20 +69,22 @@
 {% endfor -%}
 {% else -%}
 - None
-{% endif -%}
 
+{% endif -%}
 **Resolved Blockers:**
+
 {% if blockers and blockers.resolved -%}
 {% for blocker in blockers.resolved -%}
 - **{{ blocker.description }}** (Resolved {{ blocker.resolved_date }})
 {% endfor -%}
 {% else -%}
 - None
-{% endif -%}
 
+{% endif -%}
 ## Dependencies
 
 **Internal Dependencies:**
+
 {% if dependencies and dependencies.internal -%}
 {% for dep in dependencies.internal -%}
 - **{{ dep.name }}** ({{ dep.type }})
@@ -88,9 +94,10 @@
 {% endfor -%}
 {% else -%}
 - None
-{% endif -%}
 
+{% endif -%}
 **External Dependencies:**
+
 {% if dependencies and dependencies.external -%}
 {% for dep in dependencies.external -%}
 - **{{ dep.name }}** - {{ dep.description }}
@@ -99,26 +106,28 @@
 {% endfor -%}
 {% else -%}
 - None
-{% endif -%}
 
+{% endif -%}
 **Prerequisite Initiatives:**
+
 {% if dependencies and dependencies.prerequisites -%}
 {% for prereq in dependencies.prerequisites -%}
 - [{{ prereq.name }}]({{ prereq.path }}){% if prereq.phase %} ({{ prereq.phase }} must complete){% endif %}
 {% endfor -%}
 {% else -%}
 - None
-{% endif -%}
 
+{% endif -%}
 **Blocks These Initiatives:**
+
 {% if dependencies and dependencies.blocks -%}
 {% for blocked in dependencies.blocks -%}
 - [{{ blocked.name }}]({{ blocked.path }}){% if blocked.reason %} - {{ blocked.reason }}{% endif %}
 {% endfor -%}
 {% else -%}
 - None (this initiative is not blocking other work)
-{% endif -%}
 
+{% endif -%}
 ## Related Initiatives
 
 {% if related_initiatives -%}
@@ -145,8 +154,8 @@
 {% endif -%}
 {% else -%}
 - None identified
-{% endif -%}
 
+{% endif -%}
 ## Risks and Mitigation
 
 | Risk | Impact | Likelihood | Mitigation |
@@ -154,7 +163,9 @@
 {% for risk in risks -%}
 | {{ risk.description }} | {{ risk.impact }} | {{ risk.likelihood }} | {{ risk.mitigation }} |
 {% endfor -%}
+{% if not risks %}
 
+{% endif -%}
 ## Timeline
 
 {% for timeline_item in timeline -%}
@@ -169,7 +180,7 @@
 
 ## Updates
 
-### {{ created }} (Creation)
+### {{ created }} - Creation
 
 Initiative created. Ready for work.
 
