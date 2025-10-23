@@ -1,0 +1,250 @@
+---
+alwaysApply: true
+description: Guidance for using /mention and file references in commands and workflows
+title: Mention and Reference Guidance
+tags: ['mention', 'references', 'guidance', 'workflows']
+related: ['/docs/IDE_COMPATIBILITY.md']
+---
+
+# Mention and Reference Guidance
+
+## /mention Usage in Commands and Workflows
+
+When commands or workflows reference other workflows or commands, use these patterns:
+
+### File References with Loading Instructions
+
+Instead of just mentioning `/workflow-name`, provide context and loading instructions:
+
+```markdown
+## Load Context
+
+Load these rules if you determine you need them based on their descriptions:
+
+- **Security Practices**: `/rules/06_security_practices.mdc` - Apply when dealing with security-sensitive code including API calls, user input, LLM interactions, and authentication
+- **Context Optimization**: `/rules/07_context_optimization.mdc` - Apply when dealing with large files, complex operations, or memory-intensive tasks
+- **File Operations**: `/rules/08_file_operations.mdc` - Apply when performing file manipulation, directory operations, or path handling
+
+## Execute Workflow
+
+Load and execute the `/validate` workflow for quality validation:
+
+1. Load the validate workflow: `/commands/validate.md`
+2. Execute the validation steps as defined in the workflow
+3. Follow the validation checklist and requirements
+```
+
+### Context-Aware Rule Loading
+
+When a workflow needs specific rules, provide guidance on when to load them:
+
+```markdown
+## Context Loading
+
+Based on the task at hand, load these rules:
+
+### For Implementation Tasks
+- **Python Code Standards**: `/rules/01_python_code.mdc` - Automatically loaded for .py files
+- **Testing Standards**: `/rules/02_testing.mdc` - Automatically loaded for test files
+- **Security Practices**: `/rules/06_security_practices.mdc` - Load when dealing with security-sensitive code
+
+### For Validation Tasks
+- **Testing Standards**: `/rules/02_testing.mdc` - For test validation
+- **Security Practices**: `/rules/06_security_practices.mdc` - For security validation
+- **Quality Validation**: `/commands/validate.md` - Execute validation workflow
+
+### For Documentation Tasks
+- **Documentation Standards**: `/rules/03_documentation.md` - For documentation formatting
+- **Context Optimization**: `/rules/07_context_optimization.mdc` - For large documentation files
+```
+
+## Workflow Reference Patterns
+
+### Direct Workflow References
+
+When referencing workflows, provide the file path and loading instructions:
+
+```markdown
+## Execute Implementation Workflow
+
+Load and execute the implementation workflow:
+
+1. **Load**: `/commands/implement.md`
+2. **Execute**: Follow the workflow steps for test-driven development
+3. **Validate**: Run the validation workflow after implementation
+4. **Commit**: Use the commit workflow for changes
+
+## Execute Validation Workflow
+
+Load and execute the validation workflow:
+
+1. **Load**: `/commands/validate.md`
+2. **Execute**: Run all validation steps
+3. **Report**: Document any issues found
+4. **Fix**: Address issues before proceeding
+```
+
+### Conditional Rule Loading
+
+Provide guidance on when to load specific rules:
+
+```markdown
+## Conditional Rule Loading
+
+Load these rules based on the current task:
+
+### For Security-Sensitive Work
+```markdown
+Load: Security Practices rule (`/rules/06_security_practices.mdc`)
+Apply: When dealing with API calls, user input, LLM interactions, or authentication
+```
+
+### For Large File Operations
+```markdown
+Load: Context Optimization rule (`/rules/07_context_optimization.mdc`)
+Apply: When dealing with large files, complex operations, or memory-intensive tasks
+```
+
+### For File Manipulation
+```markdown
+Load: File Operations rule (`/rules/08_file_operations.mdc`)
+Apply: When performing file manipulation, directory operations, or path handling
+```
+```
+
+## Command Integration Patterns
+
+### Workflow Chaining
+
+When workflows need to chain to other workflows:
+
+```markdown
+## Workflow Chaining
+
+After completing this workflow, execute:
+
+1. **Load**: `/commands/validate.md`
+2. **Execute**: Run validation workflow
+3. **Load**: `/commands/commit.md`
+4. **Execute**: Run commit workflow
+
+## Conditional Chaining
+
+Based on the outcome:
+
+### If Validation Passes
+```markdown
+Load: `/commands/commit.md`
+Execute: Commit workflow with validated changes
+```
+
+### If Validation Fails
+```markdown
+Load: `/commands/implement.md`
+Execute: Return to implementation workflow to fix issues
+```
+```
+
+### Context-Aware Loading
+
+Provide intelligent loading based on context:
+
+```markdown
+## Context-Aware Loading
+
+Based on the current task context:
+
+### For Python Development
+- Automatically loaded: Python Code Standards, Testing Standards
+- Conditionally load: Security Practices (for API work), Context Optimization (for large files)
+
+### For Documentation Work
+- Automatically loaded: Documentation Standards
+- Conditionally load: Context Optimization (for large docs), File Operations (for file manipulation)
+
+### For Testing Work
+- Automatically loaded: Testing Standards
+- Conditionally load: Security Practices (for security tests), Context Optimization (for large test suites)
+```
+
+## Best Practices
+
+### 1. Provide Context
+
+Always explain why a rule or workflow should be loaded:
+
+```markdown
+Load: Security Practices rule (`/rules/06_security_practices.mdc`)
+Reason: This task involves API calls and user input validation
+```
+
+### 2. Give Loading Instructions
+
+Provide clear instructions on how to load:
+
+```markdown
+Load: `/commands/validate.md`
+Instructions: Read the workflow file and execute the validation steps as defined
+```
+
+### 3. Explain Conditional Loading
+
+Make it clear when rules should be loaded:
+
+```markdown
+Conditional: Load Security Practices rule only when dealing with security-sensitive code
+Always: Load Python Code Standards rule when editing .py files
+```
+
+### 4. Provide Alternatives
+
+Give alternatives when appropriate:
+
+```markdown
+Primary: Load `/commands/implement.md` for implementation workflow
+Alternative: Load `/commands/plan.md` if planning is needed first
+```
+
+## Integration with Cursor IDE
+
+### File References
+
+In Cursor IDE, use file references with clear paths:
+
+```markdown
+Load: `.cursor/rules/06_security_practices.mdc`
+Load: `.cursor/commands/validate.md`
+```
+
+### Mention Usage
+
+When using `/mention`, provide context:
+
+```markdown
+Load these rules if you determine you need them based on their descriptions:
+
+- Security Practices: `.cursor/rules/06_security_practices.mdc` - For security-sensitive code
+- Context Optimization: `.cursor/rules/07_context_optimization.mdc` - For large file operations
+```
+
+---
+
+## Rule Metadata
+
+**File:** `08_mention_guidance.yaml`
+**Trigger:** always_on (Windsurf) / alwaysApply (Cursor)
+**Estimated Tokens:** ~1,200
+**Last Updated:** 2025-10-22
+**Status:** Active
+
+**Topics Covered:**
+- Mention usage patterns
+- File reference guidance
+- Workflow chaining
+- Context-aware loading
+
+**Workflow References:**
+- All workflows (always loaded)
+
+**Dependencies:**
+- Source: 08_mention_guidance.md

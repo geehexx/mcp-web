@@ -1,15 +1,13 @@
 ---
-created: "2025-10-21"
-updated: "2025-10-21"
 description: LLM-agnostic prompt optimization with intelligent semantic preservation and idempotency
-auto_execution_mode: 2
+title: Improve Prompt Workflow
+type: workflow
 category: Optimization
-complexity: 70
-tokens: 3500
-dependencies:
-  - improve-workflow
+complexity: moderate
+dependencies: ['improve-workflow']
 status: active
-version: "3.1-self-optimized"
+created: 2025-10-22
+updated: 2025-10-22
 ---
 
 # Improve Prompt Workflow

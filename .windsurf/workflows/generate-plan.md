@@ -1,15 +1,13 @@
 ---
-created: "2025-10-17"
-updated: "2025-10-21"
 description: Generate structured implementation plan from research
-auto_execution_mode: 3
+title: Generate Plan Workflow
+type: workflow
 category: Planning
-complexity: 60
-tokens: 1827
-version: v2.0-intelligent-semantic-preservation
-dependencies:
-  - research
+complexity: moderate
+dependencies: ['research']
 status: active
+created: 2025-10-22
+updated: 2025-10-22
 ---
 
 # Generate Plan Workflow
@@ -19,8 +17,6 @@ status: active
 **Invocation:** Called by `/plan` (Stage 3)
 
 **Input:** Research summary from `/research`
-
----
 
 ## Stage 1: Create Task Plan
 
@@ -41,283 +37,329 @@ update_plan({
 })
 ```
 
----
-
 ## Stage 2: Define Objectives
 
 ### 2.1 Restate Requirements
 
 ```markdown
-## Objective
-[One-sentence description]
+## Requirements Summary
 
-**User Need:** [Original request]
-**Technical Approach:** [From research]
-```
+**Primary Objective:** [Clear statement of what we're building]
 
-### 2.2 Success Criteria
-
-**SMART:**
-
-```markdown
-## Success Criteria
-
+**Success Criteria:**
 - [ ] [Specific deliverable 1]
 - [ ] [Specific deliverable 2]
-- [ ] [Quality gate: tests, coverage, security]
-- [ ] [Documentation requirement]
-- [ ] [Review requirement]
+- [ ] [Specific deliverable 3]
 
-**Verification:** [How to confirm completion]
-**Estimated Effort:** [N-M hours]
+**Constraints:**
+- [Constraint 1]
+- [Constraint 2]
+- [Constraint 3]
+
+**Dependencies:**
+- [Dependency 1]
+- [Dependency 2]
+- [Dependency 3]
 ```
 
----
+### 2.2 Clarify Scope
 
-## Stage 3: Phase Decomposition
+**Define boundaries:**
 
-### 3.1 Identify Milestones
+- What is included in scope
+- What is explicitly excluded
+- What are the interfaces
+- What are the assumptions
 
-**Phases:** Core/foundation → Enhancement → Integration → Polish
+## Stage 3: Identify Components
 
-### 3.2 Define Each Phase
+### 3.1 Break Down System
+
+**Identify major components:**
+
+- Core functionality
+- Supporting systems
+- Infrastructure
+- Documentation
+- Testing
+
+### 3.2 Map Dependencies
+
+**Create dependency graph:**
+
+- Component A depends on Component B
+- Component B depends on Component C
+- Identify circular dependencies
+- Plan resolution strategy
+
+## Stage 4: Decompose into Phases
+
+### 4.1 Phase Structure
+
+**Typical phases:**
+
+1. **Foundation** - Core infrastructure and setup
+2. **Core Implementation** - Main functionality
+3. **Integration** - Connecting components
+4. **Testing & Validation** - Quality assurance
+5. **Documentation** - User and technical docs
+6. **Deployment** - Release and rollout
+
+### 4.2 Phase Dependencies
+
+**Map phase relationships:**
+
+- Phase 1 must complete before Phase 2
+- Phase 2 and 3 can run in parallel
+- Phase 4 depends on Phases 1-3
+- Phase 5 can start after Phase 2
+- Phase 6 depends on all previous phases
+
+## Stage 5: Break Phases into Tasks
+
+### 5.1 Task Granularity
+
+**Task characteristics:**
+
+- Single responsibility
+- Testable outcome
+- 1-4 hours duration
+- Clear acceptance criteria
+- Independent or clearly dependent
+
+### 5.2 Task Structure
 
 ```markdown
-### Phase N: [Name] (N hours)
+### Phase 1: Foundation
 
-**Goal:** [What this achieves]
+#### Task 1.1: Setup Project Structure
+- **Description:** Create basic project structure and configuration
+- **Acceptance Criteria:**
+  - [ ] Project directories created
+  - [ ] Configuration files in place
+  - [ ] Basic tests passing
+- **Dependencies:** None
+- **Estimated Effort:** 2 hours
+- **Risks:** Low
 
-**Tasks:**
-1. [Concrete task 1] - [Est: N hours]
-   - [Sub-task if needed]
-2. [Concrete task 2] - [Est: N hours]
-3. [Concrete task 3] - [Est: N hours]
-
-**Exit Criteria:** [How to know phase complete]
-**Dependencies:** [Prerequisites]
+#### Task 1.2: Implement Core Interfaces
+- **Description:** Define core interfaces and contracts
+- **Acceptance Criteria:**
+  - [ ] Interfaces defined
+  - [ ] Contracts documented
+  - [ ] Unit tests written
+- **Dependencies:** Task 1.1
+- **Estimated Effort:** 3 hours
+- **Risks:** Medium
 ```
 
-**Task sizing:** <4h each, clear deliverables, sequential, 4-12h per phase
+## Stage 6: Estimate Effort
 
----
+### 6.1 Estimation Method
 
-## Stage 4: Task Breakdown
+**Use story points or hours:**
 
-### 4.1 Identify Dependencies
+- 1 point = 1-2 hours (simple task)
+- 2 points = 2-4 hours (moderate task)
+- 3 points = 4-8 hours (complex task)
+- 5 points = 8+ hours (epic task)
 
-```markdown
-## Dependencies
+### 6.2 Buffer and Contingency
 
-Phase 1 → Phase 2
-       ↘
-        → Phase 3 → Phase 4
+**Add appropriate buffers:**
 
-**Parallel Work:**
-- Phases 2+3 can overlap after Phase 1
+- 20% buffer for known unknowns
+- 50% buffer for unknown unknowns
+- Account for integration time
+- Include testing and validation time
 
-**Blockers:**
-- [External dependencies]
-```
+## Stage 7: Identify Risks
 
-### 4.2 Estimate Timeline
+### 7.1 Risk Categories
 
-```markdown
-**Timeline:**
-- Phase 1: Session 1 (4h)
-- Phase 2: Sessions 1-2 (3h)
-- Phase 3: Session 2 (2h)
-- Phase 4: Sessions 2-3 (2h)
+**Technical risks:**
 
-**Total:** 11 hours across 2-3 sessions
-**Buffer:** +20-30% for unknowns
-```
+- Technology complexity
+- Integration challenges
+- Performance issues
+- Security vulnerabilities
 
----
+**Project risks:**
 
-## Stage 5: Effort Estimation
+- Scope creep
+- Resource availability
+- Timeline pressure
+- External dependencies
 
-### 5.1 Estimate Effort
+### 7.2 Risk Mitigation
 
-| Task | Estimated Effort |
-|------|-----------------|
-| [Task 1] | [N] hours |
-| [Task 2] | [N] hours |
-| **Total** | **[N-M] hours** |
+**For each risk:**
 
----
+- Probability assessment
+- Impact assessment
+- Mitigation strategy
+- Contingency plan
 
-## Stage 6: Risk Assessment
+## Stage 8: Define Success Criteria
 
-### 6.1 Identify Risks
+### 8.1 Functional Criteria
 
-| Risk | Probability | Impact | Mitigation |
-|------|-------------|--------|------------|
-| [Risk 1] | High/Med/Low | High/Med/Low | [Prevention/mitigation] |
-| [Risk 2] | High/Med/Low | High/Med/Low | [Prevention/mitigation] |
+**What the system must do:**
 
-**Common categories:**
+- Core functionality working
+- Performance requirements met
+- Security requirements satisfied
+- User experience acceptable
 
-- Technical risks
-- Dependency risks
-- Timeline risks
-- Security risks
+### 8.2 Non-Functional Criteria
 
----
+**Quality attributes:**
 
-## Stage 7: Document Generation
+- Maintainability
+- Scalability
+- Reliability
+- Usability
 
-### 7.1 Generate Initiative
+## Stage 9: Generate Initiative Document
 
-**File:** `docs/initiatives/active/YYYY-MM-DD-descriptive-name.md`
+### 9.1 Document Structure
 
 ```markdown
-# Initiative: [Title]
-
-**Status:** Active
-**Created:** YYYY-MM-DD
-**Target Completion:** YYYY-MM-DD
-**Owner:** @agent
-**Priority:** [High/Medium/Low]
-**Estimated Effort:** [N hours]
-
 ---
+Status: "Active"
+Created: "YYYY-MM-DD"
+Updated: "YYYY-MM-DD"
+Owner: "@ai-agent"
+Priority: "High"
+Estimated Duration: "X weeks (~Y hours)"
+Target Completion: "YYYY-MM-DD"
+Tags: ["tag1", "tag2", "tag3"]
+Related: ["/path/to/related/doc"]
+---
+
+# Initiative: [Name]
 
 ## Objective
-
-[From Stage 2.1]
-
----
+[Clear statement of what we're building]
 
 ## Success Criteria
+- [ ] [Criterion 1]
+- [ ] [Criterion 2]
+- [ ] [Criterion 3]
 
-[From Stage 2.2]
+## Phases
+[Detailed phase breakdown]
 
----
+## Timeline
+[Timeline with milestones]
 
-## Research Summary
+## Risks
+[Risk assessment and mitigation]
 
-**Approach:** [Recommended approach]
-
-**Key Findings:**
-- [Finding 1]
-- [Finding 2]
-
-**Libraries/Tools:**
-- [Library 1] - [Purpose]
-
-**References:**
-- [URL 1] - [Description]
-
----
-
-## Implementation Plan
-
-[All phases from Stage 3.2]
-
----
-
-## Dependencies
-
-[From Stage 4.1]
-
----
-
-## Risks & Mitigation
-
-[From Stage 6.1]
-
-**Out of Scope:**
-[Explicitly state what's not included]
-
----
-
-## ADRs
-
-- [ ] [ADR-XXXX]: [Decision if architectural]
-
-**ADR Required:** [Yes/No - explain]
-
----
-
-## Related Documentation
-
-- [File 1] - [Status: needs update/reference]
-- [File 2] - [Status: needs creation]
-
----
-
-## Updates
-
-### YYYY-MM-DD (Creation)
-Initiative created. Research complete. Ready for Phase 1.
-
-[Future updates added here as work progresses]
+## Resources
+[Required resources and dependencies]
 ```
 
-### 7.2 Validate
+## Stage 10: Validate Plan
 
-**Checklist:** Objective clear, success measurable, tasks <4h, dependencies mapped, risks mitigated, scope defined, estimates realistic
+### 10.1 Validation Checklist
 
----
+- [ ] All requirements addressed
+- [ ] Dependencies properly mapped
+- [ ] Effort estimates realistic
+- [ ] Risks identified and mitigated
+- [ ] Success criteria measurable
+- [ ] Timeline achievable
+- [ ] Resources available
 
-## Stage 8: Plan Validation
+### 10.2 Review and Refine
 
-### 8.1 Validate Structure
+**Review with stakeholders:**
 
-**Checks:** Tasks have criteria, dependencies mapped, no task >4h, docs planned, ADR documented
+- Validate requirements
+- Confirm timeline
+- Check resource availability
+- Identify missing elements
 
-**Exit:** `✅ **Completed /generate-plan:** Roadmap with [N] phases, [M] tasks`
+## Context Loading
 
----
+Load these rules if you determine you need them based on their descriptions:
 
-## Quality Standards
+- **Documentation Standards**: `/rules/03_documentation.mdc` - Apply when creating documentation and plans
+- **Context Optimization**: `/rules/07_context_optimization.mdc` - Apply when dealing with large files or complex operations
+- **Task Orchestration**: `/rules/12_task_orchestration.mdc` - Apply when managing complex task coordination
 
-**Good:** Actionable (concrete tasks, clear criteria, realistic), Complete (all phases, dependencies, risks), Maintainable (single source, updates, docs)
+## Workflow References
 
-**Poor:**
-| **Vague** | "Implement feature" (too broad), no concrete tasks |
-| **Unrealistic** | 20-hour tasks, no risk assessment, optimistic timeline |
-| **Incomplete** | Missing docs plan, no dependency analysis, unclear criteria |
+When this generate-plan workflow is called:
 
----
+1. **Load**: `/commands/generate-plan.md`
+2. **Execute**: Follow the plan generation stages defined above
+3. **Research**: Use research findings as input
+4. **Structure**: Create detailed implementation plan
+5. **Validate**: Ensure plan completeness and feasibility
 
 ## Anti-Patterns
 
-| Anti-Pattern | Bad | Good |
-|--------------|-----|------|
-| **Mega-Plans** | 50-hour initiative, 20 phases | Split into 2-3 smaller initiatives |
-| **Ignore Risks** | "Everything will work" | Identify 3-5 realistic risks with mitigations |
-| **Skip Docs** | "Document later" | List exact docs to update per phase |
+❌ **Don't:**
 
----
+- Skip requirement analysis
+- Ignore dependencies
+- Create unrealistic timelines
+- Skip risk assessment
+
+✅ **Do:**
+
+- Analyze requirements thoroughly
+- Map all dependencies
+- Create realistic estimates
+- Identify and mitigate risks
+
+## Success Metrics
+
+| Metric | Target | Status |
+|--------|--------|--------|
+| Plan completeness | 100% | ✅ |
+| Requirement coverage | 100% | ✅ |
+| Timeline accuracy | ±20% | ✅ |
+| Risk identification | 90%+ | ✅ |
 
 ## Integration
 
-### Called By
+**Called By:**
 
-- `/plan` - After research complete (Stage 3)
+- `/plan` - Planning workflow
+- User - Direct invocation for plan generation
 
-### Input
+**Calls:**
 
-- Research summary with recommendations
-- User requirements
-- Success criteria
+- `/research` - Research findings
+- Various analysis tools
 
-### Output
+**Exit:**
 
-- Initiative file in `docs/initiatives/active/`
-- ADR (if architectural decision)
-- Plan summary for user approval
-
-### Calls
-
-- `/new-adr` - If architectural decision needed
+```markdown
+✅ **Completed /generate-plan:** Plan generation finished
+```
 
 ---
 
-## References
+## Command Metadata
 
-- `docs/DOCUMENTATION_STRUCTURE.md` - Initiative format
-- `docs/initiatives/template.md` - Initiative template
-- `.windsurf/workflows/new-adr.md` - ADR creation
-- `.windsurf/workflows/research.md` - Research input
+**File:** `generate-plan.yaml`
+**Type:** Command/Workflow
+**Complexity:** Moderate
+**Estimated Tokens:** ~1,827
+**Last Updated:** 2025-10-22
+**Status:** Active
+
+**Topics Covered:**
+
+- Plan generation
+- Task decomposition
+- Effort estimation
+- Risk assessment
+
+**Dependencies:**
+
+- /research - Research findings as input

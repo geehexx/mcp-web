@@ -1,0 +1,361 @@
+---
+pass_through: true
+description: Generate structured implementation plan from research
+title: Generate Plan Workflow
+tags: ['planning', 'generation', 'implementation', 'structure']
+related: []
+---
+
+# Generate Plan Workflow
+
+**Purpose:** Transform research into concrete implementation plan with phases, tasks, timelines.
+
+**Invocation:** Called by `/plan` (Stage 3)
+
+**Input:** Research summary from `/research`
+
+## Stage 1: Create Task Plan
+
+```typescript
+update_plan({
+  explanation: "🔄 Starting /generate-plan workflow",
+  plan: [
+    { step: "1. /generate-plan - Load context and analyze requirements", status: "in_progress" },
+    { step: "2. /generate-plan - Identify components and dependencies", status: "pending" },
+    { step: "3. /generate-plan - Decompose work into phases", status: "pending" },
+    { step: "4. /generate-plan - Break phases into tasks", status: "pending" },
+    { step: "5. /generate-plan - Estimate effort", status: "pending" },
+    { step: "6. /generate-plan - Identify risks", status: "pending" },
+    { step: "7. /generate-plan - Define success criteria", status: "pending" },
+    { step: "8. /generate-plan - Generate initiative document", status: "pending" },
+    { step: "9. /generate-plan - Validate plan", status: "pending" }
+  ]
+})
+```
+
+## Stage 2: Define Objectives
+
+### 2.1 Restate Requirements
+
+```markdown
+## Requirements Summary
+
+**Primary Objective:** [Clear statement of what we're building]
+
+**Success Criteria:**
+- [ ] [Specific deliverable 1]
+- [ ] [Specific deliverable 2]
+- [ ] [Specific deliverable 3]
+
+**Constraints:**
+- [Constraint 1]
+- [Constraint 2]
+- [Constraint 3]
+
+**Dependencies:**
+- [Dependency 1]
+- [Dependency 2]
+- [Dependency 3]
+```
+
+### 2.2 Clarify Scope
+
+**Define boundaries:**
+
+- What is included in scope
+- What is explicitly excluded
+- What are the interfaces
+- What are the assumptions
+
+## Stage 3: Identify Components
+
+### 3.1 Break Down System
+
+**Identify major components:**
+
+- Core functionality
+- Supporting systems
+- Infrastructure
+- Documentation
+- Testing
+
+### 3.2 Map Dependencies
+
+**Create dependency graph:**
+
+- Component A depends on Component B
+- Component B depends on Component C
+- Identify circular dependencies
+- Plan resolution strategy
+
+## Stage 4: Decompose into Phases
+
+### 4.1 Phase Structure
+
+**Typical phases:**
+
+1. **Foundation** - Core infrastructure and setup
+2. **Core Implementation** - Main functionality
+3. **Integration** - Connecting components
+4. **Testing & Validation** - Quality assurance
+5. **Documentation** - User and technical docs
+6. **Deployment** - Release and rollout
+
+### 4.2 Phase Dependencies
+
+**Map phase relationships:**
+
+- Phase 1 must complete before Phase 2
+- Phase 2 and 3 can run in parallel
+- Phase 4 depends on Phases 1-3
+- Phase 5 can start after Phase 2
+- Phase 6 depends on all previous phases
+
+## Stage 5: Break Phases into Tasks
+
+### 5.1 Task Granularity
+
+**Task characteristics:**
+
+- Single responsibility
+- Testable outcome
+- 1-4 hours duration
+- Clear acceptance criteria
+- Independent or clearly dependent
+
+### 5.2 Task Structure
+
+```markdown
+### Phase 1: Foundation
+
+#### Task 1.1: Setup Project Structure
+- **Description:** Create basic project structure and configuration
+- **Acceptance Criteria:**
+  - [ ] Project directories created
+  - [ ] Configuration files in place
+  - [ ] Basic tests passing
+- **Dependencies:** None
+- **Estimated Effort:** 2 hours
+- **Risks:** Low
+
+#### Task 1.2: Implement Core Interfaces
+- **Description:** Define core interfaces and contracts
+- **Acceptance Criteria:**
+  - [ ] Interfaces defined
+  - [ ] Contracts documented
+  - [ ] Unit tests written
+- **Dependencies:** Task 1.1
+- **Estimated Effort:** 3 hours
+- **Risks:** Medium
+```
+
+## Stage 6: Estimate Effort
+
+### 6.1 Estimation Method
+
+**Use story points or hours:**
+
+- 1 point = 1-2 hours (simple task)
+- 2 points = 2-4 hours (moderate task)
+- 3 points = 4-8 hours (complex task)
+- 5 points = 8+ hours (epic task)
+
+### 6.2 Buffer and Contingency
+
+**Add appropriate buffers:**
+
+- 20% buffer for known unknowns
+- 50% buffer for unknown unknowns
+- Account for integration time
+- Include testing and validation time
+
+## Stage 7: Identify Risks
+
+### 7.1 Risk Categories
+
+**Technical risks:**
+
+- Technology complexity
+- Integration challenges
+- Performance issues
+- Security vulnerabilities
+
+**Project risks:**
+
+- Scope creep
+- Resource availability
+- Timeline pressure
+- External dependencies
+
+### 7.2 Risk Mitigation
+
+**For each risk:**
+
+- Probability assessment
+- Impact assessment
+- Mitigation strategy
+- Contingency plan
+
+## Stage 8: Define Success Criteria
+
+### 8.1 Functional Criteria
+
+**What the system must do:**
+
+- Core functionality working
+- Performance requirements met
+- Security requirements satisfied
+- User experience acceptable
+
+### 8.2 Non-Functional Criteria
+
+**Quality attributes:**
+
+- Maintainability
+- Scalability
+- Reliability
+- Usability
+
+## Stage 9: Generate Initiative Document
+
+### 9.1 Document Structure
+
+```markdown
+---
+Status: "Active"
+Created: "YYYY-MM-DD"
+Updated: "YYYY-MM-DD"
+Owner: "@ai-agent"
+Priority: "High"
+Estimated Duration: "X weeks (~Y hours)"
+Target Completion: "YYYY-MM-DD"
+Tags: ["tag1", "tag2", "tag3"]
+Related: ["/path/to/related/doc"]
+---
+
+# Initiative: [Name]
+
+## Objective
+[Clear statement of what we're building]
+
+## Success Criteria
+- [ ] [Criterion 1]
+- [ ] [Criterion 2]
+- [ ] [Criterion 3]
+
+## Phases
+[Detailed phase breakdown]
+
+## Timeline
+[Timeline with milestones]
+
+## Risks
+[Risk assessment and mitigation]
+
+## Resources
+[Required resources and dependencies]
+```
+
+## Stage 10: Validate Plan
+
+### 10.1 Validation Checklist
+
+- [ ] All requirements addressed
+- [ ] Dependencies properly mapped
+- [ ] Effort estimates realistic
+- [ ] Risks identified and mitigated
+- [ ] Success criteria measurable
+- [ ] Timeline achievable
+- [ ] Resources available
+
+### 10.2 Review and Refine
+
+**Review with stakeholders:**
+
+- Validate requirements
+- Confirm timeline
+- Check resource availability
+- Identify missing elements
+
+## Context Loading
+
+Load these rules if you determine you need them based on their descriptions:
+
+- **Documentation Standards**: `/rules/03_documentation.mdc` - Apply when creating documentation and plans
+- **Context Optimization**: `/rules/07_context_optimization.mdc` - Apply when dealing with large files or complex operations
+- **Task Orchestration**: `/rules/12_task_orchestration.mdc` - Apply when managing complex task coordination
+
+## Workflow References
+
+When this generate-plan workflow is called:
+
+1. **Load**: `/commands/generate-plan.md`
+2. **Execute**: Follow the plan generation stages defined above
+3. **Research**: Use research findings as input
+4. **Structure**: Create detailed implementation plan
+5. **Validate**: Ensure plan completeness and feasibility
+
+## Anti-Patterns
+
+❌ **Don't:**
+
+- Skip requirement analysis
+- Ignore dependencies
+- Create unrealistic timelines
+- Skip risk assessment
+
+✅ **Do:**
+
+- Analyze requirements thoroughly
+- Map all dependencies
+- Create realistic estimates
+- Identify and mitigate risks
+
+## Success Metrics
+
+| Metric | Target | Status |
+|--------|--------|--------|
+| Plan completeness | 100% | ✅ |
+| Requirement coverage | 100% | ✅ |
+| Timeline accuracy | ±20% | ✅ |
+| Risk identification | 90%+ | ✅ |
+
+## Integration
+
+**Called By:**
+
+- `/plan` - Planning workflow
+- User - Direct invocation for plan generation
+
+**Calls:**
+
+- `/research` - Research findings
+- Various analysis tools
+
+**Exit:**
+
+```markdown
+✅ **Completed /generate-plan:** Plan generation finished
+```
+
+---
+
+## Command Metadata
+
+**File:** `generate-plan.yaml`
+**Type:** Command/Workflow
+**Complexity:** Moderate
+**Estimated Tokens:** ~1,827
+**Last Updated:** 2025-10-22
+**Status:** Active
+
+**Topics Covered:**
+
+- Plan generation
+- Task decomposition
+- Effort estimation
+- Risk assessment
+
+**Dependencies:**
+
+- /research - Research findings as input

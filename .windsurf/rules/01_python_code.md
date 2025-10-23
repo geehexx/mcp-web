@@ -1,6 +1,7 @@
 ---
 trigger: glob
 description: Python code style type hints async patterns and best practices
+title: Python Code Standards
 globs: *.py, **/*.py
 ---
 
@@ -382,10 +383,10 @@ Before committing Python code:
 
 ## Rule Metadata
 
-**File:** `01_python_code.md`
-**Trigger:** glob
+**File:** `01_python_code.yaml`
+**Trigger:** glob (Windsurf) / globs (Cursor)
 **Estimated Tokens:** ~2,200
-**Last Updated:** 2025-10-21
+**Last Updated:** 2025-10-22
 **Status:** Active
 
 **Can be @mentioned:** Yes (hybrid loading)
@@ -404,7 +405,3 @@ Before committing Python code:
 **Dependencies:**
 
 - Source: 02_python_standards.md
-
-**Changelog:**
-
-- 2025-10-21: Created from 02_python_standards.md (Python content only)

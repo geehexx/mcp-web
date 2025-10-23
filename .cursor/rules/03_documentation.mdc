@@ -1,0 +1,190 @@
+---
+alwaysApply: false
+globs: docs/**/*.md, *.md, README.md
+description: Documentation standards markdown ADRs initiatives
+title: Documentation Standards
+tags: ['documentation', 'markdown', 'adr', 'initiatives']
+related: ['/docs/DOCUMENTATION_STRUCTURE.md']
+---
+
+# Documentation Standards & Management
+
+## 3.1 Documentation Structure
+
+**Reference:** `docs/DOCUMENTATION_STRUCTURE.md`
+
+Follow the established directory structure:
+
+```text
+docs/
+├── CONSTITUTION.md                 # Project principles
+├── DOCUMENTATION_STRUCTURE.md      # This structure (meta)
+├── adr/                            # Architecture Decision Records
+│   ├── README.md                   # ADR index
+│   ├── template.md                 # ADR template
+│   └── NNNN-decision-title.md      # Individual ADRs
+├── initiatives/                    # Strategic work tracking
+│   ├── active/                     # Current initiatives
+│   └── completed/                  # Archived initiatives
+├── guides/                         # How-to documentation
+├── api/                            # API reference
+├── architecture/                   # System design docs
+├── reference/                      # Quick reference
+└── archive/                        # Historical documents
+```
+
+## 3.2 Document Types
+
+### Architecture Decision Records (ADRs)
+
+**Reference:** [ADR GitHub](https://adr.github.io/) (October 2025)
+
+- **Purpose:** Document significant architectural decisions
+- **Format:** Use `docs/adr/template.md`
+- **Naming:** `NNNN-verb-noun-phrase.md` (e.g., `0001-use-httpx-playwright-fallback.md`)
+- **Lifecycle:** Proposed → Accepted → Implemented (immutable once accepted)
+- **When to create:**
+  - New dependencies
+  - Major algorithm changes
+  - Security-related decisions
+  - Performance-critical changes
+  - API design decisions
+
+### Initiatives
+
+**Purpose:** Track strategic work and multi-session projects
+
+- **Format:** Use initiative template
+- **Naming:** `YYYY-MM-DD-descriptive-name.md`
+- **Structure:** Objective, phases, tasks, acceptance criteria
+- **Lifecycle:** Active → Completed → Archived
+
+### Guides
+
+**Purpose:** How-to documentation for common tasks
+
+- **Format:** Step-by-step instructions
+- **Examples:** Code snippets, command sequences
+- **Audience:** Developers, contributors
+
+## 3.3 Markdown Standards
+
+### File Structure
+
+```markdown
+---
+title: "Document Title"
+type: "guide|adr|initiative|reference"
+status: "draft|active|completed|archived"
+created: "YYYY-MM-DD"
+updated: "YYYY-MM-DD"
+---
+
+# Document Title
+
+Brief description of the document's purpose.
+
+## Section 1
+
+Content with proper headings hierarchy.
+
+### Subsection
+
+More detailed content.
+
+## References
+
+- [Link 1](url)
+- [Link 2](url)
+```
+
+### Headings
+
+- **H1:** Document title only
+- **H2:** Major sections
+- **H3:** Subsections
+- **H4+:** Avoid deep nesting
+
+### Code Blocks
+
+```python
+# Use language-specific syntax highlighting
+def example_function():
+    return "Hello, World!"
+```
+
+```bash
+# Shell commands with comments
+echo "Running command"
+python script.py
+```
+
+### Links
+
+- **Internal:** Use relative paths (`../adr/0001-decision.md`)
+- **External:** Use full URLs with descriptive text
+- **References:** Link to related documents
+
+## 3.4 Content Guidelines
+
+### Writing Style
+
+- **Clear and concise:** Avoid unnecessary complexity
+- **Action-oriented:** Use active voice
+- **Consistent:** Follow established patterns
+- **Complete:** Include all necessary information
+
+### Technical Documentation
+
+- **Code examples:** Always include working examples
+- **Error handling:** Document common errors and solutions
+- **Dependencies:** List all requirements
+- **Version compatibility:** Specify version requirements
+
+### User Documentation
+
+- **Step-by-step:** Break complex tasks into steps
+- **Prerequisites:** List what users need before starting
+- **Expected outcomes:** Describe what success looks like
+- **Troubleshooting:** Include common issues and solutions
+
+## 3.5 Maintenance
+
+### Regular Updates
+
+- **Keep current:** Update documentation with code changes
+- **Review accuracy:** Verify examples and instructions work
+- **Remove outdated:** Archive or delete obsolete content
+- **Link checking:** Ensure all links are valid
+
+### Quality Checklist
+
+- ✅ Clear title and description
+- ✅ Proper heading structure
+- ✅ Working code examples
+- ✅ Valid links (internal and external)
+- ✅ Consistent formatting
+- ✅ Up-to-date information
+
+---
+
+## Rule Metadata
+
+**File:** `03_documentation.yaml`
+**Trigger:** glob (Windsurf) / globs (Cursor)
+**Estimated Tokens:** ~1,500
+**Last Updated:** 2025-10-22
+**Status:** Active
+
+**Topics Covered:**
+- Documentation structure
+- ADR standards
+- Initiative tracking
+- Markdown guidelines
+
+**Workflow References:**
+- /implement - Documentation updates
+- /validate - Documentation validation
+
+**Dependencies:**
+- Source: 03_documentation.md

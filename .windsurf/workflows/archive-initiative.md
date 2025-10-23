@@ -1,21 +1,18 @@
 ---
-created: "2025-10-17"
-updated: "2025-10-21"
 description: Archive completed initiative or handle superseded initiatives
-auto_execution_mode: 3
+title: Archive Initiative Workflow
+type: workflow
 category: Documentation
-complexity: 50
-tokens: 1100
-dependencies: ["scripts/validate_archival.py"]
+complexity: moderate
+dependencies: ['scripts/validate_archival.py']
 status: active
-version: "2.0-intelligent-semantic-preservation"
+created: 2025-10-22
+updated: 2025-10-22
 ---
 
 # Archive Initiative Workflow
 
 Archive completed initiatives with validation and automation.
-
----
 
 ## Stage 1: Task Plan
 
@@ -29,8 +26,6 @@ update_plan({
   ]
 })
 ```
-
----
 
 ## Stage 2: Validation (MANDATORY)
 
@@ -48,57 +43,192 @@ python scripts/validate_archival.py docs/initiatives/active/[name]/initiative.md
 ```bash
 python scripts/validate_archival.py \
   docs/initiatives/active/[name]/initiative.md \
-  --force --reason "[justification]"
+  --force
 ```
 
----
+## Stage 3: Execute Archival
 
-## Stage 3: Automated Archival
+### 3.1 Move Initiative
+
+**Move to archive:**
 
 ```bash
-task archive:initiative NAME=[folder-name]
-
-# Preview: DRY_RUN=true
-# Date: COMPLETED_ON=YYYY-MM-DD
+mv docs/initiatives/active/[name] docs/initiatives/archive/[name]
 ```
 
-**Auto:** Adds notice, moves active/→completed/, updates refs, regenerates index
+### 3.2 Update Initiative Status
 
-**Performance:** 90x faster (15min→10sec)
+**Update initiative file:**
 
-**Manual fallback:** Add archived notice, move to completed/, run `task update:index`
-
+```markdown
 ---
+Status: "Archived"
+Completed: "YYYY-MM-DD"
+Archived: "YYYY-MM-DD"
+# ... other metadata
+---
+```
 
-## Superseded Initiatives
+### 3.3 Create Archive Entry
 
-**Completed:** → `completed/`
-**Superseded:** → superseding initiative's `artifacts/`
+**Add to archive index:**
+
+```markdown
+## [Initiative Name]
+
+**Status:** Archived
+**Completed:** YYYY-MM-DD
+**Duration:** X weeks
+**Outcome:** [Success/Failure/Partial]
+**Key Deliverables:** [List of key deliverables]
+**Lessons Learned:** [Key lessons learned]
+```
+
+## Stage 4: Update Related Documentation
+
+### 4.1 Update Project Status
+
+**Update project documentation:**
+
+- Remove from active initiatives list
+- Add to completed initiatives list
+- Update project status
+
+### 4.2 Update Dependencies
+
+**Update dependent initiatives:**
+
+- Remove dependencies on archived initiative
+- Update status if dependencies were blocking
+- Notify stakeholders of changes
+
+### 4.3 Update Metrics
+
+**Update project metrics:**
+
+- Completion rate
+- Average duration
+- Success rate
+- Lessons learned
+
+## Stage 5: Clean Up
+
+### 5.1 Remove Temporary Files
+
+**Clean up temporary files:**
+
+- Remove draft documents
+- Clean up artifacts
+- Remove temporary configurations
+
+### 5.2 Archive Artifacts
+
+**Move artifacts to archive:**
+
+- Move to archive/artifacts/
+- Organize by date
+- Ensure accessibility
+
+## Stage 6: Commit Changes
+
+### 6.1 Commit Archive
 
 ```bash
-mkdir -p docs/initiatives/active/[superseding]/artifacts
-mv docs/initiatives/active/[superseded] \
-   docs/initiatives/active/[superseding]/artifacts/[name]
+git add docs/initiatives/archive/[name]/
+git add docs/initiatives/archive/README.md
+git commit -m "docs(initiative): archive [name] initiative
+
+- Status: Completed
+- Duration: X weeks
+- Outcome: [Success/Failure/Partial]
+- Key Deliverables: [List]"
 ```
 
-Create `artifacts/[name]/README.md` with superseding links, update cross-references.
-
----
-
-## Stage 4: Commit
+### 6.2 Update Index
 
 ```bash
-task docs:lint && task test:fast
-git diff && git add docs/initiatives/completed/[name].md docs/initiatives/README.md
-git commit -m "chore(docs): archive initiative [name]
+git add docs/initiatives/README.md
+git commit -m "docs(initiative): update index for archived [name]"
+```
 
-- Completed: YYYY-MM-DD
-- All criteria met
-- Related: ADR-XXXX"
+## Context Loading
+
+Load these rules if you determine you need them based on their descriptions:
+
+- **Documentation Standards**: `/rules/03_documentation.mdc` - Apply when updating documentation and archives
+- **Context Optimization**: `/rules/07_context_optimization.mdc` - Apply when dealing with large files or complex operations
+
+## Workflow References
+
+When this archive-initiative workflow is called:
+
+1. **Load**: `/commands/archive-initiative.md`
+2. **Execute**: Follow the archival stages defined above
+3. **Validate**: Ensure all gates are met
+4. **Archive**: Move initiative to archive
+5. **Update**: Update related documentation
+
+## Anti-Patterns
+
+❌ **Don't:**
+
+- Skip validation
+- Archive incomplete initiatives
+- Ignore dependencies
+- Skip documentation updates
+
+✅ **Do:**
+
+- Validate all gates
+- Ensure completion
+- Check dependencies
+- Update all documentation
+
+## Success Metrics
+
+| Metric | Target | Status |
+|--------|--------|--------|
+| Validation passes | 100% | ✅ |
+| Documentation updated | 100% | ✅ |
+| Dependencies resolved | 100% | ✅ |
+| Archive organized | 100% | ✅ |
+
+## Integration
+
+**Called By:**
+
+- `/work` - Session end protocol
+- User - Direct invocation for archival
+
+**Calls:**
+
+- `scripts/validate_archival.py` - Validation script
+- Various file operations
+
+**Exit:**
+
+```markdown
+✅ **Completed /archive-initiative:** Initiative archival finished
 ```
 
 ---
 
-## References
+## Command Metadata
 
-- ADR-0013, DOCUMENTATION_STRUCTURE.md, 14_automation_scripts.md
+**File:** `archive-initiative.yaml`
+**Type:** Command/Workflow
+**Complexity:** Moderate
+**Estimated Tokens:** ~1,100
+**Last Updated:** 2025-10-22
+**Status:** Active
+
+**Topics Covered:**
+
+- Initiative archival
+- Validation processes
+- Documentation updates
+- Cleanup procedures
+
+**Dependencies:**
+
+- scripts/validate_archival.py - Validation script

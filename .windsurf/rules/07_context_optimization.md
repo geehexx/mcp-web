@@ -1,127 +1,234 @@
 ---
 trigger: model_decision
-description: Apply for context loading batch operations or performance optimization work
+description: Apply when dealing with large files, complex operations, or memory-intensive tasks
+title: Context Optimization
 ---
 
-# Context and Performance Optimization
+# Context Optimization Guidelines
 
-## When to Batch Operations
+## Model Decision Rule Loading
 
-| Scenario | Batch? | Reason |
-|----------|--------|--------|
-| 3+ independent items | ✅ Yes | 3-10x faster |
-| I/O-bound operations | ✅ Yes | Parallelism wins |
-| Items depend on previous | ❌ No | Sequential required |
-| CPU-bound tasks | ⚠️ Maybe | Use different parallelization |
-| Memory constrained | ❌ No | Stream instead |
+**For Cursor IDE:** This rule uses glob matching as a best-effort approach. When working with large files or complex operations, consider loading additional context rules manually.
 
----
+**Available context rules to load when needed:**
 
-## Optimal Batch Sizes
+- **Security Practices**: `/rules/06_security_practices.mdc` - For security-sensitive code, API calls, user input, LLM interactions, and authentication
+- **Context Optimization**: `/rules/07_context_optimization.mdc` - For large files, complex operations, or memory-intensive tasks
+- **File Operations**: `/rules/08_file_operations.mdc` - For file manipulation, directory operations, and path handling
+- **Git Workflows**: `/rules/09_git_workflows.mdc` - For git operations, branching, and version control
+- **Session Protocols**: `/rules/10_session_protocols.mdc` - For session management and protocol adherence
+- **Error Handling**: `/rules/11_error_handling.mdc` - For robust error handling and recovery
+- **Task Orchestration**: `/rules/12_task_orchestration.mdc` - For complex task management and coordination
+- **Workflow Routing**: `/rules/13_workflow_routing.mdc` - For workflow selection and routing decisions
+- **Automation Scripts**: `/rules/14_automation_scripts.mdc` - For automation and scripting tasks
+- **Tool Patterns**: `/rules/15_tool_patterns.mdc` - For tool usage patterns and best practices
 
-| Operation | Batch Size | Reason |
-|-----------|------------|--------|
-| Local file reads | 10-15 | Balance parallelism vs overhead |
-| Network file reads | 5-10 | Network latency dominates |
-| URL fetches | 3-5 | Rate limiting, politeness |
-| LLM API calls | 1-3 | API rate limits |
-| Database queries | 50-100 | Connection pooling |
+## Context Loading Strategy
 
----
+### Automatic Loading (Glob Matching)
 
-## Context Loading Patterns
+Rules are automatically loaded when editing files matching these patterns:
 
-Initiative Context
+- `*.py, **/*.py` - Python source files
+- `tests/**/*.py, conftest.py` - Test files
+- `*.md, docs/**/*.md` - Documentation files
 
-**Use:** Load all files for an active initiative
+### Manual Loading (Context-Aware)
 
-```python
-# 1. Identify initiative files
-initiative_dir = "docs/initiatives/active/feature-x/"
-core_files = [
-    f"{initiative_dir}initiative.md",
-    f"{initiative_dir}plan.md",
-    "src/feature_x.py",
-    "tests/test_feature_x.py"
-]
+When working on specific tasks, manually reference relevant rules:
 
-# 2. Batch load
-mcp0_read_multiple_files(core_files)
+```markdown
+# Load these rules if you determine you need them based on their descriptions:
+
+- Security Practices: `/rules/06_security_practices.mdc` - Apply when dealing with security-sensitive code including API calls, user input, LLM interactions, and authentication
+- Context Optimization: `/rules/07_context_optimization.mdc` - Apply when dealing with large files, complex operations, or memory-intensive tasks
+- File Operations: `/rules/08_file_operations.mdc` - Apply when performing file manipulation, directory operations, or path handling
 ```
 
-**Performance:** 5-10x faster than sequential
+## Memory Management
 
----
-
-## Pattern 2: Hierarchical Loading
-
-**Use:** Load project context progressively
+### Large File Handling
 
 ```python
-# Phase 1: High-level overview
-overview_files = [
-    "README.md",
-    "docs/CONSTITUTION.md",
-    "docs/DOCUMENTATION_STRUCTURE.md"
-]
-mcp0_read_multiple_files(overview_files)
+# Use generators for large datasets
+def process_large_file(path: str) -> Iterator[str]:
+    """Process file line by line (memory efficient)."""
+    with open(path) as f:
+        for line in f:
+            yield process_line(line)
 
-# Phase 2: Relevant subsystem (based on Phase 1)
-subsystem_files = find_by_name(
-    SearchDirectory="src/subsystem/",
-    Pattern="*.py",
-    MaxDepth=2
-)
-mcp0_read_multiple_files(subsystem_files[:10])
-
-# Phase 3: Deep dive (if needed)
-# Load specific files identified in Phase 2
+# Stream processing for large data
+async def stream_large_dataset(data_source: str) -> AsyncIterator[dict]:
+    """Stream large dataset in chunks."""
+    async with open(data_source) as f:
+        async for line in f:
+            yield parse_line(line)
 ```
 
-**Benefits:** Minimal tokens, targeted loading, progressive refinement
+### Context Window Optimization
 
----
+```python
+# Batch operations to reduce context
+async def batch_process(items: list[str], batch_size: int = 100) -> list[dict]:
+    """Process items in batches to manage context."""
+    results = []
+    for i in range(0, len(items), batch_size):
+        batch = items[i:i + batch_size]
+        batch_result = await process_batch(batch)
+        results.extend(batch_result)
+    return results
 
-## Quick Reference
+# Use summaries for large content
+def summarize_large_content(content: str, max_length: int = 1000) -> str:
+    """Create summary of large content for context."""
+    if len(content) <= max_length:
+        return content
 
-**Batch file reads:** Use `mcp0_read_multiple_files` for 3+ files (3-10x faster)
-**Optimal size:** 10-15 files per batch
-**Parallel searches:** Independent grep_search calls in parallel
+    # Extract key sections
+    summary = content[:max_length//2] + "\n...\n" + content[-max_length//2:]
+    return summary
+```
 
-**Performance targets:**
+## Performance Optimization
 
-- 5 files: <1s
-- 10 files: <2s
-- 15 files: <3s
+### Parallel Processing
+
+```python
+import asyncio
+from concurrent.futures import ThreadPoolExecutor
+
+# CPU-bound parallel processing
+def parallel_cpu_task(items: list[str]) -> list[dict]:
+    """Process CPU-bound tasks in parallel."""
+    with ThreadPoolExecutor(max_workers=4) as executor:
+        futures = [executor.submit(process_item, item) for item in items]
+        return [future.result() for future in futures]
+
+# IO-bound parallel processing
+async def parallel_io_task(urls: list[str]) -> list[dict]:
+    """Process IO-bound tasks in parallel."""
+    tasks = [fetch_url(url) for url in urls]
+    return await asyncio.gather(*tasks, return_exceptions=True)
+```
+
+### Caching Strategy
+
+```python
+from functools import lru_cache
+import functools
+
+# Function result caching
+@lru_cache(maxsize=1000)
+def expensive_computation(n: int) -> int:
+    """Cache expensive computation results."""
+    return complex_calculation(n)
+
+# Async caching with TTL
+_cache: dict[str, tuple[any, float]] = {}
+
+async def cached_async_operation(key: str, operation: callable, ttl: int = 3600) -> any:
+    """Cache async operation results with TTL."""
+    now = time.time()
+
+    if key in _cache:
+        result, timestamp = _cache[key]
+        if now - timestamp < ttl:
+            return result
+
+    result = await operation()
+    _cache[key] = (result, now)
+    return result
+```
+
+## Context-Aware Operations
+
+### Smart File Reading
+
+```python
+def smart_read_file(file_path: str, max_size: int = 10000) -> str:
+    """Read file with size awareness."""
+    file_size = Path(file_path).stat().st_size
+
+    if file_size > max_size:
+        # Read first and last parts for large files
+        with open(file_path, 'r') as f:
+            start = f.read(max_size // 2)
+            f.seek(-max_size // 2, 2)
+            end = f.read()
+        return start + "\n...\n" + end
+    else:
+        return Path(file_path).read_text()
+```
+
+### Intelligent Batching
+
+```python
+def intelligent_batch(items: list[str], max_batch_size: int = 100) -> list[list[str]]:
+    """Create intelligent batches based on item complexity."""
+    batches = []
+    current_batch = []
+    current_size = 0
+
+    for item in items:
+        item_size = len(item)  # Simple size estimation
+        if current_size + item_size > max_batch_size and current_batch:
+            batches.append(current_batch)
+            current_batch = [item]
+            current_size = item_size
+        else:
+            current_batch.append(item)
+            current_size += item_size
+
+    if current_batch:
+        batches.append(current_batch)
+
+    return batches
+```
+
+## Rule Loading Best Practices
+
+### Context-Aware Rule Selection
+
+1. **Analyze the task** - Determine what type of work you're doing
+2. **Check file patterns** - See if glob matching applies
+3. **Manual loading** - Reference specific rules when needed
+4. **Context switching** - Load different rules for different phases
+
+### Example Usage
+
+```markdown
+# Working on authentication system
+Load: Security Practices rule for input validation and API key handling
+
+# Processing large dataset
+Load: Context Optimization rule for memory management and batching
+
+# File manipulation tasks
+Load: File Operations rule for safe path handling and file operations
+```
 
 ---
 
 ## Rule Metadata
 
-**File:** `07_context_optimization.md`
-**Trigger:** model_decision
-**Estimated Tokens:** ~2,500
-**Last Updated:** 2025-10-21
+**File:** `07_context_optimization.yaml`
+**Trigger:** model_decision (Windsurf) / globs (Cursor)
+**Estimated Tokens:** ~1,800
+**Last Updated:** 2025-10-22
 **Status:** Active
-
-**Can be @mentioned:** Yes (hybrid loading)
 
 **Topics Covered:**
 
-- Batch operations
-- Parallel loading
-- Context patterns
+- Context optimization
+- Memory management
 - Performance optimization
+- Rule loading strategies
 
 **Workflow References:**
 
-- /load-context - Context loading
-- /work - Batch optimization
+- /implement - Context-aware implementation
+- /validate - Performance validation
 
 **Dependencies:**
 
-- Merged: batch-operations.md + context-loading-patterns.md
-
-**Changelog:**
-
-- 2025-10-21: Created from batch-operations.md and context-loading-patterns.md
+- Source: 07_context_optimization.md

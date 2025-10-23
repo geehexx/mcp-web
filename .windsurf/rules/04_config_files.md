@@ -1,6 +1,7 @@
 ---
 trigger: glob
 description: Configuration file best practices TOML YAML Taskfile
+title: Configuration File Standards
 globs: pyproject.toml, *.ini, Taskfile.yml, .pre-commit-config.yaml
 ---
 
@@ -48,75 +49,87 @@ list:
 
 # Bad
 key: "value"  # Unnecessary quotes
-list:
-- item1     # Inconsistent spacing
+list: [item1, item2]  # Hard to read
 ```
 
 ## Taskfile.yml
 
-**Organization:**
-
-- Group related tasks
-- Use `desc:` for user-facing tasks
-- Internal tasks: Prefix with `internal:`
-- Dependencies: Use `deps:` array
-
-```yaml
-tasks:
-  test:fast:
-    desc: "Run fast unit tests"
-    cmd: pytest -xvs tests/unit --maxfail=1
-
-  internal:setup:
-    cmd: uv sync
-```
-
-## Pre-commit Config
-
 **Structure:**
 
-- Order hooks by execution speed (fast → slow)
-- Use `args:` for configuration
-- Set `pass_filenames: false` for hooks that need it
-
 ```yaml
-repos:
-  - repo: local
-    hooks:
-      - id: validate-rules
-        name: Validate rules
-        entry: python scripts/validate_rules.py
-        language: system
-        files: \.windsurf/rules/.*\.md$
+version: '3'
+
+tasks:
+  test:
+    desc: "Run tests"
+    cmds:
+      - uv run pytest
+
+  lint:
+    desc: "Run linting"
+    cmds:
+      - uv run ruff check .
+      - uv run mypy .
 ```
+
+## Configuration Validation
+
+### TOML Validation
+
+```bash
+# Validate TOML syntax
+python -c "import tomllib; tomllib.load(open('pyproject.toml', 'rb'))"
+```
+
+### YAML Validation
+
+```bash
+# Validate YAML syntax
+python -c "import yaml; yaml.safe_load(open('config.yaml'))"
+```
+
+## Best Practices
+
+### Version Management
+
+- **Pin major versions:** Use `>=1.0,<2.0` for libraries
+- **Exact versions:** Use `==1.2.3` for applications
+- **Update regularly:** Keep dependencies current
+
+### Security
+
+- **No secrets:** Never commit API keys or passwords
+- **Environment variables:** Use `.env` files for secrets
+- **Validation:** Validate all configuration inputs
+
+### Documentation
+
+- **Inline comments:** Explain non-obvious choices
+- **README updates:** Document new configuration options
+- **Examples:** Provide working configuration examples
 
 ---
 
 ## Rule Metadata
 
-**File:** `04_config_files.md`
-**Trigger:** glob
-**Estimated Tokens:** ~1,500
-**Last Updated:** 2025-10-21
+**File:** `04_config_files.yaml`
+**Trigger:** glob (Windsurf) / globs (Cursor)
+**Estimated Tokens:** ~800
+**Last Updated:** 2025-10-22
 **Status:** Active
-
-**Can be @mentioned:** Yes (hybrid loading)
 
 **Topics Covered:**
 
-- TOML best practices
-- YAML pitfalls
-- Taskfile organization
-- Pre-commit configuration
+- TOML configuration
+- YAML configuration
+- Taskfile standards
+- Configuration validation
 
 **Workflow References:**
 
-- /implement - When editing config files
+- /implement - Configuration updates
+- /validate - Configuration validation
 
 **Dependencies:**
 
-- Consolidated from project experience
-
-**Changelog:**
-
-- 2025-10-21: Created (new consolidated rule)
+- Source: 04_config_files.md

@@ -1,14 +1,13 @@
 ---
-created: "2025-10-17"
-updated: "2025-10-21"
 description: Systematic session review with intelligent consolidation detection
-auto_execution_mode: 3
+title: Meta-Analysis Workflow
+type: workflow
 category: Analysis
-complexity: 60
-tokens: 1300
-dependencies: [extract-session, summarize-session, consolidate-summaries]
+complexity: moderate
+dependencies: ['extract-session', 'summarize-session', 'consolidate-summaries']
 status: active
-version: "2.0-intelligent-semantic-preservation"
+created: 2025-10-22
+updated: 2025-10-22
 ---
 
 # Meta-Analysis Workflow
@@ -48,35 +47,102 @@ ls -1 docs/archive/session-summaries/${TODAY}-*.md 2>/dev/null | wc -l
 
 **Threshold:** ≥70% + gap <2h → Call `/consolidate-summaries`, skip to Stage 5
 
-**Never:** Different initiatives, unrelated files, gap >2h, confidence <70%
+## Stage 3: Extract and Summarize
 
-## Stage 3: Extract Session
+**Call** `/extract-session` → `/summarize-session`
 
-Call `/extract-session` → Git history, accomplishments, decisions, learnings, protocol compliance
+**Output:** `docs/archive/session-summaries/YYYY-MM-DD-HHMMSS-session-summary.md`
 
-## Stage 4: Generate Summary
+## Stage 4: Living Documentation
 
-Call `/summarize-session` → Template, validate, create `docs/archive/session-summaries/YYYY-MM-DD-*.md`
+**Check for updates needed:**
 
-## Stage 5: Living Documentation
+- `docs/ARCHITECTURE.md` - Major architectural changes
+- `docs/CONSTITUTION.md` - Process or standard changes
+- `docs/DOCUMENTATION_STRUCTURE.md` - Documentation structure changes
+- `README.md` - Project overview changes
 
-| Doc | Update ✅ | Skip ❌ |
-|-----|----------|----------|
-| PROJECT_SUMMARY | Major feature, milestone, ADR, initiative, metrics | Routine fixes, minor docs, tests |
-| CHANGELOG | Release, breaking change, user feature, major bug | Internal, docs-only, WIP |
+**Update if:** Significant changes detected (new patterns, processes, or standards)
 
-If triggers: Call `/update-docs`
+## Stage 5: Commit
 
-## Stage 6: Commit
+**Commit all changes:**
 
 ```bash
-git add docs/archive/session-summaries/YYYY-MM-DD-*.md .windsurf/.last-meta-analysis
-git commit -m "docs(session): add YYYY-MM-DD [focus] session summary
+git add .
+git commit -m "docs: session summary and documentation updates
 
-- Duration: ~Nh, Focus: [Primary]
-- Key: [highlights]"
+- Session summary: YYYY-MM-DD-HHMMSS
+- Updated: [list of updated docs]
+- Changes: [brief description]"
 ```
 
-## References
+## Context Loading
 
-`extract-session.md`, `summarize-session.md`, `update-docs.md`, `10_session_protocols.md`
+Load these rules if you determine you need them based on their descriptions:
+
+- **Context Optimization**: `/rules/07_context_optimization.mdc` - Apply when dealing with large files, complex operations, or memory-intensive tasks
+- **Documentation Standards**: `/rules/03_documentation.mdc` - Apply when updating documentation and maintaining standards
+
+## Workflow References
+
+When this meta-analysis workflow is called:
+
+1. **Load**: `/commands/meta-analysis.md`
+2. **Execute**: Follow the analysis stages defined above
+3. **Consolidate**: Check for session consolidation opportunities
+4. **Summarize**: Extract and summarize session data
+5. **Update**: Update living documentation as needed
+
+## Integration
+
+**Called By:**
+
+- `/work` - Session end protocol
+- User - Direct invocation for session analysis
+
+**Calls:**
+
+- `/extract-session` - Extract session data
+- `/summarize-session` - Create session summary
+- `/consolidate-summaries` - Consolidate multiple sessions (rare)
+
+## Anti-Patterns
+
+❌ **Don't:**
+
+- Skip session summarization
+- Ignore consolidation opportunities
+- Skip living documentation updates
+- Commit without proper message
+
+✅ **Do:**
+
+- Always create session summary
+- Check for consolidation when appropriate
+- Update living docs when significant changes
+- Use proper commit messages
+
+---
+
+## Command Metadata
+
+**File:** `meta-analysis.yaml`
+**Type:** Command/Workflow
+**Complexity:** Medium
+**Estimated Tokens:** ~1,300
+**Last Updated:** 2025-10-22
+**Status:** Active
+
+**Topics Covered:**
+
+- Session analysis
+- Summary generation
+- Documentation updates
+- Consolidation detection
+
+**Dependencies:**
+
+- /extract-session - Extract session data
+- /summarize-session - Create session summary
+- /consolidate-summaries - Consolidate multiple sessions

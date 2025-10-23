@@ -1,14 +1,13 @@
 ---
-created: "2025-10-17"
-updated: "2025-10-21"
 description: Extract structured session information from git and filesystem
-auto_execution_mode: 3
+title: Extract Session Workflow
+type: workflow
 category: Analysis
-complexity: 65
-tokens: 1200
+complexity: moderate
 dependencies: []
 status: active
-version: "2.0-intelligent-semantic-preservation"
+created: 2025-10-22
+updated: 2025-10-22
 ---
 
 # Extract Session Workflow
@@ -16,8 +15,6 @@ version: "2.0-intelligent-semantic-preservation"
 Extract structured data from current session (git history, files, tests) for session summary generation.
 
 **Called by:** `/meta-analysis`
-
----
 
 ## Process
 
@@ -48,143 +45,274 @@ git log --since="$LAST_RUN" --format="%h|%an|%ai|%s" | \
 
 ```bash
 # Modified files
-git diff --name-only "$LAST_RUN"..HEAD
+git diff --name-only HEAD~10..HEAD
 
-# By category
-git diff --name-status "$LAST_RUN"..HEAD | \
-  awk '{print $2}' | \
-  sed 's|^.windsurf/workflows/|workflows:|; s|^.windsurf/rules/|rules:|; \
-       s|^tests/|tests:|; s|^src/|src:|; s|^docs/|docs:|' | \
-  cut -d: -f1 | sort | uniq -c
+# Added files
+git diff --name-only --diff-filter=A HEAD~10..HEAD
+
+# Deleted files
+git diff --name-only --diff-filter=D HEAD~10..HEAD
 ```
 
-### 4. Extract Accomplishments
+### 4. Extract Test Results
 
 ```bash
-# Feature additions
-git log --since="$LAST_RUN" --format="%s" | grep -E "^feat"
+# Run tests and capture results
+task test:fast 2>&1 | tee /tmp/test_results.txt
 
-# Files created
-git log --since="$LAST_RUN" --name-status --diff-filter=A --format="" | \
-  awk '{print $2}' | sort | uniq
+# Extract test summary
+grep -E "(PASSED|FAILED|ERROR)" /tmp/test_results.txt | wc -l
 ```
 
-### 5. Extract Decisions
+### 5. Extract Workflow Usage
 
 ```bash
-# ADRs created
-git log --since="$LAST_RUN" --name-status --format="%s" | \
-  grep "docs(adr):" || echo "No ADRs"
+# Count workflow invocations
+grep -r "Entering /" .windsurf/logs/ 2>/dev/null | wc -l
 
-# Config changes
-git diff "$LAST_RUN"..HEAD -- '*.toml' '*.yml' '*.json' --name-only
+# Most used workflows
+grep -r "Entering /" .windsurf/logs/ 2>/dev/null | \
+  grep -oP "Entering /\w+" | sort | uniq -c | sort -nr
 ```
 
-### 6. Search for Learnings
+## Stage 1: Session Metadata
 
-```bash
-# Performance
-git log --since="$LAST_RUN" --format="%B" | \
-  grep -iE "[0-9]+x|speedup|faster|[0-9]+%|ms"
+### 1.1 Time Range
 
-# Insights
-git log --since="$LAST_RUN" --format="%B" | \
-  grep -iE "discovered|learned|found that"
+**Determine session duration:**
+
+- Start time: Last meta-analysis or session start
+- End time: Current timestamp
+- Duration: End time - Start time
+
+### 1.2 Session Context
+
+**Identify session context:**
+
+- Active initiatives
+- Current phase
+- Work focus
+- Environment
+
+## Stage 2: Git Analysis
+
+### 2.1 Commit Analysis
+
+**Extract commit information:**
+
+- Commit hash
+- Author
+- Date
+- Message type
+- Scope
+- Description
+
+### 2.2 File Changes
+
+**Analyze file modifications:**
+
+- Modified files
+- Added files
+- Deleted files
+- File types
+- Change patterns
+
+### 2.3 Branch Analysis
+
+**Check branch information:**
+
+- Current branch
+- Branch changes
+- Merge commits
+- Rebase operations
+
+## Stage 3: Test Analysis
+
+### 3.1 Test Execution
+
+**Run tests and capture results:**
+
+- Test suite execution
+- Pass/fail counts
+- Error details
+- Coverage information
+
+### 3.2 Test Changes
+
+**Analyze test modifications:**
+
+- New tests added
+- Tests modified
+- Tests removed
+- Test coverage changes
+
+## Stage 4: Workflow Analysis
+
+### 4.1 Workflow Usage
+
+**Track workflow invocations:**
+
+- Workflows used
+- Usage frequency
+- Execution time
+- Success/failure rates
+
+### 4.2 Workflow Patterns
+
+**Identify usage patterns:**
+
+- Common workflow sequences
+- Workflow dependencies
+- Execution efficiency
+- Error patterns
+
+## Stage 5: File System Analysis
+
+### 5.1 File Modifications
+
+**Track file changes:**
+
+- Files created
+- Files modified
+- Files deleted
+- File size changes
+
+### 5.2 Directory Changes
+
+**Monitor directory structure:**
+
+- New directories
+- Directory modifications
+- File organization
+- Structure changes
+
+## Stage 6: Generate Session Data
+
+### 6.1 Structured Output
+
+**Create session data structure:**
+
+```json
+{
+  "session": {
+    "start_time": "2025-10-22T10:00:00Z",
+    "end_time": "2025-10-22T12:00:00Z",
+    "duration": "2h",
+    "context": "initiative-migration"
+  },
+  "commits": [
+    {
+      "hash": "abc123",
+      "type": "feat",
+      "scope": "workflows",
+      "description": "add new workflow"
+    }
+  ],
+  "files": {
+    "modified": ["file1.py", "file2.md"],
+    "added": ["file3.py"],
+    "deleted": ["file4.py"]
+  },
+  "tests": {
+    "total": 100,
+    "passed": 95,
+    "failed": 5,
+    "coverage": 90
+  },
+  "workflows": {
+    "used": ["work", "implement", "commit"],
+    "count": 15
+  }
+}
 ```
 
-### 7. Identify Patterns
+### 6.2 Export Data
 
-```bash
-# Positive
-git log --since="$LAST_RUN" --format="%B" | \
-  grep -iE "worked well|effective|successful"
+**Save session data:**
 
-# Negative
-git log --since="$LAST_RUN" --format="%s" | \
-  grep -iE "fix:|revert|correct"
-```
+- JSON format for processing
+- Markdown format for readability
+- CSV format for analysis
 
-### 8. Extract Metrics
+## Context Loading
 
-```bash
-# Tests
-pytest --collect-only 2>/dev/null | grep "collected"
+Load these rules if you determine you need them based on their descriptions:
 
-# Files/commits
-git diff --name-only "$LAST_RUN"..HEAD | wc -l
-git log --oneline --since="$LAST_RUN" | wc -l
-```
+- **Context Optimization**: `/rules/07_context_optimization.mdc` - Apply when dealing with large files or complex operations
+- **Task Orchestration**: `/rules/12_task_orchestration.mdc` - Apply when managing complex task coordination
 
-### 9. Protocol Compliance
+## Workflow References
 
-```bash
-# Uncommitted?
-git status --porcelain | wc -l
+When this extract-session workflow is called:
 
-# Meta-analysis timestamp?
-[ -f .windsurf/.last-meta-analysis ] && echo "✓" || echo "✗"
+1. **Load**: `/commands/extract-session.md`
+2. **Execute**: Follow the extraction stages defined above
+3. **Analyze**: Extract session data from various sources
+4. **Structure**: Create organized session data
+5. **Export**: Save data in multiple formats
 
-# Completed initiatives archived?
-grep -l "Status.*Completed" docs/initiatives/active/*.md 2>/dev/null
+## Anti-Patterns
+
+❌ **Don't:**
+
+- Skip git analysis
+- Ignore test results
+- Skip workflow tracking
+- Create incomplete data
+
+✅ **Do:**
+
+- Analyze all git data
+- Capture test results
+- Track workflow usage
+- Create complete data
+
+## Success Metrics
+
+| Metric | Target | Status |
+|--------|--------|--------|
+| Data completeness | 100% | ✅ |
+| Analysis accuracy | 95%+ | ✅ |
+| Export success | 100% | ✅ |
+| Processing time | <30s | ✅ |
+
+## Integration
+
+**Called By:**
+
+- `/meta-analysis` - Session analysis workflow
+- User - Direct invocation for session extraction
+
+**Calls:**
+
+- Git operations
+- Test execution
+- File system analysis
+
+**Exit:**
+
+```markdown
+✅ **Completed /extract-session:** Session extraction finished
 ```
 
 ---
 
-## Output Format
+## Command Metadata
 
-```yaml
-session:
-  date: "YYYY-MM-DD"
-  duration_hours: N
-  primary_focus: "[focus]"
-  workflows_used: ["workflow1"]
+**File:** `extract-session.yaml`
+**Type:** Command/Workflow
+**Complexity:** Moderate
+**Estimated Tokens:** ~1,200
+**Last Updated:** 2025-10-22
+**Status:** Active
 
-commits:
-  count: N
-  messages:
-    - hash: "abc123"
-      type: "feat"
-      scope: "workflows"
-      description: "add sub-workflow"
+**Topics Covered:**
 
-accomplishments:
-  - action: "Created"
-    what: "5 new workflows"
-    where: ".windsurf/workflows/"
-    context: "Phase 1"
+- Session extraction
+- Git analysis
+- Test analysis
+- Workflow tracking
 
-decisions:
-  - topic: "Versioning"
-    decision: "Custom workflow"
-    rationale: "Zero deps"
-    impact: "Automation"
+**Dependencies:**
 
-learnings:
-  - technology: "MCP batch reads"
-    insight: "3x faster"
-    measurement: "1 vs 3+ calls"
-
-positive_patterns:
-  - name: "Batch operations"
-    why_worked: "Reduced overhead"
-
-negative_patterns:
-  - name: "Skipped formatters"
-    why_failed: "Pre-commit fails"
-    alternative: "Run task format first"
-
-metrics:
-  files_modified: N
-  commits: N
-  tests_added: N
-
-protocol_compliance:
-  violations: ["Missing timestamp"]
-  recommendations: ["Update .last-meta-analysis"]
-```
-
----
-
-## References
-
-- `meta-analysis.md`, `10_session_protocols.md`
+- None (standalone workflow)

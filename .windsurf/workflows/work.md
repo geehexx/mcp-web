@@ -1,22 +1,13 @@
 ---
-created: "2025-10-17"
-updated: "2025-10-21"
 description: Intelligent work orchestration and context detection
-auto_execution_mode: 3
+title: Work Orchestration Workflow
+type: workflow
 category: Orchestrator
-complexity: 85
-tokens: 1650
-version: v2.0-intelligent-semantic-preservation
-dependencies:
-  - detect-context
-  - load-context
-  - implement
-  - plan
-  - validate
-  - commit
-  - archive-initiative
-  - meta-analysis
+complexity: complex
+dependencies: ['detect-context', 'load-context', 'implement', 'plan', 'validate', 'commit', 'archive-initiative', 'meta-analysis']
 status: active
+created: 2025-10-22
+updated: 2025-10-22
 ---
 
 # Work Orchestration Workflow
@@ -28,6 +19,8 @@ status: active
 **Philosophy:** AI analyzes project state to determine continuation autonomously.
 
 **Chain:** `/work` → `/detect-context` → [routed workflow] → `/meta-analysis` (session end)
+
+## Critical Workflow Requirements
 
 **🚨 CRITICAL:** Even with specific user instructions (e.g., "@/work Continue Phase 1..."), you MUST follow ALL workflow stages:
 
@@ -42,8 +35,6 @@ status: active
 **Anti-pattern:** "User said do X → skip directly to implementation" ❌
 **Correct:** "User said do X → detect context, confirm route to X, show implementation plan, execute" ✅
 
----
-
 ## Stage 0: Workflow Entry
 
 **Print announcement:**
@@ -51,8 +42,6 @@ status: active
 ```markdown
 🔄 **Entering /work:** Intelligent work orchestration and routing
 ```
-
----
 
 ## Stage 1: Create Initial Task Plan
 
@@ -70,8 +59,6 @@ update_plan({
   ]
 })
 ```
-
----
 
 ## Stage 2: Detect Project Context
 
@@ -93,8 +80,6 @@ update_plan({
   ]
 })
 ```
-
----
 
 ## Stage 3: Route to Workflow
 
@@ -132,8 +117,6 @@ update_plan({
   ]
 })
 ```
-
----
 
 ## Stage 4: Execute Workflow
 
@@ -176,8 +159,6 @@ update_plan({
 - Initiative marked completed? → Session end protocol
 - More work remaining? → Continue to next task
 
----
-
 ## Stage 5: Session End Protocol
 
 **See:** [work-session-protocol.md](./work-session-protocol.md)
@@ -213,28 +194,33 @@ update_plan({
 
 **If NOT triggered:** Brief update ("✅ X done, 🔄 continuing with Y") and continue next task WITHOUT asking "shall I continue?"
 
----
+## Context Loading
 
-## Stage 6: Continue Working
+Load these rules if you determine you need them based on their descriptions:
 
-**If protocol NOT triggered:**
+- **Security Practices**: `/rules/06_security_practices.mdc` - Apply when dealing with security-sensitive code including API calls, user input, LLM interactions, and authentication
+- **Context Optimization**: `/rules/07_context_optimization.mdc` - Apply when dealing with large files, complex operations, or memory-intensive tasks
+- **Task Orchestration**: `/rules/12_task_orchestration.mdc` - Apply when managing complex task coordination and workflow orchestration
+- **Workflow Routing**: `/rules/13_workflow_routing.mdc` - Apply when determining workflow routing and context analysis
 
-- Brief progress update
-- Continue next task
-- No "completion summary" or "shall I continue?"
-- Work until completion or user signals end
+## Workflow References
 
----
+When this work orchestration workflow is called:
+
+1. **Load**: `/commands/work.md`
+2. **Execute**: Follow the orchestration stages defined above
+3. **Route**: Determine appropriate workflow based on context
+4. **Chain**: Execute routed workflow and session end protocol
 
 ## Anti-Patterns
 
-| Don't | Do |
-|-------|----|
+| ❌ Don't | ✅ Do Instead |
+|----------|---------------|
 | Ask obvious questions | Detected initiative X (60%). Continuing... |
 | Skip session end protocol | Always `/meta-analysis` + archive + commit |
 | Over-prompt | Auto-route if 80%+ confidence |
-
----
+| Skip context detection | Always analyze project state first |
+| Skip task planning | Always create task plan before actions |
 
 ## Success Metrics
 
@@ -243,8 +229,6 @@ update_plan({
 | Detection + routing | <30s | ✅ |
 | Autonomous continuation | 70%+ | ✅ |
 | Session end protocol | 100% | ✅ |
-
----
 
 ## Integration
 
@@ -260,21 +244,29 @@ update_plan({
 
 ---
 
-## Sub-Workflows
+## Command Metadata
 
-- [work-routing.md](./work-routing.md) - Routing decision logic
-- [work-session-protocol.md](./work-session-protocol.md) - Session end protocol
+**File:** `work.yaml`
+**Type:** Command/Workflow
+**Complexity:** Complex
+**Estimated Tokens:** ~1,650
+**Last Updated:** 2025-10-22
+**Status:** Active
 
----
+**Topics Covered:**
 
-## References
+- Work orchestration
+- Context detection
+- Workflow routing
+- Session management
 
-- [detect-context.md](./detect-context.md) - Context detection
-- [load-context.md](./load-context.md) - Context loading
-- [meta-analysis.md](./meta-analysis.md) - Session summary
-- [00_core_directives.md](../rules/00_core_directives.md)
+**Dependencies:**
 
----
-
-**Version:** v2.0-intelligent-semantic-preservation
-**Last Updated:** 2025-10-21
+- /detect-context - Context analysis
+- /load-context - Context loading
+- /implement - Implementation workflow
+- /plan - Planning workflow
+- /validate - Validation workflow
+- /commit - Commit workflow
+- /archive-initiative - Initiative archiving
+- /meta-analysis - Session analysis

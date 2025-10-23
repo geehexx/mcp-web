@@ -1,15 +1,13 @@
 ---
-created: "2025-10-21"
-updated: "2025-10-21"
 description: Workflow-specific optimization with intelligent semantic preservation
-auto_execution_mode: 2
+title: Improve Workflow Workflow
+type: workflow
 category: Optimization
-complexity: 65
-tokens: 2500
-dependencies:
-  - improve-prompt
+complexity: moderate
+dependencies: ['improve-prompt']
 status: active
-version: "2.1-self-optimized"
+created: 2025-10-22
+updated: 2025-10-22
 ---
 
 # Improve Workflow (Sub-workflow)

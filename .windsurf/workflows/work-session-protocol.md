@@ -1,15 +1,13 @@
 ---
-created: "2025-10-18"
-updated: "2025-10-21"
 description: /work-session-protocol - Session end protocol and completion detection
-auto_execution_mode: 3
+title: Work Session Protocol Workflow
+type: workflow
 category: Sub-workflow
-parent: work.md
-complexity: 75
-tokens: 1100
-dependencies: [archive-initiative, meta-analysis]
+complexity: moderate
+dependencies: ['archive-initiative', 'meta-analysis']
 status: active
-version: "2.0-intelligent-semantic-preservation"
+created: 2025-10-22
+updated: 2025-10-22
 ---
 
 # Work Session End Protocol
@@ -42,7 +40,7 @@ update_plan({
 })
 ```
 
-### Stage 1: Commit All
+## Stage 1: Commit All
 
 ```bash
 git status --short
@@ -50,85 +48,158 @@ git add <files> && git commit -m "type(scope): description"
 # Auto-fixes separately: style(scope): apply [tool] auto-fixes
 ```
 
-### Stage 2: Archive Completed Initiatives
+**Commit strategy:**
 
-```bash
-grep -l "Status.*Completed\|✅" docs/initiatives/active/*.md
-/archive-initiative <name>  # CRITICAL: never skip
-```
+- Group related changes
+- Use conventional commit format
+- Separate auto-fixes
+- Include meaningful descriptions
 
-### Stage 3: Execute Meta-Analysis
+## Stage 2: Archive Completed Initiatives
 
-**Correct:** `/meta-analysis`
+**Call** `/archive-initiative`:
 
-**Manual fallback:**
+- Check for completed initiatives
+- Validate completion criteria
+- Move to archive
+- Update documentation
 
-```bash
-git log --oneline --since="$(cat .windsurf/.last-meta-analysis 2>/dev/null || echo '24h ago')"
-# Create docs/archive/session-summaries/YYYY-MM-DD-*.md
-date -u +"%Y-%m-%dT%H:%M:%SZ" > .windsurf/.last-meta-analysis
-git add docs/archive/session-summaries/*.md .windsurf/.last-meta-analysis
-git commit -m "docs(session): add YYYY-MM-DD session summary"
-```
+**Archive criteria:**
 
-### Stage 4: Verify Exit Criteria
+- Status = "Completed" or "✅"
+- All success criteria met
+- No blocking issues
+- Documentation updated
 
-- [ ] All committed (git status clean)
-- [ ] Tests passing (if code changes)
-- [ ] Completed initiatives archived
-- [ ] Meta-analysis executed
+## Stage 3: Execute Meta-Analysis
+
+**Call** `/meta-analysis`:
+
+- Extract session data
+- Generate session summary
+- Update living documentation
+- Commit changes
+
+**Meta-analysis includes:**
+
+- Session summary
+- Pattern analysis
+- Documentation updates
+- Metrics generation
+
+## Stage 4: Verify Exit Criteria
+
+**Check all criteria met:**
+
+- [ ] All changes committed
+- [ ] Tests passing
+- [ ] Initiatives archived (if applicable)
+- [ ] Meta-analysis completed
 - [ ] Session summary created
-- [ ] Living docs updated (if major)
+- [ ] Documentation updated
 
-```bash
-git status --short  # Empty
-ls -t docs/archive/session-summaries/*.md | head -1
-task test:fast  # If code changes
-```
+## Stage 5: Present Session Summary
 
-### Stage 5: Completion Summary
-
-**ONLY after all criteria met:**
+**Present final summary:**
 
 ```markdown
-## ✅ Session Complete
+## Session Summary
 
-### Summary
-[2-3 sentences]
+**Duration:** X hours
+**Status:** Completed
+**Key Accomplishments:**
+- [Accomplishment 1]
+- [Accomplishment 2]
+- [Accomplishment 3]
 
-### Key Accomplishments
-- [Item 1]
-- [Item 2]
+**Next Steps:**
+- [Next step 1]
+- [Next step 2]
 
-### Commits
-[git log]
-
-### Documentation
-- Session: docs/archive/session-summaries/YYYY-MM-DD-*.md
-- [Other]
-
-### Next Steps
-- [What next]
-- [Blockers]
-
-Ready for next session.
+**Session Complete** ✅
 ```
 
-## Continue Working (NOT Session End)
+## Context Loading
 
-**Progress update:**
+Load these rules if you determine you need them based on their descriptions:
 
-```markdown
-✅ [Done], 🔄 [Current], ⏳ [Remaining]. Continuing...
-```
+- **Task Orchestration**: `/rules/12_task_orchestration.mdc` - Apply when managing complex task coordination and workflow orchestration
+- **Workflow Routing**: `/rules/13_workflow_routing.mdc` - Apply when determining workflow routing and context analysis
+
+## Workflow References
+
+When this work-session-protocol workflow is called:
+
+1. **Load**: `/commands/work-session-protocol.md`
+2. **Execute**: Follow the session end protocol stages defined above
+3. **Commit**: Commit all changes
+4. **Archive**: Archive completed initiatives
+5. **Analyze**: Execute meta-analysis
+6. **Verify**: Check exit criteria
 
 ## Anti-Patterns
 
-❌ Skip `/meta-analysis` → Breaks continuity
-❌ Leave completed in active/ → Clutters
-❌ Uncommitted at end → Work loss
-❌ Confuse progress with session end
+❌ **Don't:**
 
-## References
+- Skip commit step
+- Ignore completion criteria
+- Skip meta-analysis
+- Skip verification
 
-`work.md`, `meta-analysis.md`, `archive-initiative.md`, `00_core_directives.md`
+✅ **Do:**
+
+- Commit all changes
+- Check completion criteria
+- Execute meta-analysis
+- Verify all criteria met
+
+## Success Metrics
+
+| Metric | Target | Status |
+|--------|--------|--------|
+| Commit success | 100% | ✅ |
+| Archive success | 100% | ✅ |
+| Meta-analysis success | 100% | ✅ |
+| Exit criteria met | 100% | ✅ |
+
+## Integration
+
+**Called By:**
+
+- `/work` - Main orchestration workflow
+- User - Direct invocation for session end
+
+**Calls:**
+
+- `/commit` - Commit changes
+- `/archive-initiative` - Archive completed initiatives
+- `/meta-analysis` - Session analysis
+
+**Exit:**
+
+```markdown
+✅ **Completed /work-session-protocol:** Session end protocol finished
+```
+
+---
+
+## Command Metadata
+
+**File:** `work-session-protocol.yaml`
+**Type:** Command/Workflow
+**Complexity:** Moderate
+**Estimated Tokens:** ~1,100
+**Last Updated:** 2025-10-22
+**Status:** Active
+
+**Topics Covered:**
+
+- Session end protocol
+- Completion detection
+- Change management
+- Documentation updates
+
+**Dependencies:**
+
+- /archive-initiative - Archive completed initiatives
+- /meta-analysis - Session analysis

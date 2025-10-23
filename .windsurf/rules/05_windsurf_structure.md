@@ -1,243 +1,114 @@
 ---
-trigger: glob
-description: Windsurf directory structure enforcement frontmatter format
-globs: .windsurf/**/*.md, .windsurf/**/*.json
+trigger: model_decision
+description: Windsurf-specific structure and workflow system documentation
+title: Windsurf Structure
 ---
 
-# .windsurf Directory Structure
+# Windsurf Structure
 
-**Purpose:** Define the canonical directory structure for Windsurf AI agent configuration.
+## Directory Structure
 
----
-
-## MCP Tool Selection for .windsurf/ Files
-
-**CRITICAL:** Always use MCP filesystem tools when editing files in `.windsurf/` directory.
-
-### Required Tools
-
-| Operation | Tool | Example |
-|-----------|------|----------|
-| Read | `mcp0_read_text_file` | `mcp0_read_text_file("/home/gxx/projects/mcp-web/.windsurf/workflows/work.md")` |
-| Write (create/overwrite) | `mcp0_write_file` | `mcp0_write_file("/home/gxx/projects/mcp-web/.windsurf/rules/new.md", content)` |
-| Edit | `mcp0_edit_file` | `mcp0_edit_file("/home/gxx/projects/mcp-web/.windsurf/workflows/commit.md", edits)` |
-| Delete | Command-line `rm` | MCP doesn't support delete |
-
-### Decision Tree
-
-```text
-Is file in .windsurf/ directory?
-│
-├── YES → Use MCP tools (mcp0_*)
-│   ├─ MUST use absolute path: /home/gxx/projects/mcp-web/.windsurf/...
-│   └─ Never use relative paths like .windsurf/...
-│
-└── NO → Use standard tools (read_file, edit, write_to_file)
-    └─ Can use relative or absolute paths
+```
+.windsurf/
+├── rules/                   # Rule definitions
+│   ├── 00_core_directives.md
+│   ├── 01_python_code.md
+│   └── ...
+├── workflows/               # Workflow definitions
+│   ├── work.md
+│   ├── implement.md
+│   └── ...
+├── schemas/                 # Schema definitions
+└── workflow-improvement-analysis.json
 ```
 
-**Rationale:** The `.windsurf/` directory is protected and requires MCP tools for reliable access.
+## Rule System
 
----
+### Trigger Modes
 
-## Directory Rules
+- **always_on**: Rule is automatically loaded in every session
+- **glob**: Rule is applied when editing files matching glob patterns
+- **model_decision**: Cascade AI determines when to apply the rule based on context
+- **manual**: Rule is only applied when manually referenced
 
-### Approved Directories
-
-Only the following directories are allowed in `.windsurf/`:
-
-1. **`workflows/`** - Executable workflows only (`.md` files)
-2. **`rules/`** - Agent rules only (`.md` files with `XX_name.md` format)
-3. **`schemas/`** - JSON schemas for validation
-
-### Directory Purposes
-
-#### `workflows/` - Executable Workflows
-
-**Purpose:** Contains workflow definitions that can be invoked by the agent.
-
-**Rules:**
-
-- **ONLY** executable workflow `.md` files
-- Must follow kebab-case naming: `workflow-name.md`
-- Must have YAML frontmatter with workflow metadata
-- No supporting documentation, templates, or generated files
-
-**Examples:**
-
-- ✅ `work.md` - Work orchestration workflow
-- ✅ `detect-context.md` - Context detection workflow
-- ✅ `implement.md` - Implementation workflow
-- ❌ `INDEX.md` - Generated index (belongs in `docs/`)
-- ❌ `DEPENDENCIES.md` - Generated graph (belongs in `docs/`)
-- ❌ `common-patterns.md` - Template library (belongs in `docs/`)
-
-#### `rules/` - Agent Rules
-
-**Purpose:** Contains rule definitions that guide agent behavior.
-
-**Rules:**
-
-- **ONLY** rule `.md` files
-- Must follow `XX_name.md` format (two-digit prefix + snake_case)
-- Must have YAML frontmatter with rule metadata
-- No supporting documentation or generated files
-
-**Examples:**
-
-- ✅ `00_agent_directives.md` - Core agent rules
-- ✅ `01_testing_and_tooling.md` - Testing standards
-- ✅ `02_python_standards.md` - Python coding standards
-- ❌ `INDEX.md` - Generated index (belongs in `docs/`)
-- ❌ `cheatsheet.md` - Reference doc (belongs in `docs/`)
-
-#### `schemas/` - JSON Schemas
-
-**Purpose:** Contains JSON schemas for validation.
-
-**Rules:**
-
-- **ONLY** `.json` schema files
-- Must follow kebab-case naming: `schema-name.json`
-- Used for validating frontmatter and other structured data
-
-**Examples:**
-
-- ✅ `frontmatter-schema.json` - Frontmatter validation schema
-- ❌ `config.yaml` - Config file (doesn't belong here)
-
----
-
-## File Naming Conventions
-
-| Directory | Naming Convention | Example |
-|-----------|-------------------|---------|
-| `workflows/` | kebab-case | `work.md`, `detect-context.md` |
-| `rules/` | `XX_snake_case` | `00_agent_directives.md`, `01_testing_and_tooling.md` |
-| `docs/` | kebab-case | `workflow-index.md`, `common-patterns.md` |
-| `schemas/` | kebab-case | `frontmatter-schema.json` |
-
----
-
-## Cross-Referencing
-
-### Workflows Referencing Docs
-
-Workflows can reference documentation in `docs/`:
-
-```markdown
-**See:** [15_tool_patterns.md](./15_tool_patterns.md) for reusable patterns
-**See:** [07_context_optimization.md](./07_context_optimization.md) for loading strategies
-```
-
-### Rules Referencing Docs
-
-Rules can reference documentation in `docs/`:
-
-```markdown
-**Detailed patterns:** [15_tool_patterns.md](./15_tool_patterns.md)
-```
-
-### Generated Indexes
-
-Generated indexes are stored in `docs/`:
-
-- `docs/workflow-index.md` - Auto-generated from workflow frontmatter
-- `docs/rules-index.md` - Auto-generated from rule frontmatter
-- `docs/workflow-dependencies.md` - Auto-generated dependency graph
-
-**Generation Command:**
-
-```bash
-python scripts/generate_indexes.py
-```
-
----
-
-## Migration Notes
-
-### 2025-10-19: Directory Cleanup
-
-**Changes:**
-
-- Moved `workflows/INDEX.md` → `docs/workflow-index.md`
-- Moved `workflows/DEPENDENCIES.md` → `docs/workflow-dependencies.md`
-- Moved `rules/INDEX.md` → `docs/rules-index.md`
-- Moved `templates/common-patterns.md` → `docs/common-patterns.md`
-- Deleted `templates/` directory (empty)
-
-**Rationale:**
-
-- Keep `workflows/` and `rules/` directories pure (only executable content)
-- Centralize supporting documentation in `docs/`
-- Improve discoverability and maintainability
-- Enforce clear separation of concerns
-
----
-
-## Enforcement
-
-### ls-lint Configuration
-
-`.ls-lint.yml` enforces naming conventions:
+### Rule Format
 
 ```yaml
-.windsurf/workflows:
-  .md: kebab-case  # Workflows only
-
-.windsurf/rules:
-  .md: regex:\d{2}_[a-z_]+  # Rules only
-
-.windsurf/schemas:
-  .json: kebab-case  # Schemas only
+---
+trigger: always_on
+description: "Rule description"
+globs: "*.py, **/*.py"  # For glob trigger
+---
 ```
 
-### Pre-commit Validation
+## Workflow System
 
-File naming is validated on every commit via `ls-lint` pre-commit hook.
+### Workflow Types
 
+- **Orchestrator**: Central workflows that coordinate other workflows
+- **Implementation**: Workflows for implementing features
+- **Validation**: Workflows for quality assurance
+- **Documentation**: Workflows for documentation tasks
+
+### Workflow Format
+
+```yaml
 ---
-
-## References
-
-- [generate_indexes.py](../../scripts/generate_indexes.py) - Index generation script
-- [.ls-lint.yml](../../.ls-lint.yml) - File naming enforcement
-- Frontmatter validation: See rule files for YAML frontmatter examples
-
+created: "2025-10-17"
+updated: "2025-10-21"
+description: "Workflow description"
+auto_execution_mode: 3
+category: "Implementation"
+complexity: 75
+dependencies: []
+status: active
 ---
+```
 
-**Maintained by:** mcp-web core team
-**Version:** 1.0.0
-**Status:** Active (enforced via ls-lint)
+### Workflow Execution
+
+- **Multi-stage**: Workflows can have multiple stages
+- **Context Loading**: Workflows can load additional context
+- **Memory System**: Workflows can maintain state across stages
+- **Automation**: Workflows can trigger automated actions
+
+## Integration with Cursor
+
+### Transformation
+
+Windsurf workflows are transformed to Cursor commands:
+
+- **Simple Workflows**: 1:1 mapping to Cursor commands
+- **Complex Workflows**: Composite commands with embedded context
+- **Multi-stage**: Simplified to single-stage commands
+
+### Context Handling
+
+- **Embedded Context**: All necessary context must be embedded in Cursor commands
+- **No Memory System**: Cursor commands cannot maintain state across sessions
+- **Simplified Structure**: Cursor commands are simpler than Windsurf workflows
 
 ---
 
 ## Rule Metadata
 
-**File:** `05_windsurf_structure.md`
-**Trigger:** glob
-**Estimated Tokens:** ~1,200
-**Last Updated:** 2025-10-21
+**File:** `05_windsurf_structure.yaml`
+**Trigger:** manual (Windsurf) / alwaysApply: false (Cursor)
+**Estimated Tokens:** ~800
+**Last Updated:** 2025-10-22
 **Status:** Active
-
-**Can be @mentioned:** Yes (hybrid loading)
 
 **Topics Covered:**
 
-- MCP tool selection for .windsurf/ files (CRITICAL)
-- Directory structure
-- File naming conventions
-- Frontmatter format
-- Validation
+- Windsurf directory structure
+- Rule system
+- Workflow system
+- Integration with Cursor
 
 **Workflow References:**
 
-- All workflows - Enforces structure when editing .windsurf/
+- All workflows (for understanding structure)
 
 **Dependencies:**
 
-- Source: directory-structure.md
-
-**Changelog:**
-
-- 2025-10-21: Created from directory-structure.md
+- Source: 05_windsurf_structure.md

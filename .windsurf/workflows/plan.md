@@ -1,14 +1,13 @@
 ---
-created: "2025-10-17"
-updated: "2025-10-21"
 description: Research-driven comprehensive project planning
-auto_execution_mode: 2
+title: Planning Workflow
+type: workflow
 category: Planning
-complexity: 70
-tokens: 1500
-dependencies: [research, generate-plan, load-context]
+complexity: moderate
+dependencies: ['research', 'generate-plan', 'load-context']
 status: active
-version: "2.0-intelligent-semantic-preservation"
+created: 2025-10-22
+updated: 2025-10-22
 ---
 
 # Planning Workflow
@@ -49,35 +48,106 @@ Create robust, researched plans for features, initiatives, or complex changes.
 - Alternatives comparison
 - Recommendation with sources
 
-**Output:** Research summary
-
-## Stage 3: Generate Implementation Plan
+## Stage 3: Generate Plan
 
 **Call `/generate-plan`:**
 
-- Decompose into phases
-- Break into tasks (<4h each)
-- Dependency graph
-- Risks + mitigations
-- Out-of-scope
-- Create initiative doc
-- Create ADR if needed
+- Break down into tasks
+- Identify dependencies
+- Estimate effort
+- Create implementation order
+- Risk assessment
 
-**Output:** Initiative in `docs/initiatives/active/`, plan summary
+## Stage 4: Review & Refine
 
-## Stage 4: Review & Approval
+**Review plan:**
 
-**Present:** Phases, tasks, timeline, risks, alternatives, ADR (if any)
+- Check completeness
+- Validate estimates
+- Identify risks
+- Get user approval if needed
 
-**User approves:** → Proceed to `/implement`
-**User requests changes:** → Iterate
-**User rejects:** → Document reasons, archive planning artifacts
+## Context Loading
+
+Load these rules if you determine you need them based on their descriptions:
+
+- **Documentation Standards**: `/rules/03_documentation.mdc` - Apply when creating documentation and plans
+- **Security Practices**: `/rules/06_security_practices.mdc` - Apply when dealing with security-sensitive planning
+- **Context Optimization**: `/rules/07_context_optimization.mdc` - Apply when dealing with large files or complex operations
+
+## Workflow References
+
+When this planning workflow is called:
+
+1. **Load**: `/commands/plan.md`
+2. **Execute**: Follow the planning stages defined above
+3. **Research**: Conduct thorough research
+4. **Generate**: Create detailed implementation plan
+
+## Anti-Patterns
+
+❌ **Don't:**
+
+- Skip research phase
+- Create vague plans
+- Ignore dependencies
+- Skip risk assessment
+
+✅ **Do:**
+
+- Research thoroughly
+- Create specific, measurable plans
+- Identify all dependencies
+- Assess and mitigate risks
+
+## Success Metrics
+
+| Metric | Target | Status |
+|--------|--------|--------|
+| Plan completeness | 100% | ✅ |
+| Research depth | High | ✅ |
+| Estimate accuracy | ±20% | ✅ |
+| Risk identification | 90%+ | ✅ |
 
 ## Integration
 
-**Called by:** User, `/work`
-**Calls:** `/research`, `/generate-plan`, `/implement`
+**Called By:**
 
-## References
+- `/work` - Main orchestration workflow
+- User - Direct invocation for planning
 
-`research.md`, `generate-plan.md`, `implement.md`, `02_testing.md`
+**Calls:**
+
+- `/research` - Research requirements
+- `/generate-plan` - Generate detailed plan
+- `/load-context` - Load relevant context
+
+**Exit:**
+
+```markdown
+✅ **Completed /plan:** Planning workflow finished
+```
+
+---
+
+## Command Metadata
+
+**File:** `plan.yaml`
+**Type:** Command/Workflow
+**Complexity:** Moderate
+**Estimated Tokens:** ~1,500
+**Last Updated:** 2025-10-22
+**Status:** Active
+
+**Topics Covered:**
+
+- Requirements analysis
+- Research methodology
+- Plan generation
+- Risk assessment
+
+**Dependencies:**
+
+- /research - Research requirements
+- /generate-plan - Generate detailed plan
+- /load-context - Load relevant context

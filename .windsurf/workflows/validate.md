@@ -1,407 +1,173 @@
 ---
-created: "2025-10-17"
-updated: "2025-10-21"
-description: Comprehensive validation and quality checks
-auto_execution_mode: 3
-category: Quality
-complexity: 70
-tokens: 1500
+description: Validate code quality, security, and tests before committing
+title: Quality Validation Workflow
+type: workflow
+category: Validation
+complexity: moderate
 dependencies: []
 status: active
+created: 2025-10-22
+updated: 2025-10-22
 ---
 
-# Validate Workflow
+# Quality Validation Workflow
 
-**Purpose:** Pre-commit quality gate workflow. Runs comprehensive checks (linting, tests, security) before committing or merging code.
+**Purpose:** Comprehensive validation of code quality, security, and tests before committing changes.
 
-**Invocation:** `/validate` (called by `/work`, `/implement`, `/commit`, or directly)
+**Invocation:** `/validate` or called automatically by `/commit`
 
-**Philosophy:** Catch issues early through automated validation gates.
+## Prerequisites
 
-**For detailed test commands, see:** [`docs/guides/TESTING_REFERENCE.md`](../../docs/guides/TESTING_REFERENCE.md)
+- [ ] Code changes are staged or committed
+- [ ] Tests are written and passing
+- [ ] Dependencies are up to date
 
----
+## Validation Steps
 
-## Stage 1: Create Task Plan
-
-```typescript
-update_plan({
-  explanation: "✅ Starting /validate workflow",
-  plan: [
-    { step: "1. /validate - Run linting checks", status: "in_progress" },
-    { step: "2. /validate - Run fast tests", status: "pending" },
-    { step: "3. /validate - Run documentation validation", status: "pending" },
-    { step: "4. /validate - Run security checks", status: "pending" },
-    { step: "5. /validate - Generate validation report", status: "pending" }
-  ]
-})
-```
-
-**When to run:**
-
-| Scenario | Required? |
-|----------|-----------|
-| Committing code | ✅ Yes |
-| Creating PRs | ✅ Yes |
-| Merging to main | ✅ Yes |
-| Releasing versions | ✅ Yes |
-| Exploratory work | ❌ Optional |
-| Draft commits | ❌ Optional |
-
----
-
-## Stage 2: Pre-Flight Checks
-
-### 2.1 Verify Environment
+### 1. Code Quality Checks
 
 ```bash
-# Verify uv available
-uv --version
-
-# Check Python version
-uv run python --version
-
-# Check git status (warning only)
-git status --short
-```
-
----
-
-## Stage 3: Linting
-
-### 3.1 Format Check
-
-```bash
-task format:check
-# Equivalent to: uv run ruff format --check .
-```
-
-**If fails:** Run `task format` to auto-fix
-
-### 3.2 Lint Check
-
-```bash
+# Linting and formatting
 task lint
-# Runs: ruff check, mypy, markdownlint
-```
-
-**If fails:** Review issues, run `task format` for auto-fixes
-
-### 3.3 Type Checking
-
-```bash
-task lint:mypy
-# Equivalent to: uv run mypy src/
-```
-
-**If fails:** Add type hints or use `# type: ignore` with justification
-
-### 3.4 Documentation Linting
-
-```bash
-task docs:lint
-# Equivalent to: npx markdownlint-cli2 "**/*.md"
-```
-
-**If fails:** Run `task docs:fix` for auto-fixes
-
----
-
-## Stage 4: Testing
-
-### 4.1 Fast Tests (Unit + Golden)
-
-```bash
-task test:fast
-# Equivalent to: uv run pytest tests/unit tests/golden -n auto -x
-```
-
-**Configuration:**
-
-- Parallel execution (pytest-xdist)
-- Stop on first failure (-x)
-- ~5-10 seconds typical runtime
-
-### 4.2 Integration Tests (Conditional)
-
-```bash
-task test:integration
-# Equivalent to: uv run pytest tests/integration -n auto
-```
-
-**Skip if:** Only docs/tests/config changes
-
-### 4.3 Coverage Check
-
-```bash
-task test:coverage
-# Verifies ≥90% coverage threshold
-```
-
-**If below threshold:** Add tests for critical paths or document justification
-
----
-
-## Stage 5: Documentation Validation
-
-### 5.1 Cross-Reference Validation
-
-```bash
-task docs:validate:links
-```
-
-**Validates:**
-
-- Workflow internal cross-references (`.windsurf/workflows/*.md`)
-- ADR references (ADR-NNNN format)
-- File existence for all references
-
-**If fails:** Fix broken links, create missing files, update references
-
----
-
-## Stage 6: Security Checks
-
-**Reference:** `.windsurf/rules/06_security_practices.md`
-
-### 6.1 Security Checklist (Manual Review)
-
-**For security-sensitive code:**
-
-- [ ] OWASP LLM Top 10 compliance
-- [ ] Input validation on external inputs
-- [ ] Output sanitization before display
-- [ ] No hardcoded credentials
-- [ ] Secrets from environment variables
-- [ ] SQL injection prevention
-- [ ] Path traversal protection
-- [ ] Command injection prevention
-- [ ] Rate limiting on endpoints
-- [ ] Defense-in-depth approach
-
-### 6.2 Bandit (Python Security)
-
-```bash
-task security:bandit
-# Equivalent to: uv run bandit -c .bandit -r src/
-```
-
-**Catches:**
-
-- Hardcoded passwords
-- SQL injection risks
-- Use of `eval()`, `exec()`
-- Weak cryptography
-- Insecure random generation
-
-### 6.3 Semgrep (Semantic Analysis)
-
-```bash
-task security:semgrep
-# Equivalent to: uv run semgrep --config .semgrep.yml
-```
-
-**Patterns:**
-
-- LLM injection risks (OWASP LLM01)
-- Unsafe external fetches
-- Path traversal
-- Command injection
-
-### 6.4 Dependency Audit
-
-```bash
-task security:deps
-# Equivalent to: uv run safety check
-```
-
-**If vulnerabilities found:** Update dependencies or document risk acceptance
-
----
-
-## Stage 7: Results Summary
-
-### 7.1 Aggregate Results
-
-```markdown
-## Validation Results
-
-### ✅ Passed
-- Formatting (ruff format)
-- Type checking (mypy)
-- Unit tests (45/45 passing)
-- Security (bandit, semgrep)
-
-### ⚠️ Warnings
-- Documentation lint: 2 minor issues
-- Coverage: 88% (below 90% target)
-
-### ❌ Failed
-- Integration tests: 2/10 failing
-
-### Summary
-Status: ❌ FAILED
-Blocker: Integration tests must pass before commit
-```
-
-### 7.2 Exit Determination
-
-| Condition | Status | Exit Code |
-|-----------|--------|-----------|
-| Any test failures | FAILED | 1 |
-| Security issues (high/critical) | FAILED | 1 |
-| Type errors (not suppressed) | FAILED | 1 |
-| Warnings only | PASSED WITH WARNINGS | 0 |
-| All checks passed | PASSED | 0 |
-
----
-
-## Stage 8: Remediation Guidance
-
-### 8.1 Auto-Fix Commands
-
-```bash
-# Fix formatting and linting
 task format
 
-# Fix documentation
-task docs:fix
+# Type checking
+task type-check
 
-# Re-run validation
-/validate
+# Security scanning
+task security:bandit
+task security:semgrep
 ```
 
-### 8.2 Manual Fix Examples
-
-**Test failure:**
-
-```markdown
-**Issue:** test_playwright_fallback_timeout
-**Cause:** Timeout too low (5s)
-**Fix:** Increase timeout or mock slow network
-**Verify:** uv run pytest tests/integration/test_playwright_fallback.py -xvs
-```
-
-**Security issue:**
-
-```markdown
-**Issue:** [B303] Use of insecure MD5 hash
-**Location:** src/mcp_web/cache.py:45
-**Fix:** Replace with `hashlib.sha256()` or add `# nosec` with justification
-**Verify:** task security:bandit
-```
-
----
-
-## Examples
-
-### Example 1: Clean Pass
+### 2. Test Validation
 
 ```bash
-$ /validate
+# Run all tests
+task test:unit
+task test:integration
 
-✅ Format check (ruff)         PASSED
-✅ Lint check (ruff)           PASSED
-✅ Type check (mypy)           PASSED
-✅ Unit tests                  PASSED (45/45)
-✅ Security (bandit)           PASSED
-✅ Security (semgrep)          PASSED
+# Coverage check
+task test:coverage
 
-🎉 All checks passed! Ready to commit.
+# Security tests
+task test:security
 ```
 
-### Example 2: Auto-Fixable Issues
+### 3. Documentation Validation
 
 ```bash
-$ /validate
+# Documentation linting
+task docs:lint
 
-❌ Format check                FAILED (3 files)
-⚠️  Lint check                 WARNINGS (5 issues)
-✅ Type check                  PASSED
-✅ Tests                       PASSED
-
-$ task format
-Fixed 3 files, 5 issues
-
-$ /validate
-🎉 All checks passed!
+# Link checking
+task docs:links
 ```
 
-### Example 3: Test Failures
+### 4. Performance Checks
 
 ```bash
-$ /validate
+# Performance benchmarks
+task test:benchmark
 
-✅ Format/Lint/Type           PASSED
-❌ Unit tests                  FAILED (2/45 failing)
-
-❌ VALIDATION FAILED
-
-Debug: uv run pytest tests/unit/test_cache.py::test_cache_expiration -xvs
+# Memory usage
+task test:memory
 ```
 
----
+## Expected Output
 
-## Optimization Strategies
+- ✅ All linting passes
+- ✅ All tests pass
+- ✅ Coverage ≥90%
+- ✅ No security vulnerabilities
+- ✅ Documentation is valid
+- ✅ Performance within limits
 
-### Parallel Execution
+## Success Criteria
 
-```bash
-# Run independent checks in parallel for speed
-task format:check & task lint & task test:fast
-```
+Validation passes if:
 
-### Incremental Validation
+1. Zero linting errors
+2. Zero test failures
+3. Coverage threshold met
+4. No security issues
+5. Documentation is complete
 
-**Fast iteration cycle:**
+## Failure Handling
 
-1. Run fast checks first: `task format:check && task test:fast`
-2. If pass, run full validation: `/validate`
-3. Saves time by catching common issues early
+If validation fails:
 
-### CI/CD Integration
-
-```yaml
-# GitHub Actions example
-- name: Validate
-  run: |
-    task format:check
-    task lint
-    task test:fast
-    task security:bandit
-```
-
----
-
-## Anti-Patterns
-
-| Anti-Pattern | Issue | Solution |
-|--------------|-------|----------|
-| **Skip validation** | Merge broken code | Always run before commit |
-| **Ignore warnings** | Technical debt accumulates | Fix or document why acceptable |
-| **Override failures** | Security risks | Fix critical issues, never bypass |
-| **Manual checks only** | Inconsistent, error-prone | Use automated task commands |
-
----
+1. Fix issues identified
+2. Re-run validation
+3. Do not proceed until all checks pass
 
 ## Integration
 
-### Called By
+**Called By:**
 
-- `/work` - Before committing
-- `/implement` - After implementation
-- `/commit` - Pre-commit gate
-- CI/CD - On every push
-- User - Direct invocation
+- `/commit` workflow (mandatory)
+- `/implement` workflow (after implementation)
+- Manual invocation
 
-### Calls
+**Calls:**
 
-- None (leaf workflow)
+- Various task commands for validation
+- Security scanning tools
+- Test runners
+
+## Context Loading
+
+Load these rules if you determine you need them based on their descriptions:
+
+- **Security Practices**: `/rules/06_security_practices.mdc` - Apply when dealing with security-sensitive code including API calls, user input, LLM interactions, and authentication
+- **Context Optimization**: `/rules/07_context_optimization.mdc` - Apply when dealing with large files, complex operations, or memory-intensive tasks
+- **Testing Standards**: `/rules/02_testing.mdc` - Apply when validating test coverage and test quality
+
+## Workflow References
+
+When this validation workflow is called by other workflows:
+
+1. **Load**: `/commands/validate.md`
+2. **Execute**: Follow the validation steps defined above
+3. **Report**: Document validation results
+4. **Chain**: Proceed to commit workflow if validation passes
+
+## Anti-Patterns
+
+❌ **Don't:**
+
+- Skip validation steps
+- Ignore security warnings
+- Commit with failing tests
+- Bypass coverage requirements
+
+✅ **Do:**
+
+- Run full validation before commits
+- Address all security issues
+- Maintain high test coverage
+- Keep documentation up to date
 
 ---
 
-## References
+## Command Metadata
 
-- `docs/guides/TESTING_REFERENCE.md` - Detailed test commands
-- `.windsurf/rules/06_security_practices.md` - Security guidelines
-- `.windsurf/rules/02_testing.md` - Testing standards
+**File:** `validate.yaml`
+**Type:** Command/Workflow
+**Complexity:** Moderate
+**Estimated Tokens:** ~800
+**Last Updated:** 2025-10-22
+**Status:** Active
+
+**Topics Covered:**
+
+- Code quality validation
+- Security scanning
+- Test validation
+- Documentation checks
+- Performance validation
+
+**Dependencies:**
+
+- task commands for validation
+- Security scanning tools
+- Test frameworks

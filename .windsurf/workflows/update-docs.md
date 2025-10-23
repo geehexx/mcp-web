@@ -1,14 +1,13 @@
 ---
-created: "2025-10-17"
-updated: "2025-10-21"
 description: Update PROJECT_SUMMARY.md and CHANGELOG.md
-auto_execution_mode: 3
+title: Update Docs Workflow
+type: workflow
 category: Documentation
-complexity: 50
-tokens: 1000
+complexity: moderate
 dependencies: []
 status: active
-version: "2.0-intelligent-semantic-preservation"
+created: 2025-10-22
+updated: 2025-10-22
 ---
 
 # Update Living Docs Workflow

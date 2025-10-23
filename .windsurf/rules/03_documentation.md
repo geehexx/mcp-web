@@ -1,6 +1,7 @@
 ---
 trigger: glob
 description: Documentation standards markdown ADRs initiatives
+title: Documentation Standards
 globs: docs/**/*.md, *.md, README.md
 ---
 
@@ -28,7 +29,7 @@ docs/
 ├── architecture/                   # System design docs
 ├── reference/                      # Quick reference
 └── archive/                        # Historical documents
-```text
+```
 
 ## 3.2 Document Types
 
@@ -49,303 +50,142 @@ docs/
 
 ### Initiatives
 
-- **Location:** `docs/initiatives/active/` or `docs/initiatives/completed/`
-- **Purpose:** Track strategic projects and features
-- **Format:**
+**Purpose:** Track strategic work and multi-session projects
 
-  ```markdown
-  # Initiative: [Name]
-
-  **Status:** Active | Completed | On Hold
-  **Start Date:** YYYY-MM-DD
-  **Target Completion:** YYYY-MM-DD
-
-  ## Objective
-  [What we're trying to achieve]
-
-  ## Success Criteria
-  - [ ] Criterion 1
-  - [ ] Criterion 2
-
-  ## Tasks
-  - [ ] Task 1
-  - [ ] Task 2
-
-  ## Related ADRs
-  - ADR-0001: Decision title
-
-  ## Updates
-  ### YYYY-MM-DD
-  Progress update...
-  ```text
+- **Format:** Use initiative template
+- **Naming:** `YYYY-MM-DD-descriptive-name.md`
+- **Structure:** Objective, phases, tasks, acceptance criteria
+- **Lifecycle:** Active → Completed → Archived
 
 ### Guides
 
-- **Location:** `docs/guides/`
-- **Types:** User guides, developer guides, operational guides
-- **Format:** Step-by-step instructions with code examples
-- **Required sections:** Prerequisites, Steps, Troubleshooting, Related docs
+**Purpose:** How-to documentation for common tasks
 
-## 3.3 Documentation Standards
+- **Format:** Step-by-step instructions
+- **Examples:** Code snippets, command sequences
+- **Audience:** Developers, contributors
 
-### Markdown Quality
+## 3.3 Markdown Standards
 
-- **Linting:** All markdown must pass markdownlint-cli2
-- **Command:** `task docs:lint:markdown`
-- **Auto-fix:** `task docs:fix`
-- **Common issues:**
-  - No double-spaces between words
-  - No trailing whitespace
-  - Consistent heading levels
-  - No bare URLs (use markdown links)
-
-### Prose Quality
-
-- **Linting:** Use markdownlint-cli2 with project style guide
-- **Command:** `task docs:lint:prose`
-- **Style:**
-  - Active voice
-  - Present tense
-  - Be concise
-  - Use inclusive language
-  - Define jargon on first use
-
-### External References
-
-- **Always link first mentions:**
-
-  ```markdown
-  We use [uv](https://docs.astral.sh/uv/) as our package manager.
-  ```text
-
-- **Prefer official documentation:**
-  - Python: https://docs.python.org/3/
-  - pytest: https://docs.pytest.org/
-  - OWASP: https://owasp.org/
-- **Include current date context:** "As of October 2025, uv is the recommended..."
-
-### Code Examples
+### File Structure
 
 ```markdown
-**Good example with syntax highlighting:**
-
-\```python
-async def fetch_url(url: str) -> bytes:
-    """Fetch URL asynchronously."""
-    async with httpx.AsyncClient() as client:
-        response = await client.get(url)
-        return response.content
-\```
-
-**Command examples:**
-
-\```bash
-# Install dependencies
-task install
-
-# Run tests
-task test:parallel
-\```
-```text
-
-## 3.4 Update Triggers
-
-| Trigger | Action | Responsible |
-|---------|--------|-------------|
-| New feature | Create/update ADR, guides, API docs | Developer |
-| API change | Update API docs immediately | Developer |
-| Config change | Update reference docs | Developer |
-| Bug fix | Update guides if user-facing | Developer |
-| Quarterly | Review all active docs | Team |
-| Release | Update CHANGELOG | Release manager |
-
-## 3.5 Archival Process
-
-### When to Archive
-
-- Document superseded by newer version
-- Initiative completed (after 6 months in completed/)
-- Temporary documents no longer relevant
-- Old roadmaps/plans
-
-### How to Archive
-
-1. Add archived notice at top:
-
-   ```markdown
-   > **⚠️ ARCHIVED:** This document was archived on YYYY-MM-DD.
-   > Reason: [superseded by / no longer relevant / initiative completed]
-   > See [replacement.md] for current information.
-   ```text
-
-2. Move to `docs/archive/`
-3. Update any referring documents
-4. Add entry to `docs/archive/README.md`
-
-## 3.6 Windsurf Artifacts
-
-**Location:** `.windsurf/rules/` and `.windsurf/workflows/`
-
-### Rules
-
-- **Format:** YAML frontmatter + Markdown content
-- **Naming:** `NN_descriptive_name.md` (numbered for priority)
-- **Metadata:**
-
-  ```yaml
-  ---
-  trigger: always_on | glob | model_decision
-  description: Brief description without apostrophes
-  globs: ["**/*.py"]  # Optional, for glob trigger
-  ---
-  ```text
-
-- **Content:** Clear, actionable instructions
-- **Validation:** After changes, verify Windsurf IDE loads artifact correctly
-
-### Workflows
-
-- **Format:** YAML frontmatter + Markdown steps
-- **Naming:** `descriptive-name.md` (kebab-case)
-- **Metadata:**
-
-  ```yaml
-  ---
-  description: Brief workflow description
-  auto_execution_mode: 3  # Checkpoints at key steps
-  ---
-  ```text
-
-- **Content:** Numbered steps with clear instructions
-- **Invocation:** `/workflow-name` in Cascade
-
-## 3.7 Documentation Maintenance
-
-### Regular Reviews
-
-- **Weekly:** Active initiatives
-- **Monthly:** Guides and API docs
-- **Quarterly:** ADRs (ensure still valid), architecture docs
-
-### Quality Checks
-
-Before committing documentation:
-
-```bash
-# Run all documentation linters
-task docs:lint
-
-# Fix auto-fixable issues
-task docs:fix
-
-# Clean double-spaces and artifacts
-task docs:clean
-```text
-
-### Cross-References
-
-- **Internal links:** Use relative paths: `[ADR-0001](../../docs/adr/0001-use-httpx-playwright-fallback.md)`
-- **External links:** Full URLs with context
-- **Code references:** Use backticks: `config.py`, `MCPWebConfig`
-- **Check links:** Use automated link checker in CI
-
-## 3.8 Living Documentation
-
-**Principle:** Documentation must stay synchronized with code
-
-- **Update docs with code changes** (not after)
-- **Tests verify docs** (especially code examples)
-- **CI enforces:** Documentation linting and link checking
-- **README as entry point:** Always keep README.md current
-
-## 3.9 Version Control
-
-### Commit Messages for Docs
-
-```bash
-docs(adr): add ADR-0011 for caching strategy
-docs(guides): update testing guide with parallel examples
-docs(api): document new summarize_with_query endpoint
-docs: fix typos in README and CONTRIBUTING
-```text
-
-### PR Requirements
-
-Documentation PRs must:
-
-- [ ] Pass `task docs:lint`
-- [ ] Have no broken links
-- [ ] Update related documents
-- [ ] Include "Last Updated" date
-- [ ] Be reviewed for clarity
-
-## 3.10 Windsurf Documentation
-
-**Location:** `.windsurf/rules/` and `.windsurf/workflows/`
-
-**Purpose:** Rules and workflows are self-documenting via YAML frontmatter.
-
-### Structure
-
-- **Rules:** 16 rule files with model_decision/glob/always_on triggers
-- **Workflows:** 21 workflow files with executable steps
-- **Hybrid Loading:** Rules automatically loaded by trigger OR explicitly @mentioned
-
-### Maintenance
-
-**When editing `.windsurf/` files:**
-
-- **ALWAYS use MCP tools:** `mcp0_read_text_file`, `mcp0_write_file`, `mcp0_edit_file`
-- **Absolute paths required:** `/home/gxx/projects/mcp-web/.windsurf/...`
-- **Validate frontmatter:** Ensure correct YAML format
-- **Update token counts:** Keep frontmatter `tokens` field current
-
-**Reference:** See `08_file_operations.md` for complete MCP tool patterns
-
+---
+title: "Document Title"
+type: "guide|adr|initiative|reference"
+status: "draft|active|completed|archived"
+created: "YYYY-MM-DD"
+updated: "YYYY-MM-DD"
 ---
 
-## 3.11 Documentation Checklist
+# Document Title
 
-When creating/updating documentation:
+Brief description of the document's purpose.
 
-- ✅ Use appropriate document type (ADR, guide, reference, etc.)
-- ✅ Follow markdown and prose linting standards
-- ✅ Link to external authoritative sources
-- ✅ Include code examples with syntax highlighting
-- ✅ Add "Last Updated" date
-- ✅ Cross-reference related documents
-- ✅ Run `task docs:lint` before committing
-- ✅ Review for clarity and accuracy
-- ✅ For machine-readable docs: verify token budget and frontmatter
+## Section 1
+
+Content with proper headings hierarchy.
+
+### Subsection
+
+More detailed content.
+
+## References
+
+- [Link 1](url)
+- [Link 2](url)
+```
+
+### Headings
+
+- **H1:** Document title only
+- **H2:** Major sections
+- **H3:** Subsections
+- **H4+:** Avoid deep nesting
+
+### Code Blocks
+
+```python
+# Use language-specific syntax highlighting
+def example_function():
+    return "Hello, World!"
+```
+
+```bash
+# Shell commands with comments
+echo "Running command"
+python script.py
+```
+
+### Links
+
+- **Internal:** Use relative paths (`../adr/0001-decision.md`)
+- **External:** Use full URLs with descriptive text
+- **References:** Link to related documents
+
+## 3.4 Content Guidelines
+
+### Writing Style
+
+- **Clear and concise:** Avoid unnecessary complexity
+- **Action-oriented:** Use active voice
+- **Consistent:** Follow established patterns
+- **Complete:** Include all necessary information
+
+### Technical Documentation
+
+- **Code examples:** Always include working examples
+- **Error handling:** Document common errors and solutions
+- **Dependencies:** List all requirements
+- **Version compatibility:** Specify version requirements
+
+### User Documentation
+
+- **Step-by-step:** Break complex tasks into steps
+- **Prerequisites:** List what users need before starting
+- **Expected outcomes:** Describe what success looks like
+- **Troubleshooting:** Include common issues and solutions
+
+## 3.5 Maintenance
+
+### Regular Updates
+
+- **Keep current:** Update documentation with code changes
+- **Review accuracy:** Verify examples and instructions work
+- **Remove outdated:** Archive or delete obsolete content
+- **Link checking:** Ensure all links are valid
+
+### Quality Checklist
+
+- ✅ Clear title and description
+- ✅ Proper heading structure
+- ✅ Working code examples
+- ✅ Valid links (internal and external)
+- ✅ Consistent formatting
+- ✅ Up-to-date information
 
 ---
 
 ## Rule Metadata
 
-**File:** `03_documentation.md`
-**Trigger:** glob
-**Estimated Tokens:** ~2,000
-**Last Updated:** 2025-10-21
+**File:** `03_documentation.yaml`
+**Trigger:** glob (Windsurf) / globs (Cursor)
+**Estimated Tokens:** ~1,500
+**Last Updated:** 2025-10-22
 **Status:** Active
-
-**Can be @mentioned:** Yes (hybrid loading)
 
 **Topics Covered:**
 
-- Markdown standards
-- ADR creation
-- Initiative structure
-- Documentation lifecycle
+- Documentation structure
+- ADR standards
+- Initiative tracking
+- Markdown guidelines
 
 **Workflow References:**
 
-- /plan - Creating initiatives/ADRs
-- /new-adr - ADR workflow
+- /implement - Documentation updates
+- /validate - Documentation validation
 
 **Dependencies:**
 
-- Source: 03_documentation_lifecycle.md
-
-**Changelog:**
-
-- 2025-10-21: Created from 03_documentation_lifecycle.md
+- Source: 03_documentation.md

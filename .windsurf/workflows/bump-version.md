@@ -1,14 +1,13 @@
 ---
-created: "2025-10-17"
-updated: "2025-10-21"
 description: Auto-bump version based on conventional commits
-auto_execution_mode: 3
+title: Bump Version Workflow
+type: workflow
 category: Automation
-complexity: 70
-tokens: 1900
+complexity: moderate
 dependencies: []
 status: active
-version: "2.0-intelligent-semantic-preservation"
+created: 2025-10-22
+updated: 2025-10-22
 ---
 
 # Bump Version Workflow
@@ -18,8 +17,6 @@ version: "2.0-intelligent-semantic-preservation"
 **Invocation:** `/bump-version` (called by `/commit` or directly)
 
 **Philosophy:** Automate version management using conventional commits.
-
----
 
 ## Prerequisites
 
@@ -34,8 +31,6 @@ version: "2.0-intelligent-semantic-preservation"
 - `BREAKING CHANGE:` → **Major** bump (0.1.0 → 1.0.0)
 - `docs:`, `test:`, `chore:` → **No** bump
 
----
-
 ## Stage 1: Create Task Plan
 
 ```typescript
@@ -49,234 +44,220 @@ update_plan({
 })
 ```
 
----
+## Stage 2: Analyze Commits
 
-## Stage 2: Analyze Commits & Calculate Version
+### 2.1 Get Recent Commits
 
-### Get Commits Since Last Version
-
-```bash
-# Get current version
-current_version=$(grep -m 1 'version = ' pyproject.toml | cut -d'"' -f2)
-
-# Get commits since last tag
-git log v${current_version}..HEAD --pretty=format:"%s" 2>/dev/null || \
-git log --pretty=format:"%s" -10
-```
-
-### Determine Bump Type
+**Get commits since last tag:**
 
 ```bash
-# Check for breaking/features/fixes
-breaking=$(git log --grep="BREAKING CHANGE" --format="%s" | wc -l)
-features=$(git log --grep="^feat" --format="%s" | wc -l)
-fixes=$(git log --grep="^fix" --format="%s" | wc -l)
+git log --oneline --since="$(git describe --tags --abbrev=0 2>/dev/null || echo '1970-01-01')" --pretty=format:"%s"
 ```
 
-**Decision logic:**
+### 2.2 Parse Commit Messages
 
-```python
-if breaking > 0:
-    bump = "major"  # 0.1.0 → 1.0.0 (or 0.2.0 if pre-1.0)
-elif features > 0:
-    bump = "minor"  # 0.1.0 → 0.2.0
-elif fixes > 0:
-    bump = "patch"  # 0.1.0 → 0.1.1
-else:
-    bump = None     # No bump needed
-```
+**Identify conventional commit types:**
 
-### Calculate New Version
+- `feat:` - New features
+- `fix:` - Bug fixes
+- `BREAKING CHANGE:` - Breaking changes
+- `docs:` - Documentation
+- `test:` - Tests
+- `chore:` - Maintenance
 
-| Current | Bump | Pre-1.0 Result | Post-1.0 Result |
-|---------|------|----------------|-----------------|
-| 0.1.0 | major | 0.2.0 | N/A |
-| 0.1.0 | minor | 0.2.0 | N/A |
-| 0.1.0 | patch | 0.1.1 | N/A |
-| 1.0.0 | major | N/A | 2.0.0 |
-| 1.0.0 | minor | N/A | 1.1.0 |
-| 1.0.0 | patch | N/A | 1.0.1 |
+### 2.3 Calculate Version Bump
 
-**Note:** Pre-1.0 breaking changes bump minor (not major)
+**Determine bump type:**
 
-**Update plan:**
-
-```typescript
-update_plan({
-  explanation: "Version calculated, updating files",
-  plan: [
-    { step: "1. /bump-version - Analyze commits and calculate version", status: "completed" },
-    { step: "2. /bump-version - Update project files", status: "in_progress" },
-    // ...
-  ]
-})
-```
-
----
+- **Major** (1.0.0 → 2.0.0): Breaking changes
+- **Minor** (1.0.0 → 1.1.0): New features
+- **Patch** (1.0.0 → 1.0.1): Bug fixes
+- **None**: Documentation, tests, chores
 
 ## Stage 3: Update Project Files
 
-### Update Files
+### 3.1 Update pyproject.toml
+
+**Update version field:**
+
+```toml
+[project]
+version = "1.1.0"  # Updated version
+```
+
+### 3.2 Update **init**.py
+
+**Update version in package:**
 
 ```python
-# pyproject.toml
-edit(
-    file_path="/home/gxx/projects/mcp-web/pyproject.toml",
-    old_string=f'version = "{current_version}"',
-    new_string=f'version = "{new_version}"',
-    explanation=f"Bump version {current_version} → {new_version} ({bump_type})"
-)
-
-# PROJECT_SUMMARY.md
-edit(
-    file_path="/home/gxx/projects/mcp-web/PROJECT_SUMMARY.md",
-    old_string=f"**Version:** {current_version}",
-    new_string=f"**Version:** {new_version}",
-    explanation="Sync version"
-)
-
-# CHANGELOG.md (if exists)
-edit(
-    file_path="/home/gxx/projects/mcp-web/docs/reference/CHANGELOG.md",
-    old_string="## [Unreleased]",
-    new_string=f"## [Unreleased]\n\n## [{new_version}] - {today()}",
-    explanation="Release changes"
-)
+__version__ = "1.1.0"
 ```
 
-**Update plan:**
+### 3.3 Update CHANGELOG.md
 
-```typescript
-update_plan({
-  explanation: "Files updated, creating tag",
-  plan: [
-    { step: "2. /bump-version - Update project files", status: "completed" },
-    { step: "3. /bump-version - Create git tag and validate", status: "in_progress" }
-  ]
-})
+**Add new version entry:**
+
+```markdown
+## [1.1.0] - 2025-10-22
+
+### Added
+- New feature 1
+- New feature 2
+
+### Fixed
+- Bug fix 1
+- Bug fix 2
+
+### Changed
+- Breaking change 1
+- Breaking change 2
 ```
 
----
+## Stage 4: Create Git Tag
 
-## Stage 4: Create Tag & Validate
+### 4.1 Create Tag
 
-### Commit & Tag
+**Create annotated tag:**
 
 ```bash
-# Commit version bump
-git add pyproject.toml PROJECT_SUMMARY.md CHANGELOG.md
-git commit -m "chore: bump version to ${new_version}
+git tag -a v1.1.0 -m "Release version 1.1.0
 
-Bump type: ${bump_type}
-Automated via /bump-version"
-
-# Create annotated tag
-git tag -a "v${new_version}" -m "Release ${new_version}"
+- New features: [list]
+- Bug fixes: [list]
+- Breaking changes: [list]"
 ```
 
-### Validate
+### 4.2 Validate Tag
+
+**Verify tag creation:**
 
 ```bash
-# Verify consistency
-grep 'version = ' pyproject.toml
-grep '**Version:**' PROJECT_SUMMARY.md
-git describe --tags
-
-# Test build
-uv build
+git tag -l | grep v1.1.0
+git show v1.1.0
 ```
 
-**All should show:** `${new_version}`
+## Stage 5: Update Documentation
 
----
+### 5.1 Update README
 
-## Examples
+**Update version references:**
 
-### Feature Release
+```markdown
+## Installation
 
-**Commits since v0.2.0:**
-
-```text
-feat(cli): add test-robots command
-feat(cache): implement TTL expiration
-fix(fetcher): handle timeout
+```bash
+pip install mcp-web==1.1.0
 ```
 
-**Result:** `0.2.0` → `0.3.0` (minor bump, features present)
-
-### Patch Release
-
-**Commits since v0.2.1:**
-
-```text
-fix(security): sanitize HTML
-fix(tests): resolve timing issue
 ```
 
-**Result:** `0.2.1` → `0.2.2` (patch bump, only fixes)
+### 5.2 Update API Documentation
 
-### Breaking Change (Pre-1.0)
+**Update version in API docs:**
+```markdown
+# API Version 1.1.0
 
-**Commits since v0.9.5:**
-
-```text
-feat(api): add async support
-BREAKING CHANGE: All methods now async
+[API documentation content]
 ```
 
-**Result:** `0.9.5` → `0.10.0` (minor bump for pre-1.0)
+## Stage 6: Commit Changes
 
----
+### 6.1 Commit Version Bump
 
-## Decision Matrix
+```bash
+git add pyproject.toml src/mcp_web/__init__.py CHANGELOG.md
+git commit -m "chore: bump version to 1.1.0
 
-| Commit Types | Current | Bump | New |
-|--------------|---------|------|-----|
-| feat + fix | 0.2.0 | minor | 0.3.0 |
-| fix only | 0.2.1 | patch | 0.2.2 |
-| BREAKING | 0.9.0 | minor* | 0.10.0 |
-| BREAKING | 1.0.0 | major | 2.0.0 |
-| docs/test | 0.2.0 | none | 0.2.0 |
+- Version: 1.1.0
+- Changes: [list of changes]
+- Tag: v1.1.0"
+```
 
-*Pre-1.0: BREAKING → minor
+### 6.2 Push Tag
 
----
+```bash
+git push origin v1.1.0
+```
+
+## Context Loading
+
+Load these rules if you determine you need them based on their descriptions:
+
+- **Documentation Standards**: `/rules/03_documentation.mdc` - Apply when updating documentation
+- **Context Optimization**: `/rules/07_context_optimization.mdc` - Apply when dealing with large files or complex operations
+
+## Workflow References
+
+When this bump-version workflow is called:
+
+1. **Load**: `/commands/bump-version.md`
+2. **Execute**: Follow the version bumping stages defined above
+3. **Analyze**: Parse conventional commits
+4. **Update**: Update project files
+5. **Tag**: Create git tag
 
 ## Anti-Patterns
 
-| ❌ Don't | ✅ Do |
-|----------|-------|
-| Manually edit version numbers | Use `/bump-version` workflow |
-| Skip conventional commits | Use `feat:`, `fix:`, etc. |
-| Bump for every commit | Group changes, bump on release |
+❌ **Don't:**
 
----
+- Skip commit analysis
+- Ignore conventional commits
+- Skip validation
+- Create invalid tags
 
-## Tools Considered
+✅ **Do:**
 
-| Tool | Pros | Cons | Decision |
-|------|------|------|----------|
-| **bump-my-version** | Python-native, configurable | Requires config | ✅ Good option |
-| **commitizen** | Full workflow, changelog | Opinionated | Alternative |
-| **semantic-release** | Comprehensive | Heavy, Node-based | Not needed |
-| **Custom workflow** | Zero deps, full control | Manual maintenance | ✅ **Selected** |
+- Analyze all commits
+- Follow conventional commit format
+- Validate version changes
+- Create proper tags
 
-**Rationale:** Custom workflow provides full control, zero external dependencies, and perfect fit for AI agent automation.
+## Success Metrics
 
----
+| Metric | Target | Status |
+|--------|--------|--------|
+| Commit analysis | 100% | ✅ |
+| Version accuracy | 100% | ✅ |
+| Tag creation | 100% | ✅ |
+| Documentation update | 100% | ✅ |
 
 ## Integration
 
-**Called By:** `/commit` - After code committed
+**Called By:**
 
-**Calls:** Git commands, file edits
+- `/commit` - After commits
+- User - Direct invocation for version bumping
+
+**Calls:**
+
+- Git operations
+- File updates
+- Tag creation
+
+**Exit:**
+
+```markdown
+✅ **Completed /bump-version:** Version bumping finished
+```
 
 ---
 
-## References
+## Command Metadata
 
-- [Semantic Versioning](https://semver.org/)
-- [Conventional Commits](https://www.conventionalcommits.org/)
-- [bump-my-version](https://github.com/callowayproject/bump-my-version)
+**File:** `bump-version.yaml`
+**Type:** Command/Workflow
+**Complexity:** Moderate
+**Estimated Tokens:** ~1,900
+**Last Updated:** 2025-10-22
+**Status:** Active
 
----
+**Topics Covered:**
+
+- Version management
+- Conventional commits
+- Semantic versioning
+- Automation
+
+**Dependencies:**
+
+- None (standalone workflow)
