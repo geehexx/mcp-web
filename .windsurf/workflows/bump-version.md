@@ -149,11 +149,10 @@ git show v1.1.0
 pip install mcp-web==1.1.0
 ```
 
-```
-
 ### 5.2 Update API Documentation
 
 **Update version in API docs:**
+
 ```markdown
 # API Version 1.1.0
 

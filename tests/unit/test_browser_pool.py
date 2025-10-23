@@ -41,7 +41,7 @@ def pool_settings():
 
 
 @pytest.fixture
-async def mock_playwright():
+def mock_playwright():
     """Mock Playwright instance."""
     playwright = AsyncMock()
 
@@ -60,7 +60,10 @@ async def mock_playwright():
     page.close = AsyncMock()
     page.content = AsyncMock(return_value="<html>test</html>")
 
-    context.new_page.return_value = page
+    async def new_page(*args, **kwargs):
+        return page
+
+    context.new_page = AsyncMock(return_value=page)
     browser.new_context.return_value = context
     playwright.chromium.launch.return_value = browser
     playwright.stop = AsyncMock()

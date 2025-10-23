@@ -8,7 +8,7 @@ title: Windsurf Structure
 
 ## Directory Structure
 
-```
+```text
 .windsurf/
 ├── rules/                   # Rule definitions
 │   ├── 00_core_directives.md
