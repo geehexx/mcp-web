@@ -4,6 +4,10 @@ description: Apply when dealing with security-sensitive code including API calls
 title: Security Practices
 ---
 
+related:
+
+- "/docs/adr/0001-decision.md"
+
 # Security Guidelines
 
 ## OWASP LLM Top 10 (2025)
@@ -271,8 +275,6 @@ For any code that:
 - ✅ **Accesses files** → Prevent path traversal
 - ✅ **Executes queries** → Use parameterized statements
 - ✅ **Handles errors** → Never expose stack traces to users
-
----
 
 ## Rule Metadata
 

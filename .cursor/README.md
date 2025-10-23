@@ -97,7 +97,7 @@ python scripts/build_ide_configs.py --verbose
 
 ## File Structure
 
-```
+```yaml
 .cursor/
 ├── README.md              # This file
 ├── rules/                 # Rule definitions

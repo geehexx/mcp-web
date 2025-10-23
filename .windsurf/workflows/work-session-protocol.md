@@ -10,6 +10,8 @@ created: 2025-10-22
 updated: 2025-10-22
 ---
 
+related: []
+
 # Work Session End Protocol
 
 Detect work completion and execute session end protocol.
@@ -180,8 +182,6 @@ When this work-session-protocol workflow is called:
 ```markdown
 ✅ **Completed /work-session-protocol:** Session end protocol finished
 ```
-
----
 
 ## Command Metadata
 

@@ -115,7 +115,7 @@ class Scaffolder:
 
     def __init__(self, template_type: TemplateType):
         self.template_type = template_type
-        self.template_dir = Path(__file__).parent / "templates"
+        self.template_dir = Path(__file__).parent.parent / "templates"
         self.jinja_env = jinja2.Environment(
             loader=jinja2.FileSystemLoader(self.template_dir),
             autoescape=False,

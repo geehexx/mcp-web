@@ -26,6 +26,14 @@ from typing import Any
 ROOT = Path(__file__).parent.parent
 
 
+def sanitize_path(file_path: Path, base_dir: Path) -> Path:
+    """Sanitize a file path to prevent path traversal attacks."""
+    resolved_path = file_path.resolve()
+    if not resolved_path.is_relative_to(base_dir):
+        raise ValueError("Path traversal detected")
+    return resolved_path
+
+
 def extract_markdown_links(text: str) -> list[dict[str, Any]]:
     """Extract internal markdown links from text.
 
@@ -199,6 +207,15 @@ def validate_link(source_file: Path, link: dict[str, Any], root: Path) -> dict[s
     if url:  # Not just an anchor
         resolved_path = resolve_link_path(source_file, url, root)
 
+        # Sanitize path
+        try:
+            resolved_path = sanitize_path(resolved_path, root)
+        except ValueError:
+            return {
+                "valid": False,
+                "error": "Path traversal detected",
+            }
+
         # Check if file exists
         if not resolved_path.exists():
             return {
@@ -250,7 +267,7 @@ def validate_directory(
         exclude_patterns = []
 
     errors = []
-    markdown_files = scan_markdown_files(directory)
+    markdown_files = scan_markdown_files(directory.resolve())
 
     for file_path in markdown_files:
         # Check exclusion patterns

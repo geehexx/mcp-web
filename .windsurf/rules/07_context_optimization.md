@@ -4,6 +4,10 @@ description: Apply when dealing with large files, complex operations, or memory-
 title: Context Optimization
 ---
 
+related:
+
+- "/docs/adr/0001-decision.md"
+
 # Context Optimization Guidelines
 
 ## Model Decision Rule Loading
@@ -206,8 +210,6 @@ Load: Context Optimization rule for memory management and batching
 # File manipulation tasks
 Load: File Operations rule for safe path handling and file operations
 ```
-
----
 
 ## Rule Metadata
 

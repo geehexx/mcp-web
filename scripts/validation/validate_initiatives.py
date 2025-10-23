@@ -42,6 +42,18 @@ class ValidationResult:
     line_number: int | None = None
 
 
+class PathTraversalError(ValueError):
+    """Custom exception for path traversal attempts."""
+
+
+def sanitize_path(file_path: Path, base_dir: Path) -> Path:
+    """Sanitize a file path to prevent path traversal attacks."""
+    resolved_path = file_path.resolve()
+    if not resolved_path.is_relative_to(base_dir):
+        raise PathTraversalError("Path traversal detected")
+    return resolved_path
+
+
 class InitiativeValidator:
     """Validates initiative files against system requirements."""
 
@@ -57,7 +69,7 @@ class InitiativeValidator:
     RECOMMENDED_FIELDS = ["Estimated Duration", "Target Completion", "Updated"]
 
     def __init__(self, initiatives_dir: Path):
-        self.initiatives_dir = initiatives_dir
+        self.initiatives_dir = initiatives_dir.resolve()
         self.results: list[ValidationResult] = []
 
     def validate_file(self, file_path: Path) -> list[ValidationResult]:
@@ -65,7 +77,8 @@ class InitiativeValidator:
         self.results = []
 
         try:
-            with open(file_path, encoding="utf-8") as f:
+            sanitized_file_path = sanitize_path(file_path, self.initiatives_dir)
+            with open(sanitized_file_path, encoding="utf-8") as f:
                 post = frontmatter.load(f)
 
             # Check 1: Required frontmatter fields

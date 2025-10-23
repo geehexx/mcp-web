@@ -10,6 +10,8 @@ created: 2025-10-22
 updated: 2025-10-22
 ---
 
+related: []
+
 # New ADR Workflow
 
 Document significant architectural decisions.
@@ -98,8 +100,6 @@ Owner: "@ai-agent"
 Priority: "High"
 Tags: ["architecture", "decision", "technology"]
 Related: ["/path/to/related/adr"]
----
-
 # ADR-NNNN: [Verb-Noun-Phrase]
 
 ## Status
@@ -294,8 +294,6 @@ When this new-adr workflow is called:
 ```markdown
 ✅ **Completed /new-adr:** ADR creation finished
 ```
-
----
 
 ## Command Metadata
 

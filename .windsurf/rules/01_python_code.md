@@ -5,6 +5,10 @@ title: Python Code Standards
 globs: *.py, **/*.py
 ---
 
+related:
+
+- "/docs/adr/0001-decision.md"
+
 # Python Code Standards
 
 ## 2.1 Code Style (PEP 8)
@@ -378,8 +382,6 @@ Before committing Python code:
 - ✅ Tests written (TDD) with appropriate markers
 - ✅ `task lint` passes (ruff + mypy)
 - ✅ `task test:unit` passes
-
----
 
 ## Rule Metadata
 

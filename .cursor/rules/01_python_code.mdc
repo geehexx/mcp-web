@@ -4,8 +4,10 @@ globs: *.py, **/*.py
 description: Python code style type hints async patterns and best practices
 title: Python Code Standards
 tags: ['python', 'code', 'style', 'type-hints', 'async']
-related: ['/docs/adr/0001-decision.md']
 ---
+
+related:
+  - "/docs/adr/0001-decision.md"
 
 # Python Code Standards
 
@@ -380,8 +382,6 @@ Before committing Python code:
 - ✅ Tests written (TDD) with appropriate markers
 - ✅ `task lint` passes (ruff + mypy)
 - ✅ `task test:unit` passes
-
----
 
 ## Rule Metadata
 

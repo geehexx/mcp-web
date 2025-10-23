@@ -3,8 +3,9 @@ pass_through: true
 description: Auto-bump version based on conventional commits
 title: Bump Version Workflow
 tags: ['version', 'automation', 'conventional-commits', 'semantic-versioning']
-related: []
 ---
+
+related: []
 
 # Bump Version Workflow
 
@@ -145,11 +146,10 @@ git show v1.1.0
 pip install mcp-web==1.1.0
 ```
 
-```
-
 ### 5.2 Update API Documentation
 
 **Update version in API docs:**
+
 ```markdown
 # API Version 1.1.0
 
@@ -236,10 +236,9 @@ When this bump-version workflow is called:
 ✅ **Completed /bump-version:** Version bumping finished
 ```
 
----
-
 ## Command Metadata
 
+```yaml
 **File:** `bump-version.yaml`
 **Type:** Command/Workflow
 **Complexity:** Moderate
@@ -248,12 +247,11 @@ When this bump-version workflow is called:
 **Status:** Active
 
 **Topics Covered:**
-
 - Version management
 - Conventional commits
 - Semantic versioning
 - Automation
 
 **Dependencies:**
-
 - None (standalone workflow)
+```

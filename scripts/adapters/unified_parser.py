@@ -52,7 +52,7 @@ class UnifiedParser:
 
         return {
             "frontmatter": frontmatter,
-            "content": content_text.strip(),
+            "content": content_text,
             "file_path": str(path),
             "file_name": path.stem,
         }

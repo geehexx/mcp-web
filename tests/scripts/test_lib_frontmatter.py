@@ -3,7 +3,6 @@
 from pathlib import Path
 
 import pytest
-
 from scripts.lib.frontmatter import (
     FrontmatterError,
     extract_frontmatter,

@@ -3,8 +3,9 @@ pass_through: true
 description: /work-session-protocol - Session end protocol and completion detection
 title: Work Session Protocol Workflow
 tags: ['session', 'protocol', 'completion', 'end']
-related: []
 ---
+
+related: []
 
 # Work Session End Protocol
 
@@ -176,8 +177,6 @@ When this work-session-protocol workflow is called:
 ```markdown
 ✅ **Completed /work-session-protocol:** Session end protocol finished
 ```
-
----
 
 ## Command Metadata
 

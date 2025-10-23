@@ -149,7 +149,6 @@ git show v1.1.0
 ```bash
 pip install mcp-web==1.1.0
 ```
-```
 
 ### 5.2 Update API Documentation
 
@@ -238,6 +237,7 @@ When this bump-version workflow is called:
 
 ## Command Metadata
 
+```yaml
 **File:** `bump-version.yaml`
 **Type:** Command/Workflow
 **Complexity:** Moderate
@@ -253,3 +253,4 @@ When this bump-version workflow is called:
 
 **Dependencies:**
 - None (standalone workflow)
+```

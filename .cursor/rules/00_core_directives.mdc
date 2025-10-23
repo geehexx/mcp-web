@@ -3,8 +3,10 @@ alwaysApply: true
 description: Core agent directives and operational principles for both Cursor and Windsurf
 title: Agent Persona & Core Directives
 tags: ['core', 'agent', 'directives']
-related: ['/docs/CONSTITUTION.md']
 ---
+
+related:
+  - "/docs/CONSTITUTION.md"
 
 # Rule: Agent Persona & Core Directives
 

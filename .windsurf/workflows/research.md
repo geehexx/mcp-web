@@ -10,6 +10,8 @@ created: 2025-10-22
 updated: 2025-10-22
 ---
 
+related: []
+
 # Research Workflow
 
 **Purpose:** Gather comprehensive research for features, technologies, or architectural decisions.
@@ -270,8 +272,6 @@ When this research workflow is called:
 ```markdown
 ✅ **Completed /research:** Research workflow finished
 ```
-
----
 
 ## Command Metadata
 
