@@ -3,7 +3,6 @@
 from pathlib import Path
 
 import pytest
-
 from scripts.lib.validation import BaseValidator, ValidationResult, collect_errors, walk_files
 
 

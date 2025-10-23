@@ -3,8 +3,9 @@ pass_through: true
 description: Validate code quality, security, and tests before committing
 title: Quality Validation Workflow
 tags: ['validation', 'quality', 'security', 'testing']
-related: []
 ---
+
+related: []
 
 # Quality Validation Workflow
 
@@ -142,8 +143,6 @@ When this validation workflow is called by other workflows:
 - Address all security issues
 - Maintain high test coverage
 - Keep documentation up to date
-
----
 
 ## Command Metadata
 

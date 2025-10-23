@@ -3,8 +3,9 @@ pass_through: true
 description: Consolidate historical session summaries into daily comprehensive files
 title: Consolidate Summaries Workflow
 tags: ['consolidation', 'summaries', 'analysis', 'daily']
-related: []
 ---
+
+related: []
 
 # Consolidate Session Summaries Workflow
 
@@ -257,8 +258,6 @@ When this consolidate-summaries workflow is called:
 ```markdown
 ✅ **Completed /consolidate-summaries:** Summary consolidation finished
 ```
-
----
 
 ## Command Metadata
 

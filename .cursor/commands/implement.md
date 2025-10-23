@@ -3,8 +3,9 @@ pass_through: true
 description: Focused implementation with test-first approach
 title: Implementation Workflow
 tags: ['implementation', 'testing', 'development', 'tdd']
-related: []
 ---
+
+related: []
 
 # Implementation Workflow
 
@@ -150,8 +151,6 @@ When this implementation workflow is called:
 ```markdown
 ✅ **Completed /implement:** Implementation workflow finished
 ```
-
----
 
 ## Command Metadata
 

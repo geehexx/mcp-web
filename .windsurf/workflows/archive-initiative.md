@@ -10,6 +10,8 @@ created: 2025-10-22
 updated: 2025-10-22
 ---
 
+related: []
+
 # Archive Initiative Workflow
 
 Archive completed initiatives with validation and automation.
@@ -210,8 +212,6 @@ When this archive-initiative workflow is called:
 ```markdown
 ✅ **Completed /archive-initiative:** Initiative archival finished
 ```
-
----
 
 ## Command Metadata
 

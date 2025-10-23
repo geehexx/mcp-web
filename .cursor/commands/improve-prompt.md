@@ -3,8 +3,9 @@ pass_through: true
 description: LLM-agnostic prompt optimization with intelligent semantic preservation and idempotency
 title: Improve Prompt Workflow
 tags: ['prompt', 'optimization', 'llm', 'improvement']
-related: []
 ---
+
+related: []
 
 # Improve Prompt Workflow
 
@@ -15,8 +16,6 @@ related: []
 **Philosophy:** Universal principles (clarity, structure, reasoning) + optional model-specific enhancements.
 
 **Supported:** Claude 3.5+, GPT-4+, Gemini 1.5+, instruction-following LLMs
-
----
 
 ## Optimization Methodology (2025)
 
@@ -55,21 +54,15 @@ related: []
 
 **Self-Application:** Only self-optimize if baseline <8/10 OR tokens >4000.
 
----
-
 ## When to Use
 
 **Use:** Workflows, rules, ad-hoc prompts, system prompts, inconsistent results, structure improvements
 
 **Avoid:** Changing roles/personas, security logic, project rules (without approval), already-optimized prompts
 
----
-
 ## Stage 0: Workflow Entry
 
 🔄 **Entering /improve-prompt:** Prompt optimization with quantitative analysis
-
----
 
 ## Stage 1: Pre-Optimization Validation (Workflows Only)
 
@@ -92,8 +85,6 @@ git log --oneline --all --grep="restore.*workflows" -- .windsurf/workflows/TARGE
 
 **See:** [RESTORATION_PROTOCOL.md](../../docs/initiatives/completed/workflow-optimization-phase-2/artifacts/RESTORATION_PROTOCOL.md)
 
----
-
 ## Stage 2: Create Task Plan
 
 ```typescript
@@ -109,8 +100,6 @@ update_plan({
 })
 ```
 
----
-
 ## Stage 3: Input Capture
 
 ### 3.1 Parse Input
@@ -118,8 +107,6 @@ update_plan({
 **Formats:** Inline text, file reference (`@workflow:name`), code block
 
 **Extract:** Original text, context type (workflow/rule/ad-hoc/system), structure, examples, variables
-
----
 
 ## Stage 4: Model Detection & Configuration
 
@@ -162,8 +149,6 @@ update_plan({
 
 **See:** [improve-workflow.md](./improve-workflow.md)
 
----
-
 ## Stage 5: Analyze Current Prompt
 
 ### 5.1 Semantic Analysis (Layer 1)
@@ -190,8 +175,6 @@ semantic_profile = {
 **Dimensions (0-10):** Clear objective, specific instructions, context, constraints, output format, examples, reasoning guidance, structure
 
 **Issues:** Ambiguous objective, missing context, no output format, unclear constraints, redundant sections
-
----
 
 ## Stage 6: Apply Universal Optimizations
 
@@ -225,8 +208,6 @@ semantic_profile = {
 - Implicit knowledge (make explicit for LLM)
 - Token budget vs comprehension
 
----
-
 ## Stage 7: Model-Specific Enhancements (Optional)
 
 **If target model specified:**
@@ -238,8 +219,6 @@ semantic_profile = {
 | Gemini | System instructions, hierarchical structure, examples first |
 
 **If `target_model=auto`:** Skip model-specific, use universal only.
-
----
 
 ## Stage 8: Validation & Quality Gates
 
@@ -268,8 +247,6 @@ semantic_profile = {
 re_optimized = optimize(improved, same_config)
 assert improved == re_optimized  # Must be identical
 ```
-
----
 
 ## Stage 9: Output & Presentation
 
@@ -304,8 +281,6 @@ assert improved == re_optimized  # Must be identical
 - Further optimization opportunities
 - Model-specific suggestions
 
----
-
 ## Integration
 
 ### Calls
@@ -315,8 +290,6 @@ assert improved == re_optimized  # Must be identical
 ### Returns
 
 JSON with improved content, metrics, validation status, recommendations
-
----
 
 ## Anti-Patterns
 
@@ -336,8 +309,6 @@ JSON with improved content, metrics, validation status, recommendations
 - Recommend decomposition when needed
 - Document changes applied
 
----
-
 ## Success Metrics
 
 | Metric | Target |
@@ -346,8 +317,6 @@ JSON with improved content, metrics, validation status, recommendations
 | Quality preservation | >92% |
 | Idempotency | 100% |
 | Validation pass rate | >95% |
-
----
 
 ## References
 
@@ -366,8 +335,6 @@ JSON with improved content, metrics, validation status, recommendations
 - [Token Optimization](https://10clouds.com/blog/a-i/mastering-ai-token-optimization-proven-strategies-to-cut-ai-cost/) (2025)
 - [Prompt Compression](https://medium.com/@sahin.samia/prompt-compression-in-large-language-models-llms-making-every-token-count-078a2d1c7e03) (2025)
 - [LLM Best Practices](https://www.anthropic.com/index/prompt-engineering) (Anthropic 2025)
-
----
 
 **Version:** 3.1-self-optimized
 **Last Updated:** 2025-10-21

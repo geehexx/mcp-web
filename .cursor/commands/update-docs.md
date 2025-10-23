@@ -3,8 +3,9 @@ pass_through: true
 description: Update PROJECT_SUMMARY.md and CHANGELOG.md
 title: Update Docs Workflow
 tags: ['documentation', 'update', 'changelog', 'summary']
-related: []
 ---
+
+related: []
 
 # Update Living Docs Workflow
 

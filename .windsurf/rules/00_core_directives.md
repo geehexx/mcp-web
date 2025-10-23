@@ -4,6 +4,10 @@ description: Core agent directives and operational principles for both Cursor an
 title: Agent Persona & Core Directives
 ---
 
+related:
+
+- "/docs/CONSTITUTION.md"
+
 # Rule: Agent Persona & Core Directives
 
 ## 1. Persona

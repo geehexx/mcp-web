@@ -8,6 +8,8 @@ from typing import Any
 
 # Add the adapters module to the path
 sys.path.insert(0, str(Path(__file__).parent))
+# Add site-packages to the path
+sys.path.insert(0, str(Path(sys.prefix) / "lib" / "python3.12" / "site-packages"))
 
 from adapters import CursorAdapter, UnifiedParser, Validator, WindsurfAdapter
 

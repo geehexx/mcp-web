@@ -3,8 +3,9 @@ pass_through: true
 description: Archive completed initiative or handle superseded initiatives
 title: Archive Initiative Workflow
 tags: ['archive', 'initiative', 'completion', 'documentation']
-related: []
 ---
+
+related: []
 
 # Archive Initiative Workflow
 
@@ -206,8 +207,6 @@ When this archive-initiative workflow is called:
 ```markdown
 ✅ **Completed /archive-initiative:** Initiative archival finished
 ```
-
----
 
 ## Command Metadata
 

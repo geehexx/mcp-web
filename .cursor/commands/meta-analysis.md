@@ -3,8 +3,9 @@ pass_through: true
 description: Systematic session review with intelligent consolidation detection
 title: Meta-Analysis Workflow
 tags: ['analysis', 'session', 'summary', 'consolidation']
-related: []
 ---
+
+related: []
 
 # Meta-Analysis Workflow
 
@@ -118,8 +119,6 @@ When this meta-analysis workflow is called:
 - Check for consolidation when appropriate
 - Update living docs when significant changes
 - Use proper commit messages
-
----
 
 ## Command Metadata
 

@@ -5,6 +5,10 @@ title: Documentation Standards
 globs: docs/**/*.md, *.md, README.md
 ---
 
+related:
+
+- "/docs/DOCUMENTATION_STRUCTURE.md"
+
 # Documentation Standards & Management
 
 ## 3.1 Documentation Structure
@@ -76,8 +80,6 @@ type: "guide|adr|initiative|reference"
 status: "draft|active|completed|archived"
 created: "YYYY-MM-DD"
 updated: "YYYY-MM-DD"
----
-
 # Document Title
 
 Brief description of the document's purpose.
@@ -163,8 +165,6 @@ python script.py
 - ✅ Valid links (internal and external)
 - ✅ Consistent formatting
 - ✅ Up-to-date information
-
----
 
 ## Rule Metadata
 

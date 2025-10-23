@@ -3,8 +3,9 @@ pass_through: true
 description: Intelligent context detection for work continuation
 title: Detect Context Workflow
 tags: ['context', 'detection', 'analysis', 'routing']
-related: []
 ---
+
+related: []
 
 # Detect Context Workflow
 
@@ -132,8 +133,6 @@ When this detect-context workflow is called:
 - Analyze all available signals
 - Provide confidence levels
 - Respect user instructions absolutely
-
----
 
 ## Command Metadata
 

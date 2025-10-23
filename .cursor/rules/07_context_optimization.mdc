@@ -3,8 +3,10 @@ alwaysApply: false
 description: Apply when dealing with large files, complex operations, or memory-intensive tasks
 title: Context Optimization
 tags: ['context', 'optimization', 'memory', 'performance']
-related: ['/docs/adr/0001-decision.md']
 ---
+
+related:
+  - "/docs/adr/0001-decision.md"
 
 # Context Optimization Guidelines
 
@@ -207,8 +209,6 @@ Load: Context Optimization rule for memory management and batching
 # File manipulation tasks
 Load: File Operations rule for safe path handling and file operations
 ```
-
----
 
 ## Rule Metadata
 

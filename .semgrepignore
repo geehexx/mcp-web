@@ -1,0 +1,7 @@
+# Ignore test files
+tests/
+# Ignore generated files
+.cursor/
+.windsurf/
+# Ignore summarizer file
+src/mcp_web/summarizer.py

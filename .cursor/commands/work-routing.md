@@ -3,8 +3,9 @@ pass_through: true
 description: /work-routing - Routing decision logic for work orchestration
 title: Work Routing Workflow
 tags: ['routing', 'work', 'orchestration', 'decision']
-related: []
 ---
+
+related: []
 
 # Work Routing Logic
 
@@ -233,8 +234,6 @@ When this work-routing workflow is called:
 ```markdown
 ✅ **Completed /work-routing:** Routing decision finished
 ```
-
----
 
 ## Command Metadata
 

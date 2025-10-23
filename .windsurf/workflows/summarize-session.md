@@ -10,6 +10,8 @@ created: 2025-10-22
 updated: 2025-10-22
 ---
 
+related: []
+
 # Summarize Session Workflow
 
 Generate LLM-agnostic session summary using structured template.
@@ -364,8 +366,6 @@ When this summarize-session workflow is called:
 ```markdown
 ✅ **Completed /summarize-session:** Session summarization finished
 ```
-
----
 
 ## Command Metadata
 

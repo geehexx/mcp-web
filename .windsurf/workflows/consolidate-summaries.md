@@ -10,6 +10,8 @@ created: 2025-10-22
 updated: 2025-10-22
 ---
 
+related: []
+
 # Consolidate Session Summaries Workflow
 
 Merge multiple per-session summaries from same day into comprehensive daily summaries.
@@ -261,8 +263,6 @@ When this consolidate-summaries workflow is called:
 ```markdown
 ✅ **Completed /consolidate-summaries:** Summary consolidation finished
 ```
-
----
 
 ## Command Metadata
 

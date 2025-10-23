@@ -10,6 +10,8 @@ created: 2025-10-22
 updated: 2025-10-22
 ---
 
+related: []
+
 # Detect Context Workflow
 
 **Purpose:** Analyze project state to determine what work should happen next, enabling autonomous continuation.
@@ -136,8 +138,6 @@ When this detect-context workflow is called:
 - Analyze all available signals
 - Provide confidence levels
 - Respect user instructions absolutely
-
----
 
 ## Command Metadata
 
