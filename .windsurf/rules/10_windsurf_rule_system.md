@@ -4,6 +4,10 @@ description: Documentation of Windsurf IDE rule application logic and configurat
 title: Windsurf Rule System Documentation
 ---
 
+related:
+
+- "/docs/IDE_COMPATIBILITY.md"
+
 # Windsurf Rule System Documentation
 
 ## Rule Application Logic
@@ -184,8 +188,6 @@ description: "Apply when dealing with large files, complex operations, or memory
 1. **Improve Description**: Make descriptions more specific and contextual
 2. **Check Context**: Ensure the rule description matches the intended context
 3. **Review Patterns**: Look for patterns in when rules are incorrectly applied
-
----
 
 ## Rule Metadata
 

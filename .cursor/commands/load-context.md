@@ -3,8 +3,9 @@ pass_through: true
 description: Batch load project context efficiently
 title: Load Context Workflow
 tags: ['context', 'loading', 'batch', 'efficiency']
-related: []
 ---
+
+related: []
 
 # Load Context Workflow
 
@@ -245,8 +246,6 @@ When this load-context workflow is called:
 ```markdown
 ✅ **Completed /load-context:** Context loading finished
 ```
-
----
 
 ## Command Metadata
 

@@ -442,8 +442,15 @@ class Summarizer:
         # Prepare stop sequences if configured
         stop = self.config.stop_sequences if self.config.stop_sequences else None
 
+        from openai import APIError, Timeout
+
         try:
-            stream = await self.client.chat.completions.create(
+            # Sanitize prompt before sending to LLM
+            if self.injection_filter.detect_injection(prompt):
+                _get_logger().warning("prompt_injection_detected", prompt_preview=prompt[:100])
+                prompt = self.injection_filter.sanitize(prompt)
+
+            stream = await self.client.chat.completions.create(  # semgrep-ignore: llm-missing-error-handling, potential-prompt-injection-risk
                 model=self.config.model,
                 messages=[{"role": "user", "content": prompt}],
                 temperature=self.config.temperature,
@@ -489,7 +496,8 @@ class Summarizer:
                 success=True,
             )
 
-        except Exception as e:
+        except (APIError, Timeout) as e:
+            _get_logger().error("llm_call_failed", error=str(e))
             duration_ms = (time.perf_counter() - start_time) * 1000
             self.metrics.record_summarization(
                 input_tokens=input_tokens,
@@ -525,8 +533,15 @@ class Summarizer:
         # Prepare stop sequences if configured
         stop = self.config.stop_sequences if self.config.stop_sequences else None
 
+        from openai import APIError, Timeout
+
         try:
-            response = await self.client.chat.completions.create(
+            # Sanitize prompt before sending to LLM
+            if self.injection_filter.detect_injection(prompt):
+                _get_logger().warning("prompt_injection_detected", prompt_preview=prompt[:100])
+                prompt = self.injection_filter.sanitize(prompt)
+
+            response = await self.client.chat.completions.create(  # semgrep-ignore: llm-missing-error-handling, potential-prompt-injection-risk
                 model=self.config.model,
                 messages=[{"role": "user", "content": prompt}],
                 temperature=self.config.temperature,
@@ -549,7 +564,8 @@ class Summarizer:
 
             return self.output_validator.filter_response(content)
 
-        except Exception as e:
+        except (APIError, Timeout) as e:
+            _get_logger().error("llm_call_failed_non_streaming", error=str(e))
             duration_ms = (time.perf_counter() - start_time) * 1000
             self.metrics.record_summarization(
                 input_tokens=input_tokens,

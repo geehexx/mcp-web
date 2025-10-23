@@ -3,8 +3,9 @@ pass_through: true
 description: Create New Architecture Decision Record
 title: New ADR Workflow
 tags: ['adr', 'architecture', 'documentation', 'decisions']
-related: []
 ---
+
+related: []
 
 # New ADR Workflow
 
@@ -94,8 +95,6 @@ Owner: "@ai-agent"
 Priority: "High"
 Tags: ["architecture", "decision", "technology"]
 Related: ["/path/to/related/adr"]
----
-
 # ADR-NNNN: [Verb-Noun-Phrase]
 
 ## Status
@@ -290,8 +289,6 @@ When this new-adr workflow is called:
 ```markdown
 ✅ **Completed /new-adr:** ADR creation finished
 ```
-
----
 
 ## Command Metadata
 

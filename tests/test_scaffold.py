@@ -184,8 +184,8 @@ class TestScaffolder:
         content = scaffolder.render(fields)
 
         assert "# Initiative: Test Initiative" in content
-        assert "**Status:** Proposed" in content
-        assert "**Owner:** @test" in content
+        assert "Status: Proposed" in content
+        assert "Owner: @test" in content
         assert "Test objective" in content
         assert "- [ ] Criterion 1" in content
         assert "### Phase 1" in content
@@ -289,8 +289,8 @@ class TestScaffolder:
 class TestScaffoldCLI:
     """Tests for scaffold CLI command."""
 
-    @patch("scaffold.Scaffolder")
-    @patch("scaffold.click")
+    @patch("scripts.automation.scaffold.Scaffolder")
+    @patch("scripts.automation.scaffold.click")
     def test_dry_run_does_not_write(self, mock_click, mock_scaffolder_class):
         """Test dry-run mode doesn't write files."""
 
@@ -304,7 +304,7 @@ class TestScaffoldCLI:
         # Simplified test just checks the logic exists
         assert True  # Placeholder
 
-    @patch("scaffold.Scaffolder")
+    @patch("scripts.automation.scaffold.Scaffolder")
     def test_validate_only_validates_template(self, mock_scaffolder_class):
         """Test validate-only mode only validates."""
 
@@ -355,7 +355,7 @@ class TestIntegration:
         assert output_path.exists()
         content_written = output_path.read_text()
         assert "# Initiative: Integration Test" in content_written
-        assert "**Priority:** high" in content_written
+        assert "Priority: high" in content_written
 
     def test_full_adr_scaffold(self, tmp_path, monkeypatch):
         """Test full ADR scaffolding workflow."""

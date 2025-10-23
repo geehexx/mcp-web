@@ -10,6 +10,8 @@ created: 2025-10-22
 updated: 2025-10-22
 ---
 
+related: []
+
 # Meta-Analysis Workflow
 
 MANDATORY at session end. Creates LLM-agnostic summaries for cross-session continuity.
@@ -122,8 +124,6 @@ When this meta-analysis workflow is called:
 - Check for consolidation when appropriate
 - Update living docs when significant changes
 - Use proper commit messages
-
----
 
 ## Command Metadata
 

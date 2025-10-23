@@ -4,6 +4,10 @@ description: Documentation of Cursor IDE rule application logic and configuratio
 title: Cursor Rule System Documentation
 ---
 
+related:
+
+- "/docs/IDE_COMPATIBILITY.md"
+
 # Cursor Rule System Documentation
 
 ## Rule Application Logic
@@ -167,8 +171,6 @@ description: "Apply when dealing with large files, complex operations, or memory
 1. **Reduce Always-On Rules**: Minimize rules with `alwaysApply: true`
 2. **Optimize Globs**: Use more efficient glob patterns
 3. **Review Content**: Ensure rule content is concise and relevant
-
----
 
 ## Rule Metadata
 

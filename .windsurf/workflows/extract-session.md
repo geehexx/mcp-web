@@ -10,6 +10,8 @@ created: 2025-10-22
 updated: 2025-10-22
 ---
 
+related: []
+
 # Extract Session Workflow
 
 Extract structured data from current session (git history, files, tests) for session summary generation.
@@ -294,8 +296,6 @@ When this extract-session workflow is called:
 ```markdown
 ✅ **Completed /extract-session:** Session extraction finished
 ```
-
----
 
 ## Command Metadata
 

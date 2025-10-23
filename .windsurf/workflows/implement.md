@@ -10,6 +10,8 @@ created: 2025-10-22
 updated: 2025-10-22
 ---
 
+related: []
+
 # Implementation Workflow
 
 **Purpose:** Execute planned work with test-first discipline and incremental validation.
@@ -154,8 +156,6 @@ When this implementation workflow is called:
 ```markdown
 ✅ **Completed /implement:** Implementation workflow finished
 ```
-
----
 
 ## Command Metadata
 

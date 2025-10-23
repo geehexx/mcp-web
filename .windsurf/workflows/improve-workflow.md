@@ -10,6 +10,8 @@ created: 2025-10-22
 updated: 2025-10-22
 ---
 
+related: []
+
 # Improve Workflow (Sub-workflow)
 
 **Purpose:** Workflow-specific optimization with syntax preservation and decomposition detection.
@@ -18,13 +20,9 @@ updated: 2025-10-22
 
 **Scope:** Conciseness optimization, workflow syntax validation, decomposition detection
 
----
-
 ## Stage 0: Workflow Entry
 
 🔄 **Entering /improve-workflow:** Workflow optimization sub-routine
-
----
 
 ## Stage 1: Parse Workflow Structure
 
@@ -63,8 +61,6 @@ updated: 2025-10-22
 ### 1.3 Calculate Conciseness Weight
 
 **See:** [improve-prompt.md Stage 3.5.2](./improve-prompt.md) for weight calculation logic
-
----
 
 ## Stage 2: Apply Conciseness Techniques
 
@@ -156,8 +152,6 @@ Analyzes project state:
 - Moderate (1.5x): 20-30%
 - High (2.0x): 30-40%
 - Critical (2.5x): 40-50% + decomposition
-
----
 
 ## Stage 3: Workflow-Specific Validation
 
@@ -258,8 +252,6 @@ markers_intact = verify_workflow_markers(compressed, re_optimized)
 assert exact_match AND plans_match AND frontmatter_intact AND markers_intact
 ```
 
----
-
 ## Stage 4: Decomposition Detection
 
 **If tokens > 6000 OR complexity > 75:**
@@ -287,8 +279,6 @@ assert exact_match AND plans_match AND frontmatter_intact AND markers_intact
 
 **Recommendation:** [Chosen option] because [reason]
 ```
-
----
 
 ## Stage 5: Output Format
 
@@ -324,8 +314,6 @@ assert exact_match AND plans_match AND frontmatter_intact AND markers_intact
 
 Include everything from 5.1 PLUS decomposition proposal from Stage 4.2.
 
----
-
 ## Integration
 
 ### Called By
@@ -358,8 +346,6 @@ Include everything from 5.1 PLUS decomposition proposal from Stage 4.2.
 }
 ```
 
----
-
 ## Anti-Patterns
 
 **❌ Don't:**
@@ -376,8 +362,6 @@ Include everything from 5.1 PLUS decomposition proposal from Stage 4.2.
 - Validate before committing
 - Recommend decomposition when needed
 
----
-
 ## Success Metrics
 
 | Metric | Target |
@@ -386,8 +370,6 @@ Include everything from 5.1 PLUS decomposition proposal from Stage 4.2.
 | Quality preservation | >90% |
 | Syntax correctness | 100% |
 | Decomposition detection | >95% (for >6000 tokens) |
-
----
 
 ## References
 
@@ -401,8 +383,6 @@ Include everything from 5.1 PLUS decomposition proposal from Stage 4.2.
 - [Token Optimization](https://10clouds.com/blog/a-i/mastering-ai-token-optimization-proven-strategies-to-cut-ai-cost/) (2025)
 - [Prompt Compression](https://medium.com/@sahin.samia/prompt-compression-in-large-language-models-llms-making-every-token-count-078a2d1c7e03) (2025)
 - [Workflow Patterns](https://skywork.ai/blog/agentic-ai-examples-workflow-patterns-2025/) (2025)
-
----
 
 **Version:** 2.1-self-optimized
 **Last Updated:** 2025-10-21

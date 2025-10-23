@@ -10,6 +10,8 @@ created: 2025-10-22
 updated: 2025-10-22
 ---
 
+related: []
+
 # Work Orchestration Workflow
 
 **Purpose:** Central orchestration detecting project context and routing to specialized workflows.
@@ -241,8 +243,6 @@ When this work orchestration workflow is called:
 ```markdown
 ✅ **Completed /work:** Work orchestration finished
 ```
-
----
 
 ## Command Metadata
 

@@ -5,6 +5,10 @@ title: Testing Standards
 globs: tests/**/*.py, test_*.py, *_test.py, conftest.py
 ---
 
+related:
+
+- "/docs/adr/0001-decision.md"
+
 # Testing Standards
 
 ## 1.1 Development Environment
@@ -329,8 +333,6 @@ class TestURLProcessor:
 - ✅ No security test failures
 - ✅ Performance benchmarks within limits
 - ✅ Linting passes
-
----
 
 ## Rule Metadata
 

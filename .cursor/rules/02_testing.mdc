@@ -4,8 +4,10 @@ globs: tests/**/*.py, test_*.py, *_test.py, conftest.py
 description: Testing standards pytest fixtures TDD practices
 title: Testing Standards
 tags: ['testing', 'pytest', 'tdd', 'fixtures']
-related: ['/docs/adr/0001-decision.md']
 ---
+
+related:
+  - "/docs/adr/0001-decision.md"
 
 # Testing Standards
 
@@ -331,8 +333,6 @@ class TestURLProcessor:
 - ✅ No security test failures
 - ✅ Performance benchmarks within limits
 - ✅ Linting passes
-
----
 
 ## Rule Metadata
 

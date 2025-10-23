@@ -27,7 +27,7 @@ dependencies = [
     "playwright>=1.45.0",
     # Content Extraction
     "trafilatura>=1.12.0",
-    "pypdf>=4.0.0",
+    "pypdf>=6.1.2",
     "pdfplumber>=0.11.0",
     # Text Processing & Chunking
     "tiktoken>=0.7.0",
@@ -67,6 +67,7 @@ dev = [
     "pytest-benchmark>=4.0.0",
     "pytest-xdist>=3.6.0",  # Parallel testing
     "pytest-watch>=4.2.0",  # Watch mode for tests
+    "pytest-golden>=0.2.2",
 
     # LLM testing & evaluation
     "deepeval>=1.2.0",  # LLM evaluation framework
@@ -79,6 +80,7 @@ dev = [
     # Security analysis
     "bandit[toml]>=1.7.9",
     "safety>=3.2.0",  # Dependency vulnerability scanner
+    "semgrep>=1.50.0",
 
     # Type stubs
     "types-aiofiles>=24.1.0",
@@ -138,6 +140,7 @@ exclude_lines = [
 target-version = "py310"
 line-length = 100
 src = ["src", "tests"]
+exclude = ["docs/initiative/completed", "docs/archive"]
 
 [tool.ruff.lint]
 select = [

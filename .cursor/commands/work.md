@@ -3,8 +3,9 @@ pass_through: true
 description: Intelligent work orchestration and context detection
 title: Work Orchestration Workflow
 tags: ['orchestration', 'work', 'routing', 'context']
-related: []
 ---
+
+related: []
 
 # Work Orchestration Workflow
 
@@ -237,8 +238,6 @@ When this work orchestration workflow is called:
 ```markdown
 ✅ **Completed /work:** Work orchestration finished
 ```
-
----
 
 ## Command Metadata
 

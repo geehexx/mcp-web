@@ -10,6 +10,8 @@ created: 2025-10-22
 updated: 2025-10-22
 ---
 
+related: []
+
 # Update Living Docs Workflow
 
 Update PROJECT_SUMMARY.md and/or CHANGELOG.md when triggered.

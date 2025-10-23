@@ -8,7 +8,6 @@ from datetime import date
 from pathlib import Path
 
 import pytest
-
 from scripts.automation.extract_action_items import (
     ActionItem,
     load_initiative_metadata,

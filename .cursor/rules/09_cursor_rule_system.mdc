@@ -3,8 +3,10 @@ alwaysApply: false
 description: Documentation of Cursor IDE rule application logic and configuration
 title: Cursor Rule System Documentation
 tags: ['cursor', 'documentation', 'rules', 'system']
-related: ['/docs/IDE_COMPATIBILITY.md']
 ---
+
+related:
+  - "/docs/IDE_COMPATIBILITY.md"
 
 # Cursor Rule System Documentation
 
@@ -169,8 +171,6 @@ description: "Apply when dealing with large files, complex operations, or memory
 1. **Reduce Always-On Rules**: Minimize rules with `alwaysApply: true`
 2. **Optimize Globs**: Use more efficient glob patterns
 3. **Review Content**: Ensure rule content is concise and relevant
-
----
 
 ## Rule Metadata
 

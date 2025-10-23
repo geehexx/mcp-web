@@ -10,6 +10,8 @@ created: 2025-10-22
 updated: 2025-10-22
 ---
 
+related: []
+
 # Planning Workflow
 
 Create robust, researched plans for features, initiatives, or complex changes.
@@ -127,8 +129,6 @@ When this planning workflow is called:
 ```markdown
 ✅ **Completed /plan:** Planning workflow finished
 ```
-
----
 
 ## Command Metadata
 

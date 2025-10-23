@@ -10,6 +10,8 @@ created: 2025-10-22
 updated: 2025-10-22
 ---
 
+related: []
+
 # Bump Version Workflow
 
 **Purpose:** Automatically determine and apply semantic version bumps based on conventional commit messages.
@@ -149,11 +151,10 @@ git show v1.1.0
 pip install mcp-web==1.1.0
 ```
 
-```
-
 ### 5.2 Update API Documentation
 
 **Update version in API docs:**
+
 ```markdown
 # API Version 1.1.0
 
@@ -240,10 +241,9 @@ When this bump-version workflow is called:
 ✅ **Completed /bump-version:** Version bumping finished
 ```
 
----
-
 ## Command Metadata
 
+```yaml
 **File:** `bump-version.yaml`
 **Type:** Command/Workflow
 **Complexity:** Moderate
@@ -252,12 +252,11 @@ When this bump-version workflow is called:
 **Status:** Active
 
 **Topics Covered:**
-
 - Version management
 - Conventional commits
 - Semantic versioning
 - Automation
 
 **Dependencies:**
-
 - None (standalone workflow)
+```

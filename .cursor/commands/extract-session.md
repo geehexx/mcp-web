@@ -3,8 +3,9 @@ pass_through: true
 description: Extract structured session information from git and filesystem
 title: Extract Session Workflow
 tags: ['session', 'extraction', 'analysis', 'git']
-related: []
 ---
+
+related: []
 
 # Extract Session Workflow
 
@@ -290,8 +291,6 @@ When this extract-session workflow is called:
 ```markdown
 ✅ **Completed /extract-session:** Session extraction finished
 ```
-
----
 
 ## Command Metadata
 

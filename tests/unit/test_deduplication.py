@@ -11,7 +11,6 @@ Tests for Phase 3 of Session Summary Mining initiative:
 from datetime import date
 
 import pytest
-
 from scripts.automation.extract_action_items import (
     ActionItem,
     compute_contextual_similarity,

@@ -9,7 +9,6 @@ import tempfile
 from pathlib import Path
 
 import pytest
-
 from scripts.automation.file_ops import (
     archive_initiative,
     move_file_with_refs,
@@ -278,16 +277,17 @@ Unicode content: 日本語
 class TestCLIIntegration:
     """Test CLI usage via task commands."""
 
-    def test_archive_via_task_help(self):
-        """Test task archive:initiative help."""
+    def test_archive_via_script_help(self):
+        """Test file_ops.py script help output."""
         import subprocess
 
         result = subprocess.run(
-            ["task", "--list"],
+            ["python", "scripts/automation/file_ops.py", "--help"],
             capture_output=True,
             text=True,
         )
 
-        # Check archive tasks exist
+        # Check that the script runs and shows help
         assert result.returncode == 0
-        assert "archive" in result.stdout.lower() or "task" in result.stdout.lower()
+        assert "Usage:" in result.stdout
+        assert "archive-initiative" in result.stdout

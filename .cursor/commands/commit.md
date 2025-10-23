@@ -3,8 +3,9 @@ pass_through: true
 description: Git commit workflow with validation and review
 title: Git Commit Workflow
 tags: ['git', 'commit', 'validation', 'conventional-commits']
-related: []
 ---
+
+related: []
 
 # Git Commit Workflow
 
@@ -116,8 +117,6 @@ When this commit workflow is called:
 ```markdown
 ✅ **Completed /commit:** Git commit workflow finished
 ```
-
----
 
 ## Command Metadata
 

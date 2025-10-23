@@ -10,6 +10,8 @@ created: 2025-10-22
 updated: 2025-10-22
 ---
 
+related: []
+
 # Load Context Workflow
 
 **Purpose:** Efficiently load project context using batch operations (3-10x faster than sequential).
@@ -249,8 +251,6 @@ When this load-context workflow is called:
 ```markdown
 ✅ **Completed /load-context:** Context loading finished
 ```
-
----
 
 ## Command Metadata
 

@@ -1,22 +1,22 @@
 ---
-created: "2025-10-17"
-updated: "2025-10-21"
 description: Intelligent context detection for work continuation
-auto_execution_mode: 3
+title: Detect Context Workflow
+type: workflow
 category: Operations
-complexity: 80
-tokens: 2200
+complexity: complex
 dependencies: []
 status: active
+created: 2025-10-22
+updated: 2025-10-22
 ---
+
+related: []
 
 # Detect Context Workflow
 
 **Purpose:** Analyze project state to determine what work should happen next, enabling autonomous continuation.
 
 **Invocation:** `/detect-context` (called by `/work` or directly)
-
----
 
 ## Execution
 
@@ -33,8 +33,6 @@ status: active
 
 **⚠️ CRITICAL:** MCP tools do NOT support globs. List directory first, then read explicit paths.
 
----
-
 ## Stage 2: Detect Signals
 
 **Priority 0 (ABSOLUTE):** User explicit @mention or "continue with X" → Confidence 100%, route to specified initiative
@@ -49,105 +47,114 @@ status: active
 
 **⚠️ CRITICAL:** User explicit mentions override ALL other signals.
 
----
+## Stage 3: Classify Signals
 
-## Stage 3: Interpret & Route
+**High Confidence (80%+):**
 
-**Detection Matrix:**
+- User explicit mention
+- Active initiative with unchecked tasks
+- Test failures with clear error messages
 
-| Pattern | Confidence | Route | Context Extracted |
-|---------|------------|-------|-------------------|
-| Session "Next Steps" + initiative | High | `/implement` | Summary file, next steps, unresolved |
-| Unchecked tasks (3+) | High | `/implement` | Initiative, next 3 tasks, phase |
-| Test failures | High | `/implement` | Failures, affected modules |
-| "Plan" keywords in summary | High | `/plan` | Planning markers, scope |
-| Multiple incomplete features | Medium | `/plan` | All initiatives |
-| Recent ADR + "decide" | Medium | `/new-adr` | Decision context |
-| Unstaged changes, no context | Medium | Prompt | Changed files |
-| Clean state, no initiative | Low | Prompt | Active initiatives list |
+**Medium Confidence (30-79%):**
 
----
+- Session summary mentions work
+- Git changes in progress
+- TODO markers in relevant files
 
-## Stage 4: Confidence Scoring
+**Low Confidence (<30%):**
 
-**Score calculation:**
+- No clear signals
+- Multiple conflicting signals
+- Ambiguous context
 
-- Next steps in summary: +30
-- Unresolved in summary: +30
-- Unchecked tasks: +25
-- Initiative Active: +25
-- Test failures: +20
-- Unstaged changes: +15
-- Recent commits same area: +15
-- TODO markers: +10
+## Stage 4: Generate Routing Recommendation
 
-**Thresholds & Actions:**
+**Route to Implementation:**
 
-| Score | Confidence | Action | User Interaction |
-|-------|------------|--------|------------------|
-| 80+ | High | Auto-route | None (announce route) |
-| 30-79 | Medium | Recommend | State choice, mention alternatives |
-| <30 | Low | Prompt | List options, ask for direction |
+- Active initiative with unchecked tasks
+- Test failures
+- User requests specific feature/fix
 
-**Multiple signals:** Present ranked options with recommendation.
+**Route to Planning:**
 
----
+- New initiative mentioned
+- Ambiguous requirements
+- Research needed
 
-## Stage 5: Present & Route
+**Route to Archive:**
 
-**Output format by confidence:**
+- Initiative marked completed
+- All tasks done
+- User signals completion
 
-| Confidence | Format | Example |
-|------------|--------|----------|
-| High (80+) | Announce route | "✓ Detected continuation from last session → Routing to /implement (Initiative X)" |
-| Medium (30-79) | Recommend + alternatives | "Recommendation: Continue initiative\n\nAlternatives:\n1. Continue (recommended)\n2. Run validation\n3. Other" |
-| Low (<30) | List options | "Unable to determine next step.\n\nOptions:\n1. Continue Initiative A\n2. Continue Initiative B\n3. Create plan" |
+**Route to Meta-Analysis:**
 
----
+- Session end signals
+- Work completed
+- User requests summary
 
-## Stage 6: Return Results
+## Context Loading
 
-**Return to caller (`/work`):** Confidence score, route recommendation, extracted context
+Load these rules if you determine you need them based on their descriptions:
 
-**Caller invokes `/load-context`** with appropriate scope based on route
+- **Context Optimization**: `/rules/07_context_optimization.mdc` - Apply when dealing with large files, complex operations, or memory-intensive tasks
+- **Task Orchestration**: `/rules/12_task_orchestration.mdc` - Apply when managing complex task coordination and workflow orchestration
+- **Workflow Routing**: `/rules/13_workflow_routing.mdc` - Apply when determining workflow routing and context analysis
 
----
+## Workflow References
 
----
+When this detect-context workflow is called:
+
+1. **Load**: `/commands/detect-context.md`
+2. **Execute**: Follow the context detection stages defined above
+3. **Analyze**: Process project state and generate routing recommendation
+4. **Return**: Provide confidence level and recommended workflow
+
+## Integration
+
+**Called By:**
+
+- `/work` - Main orchestration workflow
+- User - Direct invocation for context analysis
+
+**Calls:**
+
+- Various analysis tools and commands
+- File reading operations
+- Git status checks
 
 ## Anti-Patterns
 
-| ❌ Don't | ✅ Do |
-|----------|-------|
-| Ignore user explicit @mentions | User mention = 100% confidence, route exactly as specified |
-| Use glob patterns with MCP tools | List directory first, then read explicit paths |
-| Ignore session summaries | Check summaries for "Next Steps" / "Unresolved" |
-| Over-rely on git status only | Check summaries + initiatives + git |
-| Auto-route on low confidence (<30%) | Prompt user for direction |
+❌ **Don't:**
 
----
+- Skip user explicit mentions
+- Ignore high-confidence signals
+- Make assumptions without evidence
+- Override user instructions
 
-## Performance Targets
+✅ **Do:**
 
-| Phase | Target |
-|-------|--------|
-| Load context | <1s |
-| Search signals | <2s |
-| Analyze | <1s |
-| **Total** | **<4s** |
+- Always check for user explicit mentions first
+- Analyze all available signals
+- Provide confidence levels
+- Respect user instructions absolutely
 
-**Optimization:** Batch reads, parallel grep, cache git log
+## Command Metadata
 
----
+**File:** `detect-context.yaml`
+**Type:** Command/Workflow
+**Complexity:** Complex
+**Estimated Tokens:** ~2,200
+**Last Updated:** 2025-10-22
+**Status:** Active
 
-## References
+**Topics Covered:**
 
-- [Factory.ai Context Detection](https://factory.ai/news/context-window-problem)
-- [Anthropic Long-Context Tips](https://docs.anthropic.com/claude/docs/long-context-window-tips)
-- `.windsurf/workflows/work.md`
-- `.windsurf/workflows/load-context.md`
+- Context detection
+- Signal analysis
+- Routing recommendations
+- Project state analysis
 
----
+**Dependencies:**
 
-**Last Updated:** October 21, 2025
-**Version:** 2.0.0
+- None (standalone workflow)

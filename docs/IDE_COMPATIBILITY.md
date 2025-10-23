@@ -13,7 +13,7 @@ The unified system provides:
 
 ## Architecture
 
-```
+```yaml
 .unified/                    # Unified source of truth
 ├── rules/                   # Unified rule definitions
 │   ├── 00_core_directives.yaml
@@ -174,7 +174,7 @@ python scripts/build_ide_configs.py --verbose
 
 ### Output Structure
 
-```
+```yaml
 .cursor/
 ├── rules/                   # Generated .mdc files
 │   ├── 00_core_directives.mdc

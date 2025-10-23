@@ -3,8 +3,9 @@ pass_through: true
 description: Generate formatted session summary from extracted data
 title: Summarize Session Workflow
 tags: ['session', 'summary', 'analysis', 'documentation']
-related: []
 ---
+
+related: []
 
 # Summarize Session Workflow
 
@@ -360,8 +361,6 @@ When this summarize-session workflow is called:
 ```markdown
 ✅ **Completed /summarize-session:** Session summarization finished
 ```
-
----
 
 ## Command Metadata
 

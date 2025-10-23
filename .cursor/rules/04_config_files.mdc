@@ -4,8 +4,10 @@ globs: pyproject.toml, *.ini, Taskfile.yml, .pre-commit-config.yaml
 description: Configuration file best practices TOML YAML Taskfile
 title: Configuration File Standards
 tags: ['configuration', 'toml', 'yaml', 'taskfile']
-related: ['/docs/adr/0001-decision.md']
 ---
+
+related:
+  - "/docs/adr/0001-decision.md"
 
 # Configuration File Standards
 
@@ -109,8 +111,6 @@ python -c "import yaml; yaml.safe_load(open('config.yaml'))"
 - **Inline comments:** Explain non-obvious choices
 - **README updates:** Document new configuration options
 - **Examples:** Provide working configuration examples
-
----
 
 ## Rule Metadata
 

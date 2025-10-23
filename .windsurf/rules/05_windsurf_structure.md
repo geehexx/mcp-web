@@ -1,14 +1,18 @@
 ---
-trigger: model_decision
+trigger: manual
 description: Windsurf-specific structure and workflow system documentation
 title: Windsurf Structure
 ---
+
+related:
+
+- "/docs/IDE_COMPATIBILITY.md"
 
 # Windsurf Structure
 
 ## Directory Structure
 
-```
+```yaml
 .windsurf/
 ├── rules/                   # Rule definitions
 │   ├── 00_core_directives.md
@@ -87,8 +91,6 @@ Windsurf workflows are transformed to Cursor commands:
 - **Embedded Context**: All necessary context must be embedded in Cursor commands
 - **No Memory System**: Cursor commands cannot maintain state across sessions
 - **Simplified Structure**: Cursor commands are simpler than Windsurf workflows
-
----
 
 ## Rule Metadata
 

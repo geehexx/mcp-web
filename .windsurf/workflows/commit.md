@@ -10,6 +10,8 @@ created: 2025-10-22
 updated: 2025-10-22
 ---
 
+related: []
+
 # Git Commit Workflow
 
 **Purpose:** Stage and commit with validation and conventional format.
@@ -120,8 +122,6 @@ When this commit workflow is called:
 ```markdown
 ✅ **Completed /commit:** Git commit workflow finished
 ```
-
----
 
 ## Command Metadata
 

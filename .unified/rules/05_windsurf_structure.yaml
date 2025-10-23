@@ -22,7 +22,7 @@ related:
 
 ## Directory Structure
 
-```
+```yaml
 .windsurf/
 ├── rules/                   # Rule definitions
 │   ├── 00_core_directives.md

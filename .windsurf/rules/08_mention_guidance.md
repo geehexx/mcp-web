@@ -4,6 +4,10 @@ description: Guidance for using /mention and file references in commands and wor
 title: Mention and Reference Guidance
 ---
 
+related:
+
+- "/docs/IDE_COMPATIBILITY.md"
+
 # Mention and Reference Guidance
 
 ## /mention Usage in Commands and Workflows
@@ -92,25 +96,23 @@ Provide guidance on when to load specific rules:
 Load these rules based on the current task:
 
 ### For Security-Sensitive Work
-```markdown
+```yaml
 Load: Security Practices rule (`/rules/06_security_practices.mdc`)
 Apply: When dealing with API calls, user input, LLM interactions, or authentication
 ```
 
 ### For Large File Operations
 
-```markdown
+```yaml
 Load: Context Optimization rule (`/rules/07_context_optimization.mdc`)
 Apply: When dealing with large files, complex operations, or memory-intensive tasks
 ```
 
 ### For File Manipulation
 
-```markdown
+```yaml
 Load: File Operations rule (`/rules/08_file_operations.mdc`)
 Apply: When performing file manipulation, directory operations, or path handling
-```
-
 ```
 
 ## Command Integration Patterns
@@ -128,24 +130,24 @@ After completing this workflow, execute:
 2. **Execute**: Run validation workflow
 3. **Load**: `/commands/commit.md`
 4. **Execute**: Run commit workflow
+```
 
-## Conditional Chaining
+### Conditional Chaining
 
 Based on the outcome:
 
 ### If Validation Passes
-```markdown
+
+```yaml
 Load: `/commands/commit.md`
 Execute: Commit workflow with validated changes
 ```
 
 ### If Validation Fails
 
-```markdown
+```yaml
 Load: `/commands/implement.md`
 Execute: Return to implementation workflow to fix issues
-```
-
 ```
 
 ### Context-Aware Loading
@@ -230,10 +232,9 @@ Load these rules if you determine you need them based on their descriptions:
 - Context Optimization: `.cursor/rules/07_context_optimization.mdc` - For large file operations
 ```
 
----
-
 ## Rule Metadata
 
+```yaml
 **File:** `08_mention_guidance.yaml`
 **Trigger:** always_on (Windsurf) / alwaysApply (Cursor)
 **Estimated Tokens:** ~1,200
@@ -241,16 +242,14 @@ Load these rules if you determine you need them based on their descriptions:
 **Status:** Active
 
 **Topics Covered:**
-
 - Mention usage patterns
 - File reference guidance
 - Workflow chaining
 - Context-aware loading
 
 **Workflow References:**
-
 - All workflows (always loaded)
 
 **Dependencies:**
-
 - Source: 08_mention_guidance.md
+```

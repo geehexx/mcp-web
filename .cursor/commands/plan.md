@@ -3,8 +3,9 @@ pass_through: true
 description: Research-driven comprehensive project planning
 title: Planning Workflow
 tags: ['planning', 'research', 'architecture', 'requirements']
-related: []
 ---
+
+related: []
 
 # Planning Workflow
 
@@ -123,8 +124,6 @@ When this planning workflow is called:
 ```markdown
 ✅ **Completed /plan:** Planning workflow finished
 ```
-
----
 
 ## Command Metadata
 

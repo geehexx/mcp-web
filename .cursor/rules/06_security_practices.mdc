@@ -3,8 +3,10 @@ alwaysApply: false
 description: Apply when dealing with security-sensitive code including API calls user input LLM interactions and authentication
 title: Security Practices
 tags: ['security', 'owasp', 'llm', 'authentication']
-related: ['/docs/adr/0001-decision.md']
 ---
+
+related:
+  - "/docs/adr/0001-decision.md"
 
 # Security Guidelines
 
@@ -273,8 +275,6 @@ For any code that:
 - ✅ **Accesses files** → Prevent path traversal
 - ✅ **Executes queries** → Use parameterized statements
 - ✅ **Handles errors** → Never expose stack traces to users
-
----
 
 ## Rule Metadata
 

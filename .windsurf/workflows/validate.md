@@ -10,6 +10,8 @@ created: 2025-10-22
 updated: 2025-10-22
 ---
 
+related: []
+
 # Quality Validation Workflow
 
 **Purpose:** Comprehensive validation of code quality, security, and tests before committing changes.
@@ -146,8 +148,6 @@ When this validation workflow is called by other workflows:
 - Address all security issues
 - Maintain high test coverage
 - Keep documentation up to date
-
----
 
 ## Command Metadata
 

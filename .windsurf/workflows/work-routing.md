@@ -10,6 +10,8 @@ created: 2025-10-22
 updated: 2025-10-22
 ---
 
+related: []
+
 # Work Routing Logic
 
 Determine which workflow to route to based on context detection.
@@ -237,8 +239,6 @@ When this work-routing workflow is called:
 ```markdown
 ✅ **Completed /work-routing:** Routing decision finished
 ```
-
----
 
 ## Command Metadata
 

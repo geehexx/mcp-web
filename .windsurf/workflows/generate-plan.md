@@ -10,6 +10,8 @@ created: 2025-10-22
 updated: 2025-10-22
 ---
 
+related: []
+
 # Generate Plan Workflow
 
 **Purpose:** Transform research into concrete implementation plan with phases, tasks, timelines.
@@ -235,8 +237,6 @@ Estimated Duration: "X weeks (~Y hours)"
 Target Completion: "YYYY-MM-DD"
 Tags: ["tag1", "tag2", "tag3"]
 Related: ["/path/to/related/doc"]
----
-
 # Initiative: [Name]
 
 ## Objective
@@ -341,8 +341,6 @@ When this generate-plan workflow is called:
 ```markdown
 ✅ **Completed /generate-plan:** Plan generation finished
 ```
-
----
 
 ## Command Metadata
 

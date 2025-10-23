@@ -3,8 +3,9 @@ pass_through: true
 description: Research best practices and existing patterns
 title: Research Workflow
 tags: ['research', 'planning', 'analysis', 'best-practices']
-related: []
 ---
+
+related: []
 
 # Research Workflow
 
@@ -266,8 +267,6 @@ When this research workflow is called:
 ```markdown
 ✅ **Completed /research:** Research workflow finished
 ```
-
----
 
 ## Command Metadata
 
