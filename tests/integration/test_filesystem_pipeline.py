@@ -51,17 +51,14 @@ Discussion points:
         }
 
     @pytest.fixture
-    async def pipeline(self, sample_files):
+    def pipeline(self, sample_files):
         """Create pipeline with file system enabled."""
         config = Config()
         config.fetcher.enable_file_system = True
         config.fetcher.allowed_directories = [str(sample_files["dir"])]
 
         pipeline = WebSummarizationPipeline(config)
-        try:
-            yield pipeline
-        finally:
-            await pipeline.close()
+        yield pipeline
 
     @pytest.mark.integration
     @pytest.mark.asyncio

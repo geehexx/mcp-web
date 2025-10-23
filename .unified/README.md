@@ -4,7 +4,7 @@ This directory contains the unified source-of-truth configuration for both Curso
 
 ## Structure
 
-```
+```text
 .unified/
 ├── README.md          # This file
 ├── rules/             # Unified rule definitions
