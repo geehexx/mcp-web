@@ -117,11 +117,12 @@ def chunker_config():
 
 
 @pytest.fixture
-async def summarizer(summarizer_config):
+def summarizer(summarizer_config):
     """Create summarizer instance."""
     s = Summarizer(summarizer_config)
-    yield s
-    await s.close()
+    # NOTE: Not calling s.close() here as the async fixture was causing issues.
+    # The test process is short-lived, so this is acceptable for now.
+    return s
 
 
 @pytest.fixture

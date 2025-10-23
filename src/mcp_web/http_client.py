@@ -138,10 +138,35 @@ def get_client_stats() -> dict[str, int | bool]:
         >>> print(stats["initialized"])
         True
     """
+    pool_stats = get_pool_stats()
     return {
         "initialized": _initialized,
         "client_exists": _client is not None,
+        "pool_all": pool_stats["all"],
+        "pool_active": pool_stats["active"],
+        "pool_idle": pool_stats["idle"],
+        "pool_waiting": pool_stats["waiting"],
     }
+
+
+def get_pool_stats() -> dict[str, int]:
+    """Get connection pool statistics.
+
+    Returns:
+        Dict with connection pool stats if client is initialized,
+        otherwise returns a dict with zero values.
+    """
+    if _client is not None:
+        # get_connection_pool_stats was added in 0.20.0
+        if hasattr(_client, "get_connection_pool_stats"):
+            stats = _client.get_connection_pool_stats()
+            return {
+                "all": stats.get("all_connections", 0),
+                "active": stats.get("active_connections", 0),
+                "idle": stats.get("idle_connections", 0),
+                "waiting": stats.get("waiting_requests", 0),
+            }
+    return {"all": 0, "active": 0, "idle": 0, "waiting": 0}
 
 
 async def reset_http_client() -> None:

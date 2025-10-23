@@ -9,8 +9,9 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
+sys.path.insert(0, str(Path(__file__).parent.parent / "scripts" / "automation"))
 
-from scripts.automation.scaffold import Scaffolder, TemplateType
+from scaffold import Scaffolder, TemplateType
 
 
 class TestScaffolder:

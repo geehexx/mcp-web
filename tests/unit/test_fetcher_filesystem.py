@@ -131,7 +131,7 @@ class TestFileSystemFetcher:
         }
 
     @pytest.fixture
-    async def fetcher(self, temp_files):
+    def fetcher(self, temp_files):
         """Create fetcher with temp directory allowed."""
         config = FetcherSettings(
             enable_file_system=True,
@@ -139,10 +139,7 @@ class TestFileSystemFetcher:
             max_file_size=10 * 1024 * 1024,  # 10MB
         )
         fetcher = URLFetcher(config)
-        try:
-            yield fetcher
-        finally:
-            await fetcher.close()
+        yield fetcher
 
     @pytest.mark.asyncio
     async def test_fetch_text_file_with_file_url(self, fetcher, temp_files):

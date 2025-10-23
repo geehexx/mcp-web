@@ -111,8 +111,6 @@ Load: File Operations rule (`/rules/08_file_operations.mdc`)
 Apply: When performing file manipulation, directory operations, or path handling
 ```
 
-```
-
 ## Command Integration Patterns
 
 ### Workflow Chaining
@@ -144,8 +142,6 @@ Execute: Commit workflow with validated changes
 ```markdown
 Load: `/commands/implement.md`
 Execute: Return to implementation workflow to fix issues
-```
-
 ```
 
 ### Context-Aware Loading

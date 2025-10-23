@@ -11,6 +11,7 @@ Design Decision DD-018: Structured logging for observability.
 """
 
 import json
+import logging
 import time
 from collections import defaultdict
 from collections.abc import Iterator
@@ -21,6 +22,8 @@ from pathlib import Path
 from typing import Any
 
 import structlog
+
+from mcp_web.http_client import get_pool_stats
 
 logger = structlog.get_logger()
 
@@ -121,6 +124,18 @@ class MetricsCollector:
         self.counters: dict[str, int] = defaultdict(int)
         self.timers: dict[str, list[float]] = defaultdict(list)
         self.errors: list[dict[str, Any]] = []
+        self.gauges: dict[str, int] = defaultdict(int)
+
+    def update_gauges(self) -> None:
+        """Update gauge metrics."""
+        if not self.enabled:
+            return
+
+        # httpx connection pool stats
+        pool_stats = get_pool_stats()
+        self.gauges["pool_connections_active"] = pool_stats["active"]
+        self.gauges["pool_connections_idle"] = pool_stats["idle"]
+        self.gauges["pool_requests_waiting"] = pool_stats["waiting"]
 
     def record_fetch(
         self,
@@ -348,6 +363,9 @@ class MetricsCollector:
         Returns:
             Dictionary with aggregated metrics
         """
+        # Update gauges before exporting
+        self.update_gauges()
+
         # Calculate aggregated statistics
         avg_durations = {
             key: sum(vals) / len(vals) if vals else 0.0 for key, vals in self.timers.items()
@@ -371,6 +389,7 @@ class MetricsCollector:
                 "total_cost_usd": round(total_cost, 4),
             },
             "counters": dict(self.counters),
+            "gauges": dict(self.gauges),
             "avg_durations_ms": avg_durations,
             "errors": self.errors,
         }
@@ -443,7 +462,7 @@ def configure_logging(level: str = "INFO", structured: bool = True) -> None:
     structlog.configure(
         processors=processors,
         wrapper_class=structlog.make_filtering_bound_logger(
-            getattr(structlog.stdlib, level.upper(), structlog.INFO)
+            getattr(logging, level.upper(), logging.INFO)
         ),
         context_class=dict,
         logger_factory=structlog.PrintLoggerFactory(),

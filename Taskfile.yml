@@ -13,7 +13,7 @@ vars:
   PARALLEL_WORKERS: auto
 
 env:
-  PYTHONPATH: "{{.ROOT_DIR}}/{{.SRC_DIR}}"
+  PYTHONPATH: "{{.ROOT_DIR}}/{{.SRC_DIR}}:{{.ROOT_DIR}}/scripts"
 
 tasks:
   default:

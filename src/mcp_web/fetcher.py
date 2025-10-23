@@ -15,6 +15,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from urllib.parse import unquote, urlparse
 
+import httpx
 import structlog
 
 from mcp_web.browser_pool import BrowserPool
@@ -297,6 +298,13 @@ class URLFetcher:
                 success=False,
                 error=str(e),
             )
+            if isinstance(e, httpx.PoolTimeout):
+                _get_logger().warning(
+                    "httpx_pool_timeout",
+                    url=url,
+                    error=str(e),
+                    msg="HTTPX connection pool exhausted",
+                )
             raise
 
     async def _fetch_playwright(self, url: str) -> FetchResult:
