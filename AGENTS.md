@@ -123,14 +123,14 @@ python -m mcp_web.mcp_server
 
 ---
 
-### Windsurf Agent Configuration
+### Unified Agent Configuration
 
 **Type:** Development Agent Configuration
 **Status:** Active
-**Entry Point:** `.windsurf/`
-**Protocol:** Windsurf IDE Integration
+**Entry Point:** `.unified/`
+**Protocol:** Unified IDE Integration (Windsurf & Cursor)
 
-**Description:** AI agent configuration system for automated repository maintenance, code generation, testing, and documentation management via Windsurf IDE.
+**Description:** A unified AI agent configuration system for automated repository maintenance, code generation, testing, and documentation management. This system is designed to be IDE-agnostic, with adapters that generate configurations for both Windsurf and Cursor from a single source of truth.
 
 **Capabilities:**
 
@@ -143,8 +143,8 @@ python -m mcp_web.mcp_server
 
 **Configuration:**
 
-- Rules: `.windsurf/rules/` (5 rule files defining agent behavior)
-- Workflows: `.windsurf/workflows/` (17 workflows for common operations)
+- Rules: `.unified/rules/` (defining agent behavior)
+- Commands: `.unified/commands/` (defining workflows and operations)
 - Standards: `docs/CONSTITUTION.md`, `docs/DOCUMENTATION_STRUCTURE.md`
 
 **Key Workflows:**
@@ -163,14 +163,14 @@ python -m mcp_web.mcp_server
 /validate
 
 # Full workflow list
-ls .windsurf/workflows/
+ls .unified/commands/
 ```
 
 **Related Documentation:**
 
 - [Constitution](docs/CONSTITUTION.md) - Project principles and standards
 - [Documentation Structure](docs/DOCUMENTATION_STRUCTURE.md) - Documentation organization
-- [Core Directives](.windsurf/rules/00_core_directives.md) - Core agent behavior rules
+- [Core Directives](.unified/rules/00_core_directives.yaml) - Core agent behavior rules
 - [ADR-0018: Workflow Architecture V3](docs/adr/0018-workflow-architecture-v3.md)
 
 **Maintainer:** Core Team
@@ -242,10 +242,10 @@ agents:
       - clear_cache
       - prune_cache
 
-  - name: windsurf-agent
+  - name: unified-agent
     type: development-agent
-    protocol: windsurf
-    entry_point: .windsurf/
+    protocol: unified
+    entry_point: .unified/
     status: active
     capabilities:
       - code-generation
