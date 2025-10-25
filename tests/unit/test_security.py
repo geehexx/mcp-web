@@ -8,6 +8,7 @@ Tests OWASP LLM Top 10 (2025) defenses:
 """
 
 import asyncio
+import os
 import time
 
 import pytest
@@ -295,6 +296,10 @@ class TestConsumptionLimits:
         )
 
     @pytest.mark.slow
+    @pytest.mark.skipif(
+        bool(os.environ.get("MUTMUT_RUNNING")),
+        reason="TODO: mock wall-clock timing to avoid >60s real sleep; consider freezegun/pytest-time-machine",
+    )
     async def test_rate_limiting_realistic_timing(self):
         """Test rate limiting with realistic timing (slow test).
 

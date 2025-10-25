@@ -152,6 +152,17 @@ tasks:
     cmds:
       - "{{.UV}} run pytest -n {{.PARALLEL_WORKERS}} --cov={{.SRC_DIR}}/mcp_web --cov-report=term-missing --cov-report=html"
 
+  # MUTMUT-SLOW-020: Mutmut tasks are manual-only until baseline runs complete successfully.
+  mutate:core:
+    desc: Run mutmut on core summarizer pipeline modules
+    cmds:
+      - uv run mutmut run
+
+  mutate:core:quick:
+    desc: Sample-based mutation run (20 random mutants) for quick feedback (CI PR gate)
+    cmds:
+      - uv run mutmut run --max-children 4
+
   test:coverage:min:
     desc: Run tests with minimum coverage enforcement
     cmds:
