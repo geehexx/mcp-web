@@ -9,7 +9,9 @@
 
 ## Objective
 
-Apply the minimal schema to every `.unified/**/*.yaml` file, remove redundant fields, and add missing Windsurf metadata so that adapters receive consistent inputs.
+Apply the minimal schema to every `.unified/**/*.yaml` file, remove redundant fields, add missing
+Windsurf metadata, and migrate long-form guidance into structured frontmatter (e.g.,
+`ide.hidden_sections`, `ide.metadata`) so adapters receive consistent inputs.
 
 ---
 
@@ -19,6 +21,8 @@ Apply the minimal schema to every `.unified/**/*.yaml` file, remove redundant fi
 - [ ] Update all unified files to remove deprecated fields (`title`, `type`, `tags`, `related`, `status`, `windsurf.*` bloat, `cursor.pass_through`)
 - [ ] Add `windsurf.auto_execution_mode: 3` to workflows (unless analysis dictates other values)
 - [ ] Normalize Cursor globs to raw comma-separated strings (no YAML lists)
+- [ ] Create/maintain `ide.hidden_sections` and `ide.metadata` entries that capture removed
+  sections, logging mappings in `artifacts/hidden-section-map.md`
 - [ ] Record before/after token and schema compliance snapshots in `artifacts/token-inventory.md`
 - [ ] Validate schema across repo using updated validation script
 

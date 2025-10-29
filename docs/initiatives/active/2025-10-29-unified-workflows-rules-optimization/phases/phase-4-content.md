@@ -41,6 +41,8 @@ Advance to Phase 5 only after C4.3 confirms clarity maintained and metrics recor
 - Updated `.unified/` content with redundant sections removed
 - Token savings report reflecting content optimizations
 - Playbook documenting adjustments and reusable patterns
+- Updated `artifacts/hidden-section-map.md` showing mappings between removed sections and
+  frontmatter entries (`ide.hidden_sections`, `ide.metadata`)
 
 ---
 

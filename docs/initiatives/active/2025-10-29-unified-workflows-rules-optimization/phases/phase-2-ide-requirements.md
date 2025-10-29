@@ -9,7 +9,9 @@
 
 ## Objective
 
-Validate the minimal schema required by Windsurf and Cursor, document mandatory vs optional fields, and confirm adapter expectations prior to frontmatter refactors.
+Validate the minimal schema required by Windsurf and Cursor, document mandatory vs optional fields,
+define structured metadata fields that preserve hidden sections (e.g., `ide.hidden_sections`,
+`ide.metadata`), and confirm adapter expectations prior to frontmatter refactors.
 
 ---
 
@@ -19,6 +21,8 @@ Validate the minimal schema required by Windsurf and Cursor, document mandatory 
 - [ ] Collect Cursor rule behaviour references (community notes, existing adapters) to confirm `alwaysApply`, `globs`, and description-driven triggers
 - [ ] Map required/optional fields into the JSON schema (`.unified/schemas/frontmatter-minimal.json`)
 - [ ] Identify deprecated/unused fields to remove in Phase 3
+- [ ] Define structured metadata fields for hidden sections (e.g., `ide.hidden_sections`,
+  `ide.metadata`) and draft migration guidance
 - [ ] Document compatibility notes for adapters (`scripts/adapters/cursor_adapter.py`, `scripts/adapters/windsurf_adapter.py`)
 - [ ] Capture research findings in `research/external-sources.md`
 

@@ -24,7 +24,11 @@ Related:
 
 ## Objective
 
-Reduce `.unified/` workflow and rule token footprint by ≥15% while enforcing a minimal frontmatter schema that keeps Windsurf and Cursor outputs correct, deterministic, and maintainable.
+Reduce `.unified/` workflow and rule token footprint by ≥15% while enforcing a minimal,
+structured frontmatter schema that keeps Windsurf and Cursor outputs correct, deterministic,
+and maintainable. Encode verbose contextual data (execution notes, long-form guidance,
+legacy metadata) into discrete frontmatter fields so adapters can hide sections such as
+`Command Metadata` and boilerplate context without losing institutional knowledge.
 
 ---
 
@@ -35,6 +39,8 @@ Reduce `.unified/` workflow and rule token footprint by ≥15% while enforcing a
 - [ ] Windsurf workflows include `auto_execution_mode` and correct activation metadata
 - [ ] Cursor rule transformations emit raw (unquoted) glob strings when present
 - [ ] Metadata sections (`## Command Metadata`, `## Rule Metadata`, boilerplate context loading) removed from all rendered content
+- [ ] Verbose contextual data captured via structured frontmatter fields (e.g., `ide.hidden_sections`, `ide.metadata`, token metrics, execution notes) so generated `.cursor/` & `.windsurf/` artifacts stay lean and whitespace-correct
+- [ ] Adapters honor `ide.hidden_sections` and other structured metadata when generating IDE outputs (verified via golden tests)
 - [ ] Updated adapters, validators, and CI checks prevent schema drift (≥90% coverage in affected modules)
 - [ ] Documentation refreshed to reflect new schema and authoring guidance
 - [ ] Regression suite (lint, mypy, pytest, bandit, semgrep) passes with regenerated `.cursor/` & `.windsurf/` artifacts
@@ -48,9 +54,10 @@ Reduce `.unified/` workflow and rule token footprint by ≥15% while enforcing a
 
 1. **Token bloat from redundant metadata** – Command metadata blocks repeat frontmatter details, adding 100–300 tokens per file without value.
 2. **Frontmatter field sprawl** – Fields like `tags`, `related`, `type`, and Windsurf-specific mirrors (`windsurf.type`, `windsurf.dependencies`) are unused by either IDE yet inflate every file.
-3. **Missing Windsurf execution fields** – `auto_execution_mode` omission risks workflow failures despite historical documentation requiring modes 1–3.
-4. **Glob formatting inconsistencies** – Cursor adapters emit list-form globs instead of raw comma-separated strings, diverging from best practices derived from community guidance.
-5. **Verbose boilerplate** – Repeated context loading, integration summaries, and anti-pattern sections dilute signal-to-noise across 21 workflows.
+3. **Hidden knowledge trapped in body content** – Long-form execution guidance, attribution notes, and legacy caveats live in sections that need to disappear from generated artifacts. Without a structured frontmatter home, adapters strip the context entirely.
+4. **Missing Windsurf execution fields** – `auto_execution_mode` omission risks workflow failures despite historical documentation requiring modes 1–3.
+5. **Glob formatting inconsistencies** – Cursor adapters emit list-form globs instead of raw comma-separated strings, diverging from best practices derived from community guidance.
+6. **Verbose boilerplate** – Repeated context loading, integration summaries, and anti-pattern sections dilute signal-to-noise across 21 workflows.
 
 ### Impact
 
@@ -58,6 +65,7 @@ Reduce `.unified/` workflow and rule token footprint by ≥15% while enforcing a
 - Higher maintenance burden with larger diffs and redundant metadata
 - Risk of Windsurf workflows failing due to missing required fields
 - Potential Cursor rule misapplication due to glob formatting drift
+- Loss of institutional knowledge when verbose sections are dropped from IDE outputs
 - Slower comprehension for contributors due to repetitive boilerplate
 
 ### Value
@@ -66,6 +74,8 @@ Reduce `.unified/` workflow and rule token footprint by ≥15% while enforcing a
 - Deterministic adapters that keep IDE artifacts aligned without manual fixes
 - Stronger validation gates that block schema rot before it lands in `main`
 - Clear authoring guidance with concise, high-signal workflows and rules
+- Persistent institutional knowledge captured as machine-readable metadata that IDEs
+  can selectively expose
 
 ---
 
@@ -74,8 +84,9 @@ Reduce `.unified/` workflow and rule token footprint by ≥15% while enforcing a
 ### In Scope
 
 - Refactoring `.unified/**/*.yaml` frontmatter to the minimal schema
+- Defining structured metadata fields (`ide.hidden_sections`, `ide.metadata`, execution logs) that preserve guidance removed from rendered markdown
 - Removing redundant metadata sections and boilerplate from workflow/rule bodies
-- Updating Cursor and Windsurf adapters for new schema behaviour
+- Updating Cursor and Windsurf adapters for new schema behaviour, including hidden-section suppression
 - Enhancing validation scripts, pre-commit hooks, and tests that guard the pipeline
 - Refreshing contributor documentation tied to unified workflows/rules
 - Capturing baseline and post-optimization token metrics
@@ -93,9 +104,9 @@ Reduce `.unified/` workflow and rule token footprint by ≥15% while enforcing a
 
 - **[Phase 0: Kickoff & Baseline Capture](phases/phase-0-kickoff.md)** – establish backups, gather token baselines, and validate current build outputs.
 - **[Phase 1: Inventory & Measurement](phases/phase-1-inventory.md)** – quantify token costs, catalogue metadata sections, and prioritize high-bloat files.
-- **[Phase 2: IDE Requirements Analysis](phases/phase-2-ide-requirements.md)** – confirm minimal field requirements via docs and adapters; finalize schema JSON.
-- **[Phase 3: Frontmatter Optimization](phases/phase-3-frontmatter.md)** – roll out minimal schema across `.unified/`, add missing Windsurf metadata, normalise globs.
-- **[Phase 4: Content Optimization](phases/phase-4-content.md)** – excise redundant sections, consolidate context guidance, ensure succinct narratives.
+- **[Phase 2: IDE Requirements Analysis](phases/phase-2-ide-requirements.md)** – confirm minimal field requirements via docs and adapters; finalize schema JSON, define structured metadata fields for hidden content.
+- **[Phase 3: Frontmatter Optimization](phases/phase-3-frontmatter.md)** – roll out minimal schema across `.unified/`, add missing Windsurf metadata, normalise globs, migrate long-form context into frontmatter.
+- **[Phase 4: Content Optimization](phases/phase-4-content.md)** – excise redundant sections, consolidate context guidance, ensure succinct narratives, confirm hidden sections reference new frontmatter fields.
 - **[Phase 5: Tooling & Validation Hardening](phases/phase-5-tooling.md)** – update adapters, validators, tests, and CI hooks for new schema rules.
 - **[Phase 6: Documentation & Rollout](phases/phase-6-rollout.md)** – refresh guides, run regression suites, document outcomes, and complete rollout checklist.
 - **[Phase 7: Monitoring & Continuous Improvement](phases/phase-7-monitoring.md)** – gather feedback, track drift, and queue follow-up enhancements after rollout.
@@ -116,6 +127,7 @@ Each phase file captures objectives, tasks, entry/exit criteria, success metrics
 
 - **[Cursor & Windsurf Dual Compatibility](../2025-10-22-cursor-windsurf-dual-compatibility/initiative.md)** – provides adapter architecture and transformation rules
 - **[Testing Excellence & Automation Hardening](../2025-10-22-testing-excellence/initiative.md)** – establishes validation rigor and coverage targets reused here
+- **[Workflow Optimization Phase 2](../2025-10-20-phase-3-performance-optimization.md)** – documents prior content trimming, informing hidden-section mappings
 
 ### Blockers
 
@@ -133,6 +145,7 @@ Each phase file captures objectives, tasks, entry/exit criteria, success metrics
 | Token savings <15% | Medium | Low | Prioritise highest bloat files first, iterate with measurement checkpoints per phase |
 | Windsurf workflow execution fails without `auto_execution_mode` | High | Low | Validate with Windsurf docs and add schema enforcement that blocks missing fields before merge |
 | Contributor confusion during rollout | Medium | Medium | Publish migration guide, update `.unified/README.md`, and announce changes via initiative updates |
+| Metadata drift between frontmatter and body | Medium | Medium | Automate schema checks that ensure `ide.hidden_sections` mirrors removed headings; add docs on encoding guidance |
 
 ---
 
@@ -159,6 +172,8 @@ _Total planned effort: 11–12 hours across ~1.5 working days._
 - **Adapter Test Coverage** – `scripts/adapters/*` statement coverage (target ≥90%)
 - **Validation Runtime** – Additional seconds added to CI pipeline (< +120s target)
 - **Documentation Accuracy** – `.unified/README.md` and guides updated, verified during Phase 6 exit
+- **Metadata Utilisation** – % of workflows/rules using new structured frontmatter fields for
+  hidden sections (target 100%)
 
 ---
 
@@ -170,6 +185,8 @@ _Total planned effort: 11–12 hours across ~1.5 working days._
 - [`artifacts/validation-checklist.md`](artifacts/validation-checklist.md) – updated validation gates and acceptance criteria
 - [`artifacts/monitoring-log.md`](artifacts/monitoring-log.md) – post-rollout observations, feedback, and follow-up actions
 - [`research/external-sources.md`](research/external-sources.md) – authoritative references collected for IDE behaviour
+- [`artifacts/hidden-section-map.md`](artifacts/hidden-section-map.md) – mapping between removed
+  headings and their corresponding frontmatter entries (`ide.hidden_sections`, `ide.metadata`)
 
 ---
 
@@ -177,9 +194,12 @@ _Total planned effort: 11–12 hours across ~1.5 working days._
 
 1. **Pre-flight** – execute `python scripts/validate_workflows.py` and `python scripts/build_ide_configs.py` to capture baseline outputs.
 2. **Per-phase checks** – rerun validation script after frontmatter and content updates; ensure no regressions in generated `.cursor/`/`.windsurf/` artifacts.
-3. **Regression suite** – run `task lint`, `uv run mypy`, `uv run pytest -n auto`, `uv run bandit -r src/ scripts/`, and `uv run semgrep --config .semgrep.yml` before rollout.
-4. **Token metrics** – recompute token counts post-optimization and document savings in artifacts.
-5. **Manual IDE verification** – smoke test workflows in Windsurf and ensure Cursor rules attach as expected (tracked in Phase 6 exit criteria).
+3. **Metadata integrity** – validate that every removed section has a matching frontmatter entry
+   (`ide.hidden_sections`, `ide.metadata`) and that adapters respect the metadata in generated
+   artifacts.
+4. **Regression suite** – run `task lint`, `uv run mypy`, `uv run pytest -n auto`, `uv run bandit -r src/ scripts/`, and `uv run semgrep --config .semgrep.yml` before rollout.
+5. **Token metrics** – recompute token counts post-optimization and document savings in artifacts.
+6. **Manual IDE verification** – smoke test workflows in Windsurf and ensure Cursor rules attach as expected (tracked in Phase 6 exit criteria).
 
 ---
 
@@ -237,7 +257,8 @@ Treat checkpoints as hard gates: do not proceed until actions are committed, pus
 
 1. Complete schema refactor and validation updates (Phases 3–5).
 2. Regenerate `.cursor/` and `.windsurf/` artifacts; confirm zero diffs after rerun.
-3. Update documentation and announce changes via initiative updates and `PROJECT_SUMMARY.md` entry.
+3. Update documentation and announce changes via initiative updates and `PROJECT_SUMMARY.md` entry,
+   highlighting new frontmatter fields and hidden-section handling guidance.
 4. Merge changes once validation passes; monitor initial IDE usage feedback and capture follow-up tasks if issues arise.
 
 ---
@@ -254,6 +275,9 @@ Treat checkpoints as hard gates: do not proceed until actions are committed, pus
   `phase.md`, `rollout.md` variants) and introduce a dedicated `/pull-request` workflow to assemble
   descriptions from initiative artifacts. These assets are **not yet implemented**; they are queued
   for the feature branch owner to deliver during Phases 0–6 alongside ADR/constitution updates.
+- **2025-10-30 — Structured Metadata Plan Approved:** Captured strategy for encoding verbose
+  sections into `ide.hidden_sections`/`ide.metadata`, expanded success metrics, and aligned phases
+  and artifacts with hidden-section validation requirements.
 
 ---
 
@@ -261,3 +285,5 @@ Treat checkpoints as hard gates: do not proceed until actions are committed, pus
 
 - Windsurf workflow activation modes documentation (`auto_execution_mode`, activation types) – Windsurf Docs @ https://docs.windsurf.com/windsurf/cascade/workflows
 - Cursor rule formatting best practices (`globs` raw strings, minimal metadata) – Community notes @ https://gist.github.com/bossjones/1fd99aea0e46d427f671f853900a0f2a
+- Shipixen Cursor Rules deep-dive (frontmatter requirements, metadata structuring) – https://shipixen.com/boilerplate-documentation/shipixen-cursor-rules-explained
+- SSW Frontmatter best practices (structured YAML, avoiding inline HTML) – https://www.ssw.com.au/rules/best-practices-for-frontmatter-in-markdown/
