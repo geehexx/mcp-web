@@ -82,6 +82,7 @@ Scripts for validating documentation, code, and configuration files.
 - **`validate_documentation.py`** - Validate documentation structure and consistency
 - **`validate_frontmatter.py`** - Validate YAML frontmatter in markdown files
 - **`validate_rules_frontmatter.py`** - Validate Windsurf rule frontmatter
+- **`validate_generated_sync.py`** - Ensure generated IDE artefacts remain in sync with unified sources
 - **`validate_task_format.py`** - Validate task format in documentation
 - **`validate_archival.py`** - Validate archival process compliance
 
@@ -160,6 +161,12 @@ task deps:export FILE=deps.json
 ### `extract_action_items.py`
 
 Extract action items from documents (used by summarization workflows).
+
+### `update_ide_goldens.py`
+
+Rebuilds IDE configurations and syncs `.cursor/` and `.windsurf/` outputs into
+`tests/golden/ide/` snapshots. Use when unified rules/commands change to refresh
+the regression baselines.
 
 ---
 

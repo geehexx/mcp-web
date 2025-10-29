@@ -18,8 +18,6 @@ cursor:
 tags: ["workflow", "optimization", "improvement", "automation"]
 
 ---
-related: []
-# Improve Workflow (Sub-workflow)
 
 **Purpose:** Workflow-specific optimization with syntax preservation and decomposition detection.
 
@@ -279,6 +277,7 @@ assert exact_match AND plans_match AND frontmatter_intact AND markers_intact
 **Target:** <6000 tokens, <75 complexity
 
 **Proposed:**
+
 - Extract: [What to separate]
 - New files: `part1.md` ([N] tokens), `part2.md` ([N] tokens)
 - Benefits: [Token/complexity reduction, maintainability]

@@ -19,7 +19,6 @@ cursor:
 tags: ["session", "protocol", "completion", "end"]
 
 ---
-related: []
 
 # Work Session End Protocol
 
@@ -60,6 +59,7 @@ git add <files> && git commit -m "type(scope): description"
 ```
 
 **Commit strategy:**
+
 - Group related changes
 - Use conventional commit format
 - Separate auto-fixes
@@ -75,6 +75,7 @@ git add <files> && git commit -m "type(scope): description"
 - Update documentation
 
 **Archive criteria:**
+
 - Status = "Completed" or "✅"
 - All success criteria met
 - No blocking issues
@@ -90,6 +91,7 @@ git add <files> && git commit -m "type(scope): description"
 - Commit changes
 
 **Meta-analysis includes:**
+
 - Session summary
 - Pattern analysis
 - Documentation updates
@@ -116,11 +118,13 @@ git add <files> && git commit -m "type(scope): description"
 **Duration:** X hours
 **Status:** Completed
 **Key Accomplishments:**
+
 - [Accomplishment 1]
 - [Accomplishment 2]
 - [Accomplishment 3]
 
 **Next Steps:**
+
 - [Next step 1]
 - [Next step 2]
 
@@ -148,12 +152,14 @@ When this work-session-protocol workflow is called:
 ## Anti-Patterns
 
 ❌ **Don't:**
+
 - Skip commit step
 - Ignore completion criteria
 - Skip meta-analysis
 - Skip verification
 
 ✅ **Do:**
+
 - Commit all changes
 - Check completion criteria
 - Execute meta-analysis
@@ -171,10 +177,12 @@ When this work-session-protocol workflow is called:
 ## Integration
 
 **Called By:**
+
 - `/work` - Main orchestration workflow
 - User - Direct invocation for session end
 
 **Calls:**
+
 - `/commit` - Commit changes
 - `/archive-initiative` - Archive completed initiatives
 - `/meta-analysis` - Session analysis
@@ -195,11 +203,13 @@ When this work-session-protocol workflow is called:
 **Status:** Active
 
 **Topics Covered:**
+
 - Session end protocol
 - Completion detection
 - Change management
 - Documentation updates
 
 **Dependencies:**
+
 - /archive-initiative - Archive completed initiatives
 - /meta-analysis - Session analysis

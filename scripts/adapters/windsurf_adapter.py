@@ -1,7 +1,20 @@
 """Transform unified format to Windsurf IDE format."""
 
+import re
 from pathlib import Path
 from typing import Any
+
+
+def _ensure_trailing_newline(text: str) -> str:
+    """Guarantee text ends with a single newline."""
+
+    return text if text.endswith("\n") else f"{text}\n"
+
+
+def _normalize_content(text: str) -> str:
+    """Ensure lists have blank lines separating them from preceding paragraphs."""
+
+    return re.sub(r"(\*\*[^*\n]+?\*\*:)(\n)([-\d])", r"\1\2\n\3", text)
 
 
 class WindsurfAdapter:
@@ -118,7 +131,7 @@ class WindsurfAdapter:
             output_path: Path to write the .md file
         """
         frontmatter = windsurf_rule_data["frontmatter"]
-        content = windsurf_rule_data["content"]
+        content = _normalize_content(windsurf_rule_data["content"])
 
         # Build the .md content
         md_content = "---\n"
@@ -134,7 +147,7 @@ class WindsurfAdapter:
         md_content += content
 
         # Write the file
-        Path(output_path).write_text(md_content, encoding="utf-8")
+        Path(output_path).write_text(_ensure_trailing_newline(md_content), encoding="utf-8")
 
     def generate_workflow_file(
         self, windsurf_workflow_data: dict[str, Any], output_path: str
@@ -146,7 +159,7 @@ class WindsurfAdapter:
             output_path: Path to write the .md file
         """
         frontmatter = windsurf_workflow_data["frontmatter"]
-        content = windsurf_workflow_data["content"]
+        content = _normalize_content(windsurf_workflow_data["content"])
 
         # Build the .md content
         md_content = "---\n"
@@ -162,7 +175,7 @@ class WindsurfAdapter:
         md_content += content
 
         # Write the file
-        Path(output_path).write_text(md_content, encoding="utf-8")
+        Path(output_path).write_text(_ensure_trailing_newline(md_content), encoding="utf-8")
 
     def transform_globs_format(self, globs_list: list[str]) -> str:
         """Convert Cursor globs format to Windsurf format.
@@ -199,12 +212,8 @@ class WindsurfAdapter:
         if frontmatter["trigger"] not in valid_triggers:
             return False
 
-        # Check description if present
-        if "description" in frontmatter:
-            if not isinstance(frontmatter["description"], str):
-                return False
-
-        return True
+        description = frontmatter.get("description")
+        return description is None or isinstance(description, str)
 
     def validate_windsurf_workflow(self, windsurf_workflow_data: dict[str, Any]) -> bool:
         """Validate Windsurf workflow format.
@@ -222,7 +231,4 @@ class WindsurfAdapter:
             return False
 
         # Check description is string
-        if not isinstance(frontmatter["description"], str):
-            return False
-
-        return True
+        return isinstance(frontmatter["description"], str)

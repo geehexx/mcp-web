@@ -6,7 +6,7 @@ status: "active"
 
 # Windsurf-specific configuration
 windsurf:
-  trigger: "manual"
+  trigger: "model_decision"
 
 # Cursor-specific configuration
 cursor:
@@ -15,14 +15,11 @@ cursor:
 tags: ["windsurf", "structure", "workflows", "documentation"]
 
 ---
-related:
-  - "/docs/IDE_COMPATIBILITY.md"
-
 # Windsurf Structure
 
 ## Directory Structure
 
-```
+```text
 .windsurf/
 ├── rules/                   # Rule definitions
 │   ├── 00_core_directives.md
@@ -105,7 +102,7 @@ Windsurf workflows are transformed to Cursor commands:
 ## Rule Metadata
 
 **File:** `05_windsurf_structure.yaml`
-**Trigger:** manual (Windsurf) / alwaysApply: false (Cursor)
+**Trigger:** model_decision (Windsurf) / alwaysApply: false (Cursor)
 **Estimated Tokens:** ~800
 **Last Updated:** 2025-10-22
 **Status:** Active

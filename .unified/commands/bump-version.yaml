@@ -18,7 +18,6 @@ cursor:
 tags: ["version", "automation", "conventional-commits", "semantic-versioning"]
 
 ---
-related: []
 
 # Bump Version Workflow
 
@@ -145,10 +144,10 @@ git show v1.1.0
 **Update version references:**
 ```markdown
 ## Installation
+```
 
 ```bash
 pip install mcp-web==1.1.0
-```
 ```
 
 ### 5.2 Update API Documentation

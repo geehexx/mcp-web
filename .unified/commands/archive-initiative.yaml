@@ -18,7 +18,6 @@ cursor:
 tags: ["archive", "initiative", "completion", "documentation"]
 
 ---
-related: []
 
 # Archive Initiative Workflow
 
@@ -30,9 +29,9 @@ Archive completed initiatives with validation and automation.
 update_plan({
   explanation: "📦 /archive-initiative",
   plan: [
-    { step: "1. Validate gates", status: "in_progress" },
-    { step: "2. Execute archival", status: "pending" },
-    { step: "3. Commit", status: "pending" }
+    { step: "1. /archive-initiative - Validate gates", status: "in_progress" },
+    { step: "2. /archive-initiative - Execute archival", status: "pending" },
+    { step: "3. /commit - Commit archival changes", status: "pending" }
   ]
 })
 ```
@@ -96,6 +95,7 @@ Archived: "YYYY-MM-DD"
 ### 4.1 Update Project Status
 
 **Update project documentation:**
+
 - Remove from active initiatives list
 - Add to completed initiatives list
 - Update project status
@@ -103,6 +103,7 @@ Archived: "YYYY-MM-DD"
 ### 4.2 Update Dependencies
 
 **Update dependent initiatives:**
+
 - Remove dependencies on archived initiative
 - Update status if dependencies were blocking
 - Notify stakeholders of changes
@@ -110,6 +111,7 @@ Archived: "YYYY-MM-DD"
 ### 4.3 Update Metrics
 
 **Update project metrics:**
+
 - Completion rate
 - Average duration
 - Success rate
@@ -120,6 +122,7 @@ Archived: "YYYY-MM-DD"
 ### 5.1 Remove Temporary Files
 
 **Clean up temporary files:**
+
 - Remove draft documents
 - Clean up artifacts
 - Remove temporary configurations
@@ -127,6 +130,7 @@ Archived: "YYYY-MM-DD"
 ### 5.2 Archive Artifacts
 
 **Move artifacts to archive:**
+
 - Move to archive/artifacts/
 - Organize by date
 - Ensure accessibility
@@ -173,12 +177,14 @@ When this archive-initiative workflow is called:
 ## Anti-Patterns
 
 ❌ **Don't:**
+
 - Skip validation
 - Archive incomplete initiatives
 - Ignore dependencies
 - Skip documentation updates
 
 ✅ **Do:**
+
 - Validate all gates
 - Ensure completion
 - Check dependencies
@@ -196,10 +202,12 @@ When this archive-initiative workflow is called:
 ## Integration
 
 **Called By:**
+
 - `/work` - Session end protocol
 - User - Direct invocation for archival
 
 **Calls:**
+
 - `scripts/validate_archival.py` - Validation script
 - Various file operations
 
@@ -219,10 +227,12 @@ When this archive-initiative workflow is called:
 **Status:** Active
 
 **Topics Covered:**
+
 - Initiative archival
 - Validation processes
 - Documentation updates
 - Cleanup procedures
 
 **Dependencies:**
+
 - scripts/validate_archival.py - Validation script

@@ -18,8 +18,6 @@ cursor:
 tags: ["prompt", "optimization", "llm", "improvement"]
 
 ---
-related: []
-# Improve Prompt Workflow
 
 **Purpose:** Optimize prompts for any LLM using cross-model best practices with quantitative validation.
 
@@ -268,20 +266,24 @@ assert improved == re_optimized  # Must be identical
 # 🎯 Prompt Optimization Results
 
 ## Summary
+
 - **Original:** [N] tokens, quality [N]/10
 - **Improved:** [N] tokens, quality [N]/10
 - **Reduction:** -[N] tokens (-[X]%)
 - **Semantic Preservation:** [X]%
 
 ## Changes Applied
+
 [List of techniques used]
 
 ## Validation
+
 ✅ Intent preserved
 ✅ Quality maintained/improved
 ✅ Idempotency verified
 
 ## Improved Prompt
+
 [Full improved content]
 ```
 

@@ -3,7 +3,6 @@ pass_through: true
 description: Git commit workflow with validation and review
 title: Git Commit Workflow
 tags: ['git', 'commit', 'validation', 'conventional-commits']
-related: []
 ---
 
 # Git Commit Workflow
@@ -36,7 +35,6 @@ Use conventional commit format: `type(scope): description`
 **Types:** feat, fix, docs, test, refactor, security, perf, chore, style
 
 **Examples:**
-
 ```bash
 feat(cli): add test-robots command
 fix(fetcher): handle Playwright timeout
@@ -52,7 +50,6 @@ style(lint): apply ruff formatting
 ### 5. Version Bump (Conditional)
 
 **Call** `/bump-version` if:
-
 - Major feature added
 - Breaking changes
 - User-visible changes
@@ -76,14 +73,12 @@ When this commit workflow is called:
 ## Anti-Patterns
 
 ❌ **Don't:**
-
 - Skip validation
 - Use non-conventional commit messages
 - Commit without reviewing changes
 - Mix unrelated changes
 
 ✅ **Do:**
-
 - Always validate before committing
 - Use conventional commit format
 - Review all changes
@@ -101,13 +96,11 @@ When this commit workflow is called:
 ## Integration
 
 **Called By:**
-
 - `/work` - Main orchestration workflow
 - `/implement` - After implementation
 - User - Direct invocation for commits
 
 **Calls:**
-
 - `/validate` - Validate changes
 - `/bump-version` - Bump version if needed
 
@@ -116,8 +109,6 @@ When this commit workflow is called:
 ```markdown
 ✅ **Completed /commit:** Git commit workflow finished
 ```
-
----
 
 ## Command Metadata
 
@@ -129,12 +120,10 @@ When this commit workflow is called:
 **Status:** Active
 
 **Topics Covered:**
-
 - Git operations
 - Validation processes
 - Conventional commits
 - Version management
 
 **Dependencies:**
-
 - /validate - Validate changes before commit

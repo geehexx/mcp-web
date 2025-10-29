@@ -22,7 +22,7 @@ from typing import Any
 # Add scripts directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from validate_task_format import TaskFormatValidator
+from validation.validate_task_format import TaskFormatValidator
 
 
 def extract_update_plan_calls(content: str) -> list[dict[str, Any]]:

@@ -3,7 +3,6 @@ pass_through: true
 description: Research best practices and existing patterns
 title: Research Workflow
 tags: ['research', 'planning', 'analysis', 'best-practices']
-related: []
 ---
 
 # Research Workflow
@@ -67,7 +66,6 @@ update_plan({
 - Previous solutions
 
 **Search queries:**
-
 - Feature-specific terms
 - Technology names
 - Problem descriptions
@@ -104,7 +102,6 @@ update_plan({
 - Community discussions
 
 **Search strategy:**
-
 - Start with official documentation
 - Look for community best practices
 - Check security advisories
@@ -168,38 +165,46 @@ update_plan({
 # Research Summary
 
 ## Problem Statement
+
 [Clear description of the problem]
 
 ## Research Questions
+
 1. [Question 1]
 2. [Question 2]
 3. [Question 3]
 
 ## Internal Findings
+
 - [Finding 1]
 - [Finding 2]
 - [Finding 3]
 
 ## External Findings
+
 - [Finding 1]
 - [Finding 2]
 - [Finding 3]
 
 ## Alternatives Considered
+
 | Option | Pros | Cons | Recommendation |
 |--------|------|------|----------------|
 | A | [Pros] | [Cons] | [Recommendation] |
 | B | [Pros] | [Cons] | [Recommendation] |
 
 ## Technical Assessment
+
 - **Dependencies**: [Assessment]
 - **Performance**: [Assessment]
 - **Security**: [Assessment]
 
 ## Recommendation
+
 [Clear recommendation with rationale]
 
 ## Next Steps
+
 1. [Step 1]
 2. [Step 2]
 3. [Step 3]
@@ -266,8 +271,6 @@ When this research workflow is called:
 ```markdown
 ✅ **Completed /research:** Research workflow finished
 ```
-
----
 
 ## Command Metadata
 

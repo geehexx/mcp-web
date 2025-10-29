@@ -18,7 +18,6 @@ cursor:
 tags: ["analysis", "session", "summary", "consolidation"]
 
 ---
-related: []
 
 # Meta-Analysis Workflow
 
@@ -28,11 +27,11 @@ MANDATORY at session end. Creates LLM-agnostic summaries for cross-session conti
 update_plan({
   explanation: "📊 /meta-analysis",
   plan: [
-    { step: "1. Check protocol, update timestamp", status: "in_progress" },
-    { step: "2. Check consolidation", status: "pending" },
-    { step: "3. Extract and summarize", status: "pending" },
-    { step: "4. Check living docs", status: "pending" },
-    { step: "5. Commit", status: "pending" }
+    { step: "1. /work-session-protocol - Update meta-analysis protocol timestamp", status: "in_progress" },
+    { step: "2. /extract-session - Gather session context", status: "pending" },
+    { step: "3. /summarize-session - Generate session summary", status: "pending" },
+    { step: "4. /update-docs - Review living documentation", status: "pending" },
+    { step: "5. /commit - Record meta-analysis outputs", status: "pending" }
   ]
 })
 ```
@@ -107,10 +106,12 @@ When this meta-analysis workflow is called:
 ## Integration
 
 **Called By:**
+
 - `/work` - Session end protocol
 - User - Direct invocation for session analysis
 
 **Calls:**
+
 - `/extract-session` - Extract session data
 - `/summarize-session` - Create session summary
 - `/consolidate-summaries` - Consolidate multiple sessions (rare)
@@ -118,12 +119,14 @@ When this meta-analysis workflow is called:
 ## Anti-Patterns
 
 ❌ **Don't:**
+
 - Skip session summarization
 - Ignore consolidation opportunities
 - Skip living documentation updates
 - Commit without proper message
 
 ✅ **Do:**
+
 - Always create session summary
 - Check for consolidation when appropriate
 - Update living docs when significant changes
@@ -139,12 +142,14 @@ When this meta-analysis workflow is called:
 **Status:** Active
 
 **Topics Covered:**
+
 - Session analysis
 - Summary generation
 - Documentation updates
 - Consolidation detection
 
 **Dependencies:**
+
 - /extract-session - Extract session data
 - /summarize-session - Create session summary
 - /consolidate-summaries - Consolidate multiple sessions

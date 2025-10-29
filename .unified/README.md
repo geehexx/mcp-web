@@ -4,7 +4,7 @@ This directory contains the unified source-of-truth configuration for both Curso
 
 ## Structure
 
-```
+```text
 .unified/
 ├── README.md          # This file
 ├── rules/             # Unified rule definitions
@@ -97,7 +97,9 @@ Prerequisites and context needed.
 What should be produced.
 ```
 
-## Building IDE Configs
+## Building IDE Configs & Validating Outputs
+
+### Regeneration Workflow
 
 Use the build script to generate IDE-specific configurations:
 
@@ -111,6 +113,33 @@ python scripts/build_ide_configs.py --cursor-only
 # Generate only Windsurf configs
 python scripts/build_ide_configs.py --windsurf-only
 ```
+
+During development we rely on Taskfile helpers that compose these steps:
+
+```bash
+# Rebuild configs and ensure .cursor/.windsurf match git state
+task docs:build-ide
+
+# Regenerate Cursor/Windsurf golden snapshots under tests/golden/ide/**
+task docs:update-ide-goldens
+```
+
+Both tasks call dedicated helpers to run the in-process builder and either
+validate clean artefacts (`scripts/validation/validate_generated_sync.py`) or refresh the
+golden directory (`scripts/automation/update_ide_goldens.py`).
+
+### Regression Tests
+
+Golden regression tests in `tests/golden/test_ide_configs.py` rebuild configs in-memory and
+compare `.cursor/` and `.windsurf/` outputs against the snapshots under `tests/golden/ide/**`.
+Run them as part of the golden suite:
+
+```bash
+uv run pytest tests/golden/test_ide_configs.py
+```
+
+These tests ensure unified sources and generation logic stay in sync across IDEs. When updating
+unified content, regenerate goldens via `task docs:update-ide-goldens` and rerun the suite.
 
 ## Transformation Rules
 

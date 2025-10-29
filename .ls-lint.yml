@@ -15,8 +15,11 @@ ls:
 
   # Documentation root - UPPER_CASE only for allowed files
   docs:
-    .md: regex:README|CONSTITUTION|DOCUMENTATION_STRUCTURE  # Core docs in docs root
+    .md: regex:README|CONSTITUTION|DOCUMENTATION_STRUCTURE|IDE_COMPATIBILITY  # Core docs in docs root
     .dir: kebab-case  # Subdirectories use kebab-case
+
+  .unified/rules:
+    .yaml: regex:\d{2}_[a-z_]+  # Match existing numbered rule files
 
   # ADRs - numbered with kebab-case titles
   docs/adr:
@@ -138,6 +141,7 @@ ignore:
   - .venv
   - venv
   - .benchmarks
+  - scripts/.benchmarks
   - .windsurf/.last-meta-analysis
   - uv.lock
   - package-lock.json

@@ -250,8 +250,6 @@ When this load-context workflow is called:
 ✅ **Completed /load-context:** Context loading finished
 ```
 
----
-
 ## Command Metadata
 
 **File:** `load-context.yaml`
@@ -262,12 +260,10 @@ When this load-context workflow is called:
 **Status:** Active
 
 **Topics Covered:**
-
 - Context loading
 - Batch operations
 - Scope selection
 - Efficiency optimization
 
 **Dependencies:**
-
 - None (standalone workflow)

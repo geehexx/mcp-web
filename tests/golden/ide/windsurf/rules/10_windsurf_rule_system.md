@@ -1,0 +1,209 @@
+---
+trigger: model_decision
+description: Documentation of Windsurf IDE rule application logic and configuration
+title: Windsurf Rule System Documentation
+---
+
+# Windsurf Rule System Documentation
+
+## Rule Application Logic
+
+Windsurf IDE applies rules based on the following trigger modes:
+
+### 1. Always On Rules
+
+```yaml
+---
+trigger: always_on
+---
+```
+
+- **Behavior**: Rule is automatically loaded in every session
+- **Use Case**: Core directives, fundamental principles
+- **Example**: Core agent directives, mention guidance
+
+### 2. Glob-Based Rules
+
+```yaml
+---
+trigger: glob
+globs: "*.py, **/*.py"
+---
+```
+
+- **Behavior**: Rule is automatically applied when editing files matching the glob patterns
+- **Use Case**: Language-specific rules, file type guidelines
+- **Example**: Python code standards, testing guidelines
+- **Globs Format**: Comma-separated string patterns
+
+### 3. Model Decision Rules
+
+```yaml
+---
+trigger: model_decision
+description: "Rule description"
+---
+```
+
+- **Behavior**: Windsurf's Cascade AI determines when to apply the rule based on context
+- **Use Case**: Context-aware rules, conditional guidelines
+- **Example**: Security practices, context optimization
+- **Logic**: Cascade analyzes the current context and applies the rule when it determines it's relevant
+
+### 4. Manual Rules
+
+```yaml
+---
+trigger: manual
+---
+```
+
+- **Behavior**: Rule is only applied when manually referenced
+- **Use Case**: Specialized rules, documentation
+- **Example**: System documentation, IDE-specific guidance
+
+## Windsurf-Specific Features
+
+### Cascade AI Integration
+
+- **Intelligent Application**: Cascade AI can analyze context and apply rules intelligently
+- **Context Awareness**: Rules can be applied based on current work context
+- **Dynamic Loading**: Rules can be loaded dynamically based on project state
+
+### Memory System
+
+- **Persistent Context**: Windsurf maintains context across sessions
+- **Rule State**: Rules can maintain state and remember previous applications
+- **Workflow Integration**: Rules integrate with Windsurf's workflow system
+
+### Workflow Integration
+
+- **Multi-Stage Workflows**: Rules can be part of complex multi-stage workflows
+- **Context Loading**: Rules can load additional context as needed
+- **Automation**: Rules can trigger automated actions and workflows
+
+## Transformation to Cursor
+
+### Trigger Mode Mapping
+
+| Windsurf Trigger | Cursor Configuration |
+|------------------|---------------------|
+| `always_on` | `alwaysApply: true` |
+| `glob` | `alwaysApply: false` + `globs: "pattern"` |
+| `model_decision` | `alwaysApply: false` (no globs, intelligent application) |
+| `manual` | `alwaysApply: false` (no globs, manual reference) |
+
+### Globs Format
+
+- **Windsurf**: `globs: "*.py, **/*.py"` (comma-separated string)
+- **Cursor**: `globs: "*.py, **/*.py"` (same format, raw unquoted)
+
+### Description Usage
+
+- **Windsurf**: Description used for Cascade AI context analysis
+- **Cursor**: Description used for intelligent application when `alwaysApply: false` and no `globs` present
+
+## Best Practices
+
+### Rule Design
+
+1. **Clear Descriptions**: Write descriptive rule descriptions that clearly indicate when the rule should apply
+2. **Specific Patterns**: Use specific glob patterns for file-based rules
+3. **Context Clarity**: Write clear descriptions for model_decision rules
+4. **Logical Grouping**: Group related functionality in single rules
+
+### Cascade AI Optimization
+
+1. **Contextual Descriptions**: Write descriptions that help Cascade understand when to apply rules
+2. **Clear Triggers**: Use clear language that indicates the rule's purpose
+3. **Avoid Ambiguity**: Be specific about when rules should apply
+
+### Performance Considerations
+
+1. **Minimal Always-On Rules**: Limit the number of always_on rules to essential ones only
+2. **Efficient Globs**: Use efficient glob patterns that don't match too many files
+3. **Clear Context**: Write clear descriptions to help Cascade's intelligent application
+
+## Common Patterns
+
+### Language-Specific Rules
+
+```yaml
+---
+trigger: glob
+globs: "*.py, **/*.py"
+description: "Python code standards and best practices"
+---
+```
+
+### Security Rules
+
+```yaml
+---
+trigger: model_decision
+description: "Apply when dealing with security-sensitive code including API calls, user input, LLM interactions, and authentication"
+---
+```
+
+### Documentation Rules
+
+```yaml
+---
+trigger: glob
+globs: "*.md, docs/**/*.md"
+description: "Documentation standards and formatting guidelines"
+---
+```
+
+### Context-Aware Rules
+
+```yaml
+---
+trigger: model_decision
+description: "Apply when dealing with large files, complex operations, or memory-intensive tasks"
+---
+```
+
+## Troubleshooting
+
+### Rule Not Applying
+
+1. **Check Format**: Verify YAML frontmatter is correct
+2. **Verify Globs**: Ensure glob patterns are correct and match target files
+3. **Check Description**: Ensure description is clear and relevant for Cascade
+4. **Test Manually**: Try manually referencing the rule
+
+### Rule Applying Too Often
+
+1. **Refine Globs**: Make glob patterns more specific
+2. **Improve Description**: Make description more specific about when to apply
+3. **Check Logic**: Verify the rule logic is correct
+
+### Cascade AI Issues
+
+1. **Improve Description**: Make descriptions more specific and contextual
+2. **Check Context**: Ensure the rule description matches the intended context
+3. **Review Patterns**: Look for patterns in when rules are incorrectly applied
+
+## Rule Metadata
+
+**File:** `10_windsurf_rule_system.yaml`
+**Trigger:** manual (Windsurf) / alwaysApply: false (Cursor)
+**Estimated Tokens:** ~1,200
+**Last Updated:** 2025-10-22
+**Status:** Active
+
+**Topics Covered:**
+
+- Windsurf rule application logic
+- Cascade AI integration
+- Transformation to Cursor
+- Best practices
+
+**Workflow References:**
+
+- All workflows (for understanding rule application)
+
+**Dependencies:**
+
+- Source: Windsurf IDE documentation

@@ -39,7 +39,6 @@ New dependencies, major algorithms, security decisions, performance changes, API
 ### 1.1 Decision Scope
 
 **Define the decision:**
-
 - What architectural decision needs to be made?
 - What are the key constraints?
 - What are the performance requirements?
@@ -98,29 +97,35 @@ Owner: "@ai-agent"
 Priority: "High"
 Tags: ["architecture", "decision", "technology"]
 Related: ["/path/to/related/adr"]
----
 
 # ADR-NNNN: [Verb-Noun-Phrase]
 
 ## Status
+
 [Proposed | Accepted | Implemented | Deprecated | Superseded]
 
 ## Context
+
 [What is the issue that we're seeing that is motivating this decision or change?]
 
 ## Decision
+
 [What is the change that we're proposing or have agreed to implement?]
 
 ## Alternatives
+
 [What other options have we considered and why have we rejected them?]
 
 ## Consequences
+
 [What becomes easier or more difficult to do and any risks introduced by this change?]
 
 ## Implementation
+
 [How will this decision be implemented?]
 
 ## References
+
 [Links to relevant documentation, RFCs, or other resources]
 ```
 
@@ -294,8 +299,6 @@ When this new-adr workflow is called:
 ```markdown
 ✅ **Completed /new-adr:** ADR creation finished
 ```
-
----
 
 ## Command Metadata
 

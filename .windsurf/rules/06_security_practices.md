@@ -272,8 +272,6 @@ For any code that:
 - ✅ **Executes queries** → Use parameterized statements
 - ✅ **Handles errors** → Never expose stack traces to users
 
----
-
 ## Rule Metadata
 
 **File:** `06_security_practices.yaml`
@@ -283,17 +281,14 @@ For any code that:
 **Status:** Active
 
 **Topics Covered:**
-
 - OWASP LLM Top 10
 - Input validation
 - Authentication patterns
 - Secure API design
 
 **Workflow References:**
-
 - /validate - Security checklist
 - /implement - Security-focused work
 
 **Dependencies:**
-
 - Source: 06_security_practices.md

@@ -4,6 +4,12 @@ from pathlib import Path
 from typing import Any
 
 
+def _ensure_trailing_newline(text: str) -> str:
+    """Guarantee text ends with a single newline."""
+
+    return text if text.endswith("\n") else f"{text}\n"
+
+
 class CursorAdapter:
     """Transform unified format to Cursor .mdc and command format."""
 
@@ -122,18 +128,18 @@ class CursorAdapter:
         # Add frontmatter fields
         for key, value in frontmatter.items():
             if key == "globs" and isinstance(value, list):
-                # Format globs as array
                 mdc_content += f"{key}: {value}\n"
-            elif key == "alwaysApply" and isinstance(value, bool):
+                continue
+            if key == "alwaysApply" and isinstance(value, bool):
                 mdc_content += f"{key}: {str(value).lower()}\n"
-            else:
-                mdc_content += f"{key}: {value}\n"
+                continue
+            mdc_content += f"{key}: {value}\n"
 
         mdc_content += "---\n\n"
         mdc_content += content
 
         # Write the file
-        Path(output_path).write_text(mdc_content, encoding="utf-8")
+        Path(output_path).write_text(_ensure_trailing_newline(mdc_content), encoding="utf-8")
 
     def generate_command_file(self, cursor_command_data: dict[str, Any], output_path: str) -> None:
         """Generate a Cursor command markdown file from transformed command data.
@@ -161,7 +167,7 @@ class CursorAdapter:
         md_content += content
 
         # Write the file
-        Path(output_path).write_text(md_content, encoding="utf-8")
+        Path(output_path).write_text(_ensure_trailing_newline(md_content), encoding="utf-8")
 
     def transform_globs_format(self, globs_str: str) -> list[str]:
         """Convert Windsurf globs format to Cursor format.
@@ -197,17 +203,13 @@ class CursorAdapter:
             return False
 
         # Check globs format if present
-        if "globs" in frontmatter:
-            globs = frontmatter["globs"]
-            if not isinstance(globs, list):
-                return False
+        globs = frontmatter.get("globs")
+        if globs is not None and not isinstance(globs, list):
+            return False
 
         # Check alwaysApply format if present
-        if "alwaysApply" in frontmatter:
-            if not isinstance(frontmatter["alwaysApply"], bool):
-                return False
-
-        return True
+        always_apply = frontmatter.get("alwaysApply")
+        return always_apply is None or isinstance(always_apply, bool)
 
     def validate_cursor_command(self, cursor_command_data: dict[str, Any]) -> bool:
         """Validate Cursor command format.
@@ -221,7 +223,4 @@ class CursorAdapter:
         frontmatter = cursor_command_data["frontmatter"]
 
         # Check required fields
-        if "description" not in frontmatter:
-            return False
-
-        return True
+        return "description" in frontmatter

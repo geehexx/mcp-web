@@ -3,7 +3,6 @@ pass_through: true
 description: Intelligent context detection for work continuation
 title: Detect Context Workflow
 tags: ['context', 'detection', 'analysis', 'routing']
-related: []
 ---
 
 # Detect Context Workflow
@@ -44,19 +43,16 @@ related: []
 ## Stage 3: Classify Signals
 
 **High Confidence (80%+):**
-
 - User explicit mention
 - Active initiative with unchecked tasks
 - Test failures with clear error messages
 
 **Medium Confidence (30-79%):**
-
 - Session summary mentions work
 - Git changes in progress
 - TODO markers in relevant files
 
 **Low Confidence (<30%):**
-
 - No clear signals
 - Multiple conflicting signals
 - Ambiguous context
@@ -64,25 +60,21 @@ related: []
 ## Stage 4: Generate Routing Recommendation
 
 **Route to Implementation:**
-
 - Active initiative with unchecked tasks
 - Test failures
 - User requests specific feature/fix
 
 **Route to Planning:**
-
 - New initiative mentioned
 - Ambiguous requirements
 - Research needed
 
 **Route to Archive:**
-
 - Initiative marked completed
 - All tasks done
 - User signals completion
 
 **Route to Meta-Analysis:**
-
 - Session end signals
 - Work completed
 - User requests summary
@@ -107,12 +99,10 @@ When this detect-context workflow is called:
 ## Integration
 
 **Called By:**
-
 - `/work` - Main orchestration workflow
 - User - Direct invocation for context analysis
 
 **Calls:**
-
 - Various analysis tools and commands
 - File reading operations
 - Git status checks
@@ -120,20 +110,16 @@ When this detect-context workflow is called:
 ## Anti-Patterns
 
 ❌ **Don't:**
-
 - Skip user explicit mentions
 - Ignore high-confidence signals
 - Make assumptions without evidence
 - Override user instructions
 
 ✅ **Do:**
-
 - Always check for user explicit mentions first
 - Analyze all available signals
 - Provide confidence levels
 - Respect user instructions absolutely
-
----
 
 ## Command Metadata
 
@@ -145,12 +131,10 @@ When this detect-context workflow is called:
 **Status:** Active
 
 **Topics Covered:**
-
 - Context detection
 - Signal analysis
 - Routing recommendations
 - Project state analysis
 
 **Dependencies:**
-
 - None (standalone workflow)

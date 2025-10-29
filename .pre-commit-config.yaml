@@ -42,6 +42,7 @@ repos:
     hooks:
       - id: check-yaml
         name: "✅ config · Validate YAML"
+        exclude: ^\.unified/(commands|rules)/.*\.yaml$
       - id: check-json
         name: "✅ config · Validate JSON"
       - id: check-toml
@@ -102,6 +103,13 @@ repos:
         files: ^docs/initiatives/(active|completed)/.*\.md$
         pass_filenames: false
         args: [--ci]
+
+      - id: check-generated-sync
+        name: "🔄 workflows · Ensure generated IDE artefacts are in sync"
+        entry: uv run python scripts/validation/validate_generated_sync.py
+        language: system
+        pass_filenames: false
+        files: ^\.unified/(commands|rules)/.*\.yaml$
 
       - id: validate-task-format
         name: "📋 tasks · Validate task format in documentation"

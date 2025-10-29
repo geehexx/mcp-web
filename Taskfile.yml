@@ -263,6 +263,7 @@ tasks:
   docs:lint:
     desc: Lint all documentation (markdown + prose + file naming + cross-refs)
     cmds:
+      - task: docs:build-ide
       - task: docs:lint:markdown
       - task: docs:lint:prose
       - task: docs:lint:names
@@ -270,10 +271,20 @@ tasks:
       - task: docs:validate:links
       - task: docs:validate:consistency
 
+  docs:build-ide:
+    desc: Ensure generated IDE artefacts are up to date
+    cmds:
+      - "{{.UV}} run python scripts/validation/validate_generated_sync.py"
+
   docs:lint:markdown:
     desc: Lint markdown structure
     cmds:
-      - npx markdownlint-cli2 "**/*.md" "#node_modules" "#.venv"
+      - npx markdownlint-cli2 "**/*.md" "#node_modules" "#.venv" "#tests/golden/ide"
+
+  docs:update-ide-goldens:
+    desc: Regenerate Cursor and Windsurf golden snapshots
+    cmds:
+      - "{{.UV}} run python scripts/automation/update_ide_goldens.py"
 
   docs:lint:prose:
     desc: Lint prose quality with Vale

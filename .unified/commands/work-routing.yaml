@@ -19,7 +19,6 @@ cursor:
 tags: ["routing", "work", "orchestration", "decision"]
 
 ---
-related: []
 
 # Work Routing Logic
 
@@ -68,6 +67,7 @@ Load these rules if you determine you need them based on their descriptions:
 ### 1.1 High Priority Signals
 
 **Check for blocking issues:**
+
 - Test failures (priority: HIGH)
 - Build failures
 - Security vulnerabilities
@@ -76,6 +76,7 @@ Load these rules if you determine you need them based on their descriptions:
 ### 1.2 Initiative Signals
 
 **Check initiative status:**
+
 - Active initiatives with unchecked tasks
 - Completed initiatives needing archival
 - New initiatives requiring planning
@@ -84,6 +85,7 @@ Load these rules if you determine you need them based on their descriptions:
 ### 1.3 Planning Signals
 
 **Identify planning needs:**
+
 - Unclear requirements
 - Architecture decisions needed
 - Research required
@@ -94,6 +96,7 @@ Load these rules if you determine you need them based on their descriptions:
 ### 2.1 Signal Strength
 
 **Assess signal strength:**
+
 - Strong signals: 80-100% confidence
 - Medium signals: 30-79% confidence
 - Weak signals: <30% confidence
@@ -101,6 +104,7 @@ Load these rules if you determine you need them based on their descriptions:
 ### 2.2 Signal Conflicts
 
 **Handle conflicting signals:**
+
 - User explicit instructions override all
 - Security issues override convenience
 - Broken builds override features
@@ -108,6 +112,7 @@ Load these rules if you determine you need them based on their descriptions:
 ### 2.3 Context Clarity
 
 **Evaluate context clarity:**
+
 - Clear direction: High confidence
 - Multiple options: Medium confidence
 - Unclear requirements: Low confidence
@@ -117,6 +122,7 @@ Load these rules if you determine you need them based on their descriptions:
 ### 3.1 High Confidence Routing
 
 **Auto-route when confidence >80%:**
+
 - Clear initiative with unchecked tasks → `/implement`
 - Test failures → Fix + `/implement`
 - Completed initiative → `/archive-initiative`
@@ -125,6 +131,7 @@ Load these rules if you determine you need them based on their descriptions:
 ### 3.2 Medium Confidence Routing
 
 **Recommend with alternatives:**
+
 - Primary recommendation
 - Alternative options
 - Risk assessment
@@ -133,6 +140,7 @@ Load these rules if you determine you need them based on their descriptions:
 ### 3.3 Low Confidence Routing
 
 **Prompt user for direction:**
+
 - Context summary
 - Available options
 - Recommendation
@@ -143,6 +151,7 @@ Load these rules if you determine you need them based on their descriptions:
 ### 4.1 Direct Routing
 
 **Execute recommended workflow:**
+
 - Load appropriate workflow
 - Pass context information
 - Monitor execution
@@ -151,6 +160,7 @@ Load these rules if you determine you need them based on their descriptions:
 ### 4.2 Alternative Routing
 
 **Present alternatives:**
+
 - Explain options
 - Show trade-offs
 - Get user input
@@ -159,6 +169,7 @@ Load these rules if you determine you need them based on their descriptions:
 ### 4.3 Fallback Routing
 
 **Handle unclear situations:**
+
 - Ask clarifying questions
 - Provide context
 - Suggest next steps
@@ -169,6 +180,7 @@ Load these rules if you determine you need them based on their descriptions:
 ### 5.1 Route Success
 
 **Validate successful routing:**
+
 - Workflow executed successfully
 - Context properly passed
 - Results achieved
@@ -177,6 +189,7 @@ Load these rules if you determine you need them based on their descriptions:
 ### 5.2 Route Failure
 
 **Handle routing failures:**
+
 - Identify failure cause
 - Suggest alternatives
 - Escalate if needed
@@ -195,12 +208,14 @@ When this work-routing workflow is called:
 ## Anti-Patterns
 
 ❌ **Don't:**
+
 - Ignore user instructions
 - Skip confidence assessment
 - Make assumptions
 - Skip validation
 
 ✅ **Do:**
+
 - Respect user instructions
 - Assess confidence properly
 - Validate assumptions
@@ -218,10 +233,12 @@ When this work-routing workflow is called:
 ## Integration
 
 **Called By:**
+
 - `/work` - Main orchestration workflow
 - User - Direct invocation for routing decisions
 
 **Calls:**
+
 - `/detect-context` - Context analysis
 - Various workflows - Based on routing decision
 
@@ -241,10 +258,12 @@ When this work-routing workflow is called:
 **Status:** Active
 
 **Topics Covered:**
+
 - Workflow routing
 - Decision logic
 - Context analysis
 - Route execution
 
 **Dependencies:**
+
 - /detect-context - Context analysis

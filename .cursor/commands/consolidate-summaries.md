@@ -3,7 +3,6 @@ pass_through: true
 description: Consolidate historical session summaries into daily comprehensive files
 title: Consolidate Summaries Workflow
 tags: ['consolidation', 'summaries', 'analysis', 'daily']
-related: []
 ---
 
 # Consolidate Session Summaries Workflow
@@ -22,11 +21,11 @@ Merge multiple per-session summaries from same day into comprehensive daily summ
 update_plan({
   explanation: "📋 /consolidate-summaries",
   plan: [
-    { step: "1. Analyze targets", status: "in_progress" },
-    { step: "2. Extract information", status: "pending" },
-    { step: "3. Apply consolidation rules", status: "pending" },
-    { step: "4. Validate and create", status: "pending" },
-    { step: "5. Delete originals, commit", status: "pending" }
+    { step: "1. /consolidate-summaries - Analyze targets", status: "in_progress" },
+    { step: "2. /consolidate-summaries - Extract information", status: "pending" },
+    { step: "3. /consolidate-summaries - Apply consolidation rules", status: "pending" },
+    { step: "4. /consolidate-summaries - Validate and create", status: "pending" },
+    { step: "5. /commit - Delete originals and commit", status: "pending" }
   ]
 })
 ```
@@ -39,7 +38,6 @@ ls -1 docs/archive/session-summaries/YYYY-MM-DD-*.md | wc -l
 ```
 
 **Analyze consolidation targets:**
-
 - Count summaries for date
 - Check consolidation criteria
 - Identify consolidation rules
@@ -50,7 +48,6 @@ ls -1 docs/archive/session-summaries/YYYY-MM-DD-*.md | wc -l
 ### 2.1 Load Session Summaries
 
 **Load all summaries for date:**
-
 - Read summary files
 - Extract key information
 - Identify patterns
@@ -59,7 +56,6 @@ ls -1 docs/archive/session-summaries/YYYY-MM-DD-*.md | wc -l
 ### 2.2 Extract Key Data
 
 **Extract from each summary:**
-
 - Objectives
 - Completed work
 - Commits
@@ -72,7 +68,6 @@ ls -1 docs/archive/session-summaries/YYYY-MM-DD-*.md | wc -l
 ### 3.1 Deduplicate Content
 
 **Remove duplicate information:**
-
 - Merge identical objectives
 - Combine similar work items
 - Consolidate duplicate commits
@@ -81,7 +76,6 @@ ls -1 docs/archive/session-summaries/YYYY-MM-DD-*.md | wc -l
 ### 3.2 Organize by Theme
 
 **Group content by theme:**
-
 - Feature development
 - Bug fixes
 - Documentation
@@ -91,7 +85,6 @@ ls -1 docs/archive/session-summaries/YYYY-MM-DD-*.md | wc -l
 ### 3.3 Prioritize Content
 
 **Prioritize important content:**
-
 - Major accomplishments
 - Critical learnings
 - Important patterns
@@ -102,7 +95,6 @@ ls -1 docs/archive/session-summaries/YYYY-MM-DD-*.md | wc -l
 ### 4.1 Generate Daily Summary
 
 **Create comprehensive daily summary:**
-
 ```markdown
 # Daily Summary: YYYY-MM-DD
 
@@ -151,7 +143,6 @@ ls -1 docs/archive/session-summaries/YYYY-MM-DD-*.md | wc -l
 ### 4.2 Validate Content
 
 **Check consolidated summary:**
-
 - Completeness
 - Accuracy
 - Clarity
@@ -162,7 +153,6 @@ ls -1 docs/archive/session-summaries/YYYY-MM-DD-*.md | wc -l
 ### 5.1 Archive Originals
 
 **Move original summaries:**
-
 - Create archive subdirectory
 - Move individual summaries
 - Update index
@@ -171,7 +161,6 @@ ls -1 docs/archive/session-summaries/YYYY-MM-DD-*.md | wc -l
 ### 5.2 Update Index
 
 **Update summary index:**
-
 - Add consolidated summary
 - Remove individual entries
 - Update metadata
@@ -218,14 +207,12 @@ When this consolidate-summaries workflow is called:
 ## Anti-Patterns
 
 ❌ **Don't:**
-
 - Skip analysis phase
 - Ignore consolidation rules
 - Create incomplete summaries
 - Skip validation
 
 ✅ **Do:**
-
 - Analyze targets thoroughly
 - Apply consolidation rules
 - Create complete summaries
@@ -243,12 +230,10 @@ When this consolidate-summaries workflow is called:
 ## Integration
 
 **Called By:**
-
 - `/meta-analysis` - When consolidation needed
 - User - Direct invocation for consolidation
 
 **Calls:**
-
 - `/extract-session` - Session data extraction
 - `/summarize-session` - Session summarization
 
@@ -257,8 +242,6 @@ When this consolidate-summaries workflow is called:
 ```markdown
 ✅ **Completed /consolidate-summaries:** Summary consolidation finished
 ```
-
----
 
 ## Command Metadata
 
@@ -270,13 +253,11 @@ When this consolidate-summaries workflow is called:
 **Status:** Active
 
 **Topics Covered:**
-
 - Summary consolidation
 - Content deduplication
 - Daily summaries
 - Archive management
 
 **Dependencies:**
-
 - /extract-session - Session data extraction
 - /summarize-session - Session summarization

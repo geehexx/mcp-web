@@ -15,9 +15,6 @@ cursor:
 tags: ["context", "optimization", "memory", "performance"]
 
 ---
-related:
-  - "/docs/adr/0001-decision.md"
-
 # Context Optimization Guidelines
 
 ## Model Decision Rule Loading

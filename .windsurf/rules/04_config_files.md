@@ -108,8 +108,6 @@ python -c "import yaml; yaml.safe_load(open('config.yaml'))"
 - **README updates:** Document new configuration options
 - **Examples:** Provide working configuration examples
 
----
-
 ## Rule Metadata
 
 **File:** `04_config_files.yaml`
@@ -119,17 +117,14 @@ python -c "import yaml; yaml.safe_load(open('config.yaml'))"
 **Status:** Active
 
 **Topics Covered:**
-
 - TOML configuration
 - YAML configuration
 - Taskfile standards
 - Configuration validation
 
 **Workflow References:**
-
 - /implement - Configuration updates
 - /validate - Configuration validation
 
 **Dependencies:**
-
 - Source: 04_config_files.md

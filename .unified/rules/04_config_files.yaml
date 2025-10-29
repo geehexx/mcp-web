@@ -17,9 +17,6 @@ cursor:
 tags: ["configuration", "toml", "yaml", "taskfile"]
 
 ---
-related:
-  - "/docs/adr/0001-decision.md"
-
 # Configuration File Standards
 
 ## TOML Files (pyproject.toml)

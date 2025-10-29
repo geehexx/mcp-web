@@ -185,8 +185,6 @@ description: "Apply when dealing with large files, complex operations, or memory
 2. **Check Context**: Ensure the rule description matches the intended context
 3. **Review Patterns**: Look for patterns in when rules are incorrectly applied
 
----
-
 ## Rule Metadata
 
 **File:** `10_windsurf_rule_system.yaml`
@@ -196,16 +194,13 @@ description: "Apply when dealing with large files, complex operations, or memory
 **Status:** Active
 
 **Topics Covered:**
-
 - Windsurf rule application logic
 - Cascade AI integration
 - Transformation to Cursor
 - Best practices
 
 **Workflow References:**
-
 - All workflows (for understanding rule application)
 
 **Dependencies:**
-
 - Source: Windsurf IDE documentation

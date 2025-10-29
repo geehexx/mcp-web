@@ -18,7 +18,6 @@ cursor:
 tags: ["session", "summary", "analysis", "documentation"]
 
 ---
-related: []
 
 # Summarize Session Workflow
 
@@ -61,6 +60,7 @@ Generate LLM-agnostic session summary using structured template.
 ### 2. Objectives
 
 **Session goals and focus:**
+
 - Primary objective 1
 - Primary objective 2
 - Primary objective 3
@@ -68,6 +68,7 @@ Generate LLM-agnostic session summary using structured template.
 ### 3. Completed Work
 
 **Major accomplishments:**
+
 - [ ] Accomplishment 1
 - [ ] Accomplishment 2
 - [ ] Accomplishment 3
@@ -88,6 +89,7 @@ Generate LLM-agnostic session summary using structured template.
 ### 5. Learnings
 
 **Key insights gained:**
+
 - Learning 1: [Description]
 - Learning 2: [Description]
 - Learning 3: [Description]
@@ -95,6 +97,7 @@ Generate LLM-agnostic session summary using structured template.
 ### 6. Patterns (+)
 
 **Positive patterns observed:**
+
 - Pattern 1: [Description]
 - Pattern 2: [Description]
 - Pattern 3: [Description]
@@ -102,17 +105,20 @@ Generate LLM-agnostic session summary using structured template.
 ### 7. Patterns (!)
 
 **Areas for improvement:**
+
 - Pattern 1: [Description]
 - Pattern 2: [Description]
 
 ### 8. Gaps
 
 **Identified gaps:**
+
 - Gap 1: [Description]
 
 ### 9. Next Steps
 
 **Immediate next actions:**
+
 - [ ] Next step 1
 - [ ] Next step 2
 - [ ] Next step 3
@@ -120,6 +126,7 @@ Generate LLM-agnostic session summary using structured template.
 ### 10. Living Documentation
 
 **Documentation updates needed:**
+
 - [ ] Update ARCHITECTURE.md
 - [ ] Update CONSTITUTION.md
 - [ ] Update README.md
@@ -127,6 +134,7 @@ Generate LLM-agnostic session summary using structured template.
 ### 11. Metrics
 
 **Session metrics:**
+
 - **Duration:** X hours
 - **Commits:** Y commits
 - **Files Changed:** Z files
@@ -136,6 +144,7 @@ Generate LLM-agnostic session summary using structured template.
 ### 12. Protocol
 
 **Session end protocol:**
+
 - [ ] All changes committed
 - [ ] Tests passing
 - [ ] Documentation updated
@@ -146,6 +155,7 @@ Generate LLM-agnostic session summary using structured template.
 ### 1.1 Load Extraction Data
 
 **Load session data from extract-session:**
+
 - Session metadata
 - Commit information
 - File changes
@@ -155,6 +165,7 @@ Generate LLM-agnostic session summary using structured template.
 ### 1.2 Analyze Patterns
 
 **Identify patterns:**
+
 - Work patterns
 - Error patterns
 - Success patterns
@@ -163,6 +174,7 @@ Generate LLM-agnostic session summary using structured template.
 ### 1.3 Extract Key Information
 
 **Extract key details:**
+
 - Major accomplishments
 - Important learnings
 - Critical gaps
@@ -173,6 +185,7 @@ Generate LLM-agnostic session summary using structured template.
 ### 2.1 Create Header
 
 **Generate session header:**
+
 - Title based on work done
 - Date and duration
 - Context and status
@@ -180,6 +193,7 @@ Generate LLM-agnostic session summary using structured template.
 ### 2.2 Write Objectives
 
 **Document session objectives:**
+
 - Primary goals
 - Secondary goals
 - Success criteria
@@ -187,6 +201,7 @@ Generate LLM-agnostic session summary using structured template.
 ### 2.3 List Completed Work
 
 **Document accomplishments:**
+
 - Major features
 - Bug fixes
 - Documentation
@@ -195,6 +210,7 @@ Generate LLM-agnostic session summary using structured template.
 ### 2.4 Document Commits
 
 **List all commits:**
+
 - Commit hash
 - Type and scope
 - Description
@@ -205,6 +221,7 @@ Generate LLM-agnostic session summary using structured template.
 ### 3.1 Identify Learnings
 
 **Extract key insights:**
+
 - Technical learnings
 - Process learnings
 - Tool learnings
@@ -213,6 +230,7 @@ Generate LLM-agnostic session summary using structured template.
 ### 3.2 Recognize Patterns
 
 **Identify patterns:**
+
 - Positive patterns to repeat
 - Negative patterns to avoid
 - Improvement opportunities
@@ -221,6 +239,7 @@ Generate LLM-agnostic session summary using structured template.
 ### 3.3 Identify Gaps
 
 **Find knowledge gaps:**
+
 - Missing information
 - Unclear requirements
 - Technical unknowns
@@ -231,6 +250,7 @@ Generate LLM-agnostic session summary using structured template.
 ### 4.1 Immediate Actions
 
 **Define next steps:**
+
 - Immediate tasks
 - Priority order
 - Dependencies
@@ -239,6 +259,7 @@ Generate LLM-agnostic session summary using structured template.
 ### 4.2 Documentation Updates
 
 **Identify doc updates:**
+
 - Architecture changes
 - Process changes
 - New patterns
@@ -249,6 +270,7 @@ Generate LLM-agnostic session summary using structured template.
 ### 5.1 Session Metrics
 
 **Calculate session metrics:**
+
 - Duration
 - Productivity
 - Quality
@@ -257,6 +279,7 @@ Generate LLM-agnostic session summary using structured template.
 ### 5.2 Work Metrics
 
 **Measure work output:**
+
 - Commits
 - Files changed
 - Tests written
@@ -267,6 +290,7 @@ Generate LLM-agnostic session summary using structured template.
 ### 6.1 Review Content
 
 **Check summary quality:**
+
 - Completeness
 - Accuracy
 - Clarity
@@ -275,6 +299,7 @@ Generate LLM-agnostic session summary using structured template.
 ### 6.2 Format Output
 
 **Format final summary:**
+
 - Markdown formatting
 - Consistent structure
 - Clear sections
@@ -283,6 +308,7 @@ Generate LLM-agnostic session summary using structured template.
 ### 6.3 Save Summary
 
 **Save session summary:**
+
 - File: `docs/archive/session-summaries/YYYY-MM-DD-HHMMSS-session-summary.md`
 - Format: Markdown
 - Encoding: UTF-8
@@ -330,10 +356,12 @@ When this summarize-session workflow is called:
 ## Integration
 
 **Called By:**
+
 - `/meta-analysis` - Session analysis workflow
 - User - Direct invocation for session summarization
 
 **Calls:**
+
 - `/extract-session` - Session data extraction
 - Various analysis tools
 
@@ -353,10 +381,12 @@ When this summarize-session workflow is called:
 **Status:** Active
 
 **Topics Covered:**
+
 - Session summarization
 - Pattern analysis
 - Documentation updates
 - Metrics generation
 
 **Dependencies:**
+
 - /extract-session - Session data extraction

@@ -18,7 +18,6 @@ cursor:
 tags: ["implementation", "testing", "development", "tdd"]
 
 ---
-related: []
 
 # Implementation Workflow
 
@@ -124,12 +123,14 @@ When this implementation workflow is called:
 ## Anti-Patterns
 
 ❌ **Don't:**
+
 - Skip writing tests first
 - Implement large features in one go
 - Skip validation steps
 - Commit without proper messages
 
 ✅ **Do:**
+
 - Write failing tests first (Red-Green-Refactor)
 - Implement small, incremental changes
 - Validate after each major change
@@ -147,10 +148,12 @@ When this implementation workflow is called:
 ## Integration
 
 **Called By:**
+
 - `/work` - Main orchestration workflow
 - User - Direct invocation for implementation
 
 **Calls:**
+
 - `/load-context` - Load relevant files
 - `/validate` - Validate implementation
 - `/commit` - Commit changes
@@ -171,12 +174,14 @@ When this implementation workflow is called:
 **Status:** Active
 
 **Topics Covered:**
+
 - Test-driven development
 - Implementation patterns
 - Validation processes
 - Commit practices
 
 **Dependencies:**
+
 - /load-context - Load relevant files
 - /validate - Validate implementation
 - /commit - Commit changes

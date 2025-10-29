@@ -92,25 +92,16 @@ Provide guidance on when to load specific rules:
 Load these rules based on the current task:
 
 ### For Security-Sensitive Work
-```markdown
 Load: Security Practices rule (`/rules/06_security_practices.mdc`)
 Apply: When dealing with API calls, user input, LLM interactions, or authentication
-```
 
 ### For Large File Operations
-
-```markdown
 Load: Context Optimization rule (`/rules/07_context_optimization.mdc`)
 Apply: When dealing with large files, complex operations, or memory-intensive tasks
-```
 
 ### For File Manipulation
-
-```markdown
 Load: File Operations rule (`/rules/08_file_operations.mdc`)
 Apply: When performing file manipulation, directory operations, or path handling
-```
-
 ```
 
 ## Command Integration Patterns
@@ -134,18 +125,12 @@ After completing this workflow, execute:
 Based on the outcome:
 
 ### If Validation Passes
-```markdown
 Load: `/commands/commit.md`
 Execute: Commit workflow with validated changes
-```
 
 ### If Validation Fails
-
-```markdown
 Load: `/commands/implement.md`
 Execute: Return to implementation workflow to fix issues
-```
-
 ```
 
 ### Context-Aware Loading
@@ -225,12 +210,9 @@ When using `/mention`, provide context:
 
 ```markdown
 Load these rules if you determine you need them based on their descriptions:
-
 - Security Practices: `.cursor/rules/06_security_practices.mdc` - For security-sensitive code
 - Context Optimization: `.cursor/rules/07_context_optimization.mdc` - For large file operations
 ```
-
----
 
 ## Rule Metadata
 
@@ -241,16 +223,13 @@ Load these rules if you determine you need them based on their descriptions:
 **Status:** Active
 
 **Topics Covered:**
-
 - Mention usage patterns
 - File reference guidance
 - Workflow chaining
 - Context-aware loading
 
 **Workflow References:**
-
 - All workflows (always loaded)
 
 **Dependencies:**
-
 - Source: 08_mention_guidance.md

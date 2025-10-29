@@ -10,10 +10,28 @@ Categories:
 - File naming conventions
 """
 
+from __future__ import annotations
+
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
+
+
+@pytest.fixture(scope="session", autouse=True)
+def regenerate_ide_configs() -> None:
+    """Ensure generated IDE artefacts are rebuilt before markdown tests."""
+
+    scripts_dir = Path(__file__).parent.parent / "scripts"
+    if str(scripts_dir) not in sys.path:
+        sys.path.insert(0, str(scripts_dir))
+
+    from build_ide_configs import build_configs  # type: ignore import  # noqa: WPS433
+
+    success = build_configs()
+    assert success, "Failed to rebuild IDE configurations before markdown tests"
+
 
 # Directories to exclude from markdown checks (matches .markdownlint-cli2.jsonc)
 EXCLUDE_PATTERNS = [

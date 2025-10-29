@@ -76,8 +76,6 @@ type: "guide|adr|initiative|reference"
 status: "draft|active|completed|archived"
 created: "YYYY-MM-DD"
 updated: "YYYY-MM-DD"
----
-
 # Document Title
 
 Brief description of the document's purpose.
@@ -164,8 +162,6 @@ python script.py
 - ✅ Consistent formatting
 - ✅ Up-to-date information
 
----
-
 ## Rule Metadata
 
 **File:** `03_documentation.yaml`
@@ -175,17 +171,14 @@ python script.py
 **Status:** Active
 
 **Topics Covered:**
-
 - Documentation structure
 - ADR standards
 - Initiative tracking
 - Markdown guidelines
 
 **Workflow References:**
-
 - /implement - Documentation updates
 - /validate - Documentation validation
 
 **Dependencies:**
-
 - Source: 03_documentation.md

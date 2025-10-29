@@ -18,7 +18,6 @@ cursor:
 tags: ["planning", "research", "architecture", "requirements"]
 
 ---
-related: []
 
 # Planning Workflow
 
@@ -97,12 +96,14 @@ When this planning workflow is called:
 ## Anti-Patterns
 
 ❌ **Don't:**
+
 - Skip research phase
 - Create vague plans
 - Ignore dependencies
 - Skip risk assessment
 
 ✅ **Do:**
+
 - Research thoroughly
 - Create specific, measurable plans
 - Identify all dependencies
@@ -120,10 +121,12 @@ When this planning workflow is called:
 ## Integration
 
 **Called By:**
+
 - `/work` - Main orchestration workflow
 - User - Direct invocation for planning
 
 **Calls:**
+
 - `/research` - Research requirements
 - `/generate-plan` - Generate detailed plan
 - `/load-context` - Load relevant context
@@ -144,12 +147,14 @@ When this planning workflow is called:
 **Status:** Active
 
 **Topics Covered:**
+
 - Requirements analysis
 - Research methodology
 - Plan generation
 - Risk assessment
 
 **Dependencies:**
+
 - /research - Research requirements
 - /generate-plan - Generate detailed plan
 - /load-context - Load relevant context

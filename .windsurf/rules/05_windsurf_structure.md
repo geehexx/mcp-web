@@ -8,7 +8,7 @@ title: Windsurf Structure
 
 ## Directory Structure
 
-```
+```text
 .windsurf/
 ├── rules/                   # Rule definitions
 │   ├── 00_core_directives.md
@@ -88,27 +88,22 @@ Windsurf workflows are transformed to Cursor commands:
 - **No Memory System**: Cursor commands cannot maintain state across sessions
 - **Simplified Structure**: Cursor commands are simpler than Windsurf workflows
 
----
-
 ## Rule Metadata
 
 **File:** `05_windsurf_structure.yaml`
-**Trigger:** manual (Windsurf) / alwaysApply: false (Cursor)
+**Trigger:** model_decision (Windsurf) / alwaysApply: false (Cursor)
 **Estimated Tokens:** ~800
 **Last Updated:** 2025-10-22
 **Status:** Active
 
 **Topics Covered:**
-
 - Windsurf directory structure
 - Rule system
 - Workflow system
 - Integration with Cursor
 
 **Workflow References:**
-
 - All workflows (for understanding structure)
 
 **Dependencies:**
-
 - Source: 05_windsurf_structure.md

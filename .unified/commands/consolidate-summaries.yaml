@@ -18,7 +18,6 @@ cursor:
 tags: ["consolidation", "summaries", "analysis", "daily"]
 
 ---
-related: []
 
 # Consolidate Session Summaries Workflow
 
@@ -36,11 +35,11 @@ Merge multiple per-session summaries from same day into comprehensive daily summ
 update_plan({
   explanation: "📋 /consolidate-summaries",
   plan: [
-    { step: "1. Analyze targets", status: "in_progress" },
-    { step: "2. Extract information", status: "pending" },
-    { step: "3. Apply consolidation rules", status: "pending" },
-    { step: "4. Validate and create", status: "pending" },
-    { step: "5. Delete originals, commit", status: "pending" }
+    { step: "1. /consolidate-summaries - Analyze targets", status: "in_progress" },
+    { step: "2. /consolidate-summaries - Extract information", status: "pending" },
+    { step: "3. /consolidate-summaries - Apply consolidation rules", status: "pending" },
+    { step: "4. /consolidate-summaries - Validate and create", status: "pending" },
+    { step: "5. /commit - Delete originals and commit", status: "pending" }
   ]
 })
 ```

@@ -17,9 +17,6 @@ cursor:
 tags: ["documentation", "markdown", "adr", "initiatives"]
 
 ---
-related:
-  - "/docs/DOCUMENTATION_STRUCTURE.md"
-
 # Documentation Standards & Management
 
 ## 3.1 Documentation Structure

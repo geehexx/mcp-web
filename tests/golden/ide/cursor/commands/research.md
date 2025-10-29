@@ -1,0 +1,295 @@
+---
+pass_through: true
+description: Research best practices and existing patterns
+title: Research Workflow
+tags: ['research', 'planning', 'analysis', 'best-practices']
+---
+
+# Research Workflow
+
+**Purpose:** Gather comprehensive research for features, technologies, or architectural decisions.
+
+**Invocation:** Called by `/plan` or standalone for research tasks
+
+**Philosophy:** Good research prevents mistakes and identifies proven patterns.
+
+## Stage 1: Create Task Plan
+
+```typescript
+update_plan({
+  explanation: "🔍 Starting /research workflow",
+  plan: [
+    { step: "1. /research - Define research scope", status: "in_progress" },
+    { step: "2. /research - Search internal patterns", status: "pending" },
+    { step: "  2.1. /research - Search codebase", status: "pending" },
+    { step: "  2.2. /research - Review ADRs", status: "pending" },
+    { step: "  2.3. /research - Check project rules", status: "pending" },
+    { step: "3. /research - Perform external web research", status: "pending" },
+    { step: "  3.1. /research - Run web searches (5+ queries)", status: "pending" },
+    { step: "  3.2. /research - Document findings", status: "pending" },
+    { step: "  3.3. /research - Compare alternatives", status: "pending" },
+    { step: "4. /research - Technical assessment", status: "pending" },
+    { step: "  4.1. /research - Analyze dependencies", status: "pending" },
+    { step: "  4.2. /research - Assess performance", status: "pending" },
+    { step: "  4.3. /research - Security review", status: "pending" },
+    { step: "5. /research - Compile research summary", status: "pending" }
+  ]
+})
+```
+
+## Stage 2: Define Research Scope
+
+**Identify research objectives:**
+
+- What specific problem are we solving?
+- What technologies or approaches are we evaluating?
+- What are the key decision criteria?
+- What constraints do we have?
+
+**Document research questions:**
+
+1. What are the current best practices?
+2. What are the pros and cons of each approach?
+3. What are the security implications?
+4. What are the performance considerations?
+5. What are the maintenance requirements?
+
+## Stage 3: Internal Research
+
+### 3.1 Search Codebase
+
+**Use semantic search to find:**
+
+- Similar implementations
+- Existing patterns
+- Related functionality
+- Previous solutions
+
+**Search queries:**
+
+- Feature-specific terms
+- Technology names
+- Problem descriptions
+- Solution patterns
+
+### 3.2 Review ADRs
+
+**Check existing architecture decisions:**
+
+- Related ADRs
+- Decision rationale
+- Trade-offs considered
+- Implementation details
+
+### 3.3 Check Project Rules
+
+**Review project standards:**
+
+- Coding standards
+- Security practices
+- Documentation requirements
+- Testing requirements
+
+## Stage 4: External Research
+
+### 4.1 Web Research
+
+**Perform comprehensive web searches:**
+
+- Technology documentation
+- Best practices guides
+- Security advisories
+- Performance benchmarks
+- Community discussions
+
+**Search strategy:**
+
+- Start with official documentation
+- Look for community best practices
+- Check security advisories
+- Review performance comparisons
+
+### 4.2 Document Findings
+
+**For each source:**
+
+- Key findings
+- Pros and cons
+- Security considerations
+- Performance implications
+- Maintenance requirements
+
+### 4.3 Compare Alternatives
+
+**Create comparison matrix:**
+
+| Criteria | Option A | Option B | Option C |
+|----------|----------|----------|----------|
+| Security | High | Medium | High |
+| Performance | Fast | Medium | Slow |
+| Maintenance | Low | High | Medium |
+| Community | Large | Small | Medium |
+
+## Stage 5: Technical Assessment
+
+### 5.1 Analyze Dependencies
+
+**Check dependency requirements:**
+
+- Required packages
+- Version compatibility
+- Security vulnerabilities
+- Maintenance status
+
+### 5.2 Assess Performance
+
+**Evaluate performance characteristics:**
+
+- Memory usage
+- CPU requirements
+- Network overhead
+- Scalability limits
+
+### 5.3 Security Review
+
+**Assess security implications:**
+
+- Known vulnerabilities
+- Security best practices
+- Compliance requirements
+- Risk assessment
+
+## Stage 6: Compile Research Summary
+
+**Create comprehensive summary:**
+
+```markdown
+# Research Summary
+
+## Problem Statement
+
+[Clear description of the problem]
+
+## Research Questions
+
+1. [Question 1]
+2. [Question 2]
+3. [Question 3]
+
+## Internal Findings
+
+- [Finding 1]
+- [Finding 2]
+- [Finding 3]
+
+## External Findings
+
+- [Finding 1]
+- [Finding 2]
+- [Finding 3]
+
+## Alternatives Considered
+
+| Option | Pros | Cons | Recommendation |
+|--------|------|------|----------------|
+| A | [Pros] | [Cons] | [Recommendation] |
+| B | [Pros] | [Cons] | [Recommendation] |
+
+## Technical Assessment
+
+- **Dependencies**: [Assessment]
+- **Performance**: [Assessment]
+- **Security**: [Assessment]
+
+## Recommendation
+
+[Clear recommendation with rationale]
+
+## Next Steps
+
+1. [Step 1]
+2. [Step 2]
+3. [Step 3]
+```
+
+## Context Loading
+
+Load these rules if you determine you need them based on their descriptions:
+
+- **Security Practices**: `/rules/06_security_practices.mdc` - Apply when dealing with security-sensitive research
+- **Context Optimization**: `/rules/07_context_optimization.mdc` - Apply when dealing with large files or complex operations
+- **Documentation Standards**: `/rules/03_documentation.mdc` - Apply when creating research documentation
+
+## Workflow References
+
+When this research workflow is called:
+
+1. **Load**: `/commands/research.md`
+2. **Execute**: Follow the research stages defined above
+3. **Search**: Perform comprehensive internal and external research
+4. **Analyze**: Assess technical implications
+5. **Summarize**: Compile research findings
+
+## Anti-Patterns
+
+❌ **Don't:**
+
+- Skip external research
+- Ignore security implications
+- Skip performance assessment
+- Make decisions without evidence
+
+✅ **Do:**
+
+- Research thoroughly
+- Consider security implications
+- Assess performance impact
+- Base decisions on evidence
+
+## Success Metrics
+
+| Metric | Target | Status |
+|--------|--------|--------|
+| Research depth | High | ✅ |
+| Source diversity | 5+ sources | ✅ |
+| Technical coverage | Complete | ✅ |
+| Recommendation clarity | Clear | ✅ |
+
+## Integration
+
+**Called By:**
+
+- `/plan` - Planning workflow
+- User - Direct invocation for research
+
+**Calls:**
+
+- Various search operations
+- Web research tools
+- Documentation review
+
+**Exit:**
+
+```markdown
+✅ **Completed /research:** Research workflow finished
+```
+
+## Command Metadata
+
+**File:** `research.yaml`
+**Type:** Command/Workflow
+**Complexity:** Moderate
+**Estimated Tokens:** ~1,300
+**Last Updated:** 2025-10-22
+**Status:** Active
+
+**Topics Covered:**
+
+- Research methodology
+- Technical assessment
+- Best practices
+- Decision support
+
+**Dependencies:**
+
+- None (standalone workflow)

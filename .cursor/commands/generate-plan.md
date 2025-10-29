@@ -3,7 +3,6 @@ pass_through: true
 description: Generate structured implementation plan from research
 title: Generate Plan Workflow
 tags: ['planning', 'generation', 'implementation', 'structure']
-related: []
 ---
 
 # Generate Plan Workflow
@@ -129,6 +128,7 @@ update_plan({
 ### Phase 1: Foundation
 
 #### Task 1.1: Setup Project Structure
+
 - **Description:** Create basic project structure and configuration
 - **Acceptance Criteria:**
   - [ ] Project directories created
@@ -139,6 +139,7 @@ update_plan({
 - **Risks:** Low
 
 #### Task 1.2: Implement Core Interfaces
+
 - **Description:** Define core interfaces and contracts
 - **Acceptance Criteria:**
   - [ ] Interfaces defined
@@ -231,28 +232,33 @@ Estimated Duration: "X weeks (~Y hours)"
 Target Completion: "YYYY-MM-DD"
 Tags: ["tag1", "tag2", "tag3"]
 Related: ["/path/to/related/doc"]
----
 
 # Initiative: [Name]
 
 ## Objective
+
 [Clear statement of what we're building]
 
 ## Success Criteria
+
 - [ ] [Criterion 1]
 - [ ] [Criterion 2]
 - [ ] [Criterion 3]
 
 ## Phases
+
 [Detailed phase breakdown]
 
 ## Timeline
+
 [Timeline with milestones]
 
 ## Risks
+
 [Risk assessment and mitigation]
 
 ## Resources
+
 [Required resources and dependencies]
 ```
 
@@ -271,7 +277,6 @@ Related: ["/path/to/related/doc"]
 ### 10.2 Review and Refine
 
 **Review with stakeholders:**
-
 - Validate requirements
 - Confirm timeline
 - Check resource availability
@@ -337,8 +342,6 @@ When this generate-plan workflow is called:
 ```markdown
 ✅ **Completed /generate-plan:** Plan generation finished
 ```
-
----
 
 ## Command Metadata
 

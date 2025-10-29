@@ -21,10 +21,22 @@ from typing import Any
 
 import yaml
 
-# Project root
-ROOT = Path(__file__).parent.parent
-WINDSURF_DIR = ROOT / ".windsurf"
-BENCHMARKS_DIR = ROOT / ".benchmarks"
+# Project structure
+
+
+def _resolve_repo_root() -> Path:
+    """Determine repository root whether executed locally or under pre-commit."""
+
+    cwd = Path.cwd().resolve()
+    if (cwd / ".windsurf").exists():
+        return cwd
+    return Path(__file__).resolve().parents[2]
+
+
+REPO_ROOT = _resolve_repo_root()
+SCRIPT_ROOT = REPO_ROOT / "scripts"
+WINDSURF_DIR = REPO_ROOT / ".windsurf"
+BENCHMARKS_DIR = SCRIPT_ROOT / ".benchmarks"
 BASELINE_FILE = BENCHMARKS_DIR / "workflow-tokens-baseline.json"
 HISTORY_FILE = BENCHMARKS_DIR / "workflow-tokens-history.jsonl"
 
@@ -46,7 +58,7 @@ class TokenMonitor:
         self.save_baseline_mode = save_baseline
 
         # Ensure benchmarks directory exists
-        BENCHMARKS_DIR.mkdir(exist_ok=True)
+        BENCHMARKS_DIR.mkdir(parents=True, exist_ok=True)
 
     def run(self) -> int:
         """Run token monitoring.
@@ -64,8 +76,10 @@ class TokenMonitor:
 
         # Save baseline if requested
         if self.save_baseline_mode:
-            self._save_baseline(current)
-            print("\n✅ Baseline saved")
+            if self._save_baseline(current):
+                print("\n✅ Baseline saved")
+            else:
+                print("\nℹ️ Baseline already up to date")
             return 0
 
         # Load baseline
@@ -155,19 +169,29 @@ class TokenMonitor:
         print(f"🎯 COMBINED TOTAL: {data['totals']['combined']:,} tokens")
         print(f"📊 THRESHOLD:      {self.threshold:,} tokens")
 
-    def _save_baseline(self, data: dict[str, Any]) -> None:
+    def _save_baseline(self, data: dict[str, Any]) -> bool:
         """Save current state as baseline.
 
         Args:
             data: Token count data
         """
-        # Save baseline file
-        with open(BASELINE_FILE, "w") as f:
-            json.dump(data, f, indent=2)
+        existing = self._load_baseline()
 
-        # Append to history
-        with open(HISTORY_FILE, "a") as f:
-            f.write(json.dumps(data) + "\n")
+        if existing and self._normalized(existing) == self._normalized(data):
+            return False
+
+        serialized = json.dumps(data, indent=2, sort_keys=True) + "\n"
+
+        if BASELINE_FILE.exists():
+            existing_text = BASELINE_FILE.read_text()
+            if existing_text == serialized:
+                return False
+
+        with open(BASELINE_FILE, "w") as f:
+            f.write(serialized)
+
+        self._append_history(data)
+        return True
 
     def _load_baseline(self) -> dict[str, Any] | None:
         """Load baseline data.
@@ -229,11 +253,23 @@ class TokenMonitor:
         print("\n✅ All checks passed!")
         print("=" * 60)
 
-        # Append to history
-        with open(HISTORY_FILE, "a") as f:
-            f.write(json.dumps(current) + "\n")
-
         return 0
+
+    def _append_history(self, data: dict[str, Any]) -> None:
+        """Append an entry to the token history log."""
+
+        with open(HISTORY_FILE, "a") as history_file:
+            history_file.write(json.dumps(data) + "\n")
+
+    @staticmethod
+    def _normalized(data: dict[str, Any]) -> dict[str, Any]:
+        """Extract comparable sections of token data (ignoring metadata)."""
+
+        return {
+            "workflows": data.get("workflows", {}),
+            "rules": data.get("rules", {}),
+            "totals": data.get("totals", {}),
+        }
 
 
 def main() -> int:

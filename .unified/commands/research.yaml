@@ -18,7 +18,6 @@ cursor:
 tags: ["research", "planning", "analysis", "best-practices"]
 
 ---
-related: []
 
 # Research Workflow
 
@@ -180,38 +179,46 @@ update_plan({
 # Research Summary
 
 ## Problem Statement
+
 [Clear description of the problem]
 
 ## Research Questions
+
 1. [Question 1]
 2. [Question 2]
 3. [Question 3]
 
 ## Internal Findings
+
 - [Finding 1]
 - [Finding 2]
 - [Finding 3]
 
 ## External Findings
+
 - [Finding 1]
 - [Finding 2]
 - [Finding 3]
 
 ## Alternatives Considered
+
 | Option | Pros | Cons | Recommendation |
 |--------|------|------|----------------|
 | A | [Pros] | [Cons] | [Recommendation] |
 | B | [Pros] | [Cons] | [Recommendation] |
 
 ## Technical Assessment
+
 - **Dependencies**: [Assessment]
 - **Performance**: [Assessment]
 - **Security**: [Assessment]
 
 ## Recommendation
+
 [Clear recommendation with rationale]
 
 ## Next Steps
+
 1. [Step 1]
 2. [Step 2]
 3. [Step 3]
@@ -238,12 +245,14 @@ When this research workflow is called:
 ## Anti-Patterns
 
 ❌ **Don't:**
+
 - Skip external research
 - Ignore security implications
 - Skip performance assessment
 - Make decisions without evidence
 
 ✅ **Do:**
+
 - Research thoroughly
 - Consider security implications
 - Assess performance impact
@@ -261,10 +270,12 @@ When this research workflow is called:
 ## Integration
 
 **Called By:**
+
 - `/plan` - Planning workflow
 - User - Direct invocation for research
 
 **Calls:**
+
 - Various search operations
 - Web research tools
 - Documentation review
@@ -285,10 +296,12 @@ When this research workflow is called:
 **Status:** Active
 
 **Topics Covered:**
+
 - Research methodology
 - Technical assessment
 - Best practices
 - Decision support
 
 **Dependencies:**
+
 - None (standalone workflow)

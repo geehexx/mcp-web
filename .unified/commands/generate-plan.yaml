@@ -18,7 +18,6 @@ cursor:
 tags: ["planning", "generation", "implementation", "structure"]
 
 ---
-related: []
 
 # Generate Plan Workflow
 
@@ -143,6 +142,7 @@ update_plan({
 ### Phase 1: Foundation
 
 #### Task 1.1: Setup Project Structure
+
 - **Description:** Create basic project structure and configuration
 - **Acceptance Criteria:**
   - [ ] Project directories created
@@ -153,6 +153,7 @@ update_plan({
 - **Risks:** Low
 
 #### Task 1.2: Implement Core Interfaces
+
 - **Description:** Define core interfaces and contracts
 - **Acceptance Criteria:**
   - [ ] Interfaces defined
@@ -188,12 +189,14 @@ update_plan({
 ### 7.1 Risk Categories
 
 **Technical risks:**
+
 - Technology complexity
 - Integration challenges
 - Performance issues
 - Security vulnerabilities
 
 **Project risks:**
+
 - Scope creep
 - Resource availability
 - Timeline pressure
@@ -202,6 +205,7 @@ update_plan({
 ### 7.2 Risk Mitigation
 
 **For each risk:**
+
 - Probability assessment
 - Impact assessment
 - Mitigation strategy
@@ -212,6 +216,7 @@ update_plan({
 ### 8.1 Functional Criteria
 
 **What the system must do:**
+
 - Core functionality working
 - Performance requirements met
 - Security requirements satisfied
@@ -220,6 +225,7 @@ update_plan({
 ### 8.2 Non-Functional Criteria
 
 **Quality attributes:**
+
 - Maintainability
 - Scalability
 - Reliability
@@ -240,26 +246,33 @@ Estimated Duration: "X weeks (~Y hours)"
 Target Completion: "YYYY-MM-DD"
 Tags: ["tag1", "tag2", "tag3"]
 Related: ["/path/to/related/doc"]
+
 # Initiative: [Name]
 
 ## Objective
+
 [Clear statement of what we're building]
 
 ## Success Criteria
+
 - [ ] [Criterion 1]
 - [ ] [Criterion 2]
 - [ ] [Criterion 3]
 
 ## Phases
+
 [Detailed phase breakdown]
 
 ## Timeline
+
 [Timeline with milestones]
 
 ## Risks
+
 [Risk assessment and mitigation]
 
 ## Resources
+
 [Required resources and dependencies]
 ```
 
@@ -304,12 +317,14 @@ When this generate-plan workflow is called:
 ## Anti-Patterns
 
 ❌ **Don't:**
+
 - Skip requirement analysis
 - Ignore dependencies
 - Create unrealistic timelines
 - Skip risk assessment
 
 ✅ **Do:**
+
 - Analyze requirements thoroughly
 - Map all dependencies
 - Create realistic estimates
@@ -327,10 +342,12 @@ When this generate-plan workflow is called:
 ## Integration
 
 **Called By:**
+
 - `/plan` - Planning workflow
 - User - Direct invocation for plan generation
 
 **Calls:**
+
 - `/research` - Research findings
 - Various analysis tools
 
@@ -350,10 +367,12 @@ When this generate-plan workflow is called:
 **Status:** Active
 
 **Topics Covered:**
+
 - Plan generation
 - Task decomposition
 - Effort estimation
 - Risk assessment
 
 **Dependencies:**
+
 - /research - Research findings as input

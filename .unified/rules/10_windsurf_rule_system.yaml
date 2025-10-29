@@ -15,9 +15,6 @@ cursor:
 tags: ["windsurf", "documentation", "rules", "system"]
 
 ---
-related:
-  - "/docs/IDE_COMPATIBILITY.md"
-
 # Windsurf Rule System Documentation
 
 ## Rule Application Logic

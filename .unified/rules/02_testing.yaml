@@ -17,9 +17,6 @@ cursor:
 tags: ["testing", "pytest", "tdd", "fixtures"]
 
 ---
-related:
-  - "/docs/adr/0001-decision.md"
-
 # Testing Standards
 
 ## 1.1 Development Environment
@@ -356,6 +353,7 @@ class TestURLProcessor:
 **Can be @mentioned:** Yes (hybrid loading)
 
 **Topics Covered:**
+
 - Test-driven development (TDD)
 - pytest configuration and usage
 - Parallel testing with pytest-xdist
@@ -364,8 +362,10 @@ class TestURLProcessor:
 - Security testing patterns
 
 **Workflow References:**
+
 - /implement - TDD workflow
 - /validate - Test validation
 
 **Dependencies:**
+
 - Source: 02_testing.md

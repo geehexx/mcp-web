@@ -15,9 +15,6 @@ cursor:
 tags: ["security", "owasp", "llm", "authentication"]
 
 ---
-related:
-  - "/docs/adr/0001-decision.md"
-
 # Security Guidelines
 
 ## OWASP LLM Top 10 (2025)

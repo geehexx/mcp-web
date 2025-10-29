@@ -17,9 +17,6 @@ cursor:
 tags: ["python", "code", "style", "type-hints", "async"]
 
 ---
-related:
-  - "/docs/adr/0001-decision.md"
-
 # Python Code Standards
 
 ## 2.1 Code Style (PEP 8)
@@ -405,13 +402,16 @@ Before committing Python code:
 **Can be @mentioned:** Yes (hybrid loading)
 
 **Topics Covered:**
+
 - PEP 8 style
 - Type hints (PEP 484)
 - Async/await patterns
 - Docstrings (Google style)
 
 **Workflow References:**
+
 - /implement - Always loaded when editing Python
 
 **Dependencies:**
+
 - Source: 02_python_standards.md

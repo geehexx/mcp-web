@@ -18,10 +18,8 @@ cursor:
 tags: ["documentation", "update", "changelog", "summary"]
 
 ---
-related: []
-# Update Living Docs Workflow
 
-Update PROJECT_SUMMARY.md and/or CHANGELOG.md when triggered.
+# Update PROJECT_SUMMARY.md and/or CHANGELOG.md when triggered
 
 ## Triggers
 

@@ -3,7 +3,6 @@ pass_through: true
 description: Archive completed initiative or handle superseded initiatives
 title: Archive Initiative Workflow
 tags: ['archive', 'initiative', 'completion', 'documentation']
-related: []
 ---
 
 # Archive Initiative Workflow
@@ -16,9 +15,9 @@ Archive completed initiatives with validation and automation.
 update_plan({
   explanation: "📦 /archive-initiative",
   plan: [
-    { step: "1. Validate gates", status: "in_progress" },
-    { step: "2. Execute archival", status: "pending" },
-    { step: "3. Commit", status: "pending" }
+    { step: "1. /archive-initiative - Validate gates", status: "in_progress" },
+    { step: "2. /archive-initiative - Execute archival", status: "pending" },
+    { step: "3. /commit - Commit archival changes", status: "pending" }
   ]
 })
 ```
@@ -47,7 +46,6 @@ python scripts/validate_archival.py \
 ### 3.1 Move Initiative
 
 **Move to archive:**
-
 ```bash
 mv docs/initiatives/active/[name] docs/initiatives/archive/[name]
 ```
@@ -55,7 +53,6 @@ mv docs/initiatives/active/[name] docs/initiatives/archive/[name]
 ### 3.2 Update Initiative Status
 
 **Update initiative file:**
-
 ```markdown
 ---
 Status: "Archived"
@@ -68,7 +65,6 @@ Archived: "YYYY-MM-DD"
 ### 3.3 Create Archive Entry
 
 **Add to archive index:**
-
 ```markdown
 ## [Initiative Name]
 
@@ -206,8 +202,6 @@ When this archive-initiative workflow is called:
 ```markdown
 ✅ **Completed /archive-initiative:** Initiative archival finished
 ```
-
----
 
 ## Command Metadata
 

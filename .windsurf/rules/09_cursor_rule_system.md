@@ -168,8 +168,6 @@ description: "Apply when dealing with large files, complex operations, or memory
 2. **Optimize Globs**: Use more efficient glob patterns
 3. **Review Content**: Ensure rule content is concise and relevant
 
----
-
 ## Rule Metadata
 
 **File:** `09_cursor_rule_system.yaml`
@@ -179,16 +177,13 @@ description: "Apply when dealing with large files, complex operations, or memory
 **Status:** Active
 
 **Topics Covered:**
-
 - Cursor rule application logic
 - Transformation from Windsurf
 - Best practices
 - Troubleshooting
 
 **Workflow References:**
-
 - All workflows (for understanding rule application)
 
 **Dependencies:**
-
 - Source: Cursor IDE documentation
