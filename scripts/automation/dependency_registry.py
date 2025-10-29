@@ -25,7 +25,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 try:
-    import frontmatter
+    import frontmatter  # type: ignore[import-untyped]
 except ImportError:
     print("ERROR: Required dependencies not installed")
     print("Install: uv add python-frontmatter pyyaml")
@@ -303,7 +303,7 @@ class DependencyRegistry:
 
     def build_dependency_graph(self) -> dict[str, list[str]]:
         """Build adjacency list representation of dependency graph."""
-        graph = {}
+        graph: dict[str, list[str]] = {}
 
         for initiative_id, initiative in self.initiatives.items():
             graph[initiative_id] = []
@@ -387,7 +387,7 @@ class DependencyRegistry:
 
         Returns dict mapping initiative_id -> list of propagated Blocker objects.
         """
-        propagated_blockers = {}
+        propagated_blockers: dict[str, list[Blocker]] = {}
 
         for initiative_id, initiative in self.initiatives.items():
             if len(initiative.blockers) == 0:
@@ -567,7 +567,7 @@ class DependencyRegistry:
         print(f"✅ Registry exported to {output_path}")
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(
         description="Build and validate initiative dependency registry"
     )
