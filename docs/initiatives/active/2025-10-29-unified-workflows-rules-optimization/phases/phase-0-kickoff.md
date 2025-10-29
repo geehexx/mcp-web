@@ -24,6 +24,18 @@ Establish a safe baseline before optimization work begins: snapshot current unif
 
 ---
 
+## Checkpoints & Cadence
+
+| ID | Trigger | Required Actions |
+|----|---------|------------------|
+| C0.1 | Feature branch created, safety validation run | Commit branch bootstrap (`chore(initiative): bootstrap unified optimization branch`), add initial validation notes to this phase file, push branch |
+| C0.2 | Baseline artifacts captured | Commit token inventory/frontmatter matrix snapshots (`docs/initiatives/.../artifacts`), update initiative "Updates" with baseline summary, run `/commit` workflow before push |
+| C0.3 | Rollback plan confirmed | Document rollback steps in phase notes, tag commit or push with rollback summary, notify stakeholders in initiative comments |
+
+Treat checkpoints as blocking gates; do not proceed to Phase 1 until C0.3 is complete and pushed.
+
+---
+
 ## Deliverables
 
 - Baseline token inventory (before optimization)
@@ -52,3 +64,4 @@ Establish a safe baseline before optimization work begins: snapshot current unif
 
 - Aligns with Testing Excellence initiative’s pre-flight discipline to ensure reproducible baselines
 - Token counting can leverage simple char-count ÷ 4 approximation before optimization automation is built
+- Update `initiative.md` Feature Branch section with branch name, command transcript, and validation evidence collected here

@@ -24,6 +24,18 @@ Quantify the current `.unified/` footprint, identify high-bloat targets, and cat
 
 ---
 
+## Checkpoints & Cadence
+
+| ID | Trigger | Required Actions |
+|----|---------|------------------|
+| C1.1 | Inventory scripts executed, raw metrics captured | Commit measurement tooling (`scripts/analysis/*`) and raw outputs in `artifacts/token-inventory.md`; update this phase log with methodology; push branch |
+| C1.2 | High-bloat targets identified | Commit prioritized list + notes in `artifacts/metadata-removal-playbook.md`; update initiative "Updates" with focus order; run `/commit` workflow |
+| C1.3 | Stakeholder sign-off on focus order | Record approval comments in phase file; create TODOs/backlog issues if adjustments needed; push branch with sign-off summary |
+
+Proceed to Phase 2 only after C1.3 is completed, committed, and pushed.
+
+---
+
 ## Deliverables
 
 - Updated token inventory with per-file metrics
@@ -53,3 +65,4 @@ Quantify the current `.unified/` footprint, identify high-bloat targets, and cat
 - Automate measurement where possible (Python script, Taskfile). Manual collection should be temporary
 - Consider capturing histogram or summary statistics to highlight long-tail outliers
 - Coordinate with Testing Excellence initiative to align measurement techniques if new tooling is introduced
+- When committing outputs, keep raw data under `artifacts/` and include command snippets in commit messages for reproducibility

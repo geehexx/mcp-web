@@ -38,6 +38,7 @@ Reduce `.unified/` workflow and rule token footprint by ≥15% while enforcing a
 - [ ] Updated adapters, validators, and CI checks prevent schema drift (≥90% coverage in affected modules)
 - [ ] Documentation refreshed to reflect new schema and authoring guidance
 - [ ] Regression suite (lint, mypy, pytest, bandit, semgrep) passes with regenerated `.cursor/` & `.windsurf/` artifacts
+- [ ] Feature branch + PR workflow formalised (new unified workflow, rules updates, ADR, constitution revisions) and adopted during execution
 
 ---
 
@@ -78,6 +79,7 @@ Reduce `.unified/` workflow and rule token footprint by ≥15% while enforcing a
 - Enhancing validation scripts, pre-commit hooks, and tests that guard the pipeline
 - Refreshing contributor documentation tied to unified workflows/rules
 - Capturing baseline and post-optimization token metrics
+- Defining and codifying the feature-branch + PR workflow (workflows, rules, ADR, constitution update)
 
 ### Out of Scope
 
@@ -181,6 +183,56 @@ _Total planned effort: 11–12 hours across ~1.5 working days._
 
 ---
 
+## Feature Branch & PR Workflow
+
+1. **Create initiative feature branch** – start work from `main` using `git checkout -b feature/unified-workflows-rules-optimization` (or equivalent). Document branch details in `initiative.md` and Phase 0 notes.
+2. **Follow checkpoint cadence** – each phase contains explicit checkpoints (see below) that require:
+   - Committing scoped changes with descriptive Conventional Commit messages (`feat:`, `chore:`, `refactor:`, `test:` etc.).
+   - Updating relevant artifacts (`initiative.md`, phase files, `artifacts/*.md`, research notes) to reflect progress.
+   - Running `/commit` workflow to ensure validation before pushing.
+3. **Push and share frequently** – push the feature branch after every checkpoint so collaborators and automation can observe progress.
+4. **Leverage `/implement` and related workflows** – execute the canonical workflows (e.g., `/implement`, `/validate`, `/commit`) to keep execution consistent with project standards.
+5. **Prepare PR at completion** – once Phase 6 exit criteria are met, draft the PR (see "Pull Request Expectations") and collect approvals before merging.
+
+---
+
+## Phase Checkpoints & Commit Cadence
+
+| Phase | Checkpoint ID | Trigger | Required Actions |
+|-------|----------------|---------|------------------|
+| 0 | C0.1 | Feature branch created & baseline scripts run | Commit branch bootstrap + initial validation notes; update Phase 0 log |
+| 0 | C0.2 | Baseline artifacts captured | Commit token inventory, field matrix snapshots, validation results |
+| 1 | C1.1 | Inventory scripts/report drafted | Commit measurement tooling/results; update `artifacts/metadata-removal-playbook.md` |
+| 1 | C1.2 | Prioritised target list agreed | Commit annotated plan; update initiative "Updates" section |
+| 2 | C2.1 | Schema research complete | Commit research notes + draft schema; update `research/external-sources.md` |
+| 2 | C2.2 | Schema JSON ready for review | Commit `.unified/schemas/frontmatter-minimal.json` draft; request review |
+| 3 | C3.x | Batches of 5–10 files optimised | Commit per batch with clear scope; update token inventory delta per batch |
+| 4 | C4.1 | Metadata removal playbook executed | Commit rewritten content; capture before/after metrics |
+| 5 | C5.1 | Tooling updates + tests passing | Commit adapter/validator changes with coverage evidence |
+| 6 | C6.1 | Documentation + rollout checklist complete | Commit documentation updates, final metrics, communication drafts |
+| 6 | C6.2 | Final validation suite green | Tag commit or push with validation logs attached |
+| 7 | C7.1 | Monitoring plan activated | Commit monitoring log, backlog tickets, initiative closure notes |
+
+Treat checkpoints as hard gates: do not proceed until actions are committed, pushed, and reflected in initiative artifacts.
+
+---
+
+## Pull Request Expectations
+
+- **Title:** `feat(unified-workflows): optimize schema + tooling` (adjust scope prefix if broader).
+- **Description outline:**
+  1. Summary of optimisation goals and outcomes (token savings, schema adoption, tooling hardening).
+  2. Checklist of phases/checkpoints achieved with links to commits or docs.
+  3. Testing & validation: include Taskfile/lint/mypy/pytest/bandit/semgrep outputs, coverage deltas, regenerated artifacts confirmation.
+  4. Documentation updates: enumerate files touched (initiative, phase notes, `.unified/` README, ADR, constitution updates).
+  5. Backward compatibility & rollout notes: highlight any follow-up items slated for Phase 7 monitoring.
+- **Attachments:** link to updated artifacts (`token-inventory`, `monitoring-log`, ADR) and include screenshots or tables where relevant.
+- **Review process:** request reviews from adapter maintainers, documentation maintainers, and initiative stakeholders; ensure at least two approvals.
+
+---
+
+---
+
 ## Rollout Plan
 
 1. Complete schema refactor and validation updates (Phases 3–5).
@@ -192,10 +244,16 @@ _Total planned effort: 11–12 hours across ~1.5 working days._
 
 ## Updates
 
-- **2025-10-29 – Initiative Created:** Drafted optimization plan, captured baseline problems, and
+- **2025-10-29 — Initiative Created:** Drafted optimization plan, captured baseline problems, and
   seeded artifact/phase scaffolding. External references documented for Windsurf activation modes
   and Cursor glob formatting best practices (community guidance suggests raw comma-separated
   strings for Cursor rules).
+- **2025-10-30 — Implementation Guidance Added:** Formalized feature-branch + PR workflow
+  expectations (checkpoints, commit cadence, evidence logging). Flagged that execution must create
+  a multi-template PR system under `.github/pull_request_template/` (e.g., `initiative.md`,
+  `phase.md`, `rollout.md` variants) and introduce a dedicated `/pull-request` workflow to assemble
+  descriptions from initiative artifacts. These assets are **not yet implemented**; they are queued
+  for the feature branch owner to deliver during Phases 0–6 alongside ADR/constitution updates.
 
 ---
 

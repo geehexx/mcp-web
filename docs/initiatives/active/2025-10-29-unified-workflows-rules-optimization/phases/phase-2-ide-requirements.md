@@ -24,6 +24,18 @@ Validate the minimal schema required by Windsurf and Cursor, document mandatory 
 
 ---
 
+## Checkpoints & Cadence
+
+| ID | Trigger | Required Actions |
+|----|---------|------------------|
+| C2.1 | Research notes captured | Commit references and summaries to `research/external-sources.md`; annotate this phase with methodology; push branch |
+| C2.2 | Minimal schema drafted | Commit `.unified/schemas/frontmatter-minimal.json` (draft) with validation stub; request async review |
+| C2.3 | Adapter impact assessed | Update phase notes with adapter expectations; log follow-ups in `artifacts/metadata-removal-playbook.md`; run `/commit` workflow before advancing |
+
+Advance to Phase 3 only when C2.3 is complete and approvals recorded.
+
+---
+
 ## Deliverables
 
 - Draft minimal frontmatter JSON schema
@@ -53,3 +65,4 @@ Validate the minimal schema required by Windsurf and Cursor, document mandatory 
 - Preserve security-first posture: verify that no sensitive metadata is lost that might affect guardrails
 - Capture fallback references if official docs are inaccessible (e.g., gist mirrors)
 - Coordinate with Validation tooling maintainers before finalising schema to ensure enforcement alignment
+- Include citation links or archived copies of external docs within the commit description for traceability

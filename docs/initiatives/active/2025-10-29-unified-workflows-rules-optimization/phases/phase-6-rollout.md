@@ -24,6 +24,19 @@ Finalize initiative deliverables: update documentation, communicate changes, run
 
 ---
 
+## Checkpoints & Cadence
+
+| ID | Trigger | Required Actions |
+|----|---------|------------------|
+| C6.1 | Documentation refreshed | Commit updates to `.unified/README.md` and related guides; annotate this phase with summary; push branch |
+| C6.2 | Rollout checklist verified | Update `artifacts/validation-checklist.md` with final gate status; run `/commit` workflow |
+| C6.3 | Final validation suite executed | Attach command logs (lint, mypy, pytest, bandit, semgrep) and regenerated artifact diff results; update initiative "Updates" with go/no-go decision |
+| C6.4 | PR prepared | Draft PR with required template, attach artifacts references, gather preliminary reviewer list |
+
+Advance to Phase 7 after C6.4 when PR is ready for review and all evidence is linked.
+
+---
+
 ## Deliverables
 
 - Updated documentation reflecting minimal schema and streamlined workflows
@@ -53,3 +66,4 @@ Finalize initiative deliverables: update documentation, communicate changes, run
 - Coordinate with Testing Excellence initiative for integrated validation reporting where overlaps exist
 - Capture before/after metrics succinctly for communication materials
 - If additional follow-up tasks emerge (e.g., automation enhancements), log them in backlog with clear ownership
+- Ensure PR draft references initiative checkpoints and includes links to artifacts, ADR, constitution updates, and validation logs

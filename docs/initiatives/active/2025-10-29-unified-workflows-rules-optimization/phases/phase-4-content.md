@@ -24,6 +24,18 @@ Streamline workflow and rule bodies by removing redundant sections, consolidatin
 
 ---
 
+## Checkpoints & Cadence
+
+| ID | Trigger | Required Actions |
+|----|---------|------------------|
+| C4.1 | First batch of content refactors landed | Commit scoped changes (≤5 files) with before/after notes in this phase file; update token deltas in artifacts |
+| C4.2 | Boilerplate removal playbook executed | Commit consolidated guidance, update initiative "Updates" with lessons learned, run `/commit` workflow |
+| C4.3 | Peer/self review documented | Record review notes, link to diff annotations, ensure clarity preserved; push branch |
+
+Advance to Phase 5 only after C4.3 confirms clarity maintained and metrics recorded.
+
+---
+
 ## Deliverables
 
 - Updated `.unified/` content with redundant sections removed
@@ -53,3 +65,4 @@ Streamline workflow and rule bodies by removing redundant sections, consolidatin
 - Maintain security-first language; do not remove warnings or safeguards that enforce OWASP LLM Top 10 principles
 - Use initiative artifact structure to store before/after excerpts if helpful for future audits
 - Coordinate with documentation maintainers to centralize repeated guidance where applicable
+- Capture representative before/after samples in `artifacts/metadata-removal-playbook.md` and attach commit SHAs for future audits

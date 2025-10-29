@@ -24,6 +24,18 @@ Establish feedback loops, monitor unified workflow/rule health post-merge, and q
 
 ---
 
+## Checkpoints & Cadence
+
+| ID | Trigger | Required Actions |
+|----|---------|------------------|
+| C7.1 | First monitoring cycle completed | Commit monitoring log updates, note feedback, and capture token drift metrics |
+| C7.2 | Follow-up backlog created | File issues or TODOs for identified improvements; update initiative "Updates" with owners |
+| C7.3 | Initiative transition formalised | Document handoff summary, assign ongoing maintenance owners, archive initiative when ready |
+
+Close initiative and archive artifacts once C7.3 is captured and communicated to stakeholders.
+
+---
+
 ## Deliverables
 
 - Monitoring log capturing feedback, drift checks, and follow-up tasks
@@ -53,3 +65,4 @@ Establish feedback loops, monitor unified workflow/rule health post-merge, and q
 - Integrate with existing initiative/session logs if available to avoid duplicate reporting
 - Use Testing Excellence dashboards or metrics pipelines when they cover relevant data (e.g., coverage, flakiness)
 - Consider automation to fail fast on schema regressions (e.g., GitHub Actions, Taskfile job)
+- Share monitoring results during weekly syncs and ensure backlog tickets reference specific metrics or failures observed

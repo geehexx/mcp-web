@@ -24,6 +24,18 @@ Apply the minimal schema to every `.unified/**/*.yaml` file, remove redundant fi
 
 ---
 
+## Checkpoints & Cadence
+
+| ID | Trigger | Required Actions |
+|----|---------|------------------|
+| C3.1 | Schema implemented in repo tooling | Commit schema enforcement updates (validators/tests) alongside documentation in this phase file; push branch |
+| C3.2 | First batch (≤10 files) migrated | Commit batch with clear scope (`refactor(unified): apply minimal schema to workflows batch 1`), update token deltas in artifacts, run `/commit` workflow |
+| C3.3 | All files migrated & validation green | Commit final batch, attach validation logs, update initiative "Updates" with summary and blockers |
+
+Do not advance to Phase 4 until C3.3 confirms full compliance and artifacts are refreshed.
+
+---
+
 ## Deliverables
 
 - Minimal schema file committed
@@ -54,3 +66,4 @@ Apply the minimal schema to every `.unified/**/*.yaml` file, remove redundant fi
 - Consider batching edits (5–10 files per commit) to simplify review if PR is large
 - Coordinate with adapter maintainers so transitional builds do not break downstream consumers
 - Ensure any files requiring exceptions are documented in artifacts and initiative narrative
+- Tag batches in `artifacts/token-inventory.md` with commit SHAs for traceability and regression analysis

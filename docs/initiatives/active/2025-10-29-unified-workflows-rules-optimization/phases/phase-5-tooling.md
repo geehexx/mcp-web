@@ -24,6 +24,18 @@ Update adapters, validators, and CI hooks to enforce the minimal schema and prev
 
 ---
 
+## Checkpoints & Cadence
+
+| ID | Trigger | Required Actions |
+|----|---------|------------------|
+| C5.1 | Adapters updated with schema changes | Commit adapter updates + targeted tests; document rationale in this phase file; push branch |
+| C5.2 | Validation scripts hardened | Commit validator enhancements + coverage metrics in `artifacts/validation-checklist.md`; run `/commit` workflow |
+| C5.3 | Regression suite + coverage targets achieved | Attach test logs, coverage reports, and security scan summaries; update initiative "Updates" with outcomes; push branch |
+
+Advance to Phase 6 only when C5.3 evidence is logged and shared.
+
+---
+
 ## Deliverables
 
 - Updated adapters and validation scripts in `scripts/`
@@ -55,3 +67,4 @@ Update adapters, validators, and CI hooks to enforce the minimal schema and prev
 - Leverage Testing Excellence initiative patterns for high-coverage adapter testing
 - If new scripts are introduced, ensure they follow security practices (input validation, safe file IO)
 - Capture any discovered issues or follow-up tasks in initiative updates or TODO tracker
+- Include coverage summaries and command transcripts in `artifacts/validation-checklist.md` to support PR validation narrative
