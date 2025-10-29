@@ -192,6 +192,27 @@ class DependencyRegistry:
 
     def _parse_dependencies(self, content: str, initiative: Initiative) -> None:
         """Parse dependency relationships from initiative content."""
+
+        def _classify_heading(raw_heading: str) -> str:
+            heading = raw_heading.strip("*: ").lower()
+            if "synergistic" in heading:
+                return "synergistic"
+            if "blocking" in heading:
+                return "blocking"
+            if "prerequisite" in heading:
+                return "prerequisite"
+            return "prerequisite"
+
+        def _classify_line(line: str, fallback: str) -> str:
+            line_lower = line.lower()
+            if "synergistic" in line_lower:
+                return "synergistic"
+            if "blocking" in line_lower:
+                return "blocking"
+            if "prerequisite" in line_lower:
+                return "prerequisite"
+            return fallback
+
         # Look for Dependencies section
         deps_section = re.search(
             r"##\s+Dependencies(.*?)(?=##|\Z)", content, re.DOTALL | re.IGNORECASE
@@ -202,30 +223,42 @@ class DependencyRegistry:
 
         section_content = deps_section.group(1)
 
-        # Parse prerequisite initiatives
-        prereq_matches = re.finditer(
-            r"\[([^\]]+)\]\(\.\.\/([^)]+)/initiative\.md\)",
-            section_content,
-        )
+        # Split the section into heading/content pairs so we can infer dependency type context
+        tokens = re.split(r"(\*\*[^*\n]+:\*\*)", section_content)
+        current_type = "prerequisite"
 
-        for match in prereq_matches:
-            target_id = match.group(2).split("/")[-1]
+        def _parse_chunk(chunk: str, dep_type: str) -> None:
+            current_bullet = ""
+            for raw_line in chunk.splitlines():
+                stripped = raw_line.strip()
+                if stripped.startswith("- "):
+                    current_bullet = stripped
 
-            # Determine dependency type from context
-            dep_type = "prerequisite"
-            if "synergistic" in section_content.lower():
-                dep_type = "synergistic"
-            elif "blocking" in section_content.lower():
-                dep_type = "blocking"
+                # Look for initiative links within the current line
+                link_match = re.search(r"\[([^\]]+)\]\(\.\./([^)]+)/initiative\.md\)", stripped)
+                if not link_match:
+                    continue
 
-            dependency = InitiativeDependency(
-                source_id=initiative.id,
-                target_id=target_id,
-                dependency_type=dep_type,
-                status="pending",  # Will be updated during validation
-            )
+                context = f"{current_bullet} {stripped}".strip()
+                target_id = link_match.group(2).split("/")[-1]
+                line_type = _classify_line(context, dep_type)
 
-            initiative.dependencies.append(dependency)
+                dependency = InitiativeDependency(
+                    source_id=initiative.id,
+                    target_id=target_id,
+                    dependency_type=line_type,
+                    status="pending",  # Will be updated during validation
+                )
+                initiative.dependencies.append(dependency)
+
+        if tokens and tokens[0].strip():
+            _parse_chunk(tokens[0], current_type)
+
+        for i in range(1, len(tokens), 2):
+            heading = tokens[i]
+            chunk = tokens[i + 1] if i + 1 < len(tokens) else ""
+            current_type = _classify_heading(heading)
+            _parse_chunk(chunk, current_type)
 
     def _parse_blockers(self, content: str, initiative: Initiative) -> None:
         """Parse blockers from initiative content."""

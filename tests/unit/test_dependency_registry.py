@@ -112,11 +112,19 @@ Test content.
         registry.load_initiatives()
 
         initiative = registry.initiatives["2025-10-19-initiative-a"]
-        assert len(initiative.dependencies) >= 1
+        assert len(initiative.dependencies) == 2
 
-        # Check that dependencies were parsed
-        target_ids = [dep.target_id for dep in initiative.dependencies]
-        assert any("initiative-b" in tid or "initiative-c" in tid for tid in target_ids)
+        # Should classify the first dependency (under Internal Dependencies) as prerequisite
+        internal_dep = next(
+            dep for dep in initiative.dependencies if dep.target_id.endswith("initiative-b")
+        )
+        assert internal_dep.dependency_type == "prerequisite"
+
+        # Should classify the second dependency (under Synergistic) as synergistic
+        synergistic_dep = next(
+            dep for dep in initiative.dependencies if dep.target_id.endswith("initiative-c")
+        )
+        assert synergistic_dep.dependency_type == "synergistic"
 
     def test_parse_blockers(self, temp_initiatives_dir, initiative_with_dependencies):
         """Test parsing blockers from initiative content."""
@@ -304,7 +312,11 @@ Status: Active
 
         # B should inherit blocker from A
         # Note: Depends on correct dependency parsing
-        assert isinstance(propagated, dict)
+        assert "b" in propagated
+        assert len(propagated["b"]) == 1
+        blocker = propagated["b"][0]
+        assert blocker.source_initiative_id == "a"
+        assert blocker.description.startswith("Upstream blocker from a:")
 
     def test_export_registry(self, temp_initiatives_dir):
         """Test exporting dependency registry to JSON."""
