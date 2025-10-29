@@ -1,11 +1,11 @@
 ---
-Status: Proposed
+Status: In Progress
 Created: 2025-10-22
 Owner: Core Team
 Priority: Critical
 Estimated Duration: "7-9 weeks (includes Phase 0: 8-12h scripts audit)"
 Target Completion: 2025-12-22
-Updated: 2025-10-22
+Updated: 2025-10-29
 Tags: testing, quality, automation, mutation-testing, property-based-testing
 ---
 
@@ -317,6 +317,18 @@ Supporting documents in this initiative folder:
 ---
 
 ## Updates
+
+### 2025-10-29 - Phase 1 Dependency Registry Hardening
+
+**Focus:** Dependency parsing robustness and typing hygiene for automation scripts.
+
+- ✅ Strengthened `_parse_dependencies` to correctly classify nested prerequisite, blocking, and synergistic links.
+- ✅ Added targeted unit assertions covering dependency-type detection and blocker propagation regressions.
+- ✅ Raised typing quality: explicit graph/propagation annotations and narrowed `frontmatter` import ignore, clearing mypy debt for the script.
+- ✅ Lint, mypy, and unit suites run green (`task lint`, `uv run mypy scripts/automation/dependency_registry.py`, `uv run pytest tests/unit/test_dependency_registry.py`).
+- 📤 Changes landed on `main` via commits `2c7f600` and `989a32f`; branch pushed to origin.
+
+**Status:** Phase 1 test hardening underway with dependency registry now validated by deterministic tests and typing gates.
 
 ### 2025-10-22 - Initiative Created
 
