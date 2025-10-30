@@ -9,3 +9,6 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "daily"
+    open_pull_requests_limit: 5
+    pull_request_branch_name:
+      separator: "/"
