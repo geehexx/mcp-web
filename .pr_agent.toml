@@ -1,0 +1,80 @@
+# Qodo Merge configuration for mcp-web
+
+[config]
+response_language = "en-US"
+log_level = "INFO"
+disable_auto_feedback = false
+output_relevant_configurations = true
+patch_extra_lines_before = 5
+patch_extra_lines_after = 1
+add_repo_metadata = true
+add_repo_metadata_file_list = [
+  "AGENTS.md",
+  "SECURITY.md",
+  "docs/architecture/ARCHITECTURE.md"
+]
+ignore_pr_title = ["^\\[Bump\\]", "^chore\\(deps\\)"]
+ignore_pr_labels = ["dependencies", "automerge"]
+ignore_pr_authors = ["dependabot", "github-actions", "qodo-merge-bot"]
+allow_only_specific_folders = ["src/", "tests/", "docs/"]
+
+[ignore]
+glob = [
+  "docs/archive/**",
+  "tests/golden/**",
+  "**/*.typed"
+]
+
+[pr_reviewer]
+require_score_review = true
+require_tests_review = true
+require_security_review = true
+require_ticket_analysis_review = true
+num_max_findings = 5
+extra_instructions = """\
+- Prioritize security, secrets handling, and OWASP compliance when reviewing changes.\
+- Call out concurrency, async lifecycle, and resource leak risks (browser pool, httpx, asyncio).\
+- Verify new functionality includes deterministic behavior and keeps test coverage ≥90%.\
+- Flag missing rollback/error handling paths for network and filesystem operations.\
+- Confirm documentation updates accompany user-facing changes (README, guides).\
+"""
+
+[pr_description]
+generate_ai_title = true
+publish_labels = true
+enable_pr_type = true
+enable_pr_diagram = true
+add_original_user_description = true
+use_bullet_points = true
+extra_instructions = """\
+- Highlight security implications and mitigation steps.\
+- Summarize resource stability improvements (browser pool, httpx).\
+- Call out follow-up actions or deferred work explicitly.\
+"""
+
+[pr_code_suggestions]
+enable_apply_suggestions = true
+
+[github_app]
+pr_commands = [
+  "/describe",
+  "/review --pr_reviewer.extra_instructions='Focus on resource stability, httpx singleton usage, and Playwright pool hygiene.'",
+  "/improve"
+]
+feedback_on_draft_pr = false
+handle_push_trigger = true
+push_commands = [
+  "/review --pr_reviewer.extra_instructions='Re-evaluate new commits for regressions and test updates.'"
+]
+
+[litellm]
+enable_callbacks = false
+success_callback = []
+failure_callback = []
+service_callback = []
+
+[pr_update_changelog]
+extra_instructions = "Ensure CHANGELOG updates mention Qodo Merge automation when relevant."
+
+[pr_auto_approval]
+enable_auto_approval = false
