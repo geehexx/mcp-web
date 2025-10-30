@@ -79,15 +79,6 @@ ls:
     .md: regex:.*
     .dir: regex:.*
 
-  docs/initiatives/deferred:
-    .md: regex:\d{4}-\d{2}-\d{2}-[a-z0-9-]+  # Date format only: YYYY-MM-DD-name.md
-    .dir: regex:\d{4}-\d{2}-\d{2}-[a-z0-9-]+|.*  # Allow dated directories
-
-  # Inside deferred initiative folders - be permissive
-  docs/initiatives/deferred/**:
-    .md: regex:.*
-    .dir: regex:.*
-
   docs/initiatives/template:
     .md: regex:.*
     .dir: regex:.*

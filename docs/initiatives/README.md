@@ -42,8 +42,6 @@ Create an initiative when:
 
 ```text
 Proposed → Active → Complete → (Archived if superseded)
-             ↓
-          Deferred
 ```
 
 ### 1. Proposed
@@ -52,13 +50,6 @@ Proposed → Active → Complete → (Archived if superseded)
 - Objectives and scope defined
 - Awaiting approval or prioritization
 - May be deferred or rejected
-
-### 1.5 Deferred (Optional Holding Area)
-
-- Lives in `deferred/`
-- Captures scoped work that is intentionally paused or split from an active initiative
-- Maintains full initiative metadata so it can be revived without rediscovery
-- Should link back to the active initiative (and vice versa) that originally spawned it
 
 ### 2. Active
 
@@ -80,8 +71,6 @@ Proposed → Active → Complete → (Archived if superseded)
 - Status changed to "Archived"
 - **Moved to `archived/` directory**
 - Provides historical context
-
-> 🔁 **Deferred vs. Archived:** Deferred initiatives remain relevant and are expected to return to execution. Archived initiatives are final.
 
 ## Directory Structure
 
@@ -105,9 +94,6 @@ docs/initiatives/
 │       │   └── phase-2-execution.md
 │       └── artifacts/
 │           └── research-audit.md   # Supporting research
-│
-├── deferred/                       # Approved but paused/scoped out work
-│   └── 2025-10-29-feature-x.md     # Mirrors active structure (optional folder-based)
 │
 ├── completed/                      # Successfully finished
 │   └── initiative-3.md
@@ -152,12 +138,12 @@ docs/initiatives/
 task scaffold:initiative
 
 # Or specify parameters directly
-task scaffold:initiative NAME="your-initiative-name" TYPE="folder" PRIORITY="high" STATE="deferred"
+task scaffold:initiative NAME="your-initiative-name" TYPE="folder" PRIORITY="high"
 ```
 
 **The scaffolding system will:**
 
-- ✅ Create proper directory structure (active or deferred, folder-based or flat-file)
+- ✅ Create proper directory structure (folder-based or flat-file)
 - ✅ Generate initiative file with required frontmatter fields
 - ✅ Use correct `YYYY-MM-DD` date format automatically
 - ✅ Create `phases/` and `artifacts/` directories (folder-based)
@@ -171,10 +157,9 @@ task scaffold:initiative NAME="your-initiative-name" TYPE="folder" PRIORITY="hig
 
 **Examples of generated names:**
 
-- `2025-10-15-quality-foundation/` (active / folder-based)
-- `2025-10-18-new-feature.md` (active / flat-file)
-- `2025-10-20-documentation-infrastructure/` (active / folder-based)
-- `2025-10-29-pull-request-automation.md` (deferred / flat-file)
+- `2025-10-15-quality-foundation/` (folder-based)
+- `2025-10-18-new-feature.md` (flat-file)
+- `2025-10-20-documentation-infrastructure/` (folder-based)
 
 > **⚠️ DEPRECATED:** Manual `cp`/`mkdir` commands are no longer recommended. Use `task scaffold:initiative` for consistency and automated validation.
 
