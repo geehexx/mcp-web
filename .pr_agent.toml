@@ -15,7 +15,7 @@ add_repo_metadata_file_list = [
 ]
 ignore_pr_title = ["^\\[Bump\\]", "^chore\\(deps\\)"]
 ignore_pr_labels = ["dependencies", "automerge"]
-ignore_pr_authors = ["dependabot", "github-actions", "qodo-merge-bot"]
+ignore_pr_authors = ["dependabot", "github-actions"]
 allow_only_specific_folders = [".", "src/", "tests/", "docs/"]
 
 [ignore]
