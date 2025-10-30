@@ -64,6 +64,7 @@ pr_commands = [
 feedback_on_draft_pr = false
 handle_push_trigger = true
 push_commands = [
+  "/describe",
   "/review --pr_reviewer.extra_instructions='Re-evaluate new commits for regressions and test updates.'"
 ]
 
