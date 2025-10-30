@@ -286,6 +286,34 @@ class URLFetcher:
 
             return result
 
+        except asyncio.CancelledError as cancel_error:
+            duration_ms = (time.perf_counter() - start_time) * 1000
+            self.metrics.record_fetch(
+                url=url,
+                method="httpx",
+                duration_ms=duration_ms,
+                status_code=0,
+                content_size=0,
+                success=False,
+                error="cancelled",
+            )
+
+            try:
+                await close_http_client()
+                _get_logger().warning(
+                    "httpx_request_cancelled",
+                    url=url,
+                    duration_ms=round(duration_ms, 2),
+                )
+            except Exception as cleanup_error:  # pragma: no cover - defensive logging
+                _get_logger().warning(
+                    "httpx_cancel_cleanup_failed",
+                    url=url,
+                    error=str(cleanup_error),
+                )
+
+            raise cancel_error
+
         except Exception as e:
             duration_ms = (time.perf_counter() - start_time) * 1000
             self.metrics.record_fetch(
