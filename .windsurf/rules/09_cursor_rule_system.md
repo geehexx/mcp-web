@@ -177,13 +177,16 @@ description: "Apply when dealing with large files, complex operations, or memory
 **Status:** Active
 
 **Topics Covered:**
+
 - Cursor rule application logic
 - Transformation from Windsurf
 - Best practices
 - Troubleshooting
 
 **Workflow References:**
+
 - All workflows (for understanding rule application)
 
 **Dependencies:**
+
 - Source: Cursor IDE documentation

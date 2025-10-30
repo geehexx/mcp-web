@@ -1,6 +1,6 @@
 # Phase 2: IDE Requirements Analysis
 
-**Status:** Planned
+**Status:** Completed
 **Owner:** Core Team
 **Duration:** ~1 hour
 **Priority:** P0 (Critical)
@@ -17,14 +17,14 @@ define structured metadata fields that preserve hidden sections (e.g., `ide.hidd
 
 ## Key Tasks
 
-- [ ] Review Windsurf workflow documentation for `auto_execution_mode`, trigger types, and frontmatter expectations
-- [ ] Collect Cursor rule behaviour references (community notes, existing adapters) to confirm `alwaysApply`, `globs`, and description-driven triggers
-- [ ] Map required/optional fields into the JSON schema (`.unified/schemas/frontmatter-minimal.json`)
-- [ ] Identify deprecated/unused fields to remove in Phase 3
-- [ ] Define structured metadata fields for hidden sections (e.g., `ide.hidden_sections`,
+- [x] Review Windsurf workflow documentation for `auto_execution_mode`, trigger types, and frontmatter expectations
+- [x] Collect Cursor rule behaviour references (community notes, existing adapters) to confirm `alwaysApply`, `globs`, and description-driven triggers
+- [x] Map required/optional fields into the JSON schema (`.unified/schemas/frontmatter-minimal.json`)
+- [x] Identify deprecated/unused fields to remove in Phase 3
+- [x] Define structured metadata fields for hidden sections (e.g., `ide.hidden_sections`,
   `ide.metadata`) and draft migration guidance
-- [ ] Document compatibility notes for adapters (`scripts/adapters/cursor_adapter.py`, `scripts/adapters/windsurf_adapter.py`)
-- [ ] Capture research findings in `research/external-sources.md`
+- [x] Document compatibility notes for adapters (`scripts/adapters/cursor_adapter.py`, `scripts/adapters/windsurf_adapter.py`)
+- [x] Capture research findings in `research/external-sources.md`
 
 ---
 

@@ -1,6 +1,6 @@
 # Phase 1: Inventory & Measurement
 
-**Status:** Planned
+**Status:** Completed
 **Owner:** Core Team
 **Duration:** ~2 hours
 **Priority:** P0 (Critical)
@@ -15,12 +15,12 @@ Quantify the current `.unified/` footprint, identify high-bloat targets, and cat
 
 ## Key Tasks
 
-- [ ] Enumerate all `.unified/**/*.yaml` files and record counts by type (rules vs workflows)
-- [ ] Measure current file sizes (chars/tokens) and list top 10 heaviest files
-- [ ] Detect redundant sections (`## Command Metadata`, `## Rule Metadata`, boilerplate context sections)
-- [ ] Catalog frontmatter fields in use across files (populate `artifacts/frontmatter-field-matrix.md`)
-- [ ] Document metadata removal candidates in `artifacts/metadata-removal-playbook.md`
-- [ ] Summarize findings with recommended focus order for subsequent phases
+- [x] Enumerate all `.unified/**/*.yaml` files and record counts by type (rules vs workflows)
+- [x] Measure current file sizes (chars/tokens) and list top 10 heaviest files
+- [x] Detect redundant sections (`## Command Metadata`, `## Rule Metadata`, boilerplate context sections)
+- [x] Catalog frontmatter fields in use across files (populate `artifacts/frontmatter-field-matrix.md`)
+- [x] Document metadata removal candidates in `artifacts/metadata-removal-playbook.md`
+- [x] Summarize findings with recommended focus order for subsequent phases
 
 ---
 

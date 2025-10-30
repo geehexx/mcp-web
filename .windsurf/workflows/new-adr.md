@@ -39,6 +39,7 @@ New dependencies, major algorithms, security decisions, performance changes, API
 ### 1.1 Decision Scope
 
 **Define the decision:**
+
 - What architectural decision needs to be made?
 - What are the key constraints?
 - What are the performance requirements?

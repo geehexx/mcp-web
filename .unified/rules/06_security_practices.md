@@ -1,19 +1,34 @@
 ---
-title: "Security Practices"
 description: "Apply when dealing with security-sensitive code including API calls user input LLM interactions and authentication"
-type: "rule"
 status: "active"
+tags: ["security", "owasp", "llm", "authentication"]
+type: "rule"
 
-# Windsurf-specific configuration
 windsurf:
   trigger: "model_decision"
 
-# Cursor-specific configuration
 cursor:
   alwaysApply: false
 
-tags: ["security", "owasp", "llm", "authentication"]
-
+ide:
+  hidden_sections:
+    - "Rule Metadata"
+  metadata:
+    file: "06_security_practices.md"
+    trigger: "model_decision (Windsurf) / globs (Cursor)"
+    estimated_tokens: 2500
+    last_updated: "2025-10-22"
+    status: "Active"
+    topics_covered:
+      - "OWASP LLM Top 10"
+      - "Input validation"
+      - "Authentication patterns"
+      - "Secure API design"
+    workflow_references:
+      - "/validate - Security checklist"
+      - "/implement - Security-focused work"
+    dependencies:
+      - "Source: 06_security_practices.md"
 ---
 # Security Guidelines
 

@@ -1,32 +1,20 @@
-# External Sources & References
+# External Sources
 
-Authoritative references and community insights informing the unified workflows and rules optimization initiative.
+This document contains a summary of the research findings from external sources.
 
----
+## Windsurf Workflows
 
-## Windsurf
+*   **Official Documentation:** [https://docs.windsurf.com/windsurf/cascade/workflows](https://docs.windsurf.com/windsurf/cascade/workflows)
+*   **Key Findings:**
+    *   The official documentation is high-level and does not specify the required frontmatter fields.
+    *   The `auto_execution_mode` field is not documented, but it is present in the existing `.unified/**/*.yaml` files. It will be treated as a required field based on the initiative's goals.
 
-- **Windsurf Docs – Workflows:** `https://docs.windsurf.com/windsurf/cascade/workflows`
-  - Confirms workflow storage locations, activation modes, and requirement for `auto_execution_mode`
-- **Windsurf Docs – Rules Discovery:** (same doc, Rules section)
-  - Details activation modes and best practices for concise rule writing
+## Cursor Rules
 
-## Cursor
-
-- **Cursor Docs – Rules:** `https://docs.cursor.com/context/rules` _(use cached/mirrored copy due to redirect restrictions)_
-  - Describes MDC format, `description`, `globs`, and `alwaysApply` usage
-- **Community Notes – Cursor Rule Behaviour Update (Apr 2025):** `https://gist.github.com/bossjones/1fd99aea0e46d427f671f853900a0f2a`
-  - Highlights raw comma-separated glob expectation and advises pruning redundant metadata
-
-## Token Optimization & Structure
-
-- Internal baselines from `.unified/README.md` and existing initiatives (Cursor & Windsurf Dual Compatibility, Testing Excellence)
-- OWASP LLM Top 10 (2025) – ensure removal of metadata does not weaken security guidance (link to internal security docs if needed)
-
----
-
-## Research Tasks
-
-- [ ] Capture cached copy or summary of Cursor docs for repository distribution (respecting allowed domains)
-- [ ] Extract key activation mode requirements for Windsurf workflows and include in phase notes
-- [ ] Track any additional external references discovered during implementation here
+*   **Community Notes:** [https://gist.github.com/bossjones/1fd99aea0e46d427f671f853900a0f2a](https://gist.github.com/bossjones/1fd99aea0e46d427f671f853900a0f2a)
+*   **Key Findings:**
+    *   The key frontmatter fields are `description`, `globs`, and `alwaysApply`.
+    *   The `globs` field must be a comma-separated list of file patterns.
+    *   The values in the `globs` field should not be quoted.
+    *   The combination of `description` and `globs` is supported and enables dual use (agent-discoverable and auto-attaching).
+    *   The `alwaysApply: true` setting overrides `globs` and `description` filtering.

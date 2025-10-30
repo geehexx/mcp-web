@@ -159,7 +159,7 @@ class UnifiedParser:
             return []
 
         files = []
-        for file_path in path.glob("*.yaml"):
+        for file_path in path.glob("*.md"):
             try:
                 data = self.parse(str(file_path))
                 if data["frontmatter"].get("type") == file_type:

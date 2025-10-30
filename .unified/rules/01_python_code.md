@@ -1,21 +1,36 @@
 ---
-title: "Python Code Standards"
 description: "Python code style type hints async patterns and best practices"
-type: "rule"
 status: "active"
+tags: ["python", "code", "style", "type-hints", "async"]
+type: "rule"
 
-# Windsurf-specific configuration
 windsurf:
   trigger: "glob"
   globs: "*.py, **/*.py"
 
-# Cursor-specific configuration
 cursor:
   alwaysApply: false
-  globs: ["*.py", "**/*.py"]
+  globs: "*.py, **/*.py"
 
-tags: ["python", "code", "style", "type-hints", "async"]
-
+ide:
+  hidden_sections:
+    - "Rule Metadata"
+  metadata:
+    file: "01_python_code.md"
+    trigger: "glob (Windsurf) / globs (Cursor)"
+    estimated_tokens: 2200
+    last_updated: "2025-10-22"
+    status: "Active"
+    can_be_mentioned: "Yes (hybrid loading)"
+    topics_covered:
+      - "PEP 8 style"
+      - "Type hints (PEP 484)"
+      - "Async/await patterns"
+      - "Docstrings (Google style)"
+    workflow_references:
+      - "/implement - Always loaded when editing Python"
+    dependencies:
+      - "Source: 02_python_standards.md"
 ---
 # Python Code Standards
 

@@ -44,12 +44,14 @@ When making any implementation decision, prioritize the following principles in 
 **Principle:** Always batch independent tool calls into parallel operations for maximum efficiency.
 
 **Rules:**
+
 - **Batch size:** 3-8 parallel tool calls (optimal for most operations)
 - **Independence:** Only parallelize tool calls with NO dependencies between them
 - **Read operations:** Batch file reads using `mcp0_read_multiple_files` (3-10x faster)
 - **Sequential when needed:** Keep dependent operations sequential
 
 **Performance Impact:**
+
 - Reading 5 files sequentially: ~1000ms
 - Reading 5 files in parallel: ~300ms (3x faster)
 - Searching 8 patterns in parallel: 8x speedup
@@ -63,6 +65,7 @@ When making any implementation decision, prioritize the following principles in 
 **Status:** Active
 
 **Topics Covered:**
+
 - Agent persona and role
 - Guiding principles (security, robustness, performance)
 - Operational mandate
@@ -70,7 +73,9 @@ When making any implementation decision, prioritize the following principles in 
 - Parallel tool call efficiency
 
 **Workflow References:**
+
 - All workflows (always loaded)
 
 **Dependencies:**
+
 - Related rules: All specialized rules reference back to core directives

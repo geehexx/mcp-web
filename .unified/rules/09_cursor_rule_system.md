@@ -1,31 +1,46 @@
 ---
-title: "Windsurf Rule System Documentation"
-description: "Documentation of Windsurf IDE rule application logic and configuration"
-type: "rule"
+description: "Documentation of Cursor IDE rule application logic and configuration"
 status: "active"
+tags: ["cursor", "documentation", "rules", "system"]
+type: "rule"
 
-# Windsurf-specific configuration
 windsurf:
   trigger: "model_decision"
 
-# Cursor-specific configuration
 cursor:
   alwaysApply: false
 
-tags: ["windsurf", "documentation", "rules", "system"]
-
+ide:
+  hidden_sections:
+    - "Rule Metadata"
+  metadata:
+    file: "09_cursor_rule_system.md"
+    trigger: "manual (Windsurf) / alwaysApply: false (Cursor)"
+    estimated_tokens: 1200
+    last_updated: "2025-10-22"
+    status: "Active"
+    topics_covered:
+      - "Cursor rule application logic"
+      - "Transformation from Windsurf"
+      - "Best practices"
+      - "Troubleshooting"
+    workflow_references:
+      - "All workflows (for understanding rule application)"
+    dependencies:
+      - "Source: Cursor IDE documentation"
 ---
-# Windsurf Rule System Documentation
+# Cursor Rule System Documentation
 
 ## Rule Application Logic
 
-Windsurf IDE applies rules based on the following trigger modes:
+Cursor IDE applies rules based on the following logic:
 
-### 1. Always On Rules
+### 1. Always Applied Rules
 
 ```yaml
 ---
-trigger: always_on
+alwaysApply: true
+description: "Rule description"
 ---
 ```
 
@@ -33,39 +48,41 @@ trigger: always_on
 - **Use Case**: Core directives, fundamental principles
 - **Example**: Core agent directives, mention guidance
 
-### 2. Glob-Based Rules
+### 2. File-Based Rules
 
 ```yaml
 ---
-trigger: glob
+alwaysApply: false
 globs: "*.py, **/*.py"
+description: "Rule description"
 ---
 ```
 
 - **Behavior**: Rule is automatically applied when editing files matching the glob patterns
 - **Use Case**: Language-specific rules, file type guidelines
 - **Example**: Python code standards, testing guidelines
-- **Globs Format**: Comma-separated string patterns
+- **Globs Format**: Raw, unquoted comma-separated patterns
 
-### 3. Model Decision Rules
+### 3. Intelligent Application Rules
 
 ```yaml
 ---
-trigger: model_decision
+alwaysApply: false
 description: "Rule description"
 ---
 ```
 
-- **Behavior**: Windsurf's Cascade AI determines when to apply the rule based on context
+- **Behavior**: Cursor uses the rule's description to intelligently determine when to apply the rule
 - **Use Case**: Context-aware rules, conditional guidelines
 - **Example**: Security practices, context optimization
-- **Logic**: Cascade analyzes the current context and applies the rule when it determines it's relevant
+- **Logic**: Cursor analyzes the description and applies the rule when it determines the context is relevant
 
-### 4. Manual Rules
+### 4. Manual Reference Rules
 
 ```yaml
 ---
-trigger: manual
+alwaysApply: false
+description: "Rule description"
 ---
 ```
 
@@ -73,27 +90,7 @@ trigger: manual
 - **Use Case**: Specialized rules, documentation
 - **Example**: System documentation, IDE-specific guidance
 
-## Windsurf-Specific Features
-
-### Cascade AI Integration
-
-- **Intelligent Application**: Cascade AI can analyze context and apply rules intelligently
-- **Context Awareness**: Rules can be applied based on current work context
-- **Dynamic Loading**: Rules can be loaded dynamically based on project state
-
-### Memory System
-
-- **Persistent Context**: Windsurf maintains context across sessions
-- **Rule State**: Rules can maintain state and remember previous applications
-- **Workflow Integration**: Rules integrate with Windsurf's workflow system
-
-### Workflow Integration
-
-- **Multi-Stage Workflows**: Rules can be part of complex multi-stage workflows
-- **Context Loading**: Rules can load additional context as needed
-- **Automation**: Rules can trigger automated actions and workflows
-
-## Transformation to Cursor
+## Transformation from Windsurf
 
 ### Trigger Mode Mapping
 
@@ -111,7 +108,7 @@ trigger: manual
 
 ### Description Usage
 
-- **Windsurf**: Description used for Cascade AI context analysis
+- **Windsurf**: Description used for documentation and manual reference
 - **Cursor**: Description used for intelligent application when `alwaysApply: false` and no `globs` present
 
 ## Best Practices
@@ -120,20 +117,20 @@ trigger: manual
 
 1. **Clear Descriptions**: Write descriptive rule descriptions that clearly indicate when the rule should apply
 2. **Specific Patterns**: Use specific glob patterns for file-based rules
-3. **Context Clarity**: Write clear descriptions for model_decision rules
-4. **Logical Grouping**: Group related functionality in single rules
-
-### Cascade AI Optimization
-
-1. **Contextual Descriptions**: Write descriptions that help Cascade understand when to apply rules
-2. **Clear Triggers**: Use clear language that indicates the rule's purpose
-3. **Avoid Ambiguity**: Be specific about when rules should apply
+3. **Logical Grouping**: Group related functionality in single rules
+4. **Avoid Overlap**: Ensure rules don't conflict or overlap unnecessarily
 
 ### Performance Considerations
 
-1. **Minimal Always-On Rules**: Limit the number of always_on rules to essential ones only
+1. **Minimal Always-On Rules**: Limit the number of always-applied rules to essential ones only
 2. **Efficient Globs**: Use efficient glob patterns that don't match too many files
-3. **Clear Context**: Write clear descriptions to help Cascade's intelligent application
+3. **Clear Descriptions**: Write clear descriptions to help Cursor's intelligent application
+
+### Testing Rules
+
+1. **Verify Application**: Test that rules apply when expected
+2. **Check Non-Application**: Ensure rules don't apply when they shouldn't
+3. **Validate Content**: Verify rule content is accurate and helpful
 
 ## Common Patterns
 
@@ -141,7 +138,7 @@ trigger: manual
 
 ```yaml
 ---
-trigger: glob
+alwaysApply: false
 globs: "*.py, **/*.py"
 description: "Python code standards and best practices"
 ---
@@ -151,7 +148,7 @@ description: "Python code standards and best practices"
 
 ```yaml
 ---
-trigger: model_decision
+alwaysApply: false
 description: "Apply when dealing with security-sensitive code including API calls, user input, LLM interactions, and authentication"
 ---
 ```
@@ -160,7 +157,7 @@ description: "Apply when dealing with security-sensitive code including API call
 
 ```yaml
 ---
-trigger: glob
+alwaysApply: false
 globs: "*.md, docs/**/*.md"
 description: "Documentation standards and formatting guidelines"
 ---
@@ -170,7 +167,7 @@ description: "Documentation standards and formatting guidelines"
 
 ```yaml
 ---
-trigger: model_decision
+alwaysApply: false
 description: "Apply when dealing with large files, complex operations, or memory-intensive tasks"
 ---
 ```
@@ -181,7 +178,7 @@ description: "Apply when dealing with large files, complex operations, or memory
 
 1. **Check Format**: Verify YAML frontmatter is correct
 2. **Verify Globs**: Ensure glob patterns are correct and match target files
-3. **Check Description**: Ensure description is clear and relevant for Cascade
+3. **Check Description**: Ensure description is clear and relevant
 4. **Test Manually**: Try manually referencing the rule
 
 ### Rule Applying Too Often
@@ -190,28 +187,28 @@ description: "Apply when dealing with large files, complex operations, or memory
 2. **Improve Description**: Make description more specific about when to apply
 3. **Check Logic**: Verify the rule logic is correct
 
-### Cascade AI Issues
+### Performance Issues
 
-1. **Improve Description**: Make descriptions more specific and contextual
-2. **Check Context**: Ensure the rule description matches the intended context
-3. **Review Patterns**: Look for patterns in when rules are incorrectly applied
+1. **Reduce Always-On Rules**: Minimize rules with `alwaysApply: true`
+2. **Optimize Globs**: Use more efficient glob patterns
+3. **Review Content**: Ensure rule content is concise and relevant
 
 ## Rule Metadata
 
-**File:** `10_windsurf_rule_system.yaml`
+**File:** `09_cursor_rule_system.yaml`
 **Trigger:** manual (Windsurf) / alwaysApply: false (Cursor)
 **Estimated Tokens:** ~1,200
 **Last Updated:** 2025-10-22
 **Status:** Active
 
 **Topics Covered:**
-- Windsurf rule application logic
-- Cascade AI integration
-- Transformation to Cursor
+- Cursor rule application logic
+- Transformation from Windsurf
 - Best practices
+- Troubleshooting
 
 **Workflow References:**
 - All workflows (for understanding rule application)
 
 **Dependencies:**
-- Source: Windsurf IDE documentation
+- Source: Cursor IDE documentation

@@ -46,6 +46,7 @@ python scripts/validate_archival.py \
 ### 3.1 Move Initiative
 
 **Move to archive:**
+
 ```bash
 mv docs/initiatives/active/[name] docs/initiatives/archive/[name]
 ```
@@ -53,6 +54,7 @@ mv docs/initiatives/active/[name] docs/initiatives/archive/[name]
 ### 3.2 Update Initiative Status
 
 **Update initiative file:**
+
 ```markdown
 ---
 Status: "Archived"
@@ -65,6 +67,7 @@ Archived: "YYYY-MM-DD"
 ### 3.3 Create Archive Entry
 
 **Add to archive index:**
+
 ```markdown
 ## [Initiative Name]
 

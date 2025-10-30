@@ -1,19 +1,33 @@
 ---
-title: "Mention and Reference Guidance"
 description: "Guidance for using /mention and file references in commands and workflows"
-type: "rule"
 status: "active"
+tags: ["mention", "references", "guidance", "workflows"]
+type: "rule"
 
-# Windsurf-specific configuration
 windsurf:
   trigger: "always_on"
 
-# Cursor-specific configuration
 cursor:
   alwaysApply: true
 
-tags: ["mention", "references", "guidance", "workflows"]
-
+ide:
+  hidden_sections:
+    - "Rule Metadata"
+  metadata:
+    file: "08_mention_guidance.md"
+    trigger: "always_on (Windsurf) / alwaysApply (Cursor)"
+    estimated_tokens: 1200
+    last_updated: "2025-10-22"
+    status: "Active"
+    topics_covered:
+      - "Mention usage patterns"
+      - "File reference guidance"
+      - "Workflow chaining"
+      - "Context-aware loading"
+    workflow_references:
+      - "All workflows (always loaded)"
+    dependencies:
+      - "Source: 08_mention_guidance.md"
 ---
 # Mention and Reference Guidance
 

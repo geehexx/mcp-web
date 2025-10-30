@@ -1,21 +1,39 @@
 ---
-title: "Testing Standards"
 description: "Testing standards pytest fixtures TDD practices"
-type: "rule"
 status: "active"
+tags: ["testing", "pytest", "tdd", "fixtures"]
+type: "rule"
 
-# Windsurf-specific configuration
 windsurf:
   trigger: "glob"
   globs: "tests/**/*.py, test_*.py, *_test.py, conftest.py"
 
-# Cursor-specific configuration
 cursor:
   alwaysApply: false
-  globs: ["tests/**/*.py", "test_*.py", "*_test.py", "conftest.py"]
+  globs: "tests/**/*.py, test_*.py, *_test.py, conftest.py"
 
-tags: ["testing", "pytest", "tdd", "fixtures"]
-
+ide:
+  hidden_sections:
+    - "Rule Metadata"
+  metadata:
+    file: "02_testing.md"
+    trigger: "glob (Windsurf) / globs (Cursor)"
+    estimated_tokens: 1800
+    last_updated: "2025-10-22"
+    status: "Active"
+    can_be_mentioned: "Yes (hybrid loading)"
+    topics_covered:
+      - "Test-driven development (TDD)"
+      - "pytest configuration and usage"
+      - "Parallel testing with pytest-xdist"
+      - "Test fixtures and data management"
+      - "Coverage and performance testing"
+      - "Security testing patterns"
+    workflow_references:
+      - "/implement - TDD workflow"
+      - "/validate - Test validation"
+    dependencies:
+      - "Source: 02_testing.md"
 ---
 # Testing Standards
 

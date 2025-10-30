@@ -1,19 +1,34 @@
 ---
-title: "Agent Persona & Core Directives"
 description: "Core agent directives and operational principles for both Cursor and Windsurf"
-type: "rule"
 status: "active"
+tags: ["core", "agent", "directives"]
+type: "rule"
 
-# Windsurf-specific configuration
 windsurf:
   trigger: "always_on"
 
-# Cursor-specific configuration
 cursor:
   alwaysApply: true
 
-tags: ["core", "agent", "directives"]
-
+ide:
+  hidden_sections:
+    - "Rule Metadata"
+  metadata:
+    file: "00_core_directives.md"
+    trigger: "always_on (Windsurf) / alwaysApply (Cursor)"
+    estimated_tokens: 2000
+    last_updated: "2025-10-22"
+    status: "Active"
+    topics_covered:
+      - "Agent persona and role"
+      - "Guiding principles (security, robustness, performance)"
+      - "Operational mandate"
+      - "Tool selection (uv, pytest, ruff)"
+      - "Parallel tool call efficiency"
+    workflow_references:
+      - "All workflows (always loaded)"
+    dependencies:
+      - "Related rules: All specialized rules reference back to core directives"
 ---
 # Rule: Agent Persona & Core Directives
 
@@ -64,24 +79,3 @@ When making any implementation decision, prioritize the following principles in 
 - Reading 5 files sequentially: ~1000ms
 - Reading 5 files in parallel: ~300ms (3x faster)
 - Searching 8 patterns in parallel: 8x speedup
-
-## Rule Metadata
-
-**File:** `00_core_directives.yaml`
-**Trigger:** always_on (Windsurf) / alwaysApply (Cursor)
-**Estimated Tokens:** ~2,000
-**Last Updated:** 2025-10-22
-**Status:** Active
-
-**Topics Covered:**
-- Agent persona and role
-- Guiding principles (security, robustness, performance)
-- Operational mandate
-- Tool selection (uv, pytest, ruff)
-- Parallel tool call efficiency
-
-**Workflow References:**
-- All workflows (always loaded)
-
-**Dependencies:**
-- Related rules: All specialized rules reference back to core directives

@@ -281,14 +281,17 @@ For any code that:
 **Status:** Active
 
 **Topics Covered:**
+
 - OWASP LLM Top 10
 - Input validation
 - Authentication patterns
 - Secure API design
 
 **Workflow References:**
+
 - /validate - Security checklist
 - /implement - Security-focused work
 
 **Dependencies:**
+
 - Source: 06_security_practices.md
