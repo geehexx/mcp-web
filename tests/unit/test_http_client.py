@@ -66,6 +66,7 @@ async def test_fetch_httpx_cancellation_closes_singleton(monkeypatch):
     with pytest.raises(asyncio.CancelledError):
         await fetcher.fetch("https://example.com")
 
+    get_client_mock.assert_awaited_once()
     close_client_mock.assert_awaited_once()
 
     await fetcher.close()
