@@ -19,6 +19,7 @@ Related:
   - "/scripts/adapters/"
   - "https://docs.windsurf.com/windsurf/cascade/workflows"
   - "https://gist.github.com/bossjones/1fd99aea0e46d427f671f853900a0f2a"
+  - "/docs/initiatives/deferred/2025-10-29-pull-request-workflow-automation/initiative.md"
 ---
 # Initiative: Unified Workflows & Rules System Optimization
 
@@ -91,6 +92,9 @@ legacy metadata) into discrete frontmatter fields so adapters can hide sections 
 - Refreshing contributor documentation tied to unified workflows/rules
 - Capturing baseline and post-optimization token metrics
 - Defining and codifying the feature-branch + PR workflow (workflows, rules, ADR, constitution update)
+- Changing all `.unified/**/*.yaml` files to `.unified/**/*.md` to enable proper linting and reflect their true content (markdown + frontmatter), and updating the associated tooling (`unified_parser.py`).
+- Introducing Jinja2 macros for common, repeated patterns in `.unified/**/*.md` files to improve maintainability and reduce token usage.
+- Fixing the whitespace stripping bug in `scripts/adapters/unified_parser.py` to prevent unintended markdown rendering issues.
 
 ### Out of Scope
 
@@ -112,6 +116,8 @@ legacy metadata) into discrete frontmatter fields so adapters can hide sections 
 - **[Phase 7: Monitoring & Continuous Improvement](phases/phase-7-monitoring.md)** – gather feedback, track drift, and queue follow-up enhancements after rollout.
 
 Each phase file captures objectives, tasks, entry/exit criteria, success metrics, and dependencies.
+- **Phase 2 Addition:** Define a formal JSON Schema for frontmatter in `.unified/schemas/` to make the new structure explicit and enforceable.
+- **Phase 5 Addition:** Harden the validation script (`validator.py`) to use the new JSON Schema.
 
 ---
 
@@ -149,6 +155,16 @@ Each phase file captures objectives, tasks, entry/exit criteria, success metrics
 
 ---
 
+## Rollback Strategy
+
+If a critical issue is discovered post-merge, the following steps will be taken to revert the changes:
+
+1.  **Revert the merge commit:** A `git revert -m 1 <merge-commit-sha>` will be executed and pushed to `main`. The `-m 1` flag is required to specify the parent commit to revert to (in this case, the `main` branch). **Note:** This action can complicate re-merging the original branch later. If the branch needs to be merged again after fixes, you may need to revert the revert commit first.
+2.  **Communicate the rollback:** An update will be posted in the project's communication channels to inform stakeholders of the rollback and the reasons for it.
+3.  **Create a new initiative for the fix:** A new initiative will be created to address the critical issue, and the original initiative will be linked to it.
+
+---
+
 ## Timeline & Effort
 
 | Window | Focus | Effort |
@@ -174,6 +190,7 @@ _Total planned effort: 11–12 hours across ~1.5 working days._
 - **Documentation Accuracy** – `.unified/README.md` and guides updated, verified during Phase 6 exit
 - **Metadata Utilisation** – % of workflows/rules using new structured frontmatter fields for
   hidden sections (target 100%)
+- **Final Token Savings:** Measure and document the final token savings in `artifacts/token-inventory.md`.
 
 ---
 
@@ -200,6 +217,7 @@ _Total planned effort: 11–12 hours across ~1.5 working days._
 4. **Regression suite** – run `task lint`, `uv run mypy`, `uv run pytest -n auto`, `uv run bandit -r src/ scripts/`, and `uv run semgrep --config .semgrep.yml` before rollout.
 5. **Token metrics** – recompute token counts post-optimization and document savings in artifacts.
 6. **Manual IDE verification** – smoke test workflows in Windsurf and ensure Cursor rules attach as expected (tracked in Phase 6 exit criteria).
+7. **Golden File Testing** - Leverage the existing `pytest-golden` framework by running `task golden:update` after all content changes are made to capture the new, correct state of the generated IDE files.
 
 ---
 
@@ -260,6 +278,7 @@ Treat checkpoints as hard gates: do not proceed until actions are committed, pus
 3. Update documentation and announce changes via initiative updates and `PROJECT_SUMMARY.md` entry,
    highlighting new frontmatter fields and hidden-section handling guidance.
 4. Merge changes once validation passes; monitor initial IDE usage feedback and capture follow-up tasks if issues arise.
+5. Update the main Pull Request template to include a "Manual Verification Checklist" to formalize the manual testing process for reviewers.
 
 ---
 
@@ -272,9 +291,10 @@ Treat checkpoints as hard gates: do not proceed until actions are committed, pus
 - **2025-10-30 — Implementation Guidance Added:** Formalized feature-branch + PR workflow
   expectations (checkpoints, commit cadence, evidence logging). Flagged that execution must create
   a multi-template PR system under `.github/pull_request_template/` (e.g., `initiative.md`,
-  `phase.md`, `rollout.md` variants) and introduce a dedicated `/pull-request` workflow to assemble
-  descriptions from initiative artifacts. These assets are **not yet implemented**; they are queued
-  for the feature branch owner to deliver during Phases 0–6 alongside ADR/constitution updates.
+  `phase.md`, `rollout.md` variants). The dedicated `/pull-request` workflow to assemble
+  descriptions from initiative artifacts has been de-scoped to a separate initiative. These assets
+  are **not yet implemented**; they are queued for the feature branch owner to deliver during
+  Phases 0–6 alongside ADR/constitution updates.
 - **2025-10-30 — Structured Metadata Plan Approved:** Captured strategy for encoding verbose
   sections into `ide.hidden_sections`/`ide.metadata`, expanded success metrics, and aligned phases
   and artifacts with hidden-section validation requirements.
