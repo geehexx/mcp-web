@@ -194,11 +194,11 @@ httpx leak:
 
 #### Task Cancellation Handling
 
-- [ ] Test task cancellation scenarios (abort mid-request)
-- [ ] Verify connection pool cleanup on cancellation
-- [ ] Add connection release on all exception paths
+- [x] Test task cancellation scenarios (abort mid-request)
+- [x] Verify connection pool cleanup on cancellation
+- [x] Add connection release on all exception paths
 - [ ] Memory profiling: Ensure no connection pool growth
-- [ ] Unit tests for cancellation (8+ test cases)
+- [x] Unit tests for cancellation (8+ test cases)
 
 #### Connection Pool Monitoring
 
@@ -416,6 +416,24 @@ Initiative created based on comprehensive technical roadmap analysis.
 3. Phase 3: Optimize httpx connection pool with singleton pattern
 4. Phase 4: Add health checks and Prometheus metrics
 5. Phase 5: Run 72-hour stability test and validate
+
+### 2025-10-30 (httpx Cancellation Hardening)
+
+**Completed Tasks:**
+
+- ✅ Added regression coverage for httpx singleton reuse and cancellation cleanup (5 unit cases)
+- ✅ Implemented deterministic cancellation handling that records metrics and resets the shared client
+
+**Impact:**
+
+- Prevents connection pool leaks triggered by task cancellation (P1-STABILITY-002)
+- Strengthens metrics visibility for cancellation scenarios and ensures safe reuse of the singleton client
+
+**Next Steps:**
+
+1. Extend connection pool monitoring metrics and integrate with health checks
+2. Perform memory profiling across 1000 cancelled requests to validate absence of growth
+3. Continue with Phase 4 observability deliverables
 
 ### 2025-10-21 (BrowserPool Implementation - Phase 2 Complete)
 

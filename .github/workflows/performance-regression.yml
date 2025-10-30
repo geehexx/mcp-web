@@ -86,12 +86,12 @@ jobs:
 
     steps:
       - name: Download benchmark results
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: benchmark-results
 
       - name: Comment benchmark summary on PR
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const fs = require('fs');
