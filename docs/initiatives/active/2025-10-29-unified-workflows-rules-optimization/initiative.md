@@ -1,5 +1,5 @@
 ---
-Status: "Proposed"
+Status: "In Progress"
 Created: "2025-10-29"
 Updated: "2025-10-30"
 Owner: "Core Team"
@@ -106,16 +106,17 @@ legacy metadata) into discrete frontmatter fields so adapters can hide sections 
 
 ## Phases
 
-- **[Phase 0: Kickoff & Baseline Capture](phases/phase-0-kickoff.md)** – establish backups, gather token baselines, and validate current build outputs.
-- **[Phase 1: Inventory & Measurement](phases/phase-1-inventory.md)** – quantify token costs, catalogue metadata sections, and prioritize high-bloat files.
-- **[Phase 2: IDE Requirements Analysis](phases/phase-2-ide-requirements.md)** – confirm minimal field requirements via docs and adapters; finalize schema JSON, define structured metadata fields for hidden content.
-- **[Phase 3: Frontmatter Optimization](phases/phase-3-frontmatter.md)** – roll out minimal schema across `.unified/`, add missing Windsurf metadata, normalise globs, migrate long-form context into frontmatter.
-- **[Phase 4: Content Optimization](phases/phase-4-content.md)** – excise redundant sections, consolidate context guidance, ensure succinct narratives, confirm hidden sections reference new frontmatter fields.
+- **[Phase 0: Kickoff & Baseline Capture](phases/phase-0-kickoff.md)** – **Completed**
+- **[Phase 1: Inventory & Measurement](phases/phase-1-inventory.md)** – **Completed**
+- **[Phase 2: IDE Requirements Analysis](phases/phase-2-ide-requirements.md)** – **Completed**
+- **[Phase 3: Frontmatter Optimization](phases/phase-3-frontmatter.md)** – **In Progress**
+- **[Phase 4: Content Optimization](phases/phase-4-content.md)** – Not Started
 - **[Phase 5: Tooling & Validation Hardening](phases/phase-5-tooling.md)** – update adapters, validators, tests, and CI hooks for new schema rules.
 - **[Phase 6: Documentation & Rollout](phases/phase-6-rollout.md)** – refresh guides, run regression suites, document outcomes, and complete rollout checklist.
 - **[Phase 7: Monitoring & Continuous Improvement](phases/phase-7-monitoring.md)** – gather feedback, track drift, and queue follow-up enhancements after rollout.
 
 Each phase file captures objectives, tasks, entry/exit criteria, success metrics, and dependencies.
+
 - **Phase 2 Addition:** Define a formal JSON Schema for frontmatter in `.unified/schemas/` to make the new structure explicit and enforceable.
 - **Phase 5 Addition:** Harden the validation script (`validator.py`) to use the new JSON Schema.
 
@@ -159,9 +160,9 @@ Each phase file captures objectives, tasks, entry/exit criteria, success metrics
 
 If a critical issue is discovered post-merge, the following steps will be taken to revert the changes:
 
-1.  **Revert the merge commit:** A `git revert -m 1 <merge-commit-sha>` will be executed and pushed to `main`. The `-m 1` flag is required to specify the parent commit to revert to (in this case, the `main` branch). **Note:** This action can complicate re-merging the original branch later. If the branch needs to be merged again after fixes, you may need to revert the revert commit first.
-2.  **Communicate the rollback:** An update will be posted in the project's communication channels to inform stakeholders of the rollback and the reasons for it.
-3.  **Create a new initiative for the fix:** A new initiative will be created to address the critical issue, and the original initiative will be linked to it.
+1. **Revert the merge commit:** A `git revert -m 1 <merge-commit-sha>` will be executed and pushed to `main`. The `-m 1` flag is required to specify the parent commit to revert to (in this case, the `main` branch). **Note:** This action can complicate re-merging the original branch later. If the branch needs to be merged again after fixes, you may need to revert the revert commit first.
+2. **Communicate the rollback:** An update will be posted in the project's communication channels to inform stakeholders of the rollback and the reasons for it.
+3. **Create a new initiative for the fix:** A new initiative will be created to address the critical issue, and the original initiative will be linked to it.
 
 ---
 
@@ -298,6 +299,14 @@ Treat checkpoints as hard gates: do not proceed until actions are committed, pus
 - **2025-10-30 — Structured Metadata Plan Approved:** Captured strategy for encoding verbose
   sections into `ide.hidden_sections`/`ide.metadata`, expanded success metrics, and aligned phases
   and artifacts with hidden-section validation requirements.
+- **2025-10-30 — Phases 0, 1, and 2 Completed:**
+  - Established a clean baseline and completed the project kickoff (Phase 0).
+  - Inventoried the `.unified` directory, measured the token footprint, and cataloged the frontmatter fields (Phase 1).
+  - Researched IDE requirements, defined a minimal frontmatter schema, and documented the findings (Phase 2).
+- **2025-10-30 — Phase 3 In Progress:**
+  - Renamed all `.unified/**/*.yaml` files to `.unified/**/*.md`.
+  - Updated the `unified_parser.py` script to recognize the new file extension.
+  - Began refactoring the `.unified` files to conform to the new schema. 10 files have been completed so far.
 
 ---
 

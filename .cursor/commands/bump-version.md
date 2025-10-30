@@ -44,6 +44,7 @@ update_plan({
 ### 2.1 Get Recent Commits
 
 **Get commits since last tag:**
+
 ```bash
 git log --oneline --since="$(git describe --tags --abbrev=0 2>/dev/null || echo '1970-01-01')" --pretty=format:"%s"
 ```
@@ -51,6 +52,7 @@ git log --oneline --since="$(git describe --tags --abbrev=0 2>/dev/null || echo 
 ### 2.2 Parse Commit Messages
 
 **Identify conventional commit types:**
+
 - `feat:` - New features
 - `fix:` - Bug fixes
 - `BREAKING CHANGE:` - Breaking changes
@@ -61,6 +63,7 @@ git log --oneline --since="$(git describe --tags --abbrev=0 2>/dev/null || echo 
 ### 2.3 Calculate Version Bump
 
 **Determine bump type:**
+
 - **Major** (1.0.0 → 2.0.0): Breaking changes
 - **Minor** (1.0.0 → 1.1.0): New features
 - **Patch** (1.0.0 → 1.0.1): Bug fixes
@@ -71,6 +74,7 @@ git log --oneline --since="$(git describe --tags --abbrev=0 2>/dev/null || echo 
 ### 3.1 Update pyproject.toml
 
 **Update version field:**
+
 ```toml
 [project]
 version = "1.1.0"  # Updated version
@@ -79,6 +83,7 @@ version = "1.1.0"  # Updated version
 ### 3.2 Update __init__.py
 
 **Update version in package:**
+
 ```python
 __version__ = "1.1.0"
 ```
@@ -86,6 +91,7 @@ __version__ = "1.1.0"
 ### 3.3 Update CHANGELOG.md
 
 **Add new version entry:**
+
 ```markdown
 ## [1.1.0] - 2025-10-22
 
@@ -107,6 +113,7 @@ __version__ = "1.1.0"
 ### 4.1 Create Tag
 
 **Create annotated tag:**
+
 ```bash
 git tag -a v1.1.0 -m "Release version 1.1.0
 
@@ -118,6 +125,7 @@ git tag -a v1.1.0 -m "Release version 1.1.0
 ### 4.2 Validate Tag
 
 **Verify tag creation:**
+
 ```bash
 git tag -l | grep v1.1.0
 git show v1.1.0
@@ -128,6 +136,7 @@ git show v1.1.0
 ### 5.1 Update README
 
 **Update version references:**
+
 ```markdown
 ## Installation
 ```
@@ -139,6 +148,7 @@ pip install mcp-web==1.1.0
 ### 5.2 Update API Documentation
 
 **Update version in API docs:**
+
 ```markdown
 # API Version 1.1.0
 
@@ -184,12 +194,14 @@ When this bump-version workflow is called:
 ## Anti-Patterns
 
 ❌ **Don't:**
+
 - Skip commit analysis
 - Ignore conventional commits
 - Skip validation
 - Create invalid tags
 
 ✅ **Do:**
+
 - Analyze all commits
 - Follow conventional commit format
 - Validate version changes
@@ -207,10 +219,12 @@ When this bump-version workflow is called:
 ## Integration
 
 **Called By:**
+
 - `/commit` - After commits
 - User - Direct invocation for version bumping
 
 **Calls:**
+
 - Git operations
 - File updates
 - Tag creation
@@ -231,10 +245,12 @@ When this bump-version workflow is called:
 **Status:** Active
 
 **Topics Covered:**
+
 - Version management
 - Conventional commits
 - Semantic versioning
 - Automation
 
 **Dependencies:**
+
 - None (standalone workflow)

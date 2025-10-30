@@ -1,19 +1,33 @@
 ---
-title: "Windsurf Structure"
 description: "Windsurf-specific structure and workflow system documentation"
-type: "rule"
 status: "active"
+tags: ["windsurf", "structure", "workflows", "documentation"]
+type: "rule"
 
-# Windsurf-specific configuration
 windsurf:
   trigger: "model_decision"
 
-# Cursor-specific configuration
 cursor:
   alwaysApply: false
 
-tags: ["windsurf", "structure", "workflows", "documentation"]
-
+ide:
+  hidden_sections:
+    - "Rule Metadata"
+  metadata:
+    file: "05_windsurf_structure.md"
+    trigger: "model_decision (Windsurf) / alwaysApply: false (Cursor)"
+    estimated_tokens: 800
+    last_updated: "2025-10-22"
+    status: "Active"
+    topics_covered:
+      - "Windsurf directory structure"
+      - "Rule system"
+      - "Workflow system"
+      - "Integration with Cursor"
+    workflow_references:
+      - "All workflows (for understanding structure)"
+    dependencies:
+      - "Source: 05_windsurf_structure.md"
 ---
 # Windsurf Structure
 

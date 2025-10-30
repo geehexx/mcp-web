@@ -171,14 +171,17 @@ python script.py
 **Status:** Active
 
 **Topics Covered:**
+
 - Documentation structure
 - ADR standards
 - Initiative tracking
 - Markdown guidelines
 
 **Workflow References:**
+
 - /implement - Documentation updates
 - /validate - Documentation validation
 
 **Dependencies:**
+
 - Source: 03_documentation.md

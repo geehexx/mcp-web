@@ -1,9 +1,34 @@
 ---
-trigger: model_decision
-description: Documentation of Windsurf IDE rule application logic and configuration
-title: Windsurf Rule System Documentation
----
+description: "Documentation of Windsurf IDE rule application logic and configuration"
+status: "active"
+tags: ["windsurf", "documentation", "rules", "system"]
+type: "rule"
 
+windsurf:
+  trigger: "model_decision"
+
+cursor:
+  alwaysApply: false
+
+ide:
+  hidden_sections:
+    - "Rule Metadata"
+  metadata:
+    file: "10_windsurf_rule_system.md"
+    trigger: "manual (Windsurf) / alwaysApply: false (Cursor)"
+    estimated_tokens: 1200
+    last_updated: "2025-10-22"
+    status: "Active"
+    topics_covered:
+      - "Windsurf rule application logic"
+      - "Cascade AI integration"
+      - "Transformation to Cursor"
+      - "Best practices"
+    workflow_references:
+      - "All workflows (for understanding rule application)"
+    dependencies:
+      - "Source: Windsurf IDE documentation"
+---
 # Windsurf Rule System Documentation
 
 ## Rule Application Logic
@@ -194,16 +219,13 @@ description: "Apply when dealing with large files, complex operations, or memory
 **Status:** Active
 
 **Topics Covered:**
-
 - Windsurf rule application logic
 - Cascade AI integration
 - Transformation to Cursor
 - Best practices
 
 **Workflow References:**
-
 - All workflows (for understanding rule application)
 
 **Dependencies:**
-
 - Source: Windsurf IDE documentation

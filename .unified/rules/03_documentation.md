@@ -1,21 +1,36 @@
 ---
-title: "Documentation Standards"
 description: "Documentation standards markdown ADRs initiatives"
-type: "rule"
 status: "active"
+tags: ["documentation", "markdown", "adr", "initiatives"]
+type: "rule"
 
-# Windsurf-specific configuration
 windsurf:
   trigger: "glob"
   globs: "docs/**/*.md, *.md, README.md"
 
-# Cursor-specific configuration
 cursor:
   alwaysApply: false
   globs: "docs/**/*.md, *.md, README.md"
 
-tags: ["documentation", "markdown", "adr", "initiatives"]
-
+ide:
+  hidden_sections:
+    - "Rule Metadata"
+  metadata:
+    file: "03_documentation.md"
+    trigger: "glob (Windsurf) / globs (Cursor)"
+    estimated_tokens: 1500
+    last_updated: "2025-10-22"
+    status: "Active"
+    topics_covered:
+      - "Documentation structure"
+      - "ADR standards"
+      - "Initiative tracking"
+      - "Markdown guidelines"
+    workflow_references:
+      - "/implement - Documentation updates"
+      - "/validate - Documentation validation"
+    dependencies:
+      - "Source: 03_documentation.md"
 ---
 # Documentation Standards & Management
 

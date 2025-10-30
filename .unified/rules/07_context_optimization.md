@@ -1,19 +1,34 @@
 ---
-title: "Context Optimization"
 description: "Apply when dealing with large files, complex operations, or memory-intensive tasks"
-type: "rule"
 status: "active"
+tags: ["context", "optimization", "memory", "performance"]
+type: "rule"
 
-# Windsurf-specific configuration
 windsurf:
   trigger: "model_decision"
 
-# Cursor-specific configuration
 cursor:
   alwaysApply: false
 
-tags: ["context", "optimization", "memory", "performance"]
-
+ide:
+  hidden_sections:
+    - "Rule Metadata"
+  metadata:
+    file: "07_context_optimization.md"
+    trigger: "model_decision (Windsurf) / globs (Cursor)"
+    estimated_tokens: 1800
+    last_updated: "2025-10-22"
+    status: "Active"
+    topics_covered:
+      - "Context optimization"
+      - "Memory management"
+      - "Performance optimization"
+      - "Rule loading strategies"
+    workflow_references:
+      - "/implement - Context-aware implementation"
+      - "/validate - Performance validation"
+    dependencies:
+      - "Source: 07_context_optimization.md"
 ---
 # Context Optimization Guidelines
 

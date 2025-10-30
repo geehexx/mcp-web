@@ -97,13 +97,16 @@ Windsurf workflows are transformed to Cursor commands:
 **Status:** Active
 
 **Topics Covered:**
+
 - Windsurf directory structure
 - Rule system
 - Workflow system
 - Integration with Cursor
 
 **Workflow References:**
+
 - All workflows (for understanding structure)
 
 **Dependencies:**
+
 - Source: 05_windsurf_structure.md

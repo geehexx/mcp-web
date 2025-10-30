@@ -64,6 +64,7 @@ Generate LLM-agnostic session summary using structured template.
 ### 4. Commits
 
 **All commits in session:**
+
 ```markdown
 ## Commits
 
@@ -319,12 +320,14 @@ When this summarize-session workflow is called:
 ## Anti-Patterns
 
 ❌ **Don't:**
+
 - Skip data analysis
 - Ignore patterns
 - Create incomplete summaries
 - Skip documentation updates
 
 ✅ **Do:**
+
 - Analyze all data thoroughly
 - Identify key patterns
 - Create complete summaries

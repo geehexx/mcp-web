@@ -1,21 +1,36 @@
 ---
-title: "Configuration File Standards"
 description: "Configuration file best practices TOML YAML Taskfile"
-type: "rule"
 status: "active"
+tags: ["configuration", "toml", "yaml", "taskfile"]
+type: "rule"
 
-# Windsurf-specific configuration
 windsurf:
   trigger: "glob"
   globs: "pyproject.toml, *.ini, Taskfile.yml, .pre-commit-config.yaml"
 
-# Cursor-specific configuration
 cursor:
   alwaysApply: false
   globs: "pyproject.toml, *.ini, Taskfile.yml, .pre-commit-config.yaml"
 
-tags: ["configuration", "toml", "yaml", "taskfile"]
-
+ide:
+  hidden_sections:
+    - "Rule Metadata"
+  metadata:
+    file: "04_config_files.md"
+    trigger: "glob (Windsurf) / globs (Cursor)"
+    estimated_tokens: 800
+    last_updated: "2025-10-22"
+    status: "Active"
+    topics_covered:
+      - "TOML configuration"
+      - "YAML configuration"
+      - "Taskfile standards"
+      - "Configuration validation"
+    workflow_references:
+      - "/implement - Configuration updates"
+      - "/validate - Configuration validation"
+    dependencies:
+      - "Source: 04_config_files.md"
 ---
 # Configuration File Standards
 

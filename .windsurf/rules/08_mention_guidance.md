@@ -223,13 +223,16 @@ Load these rules if you determine you need them based on their descriptions:
 **Status:** Active
 
 **Topics Covered:**
+
 - Mention usage patterns
 - File reference guidance
 - Workflow chaining
 - Context-aware loading
 
 **Workflow References:**
+
 - All workflows (always loaded)
 
 **Dependencies:**
+
 - Source: 08_mention_guidance.md

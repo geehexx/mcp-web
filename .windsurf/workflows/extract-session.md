@@ -80,6 +80,7 @@ grep -r "Entering /" .windsurf/logs/ 2>/dev/null | \
 ### 1.1 Time Range
 
 **Determine session duration:**
+
 - Start time: Last meta-analysis or session start
 - End time: Current timestamp
 - Duration: End time - Start time
@@ -87,6 +88,7 @@ grep -r "Entering /" .windsurf/logs/ 2>/dev/null | \
 ### 1.2 Session Context
 
 **Identify session context:**
+
 - Active initiatives
 - Current phase
 - Work focus
@@ -97,6 +99,7 @@ grep -r "Entering /" .windsurf/logs/ 2>/dev/null | \
 ### 2.1 Commit Analysis
 
 **Extract commit information:**
+
 - Commit hash
 - Author
 - Date
@@ -107,6 +110,7 @@ grep -r "Entering /" .windsurf/logs/ 2>/dev/null | \
 ### 2.2 File Changes
 
 **Analyze file modifications:**
+
 - Modified files
 - Added files
 - Deleted files
@@ -116,6 +120,7 @@ grep -r "Entering /" .windsurf/logs/ 2>/dev/null | \
 ### 2.3 Branch Analysis
 
 **Check branch information:**
+
 - Current branch
 - Branch changes
 - Merge commits
@@ -126,6 +131,7 @@ grep -r "Entering /" .windsurf/logs/ 2>/dev/null | \
 ### 3.1 Test Execution
 
 **Run tests and capture results:**
+
 - Test suite execution
 - Pass/fail counts
 - Error details
@@ -134,6 +140,7 @@ grep -r "Entering /" .windsurf/logs/ 2>/dev/null | \
 ### 3.2 Test Changes
 
 **Analyze test modifications:**
+
 - New tests added
 - Tests modified
 - Tests removed
@@ -144,6 +151,7 @@ grep -r "Entering /" .windsurf/logs/ 2>/dev/null | \
 ### 4.1 Workflow Usage
 
 **Track workflow invocations:**
+
 - Workflows used
 - Usage frequency
 - Execution time
@@ -152,6 +160,7 @@ grep -r "Entering /" .windsurf/logs/ 2>/dev/null | \
 ### 4.2 Workflow Patterns
 
 **Identify usage patterns:**
+
 - Common workflow sequences
 - Workflow dependencies
 - Execution efficiency
@@ -162,6 +171,7 @@ grep -r "Entering /" .windsurf/logs/ 2>/dev/null | \
 ### 5.1 File Modifications
 
 **Track file changes:**
+
 - Files created
 - Files modified
 - Files deleted
@@ -170,6 +180,7 @@ grep -r "Entering /" .windsurf/logs/ 2>/dev/null | \
 ### 5.2 Directory Changes
 
 **Monitor directory structure:**
+
 - New directories
 - Directory modifications
 - File organization
@@ -180,6 +191,7 @@ grep -r "Entering /" .windsurf/logs/ 2>/dev/null | \
 ### 6.1 Structured Output
 
 **Create session data structure:**
+
 ```json
 {
   "session": {
@@ -217,6 +229,7 @@ grep -r "Entering /" .windsurf/logs/ 2>/dev/null | \
 ### 6.2 Export Data
 
 **Save session data:**
+
 - JSON format for processing
 - Markdown format for readability
 - CSV format for analysis
@@ -241,12 +254,14 @@ When this extract-session workflow is called:
 ## Anti-Patterns
 
 ❌ **Don't:**
+
 - Skip git analysis
 - Ignore test results
 - Skip workflow tracking
 - Create incomplete data
 
 ✅ **Do:**
+
 - Analyze all git data
 - Capture test results
 - Track workflow usage
@@ -264,10 +279,12 @@ When this extract-session workflow is called:
 ## Integration
 
 **Called By:**
+
 - `/meta-analysis` - Session analysis workflow
 - User - Direct invocation for session extraction
 
 **Calls:**
+
 - Git operations
 - Test execution
 - File system analysis
@@ -288,10 +305,12 @@ When this extract-session workflow is called:
 **Status:** Active
 
 **Topics Covered:**
+
 - Session extraction
 - Git analysis
 - Test analysis
 - Workflow tracking
 
 **Dependencies:**
+
 - None (standalone workflow)

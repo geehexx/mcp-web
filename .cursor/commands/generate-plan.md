@@ -277,6 +277,7 @@ Related: ["/path/to/related/doc"]
 ### 10.2 Review and Refine
 
 **Review with stakeholders:**
+
 - Validate requirements
 - Confirm timeline
 - Check resource availability

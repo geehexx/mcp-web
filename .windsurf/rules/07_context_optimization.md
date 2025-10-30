@@ -28,6 +28,7 @@ title: Context Optimization
 ### Automatic Loading (Glob Matching)
 
 Rules are automatically loaded when editing files matching these patterns:
+
 - `*.py, **/*.py` - Python source files
 - `tests/**/*.py, conftest.py` - Test files
 - `*.md, docs/**/*.md` - Documentation files
@@ -215,14 +216,17 @@ Load: File Operations rule for safe path handling and file operations
 **Status:** Active
 
 **Topics Covered:**
+
 - Context optimization
 - Memory management
 - Performance optimization
 - Rule loading strategies
 
 **Workflow References:**
+
 - /implement - Context-aware implementation
 - /validate - Performance validation
 
 **Dependencies:**
+
 - Source: 07_context_optimization.md

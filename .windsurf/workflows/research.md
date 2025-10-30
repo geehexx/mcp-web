@@ -71,6 +71,7 @@ update_plan({
 - Previous solutions
 
 **Search queries:**
+
 - Feature-specific terms
 - Technology names
 - Problem descriptions
@@ -107,6 +108,7 @@ update_plan({
 - Community discussions
 
 **Search strategy:**
+
 - Start with official documentation
 - Look for community best practices
 - Check security advisories

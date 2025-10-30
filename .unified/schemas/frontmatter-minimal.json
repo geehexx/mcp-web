@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Unified Workflow/Rule Frontmatter Schema",
+  "description": "A minimal schema for the frontmatter of .unified/**/*.md files.",
+  "type": "object",
+  "properties": {
+    "title": {
+      "description": "The title of the workflow or rule.",
+      "type": "string"
+    },
+    "description": {
+      "description": "A detailed description of the workflow or rule.",
+      "type": "string"
+    },
+    "status": {
+      "description": "The status of the workflow or rule.",
+      "type": "string",
+      "enum": ["active", "deprecated", "experimental"]
+    },
+    "tags": {
+      "description": "A list of tags for the workflow or rule.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "type": {
+      "description": "The type of the document (workflow or rule).",
+      "type": "string",
+      "enum": ["workflow", "rule"]
+    },
+    "windsurf": {
+      "description": "Windsurf-specific configuration.",
+      "type": "object",
+      "properties": {
+        "auto_execution_mode": {
+          "description": "The auto-execution mode for the workflow.",
+          "type": "integer",
+          "enum": [1, 2, 3]
+        }
+      },
+      "required": ["auto_execution_mode"]
+    },
+    "cursor": {
+      "description": "Cursor-specific configuration.",
+      "type": "object",
+      "properties": {
+        "alwaysApply": {
+          "description": "Whether the rule should always be applied.",
+          "type": "boolean"
+        },
+        "globs": {
+          "description": "A comma-separated list of glob patterns.",
+          "type": "string"
+        }
+      }
+    },
+    "ide": {
+      "description": "IDE-agnostic configuration for handling hidden sections and metadata.",
+      "type": "object",
+      "properties": {
+        "hidden_sections": {
+          "description": "A list of section headings to be hidden from the final rendered output.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "metadata": {
+          "description": "A key-value store for additional metadata.",
+          "type": "object"
+        }
+      }
+    }
+  },
+  "required": ["title", "description", "status", "type"]
+}
