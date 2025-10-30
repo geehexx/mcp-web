@@ -58,7 +58,7 @@ enable_apply_suggestions = true
 [github_app]
 pr_commands = [
   "/describe",
-  "/review --pr_reviewer.extra_instructions='Focus on resource stability, httpx singleton usage, and Playwright pool hygiene.'",
+  "/review --pr_reviewer.extra_instructions=\"Focus on resource stability, httpx singleton usage, and Playwright pool hygiene.\"",
   "/improve"
 ]
 feedback_on_draft_pr = false
