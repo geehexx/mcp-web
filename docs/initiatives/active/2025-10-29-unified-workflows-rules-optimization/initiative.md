@@ -159,7 +159,7 @@ Each phase file captures objectives, tasks, entry/exit criteria, success metrics
 
 If a critical issue is discovered post-merge, the following steps will be taken to revert the changes:
 
-1.  **Revert the merge commit:** A `git revert <merge-commit-sha>` will be executed and pushed to `main` to undo the changes.
+1.  **Revert the merge commit:** A `git revert -m 1 <merge-commit-sha>` will be executed and pushed to `main`. The `-m 1` flag is required to specify the parent commit to revert to (in this case, the `main` branch). **Note:** This action can complicate re-merging the original branch later. If the branch needs to be merged again after fixes, you may need to revert the revert commit first.
 2.  **Communicate the rollback:** An update will be posted in the project's communication channels to inform stakeholders of the rollback and the reasons for it.
 3.  **Create a new initiative for the fix:** A new initiative will be created to address the critical issue, and the original initiative will be linked to it.
 
