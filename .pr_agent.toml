@@ -30,7 +30,7 @@ require_score_review = true
 require_tests_review = true
 require_security_review = true
 require_ticket_analysis_review = true
-num_max_findings = 5
+num_max_findings = 20
 extra_instructions = """\
 - Prioritize security, secrets handling, and OWASP compliance when reviewing changes.\
 - Call out concurrency, async lifecycle, and resource leak risks (browser pool, httpx, asyncio).\
