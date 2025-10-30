@@ -201,7 +201,8 @@ class URLFetcher:
                     await self._cache_result(url, result)
 
                 return result
-
+            except asyncio.CancelledError:
+                raise
             except Exception as e:
                 _get_logger().warning(
                     "httpx_failed",
