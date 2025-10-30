@@ -311,8 +311,8 @@ class URLFetcher:
                     url=url,
                     error=str(cleanup_error),
                 )
-
-            raise cancel_error
+            finally:
+                raise
 
         except Exception as e:
             duration_ms = (time.perf_counter() - start_time) * 1000
