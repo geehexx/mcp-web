@@ -42,7 +42,7 @@ jobs:
 
       - name: Upload lint results (if failed)
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: markdown-lint-results
           path: /tmp/mcp-web-markdownlint.json
@@ -85,7 +85,7 @@ jobs:
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: markdown-test-results
           path: |
