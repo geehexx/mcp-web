@@ -21,6 +21,7 @@ import functools
 import json
 import pstats
 import time
+import typing
 from collections import defaultdict
 from collections.abc import AsyncIterator, Callable, Iterator
 from contextlib import asynccontextmanager, contextmanager
@@ -198,7 +199,8 @@ def profile(func: F) -> F:
                 result = await func(*args, **kwargs)
                 return result
 
-        return async_wrapper  # type: ignore
+        # Cast is safe because @functools.wraps preserves the function signature
+        return typing.cast(F, async_wrapper)
 
     else:
 
@@ -208,7 +210,8 @@ def profile(func: F) -> F:
                 result = func(*args, **kwargs)
                 return result
 
-        return sync_wrapper  # type: ignore
+        # Cast is safe because @functools.wraps preserves the function signature
+        return typing.cast(F, sync_wrapper)
 
 
 class PerformanceCollector:
