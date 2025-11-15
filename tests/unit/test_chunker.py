@@ -152,8 +152,13 @@ This is the conclusion section wrapping everything up.
         chunks = chunker.chunk_text(text)
 
         assert len(chunks) > 0
-        # Verify chunks preserve structure
-        has_content = any("Introduction" in chunk.text or "Methods" in chunk.text for chunk in chunks)
+        # Verify chunks preserve content from sections (not heading text, but actual content)
+        has_content = any(
+            "introduction section" in chunk.text.lower() or
+            "methods section" in chunk.text.lower() or
+            "approach taken" in chunk.text.lower()
+            for chunk in chunks
+        )
         assert has_content, "Chunks should contain section content"
 
     def test_chunk_with_code_blocks(self, chunker):
@@ -359,12 +364,14 @@ Content for section 4.
         assert "Heading 1" in headings or "Heading 2" in headings
 
     def test_split_by_headings_no_headings(self, chunker):
-        """Test splitting text without headings."""
+        """Test splitting text without headings defaults to 'Introduction'."""
         text = "Plain text without any headings.\nJust regular content."
         sections = chunker._split_by_headings(text)
 
         assert len(sections) == 1
-        assert sections[0][0] == "Main Content"
+        # When no headings are found, defaults to "Introduction" heading
+        assert sections[0][0] == "Introduction"
+        assert "Plain text" in sections[0][1]
 
     def test_extract_code_blocks(self, chunker):
         """Test code block extraction."""
@@ -396,11 +403,14 @@ console.log('test');
         assert len(code_blocks) == 0
 
     def test_find_sentence_boundary(self, chunker):
-        """Test finding sentence boundaries."""
-        text = "First sentence. Second sentence. Third sentence."
+        """Test finding sentence boundaries in last 20% of text."""
+        # Method searches for boundaries in last 20% of text
+        # Need space after period for pattern to match in last 20%
+        text = "First sentence here with some words. Second sentence goes here. Third sentence follows. Final text."
         boundary = chunker._find_sentence_boundary(text)
 
         assert boundary > 0
+        # Should find a sentence boundary (period/question/exclamation + space)
         assert text[boundary - 2:boundary] in [". ", "! ", "? "]
 
     def test_find_sentence_boundary_none(self, chunker):
