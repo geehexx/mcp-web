@@ -29,9 +29,24 @@ class FetcherSettings(BaseSettings):
     enable_fallback: bool = Field(
         default=True, description="Enable Playwright fallback for JS-heavy sites"
     )
-    use_playwright_fallback: bool = Field(
-        default=True, description="Enable Playwright fallback (deprecated, use enable_fallback)"
+    # Deprecated field - kept for backward compatibility
+    use_playwright_fallback: bool | None = Field(
+        default=None, description="DEPRECATED: Use enable_fallback instead"
     )
+
+    def model_post_init(self, __context: Any) -> None:
+        """Handle deprecated use_playwright_fallback field."""
+        import warnings
+
+        if self.use_playwright_fallback is not None:
+            warnings.warn(
+                "use_playwright_fallback is deprecated and will be removed in v1.0.0. "
+                "Use enable_fallback instead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+            # Sync the deprecated field to the new one for backward compatibility
+            self.enable_fallback = self.use_playwright_fallback
     user_agent: str = Field(
         default="mcp-web/0.1.0 (compatible; AI assistant)",
         description="User-Agent header",

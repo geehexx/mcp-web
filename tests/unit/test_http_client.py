@@ -51,7 +51,7 @@ async def test_fetch_httpx_cancellation_closes_singleton(monkeypatch):
 
     await reset_http_client()
 
-    config = FetcherSettings(timeout=1, use_playwright_fallback=False)
+    config = FetcherSettings(timeout=1, enable_fallback=False)
     fetcher = URLFetcher(config)
 
     client_mock = AsyncMock()

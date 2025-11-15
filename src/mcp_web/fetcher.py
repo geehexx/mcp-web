@@ -212,7 +212,7 @@ class URLFetcher:
                 )
 
                 # Only fallback if enabled
-                if not self.config.use_playwright_fallback:
+                if not self.config.enable_fallback:
                     raise
 
         # Fallback to Playwright

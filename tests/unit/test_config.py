@@ -21,7 +21,7 @@ class TestFetcherSettings:
 
         assert settings.timeout == 30
         assert settings.max_concurrent == 5
-        assert settings.use_playwright_fallback is True
+        assert settings.enable_fallback is True
         assert settings.max_retries == 3
 
 

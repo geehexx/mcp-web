@@ -36,7 +36,7 @@ def test_config(temp_cache_dir):
         fetcher=FetcherSettings(
             timeout=5,
             max_concurrent=2,
-            use_playwright_fallback=False,  # Disable for tests
+            enable_fallback=False,  # Disable for tests
         ),
         extractor=ExtractorSettings(
             favor_recall=True,
