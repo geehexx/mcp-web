@@ -20,6 +20,15 @@ import structlog
 from mcp_web.browser_pool import BrowserPool
 from mcp_web.cache import CacheKeyBuilder, CacheManager
 from mcp_web.config import FetcherSettings
+from mcp_web.exceptions import (
+    BrowserError,
+    ConfigurationError,
+    FetchError,
+    HTTPError,
+    NetworkError,
+    TimeoutError,
+    ValidationError,
+)
 from mcp_web.http_client import close_http_client, get_http_client
 from mcp_web.metrics import get_metrics_collector
 
@@ -168,8 +177,9 @@ class URLFetcher:
 
         if is_file_url:
             if not self.config.enable_file_system:
-                raise ValueError(
-                    "File system access is disabled. Set FETCHER_ENABLE_FILE_SYSTEM=true"
+                raise ConfigurationError(
+                    "File system access is disabled. Set FETCHER_ENABLE_FILE_SYSTEM=true",
+                    config_key="FETCHER_ENABLE_FILE_SYSTEM",
                 )
 
             # File system fetch (no cache for local files)
@@ -228,7 +238,7 @@ class URLFetcher:
         except Exception as e:
             _get_logger().error("fetch_failed", url=url, error=str(e))
             self.metrics.record_error("fetcher", e, {"url": url})
-            raise Exception(f"Failed to fetch {url}: {str(e)}") from e
+            raise FetchError(f"Failed to fetch: {str(e)}", url=url) from e
 
     async def _fetch_httpx(self, url: str) -> FetchResult:
         """Fetch using httpx.
@@ -254,9 +264,10 @@ class URLFetcher:
 
             # Check for problematic responses that might need Playwright
             if response.status_code in [403, 429] or len(response.content) < 100:
-                raise Exception(
-                    f"Suspicious response: status={response.status_code}, "
-                    f"size={len(response.content)}"
+                raise HTTPError(
+                    f"Suspicious response (size={len(response.content)})",
+                    url=url,
+                    status_code=response.status_code,
                 )
 
             result = FetchResult(
@@ -358,7 +369,7 @@ class URLFetcher:
                         )
 
                         if response is None:
-                            raise Exception("No response from page")
+                            raise BrowserError(f"Browser navigation failed for {url}: No response from page")
 
                         # Get page content
                         content = await page.content()
@@ -387,7 +398,7 @@ class URLFetcher:
                         )
 
                         if response is None:
-                            raise Exception("No response from page")
+                            raise BrowserError(f"Browser navigation failed for {url}: No response from page")
 
                         # Get page content
                         content = await page.content()
@@ -474,7 +485,7 @@ class URLFetcher:
                     success=False,
                     error=error_msg,
                 )
-                raise PermissionError(error_msg)
+                raise ValidationError(error_msg, field="file_path", value_preview=str(file_path))
 
             # Check file exists
             if not file_path.exists():
@@ -488,7 +499,12 @@ class URLFetcher:
                     success=False,
                     error="File not found",
                 )
-                raise FileNotFoundError(f"File not found: {file_path}")
+                # Keep FileNotFoundError for backward compatibility but wrap in FetchError
+                raise FetchError(
+                    f"File not found: {file_path}",
+                    url=url,
+                    status_code=404,
+                ) from FileNotFoundError(str(file_path))
 
             # Check is file (not directory)
             if not file_path.is_file():
@@ -502,7 +518,11 @@ class URLFetcher:
                     success=False,
                     error="Not a file",
                 )
-                raise ValueError(f"Not a file: {file_path}")
+                raise ValidationError(
+                    f"Not a file: {file_path}",
+                    field="file_path",
+                    value_preview=str(file_path),
+                )
 
             # Check file size
             file_size = file_path.stat().st_size
@@ -517,8 +537,9 @@ class URLFetcher:
                     success=False,
                     error=f"File too large: {file_size} > {self.config.max_file_size}",
                 )
-                raise ValueError(
-                    f"File too large: {file_size} bytes > {self.config.max_file_size} bytes"
+                raise ValidationError(
+                    f"File too large: {file_size} bytes > {self.config.max_file_size} bytes",
+                    field="file_size",
                 )
 
             # Read file

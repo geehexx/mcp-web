@@ -7,6 +7,7 @@ import pytest
 import pytest_asyncio
 
 from mcp_web.config import FetcherSettings
+from mcp_web.exceptions import ConfigurationError, FetchError, ValidationError
 from mcp_web.fetcher import URLFetcher, _parse_file_url, _validate_file_path
 
 
@@ -180,19 +181,19 @@ class TestFileSystemFetcher:
         """Test fetching non-existent file."""
         non_existent = temp_files["dir"] / "does-not-exist.txt"
 
-        with pytest.raises(FileNotFoundError):
+        with pytest.raises(FetchError, match="File not found"):
             await fetcher.fetch(str(non_existent))
 
     @pytest.mark.asyncio
     async def test_fetch_directory_fails(self, fetcher, temp_files):
         """Test fetching directory fails."""
-        with pytest.raises(ValueError, match="Not a file"):
+        with pytest.raises(ValidationError, match="Not a file"):
             await fetcher.fetch(str(temp_files["dir"]))
 
     @pytest.mark.asyncio
     async def test_fetch_file_too_large(self, fetcher, temp_files):
         """Test fetching file exceeding size limit."""
-        with pytest.raises(ValueError, match="File too large"):
+        with pytest.raises(ValidationError, match="File too large"):
             await fetcher.fetch(str(temp_files["large"]))
 
     @pytest.mark.asyncio
@@ -204,7 +205,7 @@ class TestFileSystemFetcher:
             unauthorized_file = f.name
 
         try:
-            with pytest.raises(PermissionError, match="outside allowed directories"):
+            with pytest.raises(ValidationError, match="outside allowed directories"):
                 await fetcher.fetch(unauthorized_file)
         finally:
             Path(unauthorized_file).unlink()
@@ -216,7 +217,7 @@ class TestFileSystemFetcher:
         fetcher = URLFetcher(config)
 
         try:
-            with pytest.raises(ValueError, match="File system access is disabled"):
+            with pytest.raises(ConfigurationError, match="File system access is disabled"):
                 await fetcher.fetch(str(temp_files["text"]))
         finally:
             await fetcher.close()
@@ -268,7 +269,7 @@ class TestFileSystemSecurity:
             # Attempt path traversal
             traversal_path = str(allowed_dir / ".." / ".." / "etc" / "passwd")
 
-            with pytest.raises(PermissionError):
+            with pytest.raises(ValidationError):
                 await fetcher.fetch(traversal_path)
         finally:
             await fetcher.close()
@@ -296,7 +297,7 @@ class TestFileSystemSecurity:
 
         try:
             # Symlink resolves outside allowed directory
-            with pytest.raises(PermissionError):
+            with pytest.raises(ValidationError):
                 await fetcher.fetch(str(symlink))
         finally:
             await fetcher.close()

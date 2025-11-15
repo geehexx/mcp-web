@@ -18,6 +18,7 @@ import pytest
 
 from mcp_web.cache import CacheManager
 from mcp_web.config import FetcherSettings
+from mcp_web.exceptions import ConfigurationError
 from mcp_web.fetcher import FetchResult, URLFetcher
 
 
@@ -571,5 +572,5 @@ class TestErrorHandling:
         )
         fetcher = URLFetcher(config, cache=mock_cache)
 
-        with pytest.raises(ValueError, match="File system access is disabled"):
+        with pytest.raises(ConfigurationError, match="File system access is disabled"):
             await fetcher.fetch("file:///tmp/test.txt")
