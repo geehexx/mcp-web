@@ -294,8 +294,11 @@ def load_config(
 ) -> Config:
     """Load configuration from file and environment.
 
+    Currently loads configuration from environment variables only.
+    YAML file support is planned for a future release (see roadmap v0.3.0).
+
     Args:
-        config_file: Optional path to YAML config file
+        _config_file: Reserved for future YAML config file support (currently unused)
         overrides: Optional dict of override values
 
     Returns:
@@ -305,9 +308,12 @@ def load_config(
         >>> config = load_config()
         >>> config.summarizer.model
         'llama3.2:3b'
+
+    Note:
+        The config_file parameter is accepted but not yet implemented.
+        Use environment variables (MCP_WEB_*) for configuration.
     """
-    # TODO: Add YAML file loading support in future
-    # For now, load from environment variables
+    # Load from environment variables via pydantic-settings
     config = Config()
 
     # Apply overrides if provided
