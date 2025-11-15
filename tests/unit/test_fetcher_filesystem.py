@@ -4,6 +4,7 @@ import tempfile
 from pathlib import Path
 
 import pytest
+import pytest_asyncio
 
 from mcp_web.config import FetcherSettings
 from mcp_web.fetcher import URLFetcher, _parse_file_url, _validate_file_path
@@ -130,7 +131,7 @@ class TestFileSystemFetcher:
             "large": large_file,
         }
 
-    @pytest.fixture
+    @pytest_asyncio.fixture
     async def fetcher(self, temp_files):
         """Create fetcher with temp directory allowed."""
         config = FetcherSettings(

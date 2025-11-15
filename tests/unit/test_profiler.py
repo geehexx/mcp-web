@@ -174,7 +174,7 @@ class TestPerformanceCollector:
 
         assert "test_operation" in stats
         assert stats["test_operation"]["count"] == 1
-        assert stats["test_operation"]["avg_duration_ms"] == 123.45
+        assert stats["test_operation"]["mean_ms"] == 123.45
 
     def test_multiple_recordings(self):
         """Test multiple recordings calculates correct averages."""
@@ -195,9 +195,9 @@ class TestPerformanceCollector:
 
         stats = collector.get_statistics()
         assert stats["multi_test"]["count"] == 3
-        assert stats["multi_test"]["avg_duration_ms"] == 200.0
-        assert stats["multi_test"]["min_duration_ms"] == 100.0
-        assert stats["multi_test"]["max_duration_ms"] == 300.0
+        assert stats["multi_test"]["mean_ms"] == 200.0
+        assert stats["multi_test"]["min_ms"] == 100.0
+        assert stats["multi_test"]["max_ms"] == 300.0
 
     def test_success_failure_tracking(self):
         """Test tracking success and failure counts."""
@@ -217,8 +217,8 @@ class TestPerformanceCollector:
             collector.record(result)
 
         stats = collector.get_statistics()
-        assert stats["tracked_op"]["success_count"] == 3
-        assert stats["tracked_op"]["failure_count"] == 1
+        assert stats["tracked_op"]["count"] == 4
+        assert stats["tracked_op"]["success_rate"] == 0.75  # 3 successes out of 4
 
     def test_clear_results(self):
         """Test clearing all collected results."""
@@ -259,7 +259,7 @@ class TestPerformanceCollector:
         for result in results_to_add:
             collector.record(result)
 
-        all_results = collector.get_all_results()
+        all_results = collector.get_results()
         assert len(all_results) == 5
 
 
