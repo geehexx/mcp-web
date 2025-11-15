@@ -15,6 +15,7 @@ import asyncio
 from unittest.mock import AsyncMock, patch
 
 import pytest
+import pytest_asyncio
 
 from mcp_web.browser_pool import (
     BrowserInstance,
@@ -40,7 +41,7 @@ def pool_settings():
     )
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def mock_playwright():
     """Mock Playwright instance."""
     playwright = AsyncMock()
