@@ -8,6 +8,7 @@ import asyncio
 from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock, Mock, patch
 
+import nest_asyncio
 import pytest
 from click.testing import CliRunner
 
@@ -15,6 +16,9 @@ from mcp_web.chunker import Chunk
 from mcp_web.cli import cli, test_robots, test_summarize
 from mcp_web.extractor import ExtractedContent
 from mcp_web.fetcher import FetchResult
+
+# Apply nest_asyncio to allow asyncio.run() in CLI commands during testing
+nest_asyncio.apply()
 
 
 @pytest.mark.unit
@@ -98,8 +102,7 @@ class TestSummarizeCommand:
             ),
         ]
 
-    @pytest.mark.asyncio
-    async def test_basic_summarize(self, runner, mock_fetch_result, mock_extracted_content, mock_chunks):
+    def test_basic_summarize(self, runner, mock_fetch_result, mock_extracted_content, mock_chunks):
         """Test basic URL summarization."""
         with patch("mcp_web.cli.URLFetcher") as mock_fetcher_class, \
              patch("mcp_web.cli.ContentExtractor") as mock_extractor_class, \
@@ -120,14 +123,16 @@ class TestSummarizeCommand:
             mock_chunker.chunk_text.return_value = mock_chunks
             mock_chunker_class.return_value = mock_chunker
 
-            mock_summarizer = AsyncMock()
+            # Create a proper mock class that returns async generator
+            class MockSummarizer:
+                async def summarize_chunks(self, *args, **kwargs):
+                    yield "Test summary "
+                    yield "content here."
 
-            async def mock_summarize(*args, **kwargs):
-                yield "Test summary "
-                yield "content here."
+                async def close(self):
+                    pass
 
-            mock_summarizer.summarize_chunks.return_value = mock_summarize()
-            mock_summarizer.close = AsyncMock()
+            mock_summarizer = MockSummarizer()
             mock_summarizer_class.return_value = mock_summarizer
 
             # Run command
@@ -137,10 +142,12 @@ class TestSummarizeCommand:
                 catch_exceptions=False,
             )
 
+            if result.exit_code != 0:
+                print(f"CLI Output:\n{result.output}")
+                print(f"Exception: {result.exception}")
             assert result.exit_code == 0
 
-    @pytest.mark.asyncio
-    async def test_summarize_with_query(self, runner):
+    def test_summarize_with_query(self, runner):
         """Test summarization with query parameter."""
         with patch("mcp_web.cli.URLFetcher") as mock_fetcher_class, \
              patch("mcp_web.cli.ContentExtractor") as mock_extractor_class, \
@@ -174,15 +181,17 @@ class TestSummarizeCommand:
             ]
             mock_chunker_class.return_value = mock_chunker
 
-            mock_summarizer = AsyncMock()
+            # Create a proper mock class that returns async generator
+            class MockSummarizer:
+                async def summarize_chunks(self, *args, **kwargs):
+                    # Verify query was passed
+                    assert kwargs.get("query") == "test query"
+                    yield "Summary"
 
-            async def mock_summarize(*args, **kwargs):
-                # Verify query was passed
-                assert kwargs.get("query") == "test query"
-                yield "Summary"
+                async def close(self):
+                    pass
 
-            mock_summarizer.summarize_chunks.return_value = mock_summarize()
-            mock_summarizer.close = AsyncMock()
+            mock_summarizer = MockSummarizer()
             mock_summarizer_class.return_value = mock_summarizer
 
             result = runner.invoke(
@@ -199,8 +208,7 @@ class TestSummarizeCommand:
 
             assert result.exit_code == 0
 
-    @pytest.mark.asyncio
-    async def test_summarize_with_provider(self, runner):
+    def test_summarize_with_provider(self, runner):
         """Test summarization with different provider."""
         with patch("mcp_web.cli.URLFetcher") as mock_fetcher_class, \
              patch("mcp_web.cli.ContentExtractor") as mock_extractor_class, \
@@ -234,13 +242,15 @@ class TestSummarizeCommand:
             ]
             mock_chunker_class.return_value = mock_chunker
 
-            mock_summarizer = AsyncMock()
+            # Create a proper mock class that returns async generator
+            class MockSummarizer:
+                async def summarize_chunks(self, *args, **kwargs):
+                    yield "Summary"
 
-            async def mock_summarize(*args, **kwargs):
-                yield "Summary"
+                async def close(self):
+                    pass
 
-            mock_summarizer.summarize_chunks.return_value = mock_summarize()
-            mock_summarizer.close = AsyncMock()
+            mock_summarizer = MockSummarizer()
             mock_summarizer_class.return_value = mock_summarizer
 
             result = runner.invoke(
@@ -259,8 +269,7 @@ class TestSummarizeCommand:
 
             assert result.exit_code == 0
 
-    @pytest.mark.asyncio
-    async def test_summarize_multiple_urls(self, runner):
+    def test_summarize_multiple_urls(self, runner):
         """Test summarization of multiple URLs."""
         with patch("mcp_web.cli.URLFetcher") as mock_fetcher_class, \
              patch("mcp_web.cli.ContentExtractor") as mock_extractor_class, \
@@ -294,13 +303,15 @@ class TestSummarizeCommand:
             ]
             mock_chunker_class.return_value = mock_chunker
 
-            mock_summarizer = AsyncMock()
+            # Create a proper mock class that returns async generator
+            class MockSummarizer:
+                async def summarize_chunks(self, *args, **kwargs):
+                    yield "Summary"
 
-            async def mock_summarize(*args, **kwargs):
-                yield "Summary"
+                async def close(self):
+                    pass
 
-            mock_summarizer.summarize_chunks.return_value = mock_summarize()
-            mock_summarizer.close = AsyncMock()
+            mock_summarizer = MockSummarizer()
             mock_summarizer_class.return_value = mock_summarizer
 
             result = runner.invoke(
@@ -316,8 +327,7 @@ class TestSummarizeCommand:
 
             assert result.exit_code == 0
 
-    @pytest.mark.asyncio
-    async def test_summarize_with_output_file(self, runner, tmp_path):
+    def test_summarize_with_output_file(self, runner, tmp_path):
         """Test saving summary to file."""
         output_file = tmp_path / "summary.md"
 
@@ -353,13 +363,15 @@ class TestSummarizeCommand:
             ]
             mock_chunker_class.return_value = mock_chunker
 
-            mock_summarizer = AsyncMock()
+            # Create a proper mock class that returns async generator
+            class MockSummarizer:
+                async def summarize_chunks(self, *args, **kwargs):
+                    yield "Test summary content"
 
-            async def mock_summarize(*args, **kwargs):
-                yield "Test summary content"
+                async def close(self):
+                    pass
 
-            mock_summarizer.summarize_chunks.return_value = mock_summarize()
-            mock_summarizer.close = AsyncMock()
+            mock_summarizer = MockSummarizer()
             mock_summarizer_class.return_value = mock_summarizer
 
             result = runner.invoke(
@@ -380,8 +392,7 @@ class TestSummarizeCommand:
             assert "https://example.com" in content
             assert "Test summary content" in content
 
-    @pytest.mark.asyncio
-    async def test_summarize_verbose_mode(self, runner):
+    def test_summarize_verbose_mode(self, runner):
         """Test verbose output mode."""
         with patch("mcp_web.cli.URLFetcher") as mock_fetcher_class, \
              patch("mcp_web.cli.ContentExtractor") as mock_extractor_class, \
@@ -416,13 +427,15 @@ class TestSummarizeCommand:
             ]
             mock_chunker_class.return_value = mock_chunker
 
-            mock_summarizer = AsyncMock()
+            # Create a proper mock class that returns async generator
+            class MockSummarizer:
+                async def summarize_chunks(self, *args, **kwargs):
+                    yield "Summary"
 
-            async def mock_summarize(*args, **kwargs):
-                yield "Summary"
+                async def close(self):
+                    pass
 
-            mock_summarizer.summarize_chunks.return_value = mock_summarize()
-            mock_summarizer.close = AsyncMock()
+            mock_summarizer = MockSummarizer()
             mock_summarizer_class.return_value = mock_summarizer
 
             result = runner.invoke(
@@ -440,8 +453,7 @@ class TestSummarizeCommand:
             # Verbose mode should show additional details
             assert "Provider:" in result.output or "Title:" in result.output
 
-    @pytest.mark.asyncio
-    async def test_summarize_error_handling(self, runner):
+    def test_summarize_error_handling(self, runner):
         """Test error handling in summarization."""
         with patch("mcp_web.cli.URLFetcher") as mock_fetcher_class:
             mock_fetcher = AsyncMock()
@@ -469,8 +481,7 @@ class TestRobotsCommand:
         """Create Click test runner."""
         return CliRunner()
 
-    @pytest.mark.asyncio
-    async def test_robots_txt_found(self, runner):
+    def test_robots_txt_found(self, runner):
         """Test robots.txt found and parsed."""
         robots_content = b"""
 User-agent: *
@@ -516,8 +527,7 @@ Crawl-delay: 1
             assert result.exit_code == 0
             assert "robots.txt found" in result.output
 
-    @pytest.mark.asyncio
-    async def test_robots_txt_not_found(self, runner):
+    def test_robots_txt_not_found(self, runner):
         """Test when robots.txt is not found."""
         with patch("mcp_web.cli.URLFetcher") as mock_fetcher_class:
             mock_fetcher = AsyncMock()
@@ -534,8 +544,7 @@ Crawl-delay: 1
             # Should handle gracefully
             assert result.exit_code == 0 or "404" in result.output
 
-    @pytest.mark.asyncio
-    async def test_robots_disallow(self, runner):
+    def test_robots_disallow(self, runner):
         """Test when URL is disallowed by robots.txt."""
         robots_content = b"""
 User-agent: *
@@ -569,8 +578,7 @@ Disallow: /admin/
 
             assert result.exit_code == 0
 
-    @pytest.mark.asyncio
-    async def test_robots_ignore_flag(self, runner):
+    def test_robots_ignore_flag(self, runner):
         """Test --ignore flag to bypass robots.txt."""
         robots_content = b"""
 User-agent: *
@@ -625,7 +633,8 @@ class TestCLIHelpers:
     def test_cli_no_arguments(self, runner):
         """Test CLI with no arguments shows help."""
         result = runner.invoke(cli, [])
-        assert result.exit_code == 0
+        # Click groups exit with code 2 when no subcommand is provided
+        assert result.exit_code == 2
         assert "MCP-Web CLI" in result.output
 
     def test_test_summarize_requires_url(self, runner):
@@ -690,13 +699,15 @@ class TestAsyncImplementations:
             ]
             mock_chunker_class.return_value = mock_chunker
 
-            mock_summarizer = AsyncMock()
+            # Create a proper mock class that returns async generator
+            class MockSummarizer:
+                async def summarize_chunks(self, *args, **kwargs):
+                    yield "Summary"
 
-            async def mock_summarize(*args, **kwargs):
-                yield "Summary"
+                async def close(self):
+                    pass
 
-            mock_summarizer.summarize_chunks.return_value = mock_summarize()
-            mock_summarizer.close = AsyncMock()
+            mock_summarizer = MockSummarizer()
             mock_summarizer_class.return_value = mock_summarizer
 
             # Call async function
