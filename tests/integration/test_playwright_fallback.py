@@ -16,43 +16,53 @@ from mcp_web.fetcher import URLFetcher
 class TestPlaywrightFallback:
     """Test Playwright fallback when httpx is insufficient."""
 
+    @pytest.mark.skip(reason="TODO: Requires JS-rendered test page or mock Playwright responses - tracked in issue #TBD")
     async def test_detect_js_rendered_content(self):
-        """Test detection of JavaScript-rendered content."""
-        config = FetcherSettings()
-        URLFetcher(config)
+        """Test detection of JavaScript-rendered content.
 
-        # Example of a page that's mostly JS-rendered
-        # Using httpbin's delay endpoint which returns static content
-        # We'll create a mock test instead for CI
-        pass  # TODO: Need mock for JS-rendered content
+        TODO: This test needs:
+        - Mock Playwright page with JS-rendered content
+        - Verification that fetcher detects minimal initial HTML
+        - Confirmation that Playwright fallback is triggered
+        - Comparison of httpx vs Playwright content
+        """
+        pytest.fail("Test not implemented - placeholder for future work")
 
+    @pytest.mark.skip(reason="TODO: Requires mock for httpx failure scenarios - tracked in issue #TBD")
     async def test_fallback_on_httpx_failure(self):
-        """Test fallback when httpx fails."""
-        config = FetcherSettings(
-            timeout=1,  # Short timeout to trigger failures
-            enable_fallback=True,
-        )
-        URLFetcher(config)
+        """Test fallback when httpx fails.
 
-        # This would test with a URL that httpx can't handle
-        # but Playwright can (e.g., heavy JS, anti-bot measures)
-        pass  # TODO: Need appropriate test URL or mock
+        TODO: This test needs:
+        - Mock httpx to raise specific exceptions (403, timeout, etc.)
+        - Mock Playwright to return successful response
+        - Verify fallback is triggered correctly
+        - Ensure fetch_method='playwright' in result
+        """
+        pytest.fail("Test not implemented - placeholder for future work")
 
+    @pytest.mark.skip(reason="TODO: Requires Playwright page mock with network events - tracked in issue #TBD")
     async def test_wait_for_network_idle(self):
-        """Test that Playwright waits for network idle."""
-        config = FetcherSettings(enable_fallback=True)
-        URLFetcher(config)
+        """Test that Playwright waits for network idle.
 
-        # Test would verify that Playwright waits for all network
-        # requests to complete before extracting content
-        pass  # TODO: Mock or test URL needed
+        TODO: This test needs:
+        - Mock Playwright page with network request tracking
+        - Simulate pending network requests
+        - Verify page.wait_for_load_state('networkidle') is called
+        - Ensure content extraction waits for all resources
+        """
+        pytest.fail("Test not implemented - placeholder for future work")
 
+    @pytest.mark.skip(reason="TODO: Requires SPA test fixture (React/Vue/Angular) - tracked in issue #TBD")
     async def test_extract_from_spa(self):
-        """Test extraction from single-page application."""
-        # SPAs like React apps need JS execution to render content
-        # This would test that Playwright successfully extracts
-        # content from a React/Vue/Angular app
-        pass  # TODO: Test React app example
+        """Test extraction from single-page application.
+
+        TODO: This test needs:
+        - Fixture with React/Vue/Angular app HTML
+        - Mock Playwright to execute JavaScript
+        - Verify rendered content is extracted (not just <div id="root">)
+        - Test with various SPA frameworks
+        """
+        pytest.fail("Test not implemented - placeholder for future work")
 
     async def test_handle_playwright_errors_gracefully(self):
         """Test graceful handling of Playwright errors."""
@@ -74,11 +84,17 @@ class TestPlaywrightFallback:
         finally:
             await fetcher.close()
 
+    @pytest.mark.skip(reason="TODO: Requires mock Playwright response with full metadata - tracked in issue #TBD")
     async def test_fallback_preserves_metadata(self):
-        """Test that Playwright fallback preserves HTTP metadata."""
-        # When falling back to Playwright, we should still capture
-        # status codes, content-type, headers, etc.
-        pass  # TODO: Verify metadata preservation
+        """Test that Playwright fallback preserves HTTP metadata.
+
+        TODO: This test needs:
+        - Mock Playwright response with status_code, headers
+        - Verify FetchResult includes all metadata
+        - Test content-type preservation
+        - Ensure headers are captured correctly
+        """
+        pytest.fail("Test not implemented - placeholder for future work")
 
 
 @pytest.mark.unit
@@ -173,22 +189,29 @@ class TestFallbackConfiguration:
 class TestFallbackMetrics:
     """Test metrics collection for fallback behavior."""
 
+    @pytest.mark.skip(reason="TODO: Requires metrics integration test - tracked in issue #TBD")
     async def test_track_fetch_method_used(self):
-        """Test that we track which method was used."""
-        config = FetcherSettings()
-        URLFetcher(config)
+        """Test that we track which method was used.
 
-        # Would need to fetch a real URL and check the result
-        # result.fetch_method should be either 'httpx' or 'playwright'
-        pass  # TODO: Requires test URL
+        TODO: This test needs:
+        - Mock both httpx and Playwright fetches
+        - Verify fetch_method field in FetchResult
+        - Check metrics collector records method used
+        - Test both 'httpx' and 'playwright' paths
+        """
+        pytest.fail("Test not implemented - placeholder for future work")
 
+    @pytest.mark.skip(reason="TODO: Requires metrics aggregation test - tracked in issue #TBD")
     async def test_track_fallback_frequency(self):
-        """Test tracking how often fallback is needed."""
-        # Metrics should show:
-        # - Number of httpx successes
-        # - Number of playwright fallbacks
-        # - Fallback rate percentage
-        pass  # TODO: Metrics integration
+        """Test tracking how often fallback is needed.
+
+        TODO: This test needs:
+        - Mock multiple fetch attempts (mix of httpx and Playwright)
+        - Verify metrics collector aggregates counts
+        - Calculate fallback rate (fallbacks / total fetches)
+        - Test metrics export includes fallback statistics
+        """
+        pytest.fail("Test not implemented - placeholder for future work")
 
 
 @pytest.mark.integration
@@ -196,25 +219,31 @@ class TestFallbackMetrics:
 class TestFallbackPerformance:
     """Test performance characteristics of fallback."""
 
+    @pytest.mark.skip(reason="TODO: Requires performance benchmarking setup - tracked in issue #TBD")
     async def test_httpx_faster_than_playwright(self):
-        """Test that httpx is significantly faster for static content."""
+        """Test that httpx is significantly faster for static content.
 
-        config = FetcherSettings()
-        URLFetcher(config)
+        TODO: This test needs:
+        - Mock static HTML response
+        - Time httpx fetch
+        - Time Playwright fetch
+        - Assert httpx is at least 10x faster
+        - Use pytest-benchmark for accurate measurements
+        """
+        pytest.fail("Test not implemented - placeholder for future work")
 
-        # For static content, httpx should be 10-100x faster
-        # This would be tested with a known static URL
-        pass  # TODO: Performance comparison test
-
+    @pytest.mark.skip(reason="TODO: Requires concurrency test setup - tracked in issue #TBD")
     async def test_concurrent_httpx_requests(self):
-        """Test that httpx handles concurrent requests efficiently."""
+        """Test that httpx handles concurrent requests efficiently.
 
-        config = FetcherSettings()
-        URLFetcher(config)
-
-        # httpx should handle many concurrent requests
-        # Playwright would be limited by browser instances
-        pass  # TODO: Concurrency test
+        TODO: This test needs:
+        - Mock httpx to handle 100+ concurrent requests
+        - Measure throughput and latency
+        - Compare with Playwright (limited by browser pool size)
+        - Verify httpx handles concurrency better for simple pages
+        - Test with asyncio.gather for multiple URLs
+        """
+        pytest.fail("Test not implemented - placeholder for future work")
 
 
 # Mock/Fixture examples for testing without real network calls

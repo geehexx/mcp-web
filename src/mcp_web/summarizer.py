@@ -586,6 +586,18 @@ class Summarizer:
             # Sanitize the query
             query = self.injection_filter.sanitize(query)
 
+        # SECURITY: Sanitize web content to prevent prompt injection attacks
+        # Web content from untrusted sources could contain malicious instructions
+        # targeting the LLM (OWASP LLM01:2025 - Prompt Injection)
+        if self.injection_filter.detect_injection(content):
+            _get_logger().warning(
+                "prompt_injection_in_content",
+                content_preview=content[:200],
+                content_length=len(content),
+            )
+            # Sanitize the content while preserving legitimate information
+            content = self.injection_filter.sanitize(content)
+
         # Build optimized system instructions (balanced for performance and quality)
         # Research: Concise prompts reduce latency without sacrificing quality
         # Reference: https://signoz.io/guides/open-ai-api-latency/
