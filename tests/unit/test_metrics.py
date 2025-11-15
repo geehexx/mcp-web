@@ -502,9 +502,12 @@ class TestMetricsCollector:
         metrics = collector.export_metrics()
         total_cost = metrics["summary"]["total_cost_usd"]
 
-        # Should be sum of both
+        # Should be sum of both (use pytest.approx for floating point comparison)
+        # Use absolute tolerance for small floating point values
         assert total_cost > 0
-        assert total_cost == sum(m.cost_estimate for m in collector.summarization_metrics)
+        assert total_cost == pytest.approx(
+            sum(m.cost_estimate for m in collector.summarization_metrics), abs=1e-4
+        )
 
 
 @pytest.mark.unit

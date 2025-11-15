@@ -11,6 +11,7 @@ Design Decision DD-018: Structured logging for observability.
 """
 
 import json
+import logging
 import time
 from collections import defaultdict
 from collections.abc import Iterator
@@ -443,7 +444,7 @@ def configure_logging(level: str = "INFO", structured: bool = True) -> None:
     structlog.configure(
         processors=processors,
         wrapper_class=structlog.make_filtering_bound_logger(
-            getattr(structlog.stdlib, level.upper(), structlog.INFO)
+            getattr(logging, level.upper(), logging.INFO)
         ),
         context_class=dict,
         logger_factory=structlog.PrintLoggerFactory(),
