@@ -1686,6 +1686,11 @@ dev = [
     { name = "types-python-dateutil" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "nest-asyncio" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "aiofiles", specifier = ">=24.1.0,<25.0.0" },
@@ -1733,6 +1738,9 @@ requires-dist = [
     { name = "types-python-dateutil", marker = "extra == 'dev'", specifier = ">=2.9.0,<3.0.0" },
 ]
 provides-extras = ["dev"]
+
+[package.metadata.requires-dev]
+dev = [{ name = "nest-asyncio", specifier = ">=1.6.0" }]
 
 [[package]]
 name = "mdurl"

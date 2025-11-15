@@ -214,3 +214,8 @@ max_stack_depth = 8
 runner = "uv run pytest"
 use_coverage = true
 backup = false
+
+[dependency-groups]
+dev = [
+    "nest-asyncio>=1.6.0",
+]
