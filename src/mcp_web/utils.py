@@ -84,7 +84,8 @@ def validate_url(url: str) -> bool:
     try:
         result = urlparse(url)
         return all([result.scheme in ("http", "https"), result.netloc])
-    except Exception:
+    except (ValueError, AttributeError, TypeError):
+        # Handle malformed URLs, None values, or non-string inputs
         return False
 
 

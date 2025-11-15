@@ -246,7 +246,13 @@ class CacheManager:
                 "usage_percent": round((volume / self.max_size) * 100, 2),
                 "entry_count": len(self.cache),
             }
-        except Exception:
+        except (OSError, RuntimeError, AttributeError) as e:
+            # Handle cache access errors (disk I/O, corrupt cache, etc.)
+            _get_logger().error(
+                "cache_stats_error",
+                error_type=type(e).__name__,
+                error=str(e),
+            )
             return {}
 
     def _hash_key(self, key: str) -> str:
