@@ -1,0 +1,103 @@
+```mermaid
+graph TB
+    subgraph External["External Systems"]
+        User[👤 User/Client]
+        OpenAI[☁️ OpenAI API]
+        Anthropic[☁️ Anthropic API]
+        Ollama[💻 Ollama Local]
+        Web[🌐 Web Servers]
+    end
+
+    subgraph MCPWeb["MCP-Web System"]
+        MCP[MCP Server<br/>Orchestration Layer]
+
+        subgraph Core["Core Pipeline"]
+            Fetch[URL Fetcher<br/>httpx + Playwright]
+            Extract[Content Extractor<br/>Trafilatura + BeautifulSoup]
+            Chunk[Text Chunker<br/>Token-aware splitting]
+            Summarize[LLM Summarizer<br/>Multi-provider support]
+        end
+
+        subgraph Infrastructure["Infrastructure"]
+            Cache[(📦 Disk Cache<br/>SHA-256 keyed)]
+            BrowserPool[🌐 Browser Pool<br/>Playwright instances]
+            Security[🔒 Security<br/>OWASP LLM Top 10]
+            Metrics[📊 Metrics<br/>structlog + events]
+        end
+    end
+
+    User -->|MCP Request| MCP
+    MCP -->|Coordinate| Fetch
+    MCP -->|Coordinate| Extract
+    MCP -->|Coordinate| Chunk
+    MCP -->|Coordinate| Summarize
+
+    Fetch -->|HTTP| Web
+    Fetch -->|Use| BrowserPool
+    Fetch -->|Check| Cache
+
+    Extract -->|Parse HTML| Fetch
+    Extract -->|Check| Cache
+
+    Chunk -->|Split text| Extract
+
+    Summarize -->|OpenAI| OpenAI
+    Summarize -->|Anthropic| Anthropic
+    Summarize -->|Local| Ollama
+    Summarize -->|Validate| Security
+    Summarize -->|Check| Cache
+
+    MCP -->|Log| Metrics
+    Fetch -->|Log| Metrics
+    Extract -->|Log| Metrics
+    Summarize -->|Log| Metrics
+
+    MCP -->|Response| User
+
+    classDef coreClass fill:#4A90E2,stroke:#2E5C8A,stroke-width:2px,color:#fff
+    classDef infraClass fill:#7B68EE,stroke:#483D8B,stroke-width:2px,color:#fff
+    classDef externalClass fill:#50C878,stroke:#2D7A4A,stroke-width:2px,color:#fff
+
+    class Fetch,Extract,Chunk,Summarize coreClass
+    class Cache,BrowserPool,Security,Metrics infraClass
+    class User,OpenAI,Anthropic,Ollama,Web externalClass
+```
+
+## System Context Diagram
+
+This diagram shows the high-level architecture of MCP-Web and its interactions with external systems.
+
+### Key Components:
+
+**MCP Server (Orchestration)**
+- Coordinates the entire summarization pipeline
+- Implements MCP protocol
+- Manages request routing
+
+**Core Pipeline**
+1. **URL Fetcher** - Retrieves web content (httpx primary, Playwright fallback)
+2. **Content Extractor** - Parses HTML and extracts meaningful content
+3. **Text Chunker** - Splits content into LLM-sized chunks
+4. **LLM Summarizer** - Generates summaries using various LLM providers
+
+**Infrastructure**
+- **Cache** - Disk-based caching with SHA-256 keys
+- **Browser Pool** - Managed Playwright browser instances
+- **Security** - OWASP LLM Top 10 defenses
+- **Metrics** - Structured logging and performance tracking
+
+**External Systems**
+- **Users** - MCP clients requesting summaries
+- **LLM Providers** - OpenAI, Anthropic, Ollama, etc.
+- **Web Servers** - Source content
+
+### Data Flow:
+1. User sends MCP request
+2. MCP Server coordinates pipeline
+3. Fetcher retrieves content (with caching)
+4. Extractor parses and cleans content
+5. Chunker splits into manageable pieces
+6. Summarizer generates summary via LLM
+7. Response returned to user
+
+All operations are logged via the Metrics system.

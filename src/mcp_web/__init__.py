@@ -3,7 +3,9 @@
 Provides intelligent URL summarization, content extraction, and web scraping capabilities.
 """
 
-__version__ = "0.1.0"
+from importlib.metadata import version
+
+__version__ = version("mcp-web")  # Single source of truth from pyproject.toml
 
 from mcp_web.config import Config, load_config
 from mcp_web.mcp_server import create_server

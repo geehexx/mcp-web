@@ -1,0 +1,164 @@
+```mermaid
+graph LR
+    subgraph API["API Layer"]
+        MCP[MCP Server<br/>WebSummarizationPipeline]
+    end
+
+    subgraph Fetch["Fetch Layer"]
+        URLFetch[URL Fetcher]
+        HTTP[HTTP Client<br/>httpx singleton]
+        BP[Browser Pool<br/>Playwright managers]
+    end
+
+    subgraph Process["Processing Layer"]
+        Extract[Content Extractor<br/>HTML → Text]
+        Chunk[Text Chunker<br/>Token-aware splitter]
+    end
+
+    subgraph LLM["LLM Layer"]
+        Sum[Summarizer<br/>Multi-provider]
+        OpenAI[OpenAI Client]
+        Ollama[Ollama Client]
+        Anthropic[Anthropic Client]
+    end
+
+    subgraph Infra["Infrastructure"]
+        Cache[(Cache Manager<br/>Disk-based)]
+        Security[Security Filter<br/>OWASP defenses]
+        Metrics[Metrics Collector<br/>Performance tracking]
+        Config[Config<br/>Pydantic settings]
+    end
+
+    MCP --> URLFetch
+    MCP --> Extract
+    MCP --> Chunk
+    MCP --> Sum
+    MCP --> Config
+
+    URLFetch --> HTTP
+    URLFetch --> BP
+    URLFetch --> Cache
+    URLFetch --> Metrics
+
+    Extract --> Cache
+    Extract --> Metrics
+
+    Chunk --> Config
+    Chunk --> Metrics
+
+    Sum --> Security
+    Sum --> Cache
+    Sum --> Metrics
+    Sum --> Config
+    Sum --> OpenAI
+    Sum --> Ollama
+    Sum --> Anthropic
+
+    HTTP --> Config
+    BP --> Config
+    BP --> Metrics
+
+    Security --> Config
+
+    Cache --> Config
+    Metrics --> Config
+
+    classDef apiClass fill:#FF6B6B,stroke:#CC5555,stroke-width:3px,color:#fff
+    classDef fetchClass fill:#4ECDC4,stroke:#3BA39C,stroke-width:2px,color:#fff
+    classDef processClass fill:#FFE66D,stroke:#CCB857,stroke-width:2px,color:#000
+    classDef llmClass fill:#A8E6CF,stroke:#86B8A6,stroke-width:2px,color:#000
+    classDef infraClass fill:#95A5A6,stroke:#7F8C8D,stroke-width:2px,color:#fff
+
+    class MCP apiClass
+    class URLFetch,HTTP,BP fetchClass
+    class Extract,Chunk processClass
+    class Sum,OpenAI,Ollama,Anthropic llmClass
+    class Cache,Security,Metrics,Config infraClass
+```
+
+## Component Interaction Diagram
+
+This diagram shows how components depend on and interact with each other.
+
+### Layers:
+
+**API Layer** (Red)
+- **MCP Server** - Public API and orchestration
+- Entry point for all requests
+
+**Fetch Layer** (Teal)
+- **URL Fetcher** - Coordinates HTTP and browser-based fetching
+- **HTTP Client** - Singleton httpx client for fast requests
+- **Browser Pool** - Managed Playwright instances for JS-heavy sites
+
+**Processing Layer** (Yellow)
+- **Content Extractor** - HTML parsing and content extraction
+- **Text Chunker** - Intelligent text splitting
+
+**LLM Layer** (Green)
+- **Summarizer** - Multi-provider LLM abstraction
+- **Provider Clients** - OpenAI, Ollama, Anthropic integrations
+
+**Infrastructure** (Gray)
+- **Cache Manager** - Disk-based caching with TTL
+- **Security Filter** - Prompt injection detection and sanitization
+- **Metrics Collector** - Performance tracking and logging
+- **Config** - Centralized configuration (all components depend on this)
+
+### Key Patterns:
+
+**1. Dependency Injection**
+- All components receive Config instance
+- Enables testability and flexibility
+
+**2. Singleton Pattern** (⚠️ **Being Refactored**)
+- HTTP Client currently global (FIXME)
+- Metrics Collector currently global (FIXME)
+
+**3. Caching Strategy**
+- Multiple layers use Cache Manager
+- Content-addressed caching (SHA-256 hashing)
+
+**4. Security-First**
+- Summarizer validates all inputs via Security Filter
+- URL Fetcher validates URLs before fetching
+
+**5. Observability**
+- All major components log to Metrics
+- Structured logging with performance tracking
+
+### Data Flow:
+
+**Request Path:**
+MCP → URLFetcher → Extract → Chunk → Summarizer → LLM Provider
+
+**Cross-Cutting Concerns:**
+- Config: All components
+- Metrics: All operations
+- Cache: Fetch, Extract, Summarizer
+- Security: URLFetcher, Summarizer
+
+### Component Responsibilities:
+
+| Component | Responsibility | Dependencies |
+|-----------|----------------|--------------|
+| MCP Server | Orchestration, MCP protocol | All components |
+| URL Fetcher | HTTP/browser fetching, fallback | HTTP Client, Browser Pool, Cache |
+| Content Extractor | HTML parsing, content extraction | Cache |
+| Text Chunker | Token-aware text splitting | Config |
+| Summarizer | LLM summarization, provider abstraction | LLM Clients, Security, Cache |
+| Cache Manager | Disk-based caching, TTL, pruning | Config |
+| Security Filter | Prompt injection detection, validation | Config |
+| Metrics Collector | Performance tracking, logging | Config |
+| Config | Centralized configuration | None (Pydantic) |
+
+### Known Issues:
+
+⚠️ **Global Singletons** (being refactored):
+- HTTP Client uses global state
+- Metrics Collector uses global state
+- **Recommendation:** Dependency injection pattern
+
+⚠️ **Tight Coupling**:
+- MCP Server knows about all components
+- **Recommendation:** Service layer abstraction

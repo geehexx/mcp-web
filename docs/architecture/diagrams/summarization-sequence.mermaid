@@ -1,0 +1,162 @@
+```mermaid
+sequenceDiagram
+    actor Client
+    participant MCP as MCP Server
+    participant Fetch as URL Fetcher
+    participant Cache as Cache Manager
+    participant Browser as Browser Pool
+    participant Extract as Content Extractor
+    participant Chunk as Text Chunker
+    participant Security as Security Filter
+    participant LLM as LLM Summarizer
+    participant Provider as LLM Provider
+
+    Client->>MCP: summarize_urls(["https://example.com"])
+    activate MCP
+
+    Note over MCP: Validate URLs
+    MCP->>Security: validate_url("https://example.com")
+    Security-->>MCP: ✓ Valid
+
+    MCP->>Fetch: fetch("https://example.com")
+    activate Fetch
+
+    Fetch->>Cache: get("fetch:https://example.com")
+    Cache-->>Fetch: None (cache miss)
+
+    Note over Fetch: Try httpx first
+    Fetch->>Fetch: httpx.get()
+
+    alt httpx success
+        Fetch-->>Fetch: ✓ Got response
+    else httpx fails (403, JS-heavy)
+        Fetch->>Browser: acquire()
+        Browser-->>Fetch: Browser instance
+        Fetch->>Browser: page.goto()
+        Browser-->>Fetch: Rendered HTML
+        Fetch->>Browser: release()
+    end
+
+    Fetch->>Cache: set("fetch:https://...", result)
+    Fetch-->>MCP: FetchResult
+    deactivate Fetch
+
+    MCP->>Extract: extract(fetch_result)
+    activate Extract
+
+    Extract->>Cache: get("extract:sha256hash")
+    Cache-->>Extract: None (cache miss)
+
+    Note over Extract: Parse HTML with Trafilatura
+    Extract->>Extract: trafilatura.extract()
+    Extract->>Extract: parse_metadata()
+
+    Extract->>Cache: set("extract:sha256hash", content)
+    Extract-->>MCP: ExtractedContent
+    deactivate Extract
+
+    MCP->>Chunk: chunk_text(content.text)
+    activate Chunk
+
+    Note over Chunk: Split into chunks (8000 tokens)
+    Chunk->>Chunk: count_tokens()
+    Chunk->>Chunk: hierarchical_split()
+
+    Chunk-->>MCP: [Chunk1, Chunk2, ...]
+    deactivate Chunk
+
+    MCP->>LLM: summarize_chunks(chunks, query)
+    activate LLM
+
+    LLM->>Cache: get("summary:hash")
+    Cache-->>LLM: None (cache miss)
+
+    alt Query provided
+        LLM->>Security: detect_injection(query)
+        Security-->>LLM: ✓ Safe
+        LLM->>Security: sanitize(query)
+        Security-->>LLM: Sanitized query
+    end
+
+    Note over LLM: Build structured prompt
+    LLM->>LLM: create_structured_prompt()
+
+    LLM->>Provider: stream_completion(prompt)
+    activate Provider
+
+    loop Streaming response
+        Provider-->>LLM: Token chunk
+        LLM-->>MCP: Yield chunk
+        MCP-->>Client: Stream to client
+    end
+
+    Provider-->>LLM: Complete
+    deactivate Provider
+
+    LLM->>Cache: set("summary:hash", full_summary)
+    LLM-->>MCP: Complete
+    deactivate LLM
+
+    Note over MCP: Format final response
+    MCP->>MCP: add_metadata()
+
+    MCP-->>Client: Complete summary
+    deactivate MCP
+```
+
+## Summarization Sequence Diagram
+
+This diagram shows the complete request flow for a URL summarization request.
+
+### Key Phases:
+
+**1. URL Validation (Security)**
+- Validates URL is safe (not localhost, private IP, etc.)
+- Prevents SSRF attacks
+
+**2. Content Fetching (with Fallback)**
+- First tries httpx (fast, lightweight)
+- Falls back to Playwright if needed (JavaScript, 403 errors)
+- Caches fetch results
+
+**3. Content Extraction**
+- Parses HTML with Trafilatura
+- Extracts clean text, title, metadata
+- Caches extracted content (by content hash)
+
+**4. Text Chunking**
+- Splits content into LLM-appropriate chunks
+- Token-aware splitting (default: 8000 tokens)
+- Hierarchical strategy (sections → paragraphs → sentences)
+
+**5. Security Filtering**
+- Detects prompt injection in user queries
+- Sanitizes dangerous content
+- Implements OWASP LLM01:2025 defenses
+
+**6. LLM Summarization**
+- Builds structured prompt
+- Streams response from LLM provider
+- Supports OpenAI, Anthropic, Ollama, etc.
+- Caches summaries (by content hash + query + model)
+
+**7. Response Assembly**
+- Adds metadata (sources, links)
+- Formats final output
+- Returns to client
+
+### Caching Strategy:
+
+Three-level caching ensures efficiency:
+1. **Fetch cache** - Raw HTTP responses
+2. **Extract cache** - Parsed content
+3. **Summary cache** - LLM outputs
+
+Cache keys use SHA-256 hashing for deduplication.
+
+### Error Handling:
+
+- Fetch failures trigger Playwright fallback
+- Extraction errors logged and raised
+- LLM errors include retry logic (provider-specific)
+- All errors logged via Metrics system
