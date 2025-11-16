@@ -649,8 +649,8 @@ class TextChunker:
         Returns:
             Position of boundary, or -1 if not found
         """
-        # Look for sentence endings in last 20% of text
-        search_start = max(0, int(len(text) * 0.8))
+        # Look for sentence endings in last portion of text (configurable ratio)
+        search_start = max(0, int(len(text) * self.config.last_chunk_search_ratio))
         search_text = text[search_start:]
 
         # Find last sentence ending

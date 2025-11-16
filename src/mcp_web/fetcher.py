@@ -263,7 +263,7 @@ class URLFetcher:
             duration_ms = (time.perf_counter() - start_time) * 1000
 
             # Check for problematic responses that might need Playwright
-            if response.status_code in [403, 429] or len(response.content) < 100:
+            if response.status_code in [403, 429] or len(response.content) < self.config.min_content_size:
                 raise HTTPError(
                     f"Suspicious response (size={len(response.content)})",
                     url=url,

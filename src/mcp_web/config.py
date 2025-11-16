@@ -69,6 +69,12 @@ class FetcherSettings(BaseSettings):
         description="Maximum file size in bytes for file:// URLs",
     )
 
+    # Content validation thresholds
+    min_content_size: int = Field(
+        default=100,
+        description="Minimum content size (bytes) before triggering Playwright fallback",
+    )
+
     model_config = SettingsConfigDict(env_prefix="MCP_WEB_FETCHER_")
 
 
@@ -122,6 +128,12 @@ class ChunkerSettings(BaseSettings):
         default=24,
         ge=1,
         description="Average words per sentence to treat prose as dense",
+    )
+    last_chunk_search_ratio: float = Field(
+        default=0.8,
+        ge=0.0,
+        le=1.0,
+        description="Ratio of text length to search for last chunk boundary (0.0-1.0)",
     )
 
     model_config = SettingsConfigDict(env_prefix="MCP_WEB_CHUNKER_")
@@ -264,6 +276,22 @@ class MetricsSettings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="MCP_WEB_METRICS_")
 
 
+class MCPServerSettings(BaseSettings):
+    """MCP Server configuration."""
+
+    max_links_to_follow: int = Field(
+        default=5,
+        ge=0,
+        description="Maximum number of additional links to follow per page",
+    )
+    enable_link_following: bool = Field(
+        default=True,
+        description="Enable automatic link following for related content",
+    )
+
+    model_config = SettingsConfigDict(env_prefix="MCP_WEB_SERVER_")
+
+
 class Config(BaseSettings):
     """Root configuration for mcp-web."""
 
@@ -274,6 +302,7 @@ class Config(BaseSettings):
     summarizer: SummarizerSettings = Field(default_factory=SummarizerSettings)
     cache: CacheSettings = Field(default_factory=CacheSettings)
     metrics: MetricsSettings = Field(default_factory=MetricsSettings)
+    server: MCPServerSettings = Field(default_factory=MCPServerSettings)
 
     model_config = SettingsConfigDict(
         env_prefix="MCP_WEB_",

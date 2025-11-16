@@ -217,8 +217,8 @@ class WebSummarizationPipeline:
         # Score and filter links
         relevant_links = self._score_links(contents, query)
 
-        # Limit to top N links
-        top_links = relevant_links[:5]  # Max 5 additional links per page
+        # Limit to top N links (configurable)
+        top_links = relevant_links[:self.config.server.max_links_to_follow]
 
         if not top_links:
             return []
