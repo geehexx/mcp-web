@@ -2,6 +2,6 @@
   "devDependencies": {
     "@ls-lint/ls-lint": "^2.3.0",
     "markdownlint-cli2": "^0.18.1",
-    "markdownlint-cli2-formatter-json": "^0.0.8"
+    "markdownlint-cli2-formatter-json": "^0.0.9"
   }
 }
